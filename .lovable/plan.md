@@ -31,7 +31,27 @@ Result: storage stops growing. The only thing that accumulates is Tier 1 text, w
 
 ## After expiry
 
-The conversation tile stays, marked "Archived — summary kept". The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days.
+
+## Traceability: every action carries a reference
+
+So a downloaded transcript, a calendar entry and a Next Step row can always be matched back together, each conversation and each action gets a short human-readable reference.
+
+- **Conversation reference**: `MB-260825-A7` — prefix, date of capture, two characters. Shown on the conversation tile.
+- **Action reference**: `MB-260825-A7-03` — the conversation reference plus the action's number in that conversation.
+
+Where the reference appears:
+- On the conversation tile and the summary card.
+- In the Next Step Summary table, as a quiet monospace column (tap to copy).
+- On the calendar entry, next to the "From Memory Bridge" chip.
+- In the downloaded bundle: in the filename (`MB-260825-A7.txt`), in the file header, and against each action listed inside it.
+- In reminder emails and Support Circle notices for that action.
+
+What it buys you: after the transcript and audio are gone from the app, the archived tile still shows `MB-260825-A7`, and the downloaded file on your own drive carries the same code — so any action on the calendar or in the Next Step log can be matched to its source document by eye, with no lookup needed. A search box on Memory Bridge accepts a reference and jumps straight to the conversation or action.
+
+## After expiry
+
+The conversation tile stays, marked "Archived — summary kept", and keeps its reference. The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days, alongside the reference to look up in your own download.
+
 
 ## Settings
 
@@ -74,4 +94,6 @@ This is a build-and-document plan, not legal advice; before taking paying users 
 - Per-action `transcript_excerpt` already exists on `extracted_actions` and is retained — that is what preserves the action-to-source link after purge.
 - UI: countdown from `expires_at`; archived state keyed off `audio_deleted_at`; download bundles the transcript client-side before it expires.
 - GDPR: `capture_consent` record (version, timestamp, scope) written at first capture; account-deletion routine as a service-role edge function that removes rows and storage objects across all user-owned tables; `docs/dpia.md`, `docs/retention-schedule.md` and an updated privacy notice.
+- Traceability: add `ref_code` (text, unique) to `meeting_recordings`, generated on insert from the capture date plus a short random suffix; add `ref_code` to `extracted_actions` as `<meeting ref>-<zero-padded sequence>`, assigned at extraction time. Calendar entries read the action's `ref_code` through the existing `extracted_action_id` link, so no third column is needed. Reference search resolves either shape with a prefix match.
+
 
