@@ -419,6 +419,84 @@ export default function LaunchMemoryBridge() {
 
   };
 
+  /** Upload an existing audio/video file and run the same extraction path. */
+  const handleUploadSelected = async (file: File | null | undefined) => {
+    if (!file) return;
+    if (!isSupportedRecordingFile(file)) {
+      toast.error('That file type is not supported.', {
+        description: 'Choose an audio or video recording (m4a, mp3, wav, webm, mp4).',
+      });
+      return;
+    }
+
+    const userId = await ensureSession();
+    if (!userId) {
+      toast.error('Your session timed out.', {
+        description: 'Sign in and upload again.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
+      return;
+    }
+
+    const title = recordingTitle || file.name.replace(/\.[^.]+$/, '');
+    setIsUploading(true);
+    setIsExtracting(true);
+    try {
+      toast.info('Uploading your recording…');
+      const saved = await uploadRecordingFile(file, userId, title);
+      allowance.refresh();
+
+      const result = await processSavedRecording(saved.id, userId, saved.durationSeconds);
+
+      if (result.success && result.actionsCount && result.actionsCount > 0) {
+        if (result.meetingId && (loopCircleIds.length > 0 || loopAdhoc.length > 0)) {
+          await supabase
+            .from('extracted_actions')
+            .update({
+              assigned_watchers: loopCircleIds,
+              adhoc_loop_ins: loopAdhoc as any,
+            })
+            .eq('meeting_recording_id', result.meetingId);
+        }
+        setLastExtractionResult({
+          meetingId: result.meetingId!,
+          recordingId: saved.id,
+          actionsCount: result.actionsCount,
+          title,
+        });
+        setShowPostExtractionDialog(true);
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setLoopCircleIds([]);
+        setLoopAdhoc([]);
+      } else if (result.success) {
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
+        setViewingActions({ recordingId: saved.id, title });
+        toast.info('Upload saved — no next steps found yet.', {
+          description: 'Open the transcript to extract again or add your own step.',
+          duration: 8000,
+        });
+      }
+
+      fetchRecordings();
+      setRecordingTitle('');
+    } catch (err) {
+      console.error('handleUploadSelected failed', err);
+      toast.error(
+        `Could not upload that recording: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      );
+    } finally {
+      setIsUploading(false);
+      setIsExtracting(false);
+      if (uploadInputRef.current) uploadInputRef.current.value = '';
+    }
+  };
+
 
   const handleAcceptAndScheduleAll = async (
     actionIds?: string[],
