@@ -73,3 +73,5 @@ This is a build-and-document plan, not legal advice; before taking paying users 
 - A scheduled edge function `purge-expired-media` removes the storage objects for those paths (service-role, bounded batch per run, marks rows as it goes).
 - Per-action `transcript_excerpt` already exists on `extracted_actions` and is retained — that is what preserves the action-to-source link after purge.
 - UI: countdown from `expires_at`; archived state keyed off `audio_deleted_at`; download bundles the transcript client-side before it expires.
+- GDPR: `capture_consent` record (version, timestamp, scope) written at first capture; account-deletion routine as a service-role edge function that removes rows and storage objects across all user-owned tables; `docs/dpia.md`, `docs/retention-schedule.md` and an updated privacy notice.
+
