@@ -110,5 +110,7 @@ This is a build-and-document plan, not legal advice; before taking paying users 
 - UI: countdown from `expires_at`; archived state keyed off `audio_deleted_at`; download bundles the transcript client-side before it expires.
 - GDPR: `capture_consent` record (version, timestamp, scope) written at first capture; account-deletion routine as a service-role edge function that removes rows and storage objects across all user-owned tables; `docs/dpia.md`, `docs/retention-schedule.md` and an updated privacy notice.
 - Traceability: add `ref_code` (text, unique) to `meeting_recordings`, generated on insert from the capture date plus a short random suffix; add `ref_code` to `extracted_actions` as `<meeting ref>-<zero-padded sequence>`, assigned at extraction time. Calendar entries read the action's `ref_code` through the existing `extracted_action_id` link, so no third column is needed. Reference search resolves either shape with a prefix match.
+- Privacy mode: `privacy_mode` (text: `light` | `balanced` | `full`, default `balanced`) on `profiles`; `expires_at` on new recordings is set from it (0 / 30 / 90 days). Light touch marks the row for immediate purge once extraction completes, and never writes the long transcript field. Changing the mode later applies to new captures only and re-dates existing ones to the shorter of the two — never extends them.
+
 
 
