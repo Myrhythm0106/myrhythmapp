@@ -737,7 +737,40 @@ export default function LaunchMemoryBridge() {
                   </p>
                 )}
 
+                {/* Already have a recording? Upload it and get the same next steps. */}
+                <div className="mt-5">
+                  <input
+                    ref={uploadInputRef}
+                    type="file"
+                    accept="audio/*,video/*,.m4a,.mp3,.wav,.webm,.mp4,.mov"
+                    className="hidden"
+                    onChange={(e) => handleUploadSelected(e.target.files?.[0])}
+                  />
+                  <button
+                    type="button"
+                    disabled={isUploading || isExtracting}
+                    onClick={() => uploadInputRef.current?.click()}
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] w-full rounded-xl border border-launch-gold/40 bg-white/60 px-4 text-sm font-medium text-launch-ink hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Uploading and finding next steps…
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4" />
+                        Upload a recording instead
+                      </>
+                    )}
+                  </button>
+                  <p className="mt-2 text-xs text-launch-ink/60">
+                    Audio or video from your phone, a voice memo or a call recording.
+                  </p>
+                </div>
+
                 <RecordingEggTimer className="mt-5 text-left" />
+
               </>
             )}
 
