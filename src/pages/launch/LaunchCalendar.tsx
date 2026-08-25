@@ -44,6 +44,7 @@ import { toast } from 'sonner';
 
 export default function LaunchCalendar() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialView = (searchParams.get('view') as CalendarView) || 'day';
   const [currentView, setCurrentView] = useState<CalendarView>(
     (['day', 'week', 'month', 'year'] as CalendarView[]).includes(initialView) ? initialView : 'day'
