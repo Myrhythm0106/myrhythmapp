@@ -286,6 +286,7 @@ export default function LaunchCalendar() {
             onEventStatusChange={handleEventStatusChange}
             onEventCarryOver={handleEventCarryOver}
             onEventReschedule={handleEventReschedule}
+            onEventOpenSource={handleOpenEventSource}
           />
         )}
         {currentView === 'week' && (
