@@ -152,6 +152,9 @@ export default function LaunchCalendar() {
   const sortedDayEvents = () =>
     [...filteredDayEvents].sort((a, b) => a.time.localeCompare(b.time));
 
+  const handleOpenEventSource = () => navigate('/launch/memory');
+
+
   const handleNavigate = (direction: 'prev' | 'next') => {
     switch (currentView) {
       case 'day':
