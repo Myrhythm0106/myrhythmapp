@@ -53,7 +53,9 @@ export function LaunchDayView({
   inheritedWeekFocus,
   onEventStatusChange,
   onEventCarryOver,
-  onEventReschedule
+  onEventReschedule,
+  onEventOpenSource
+
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
