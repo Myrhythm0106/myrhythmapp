@@ -31,7 +31,27 @@ Result: storage stops growing. The only thing that accumulates is Tier 1 text, w
 
 ## After expiry
 
-The conversation tile stays, marked "Archived — summary kept". The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days.
+
+## Traceability: every action carries a reference
+
+So a downloaded transcript, a calendar entry and a Next Step row can always be matched back together, each conversation and each action gets a short human-readable reference.
+
+- **Conversation reference**: `MB-260825-A7` — prefix, date of capture, two characters. Shown on the conversation tile.
+- **Action reference**: `MB-260825-A7-03` — the conversation reference plus the action's number in that conversation.
+
+Where the reference appears:
+- On the conversation tile and the summary card.
+- In the Next Step Summary table, as a quiet monospace column (tap to copy).
+- On the calendar entry, next to the "From Memory Bridge" chip.
+- In the downloaded bundle: in the filename (`MB-260825-A7.txt`), in the file header, and against each action listed inside it.
+- In reminder emails and Support Circle notices for that action.
+
+What it buys you: after the transcript and audio are gone from the app, the archived tile still shows `MB-260825-A7`, and the downloaded file on your own drive carries the same code — so any action on the calendar or in the Next Step log can be matched to its source document by eye, with no lookup needed. A search box on Memory Bridge accepts a reference and jumps straight to the conversation or action.
+
+## After expiry
+
+The conversation tile stays, marked "Archived — summary kept", and keeps its reference. The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days, alongside the reference to look up in your own download.
+
 
 ## Settings
 
