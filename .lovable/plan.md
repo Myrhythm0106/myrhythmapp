@@ -48,6 +48,35 @@ Where the reference appears:
 
 What it buys you: after the transcript and audio are gone from the app, the archived tile still shows `MB-260825-A7`, and the downloaded file on your own drive carries the same code — so any action on the calendar or in the Next Step log can be matched to its source document by eye, with no lookup needed. A search box on Memory Bridge accepts a reference and jumps straight to the conversation or action.
 
+## On the calendar: the reference, and the honest state of its source
+
+Every calendar entry that came from a conversation carries its reference and says plainly what is still behind it.
+
+**How it looks.** Under the event title sits a single quiet line — a small link icon, the reference in monospace, and a state dot:
+
+```text
+  Call the OT about the handrail            09:30
+  ⌁ MB-260825-A7-03  · source available
+```
+
+Restrained by design: 11px, muted ink, gold hairline rule on hover. No badge soup. On a phone the line collapses to the reference alone; the state moves to the detail sheet.
+
+**Tapping it** opens the source sheet directly — the conversation summary card, the one-line quote this action came from, the participants and the date. If the transcript is still held, a "Read full transcript" row appears beneath it; if the audio is still held, a play control. One tap from calendar to origin, and back.
+
+**The three states, worded so nobody has to guess:**
+
+| State | Calendar line | What the source sheet offers |
+|---|---|---|
+| Source held | `· source available` (teal dot) | Summary, quote, transcript, playback, download |
+| Downloaded by you | `· downloaded 12 Aug` (gold dot) | Summary and quote, plus "You downloaded this on 12 August — look for `MB-260825-A7.txt`" |
+| Retired | `· source retired` (grey dot) | Summary and quote only, plus "Audio and transcript were retired on 24 September under your Balanced setting. The reference above matches your download if you took one." |
+
+The summary card and the quote never disappear, so a retired entry is never a dead end — you always still see *why* this is in your diary.
+
+**Where else the state shows.** The same three-state line appears on the Next Step Summary row and the Memory Bridge conversation tile, using one shared component, so the vocabulary is identical everywhere. Downloading a bundle stamps the download date, which is what turns the line gold.
+
+
+
 ## After expiry
 
 The conversation tile stays, marked "Archived — summary kept", and keeps its reference. The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days, alongside the reference to look up in your own download.
