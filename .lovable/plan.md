@@ -37,6 +37,35 @@ The conversation tile stays, marked "Archived — summary kept". The summary, th
 
 One control: how long full transcripts and audio are kept — 7, 30 or 90 days (30 default), with a line stating the summary card is always kept and never expires.
 
+## GDPR — yes, squarely, and it shapes the build
+
+Recordings of conversations about someone's recovery are **special category data** (health) under UK GDPR Article 9, and they capture third parties too — the clinician, the family member in the room. That raises the bar, and the design above already leans the right way (data minimisation, storage limitation). What the build must add:
+
+**Lawful basis and consent**
+- Article 9 requires **explicit consent** for health data. A one-time, clearly worded consent at first capture — separate from the terms tick — recording what is stored, for how long, and that they can withdraw. Versioned, with the timestamp stored, so consent is provable.
+- A short in-recorder line reminding the person to tell others in the room they are recording, and a "Consent noted" tick on the capture. This covers the third-party angle honestly without turning it into a legal form.
+
+**Storage limitation (Article 5(1)(e))**
+- The 30-day purge is now a documented retention rule, not an implementation detail: it goes in a public retention schedule and in the privacy notice. The permanent tier is limited to the minimum needed to keep the action-to-source link meaningful.
+
+**Rights (Articles 15, 17, 20)**
+- Export already exists (`gdprExport.ts`) — extend it to include the summary cards and any surviving transcripts, in a machine-readable form.
+- **Delete my account and everything in it** must be a real, self-service action: purges rows, storage objects and derived records, and confirms in writing. Add it to Settings.
+- Rectification is covered by the existing transcript editing.
+
+**Processors and transfers**
+- List every processor touching this data — Supabase (hosting/storage), the transcription provider, the AI provider used for extraction, the email provider — with the data each receives, and confirm a Data Processing Agreement and appropriate transfer mechanism (UK IDTA / SCCs) for each. Recorded in `docs/`, not in code.
+- Confirm no recording content is used for model training by any provider.
+
+**Accountability**
+- A **DPIA** — this is high-risk processing (health data, potentially vulnerable people, recordings), so a written DPIA is expected rather than optional. Draft it as `docs/dpia.md`.
+- A Record of Processing Activities, a breach procedure with the 72-hour notification path, and a privacy notice written in plain language.
+- The research layer is already compliant by design (opt-in, pseudonymised, k=20) per the existing research charter — cross-reference rather than duplicate.
+
+This is a build-and-document plan, not legal advice; before taking paying users or approaching rehab centres it is worth a short review by a data protection adviser, and rehab partners will ask for the DPIA and the retention schedule by name.
+
+
+
 ## Technical notes
 
 - Add `summary_card` (jsonb, ~small) to `meeting_recordings`; populate at extraction time from the AI output. This is the permanent record.
