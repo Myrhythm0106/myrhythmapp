@@ -34,6 +34,7 @@ import { MicLevelMeter } from '@/components/memoryBridge/MicLevelMeter';
 import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
+import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
