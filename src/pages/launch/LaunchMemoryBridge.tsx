@@ -92,6 +92,8 @@ export default function LaunchMemoryBridge() {
     sourceFileName?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
 
   const {
