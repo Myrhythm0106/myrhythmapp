@@ -1175,10 +1175,12 @@ export type Database = {
           priority_level: number | null
           proposed_date: string | null
           proposed_time: string | null
+          reference_code: string | null
           relationship_impact: string | null
           requires_review: boolean | null
           scheduled_date: string | null
           scheduled_time: string | null
+          source_quote: string | null
           source_type: string
           start_date: string | null
           status: string
@@ -1232,10 +1234,12 @@ export type Database = {
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
+          reference_code?: string | null
           relationship_impact?: string | null
           requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          source_quote?: string | null
           source_type?: string
           start_date?: string | null
           status?: string
@@ -1289,10 +1293,12 @@ export type Database = {
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
+          reference_code?: string | null
           relationship_impact?: string | null
           requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          source_quote?: string | null
           source_type?: string
           start_date?: string | null
           status?: string
@@ -1554,6 +1560,7 @@ export type Database = {
       meeting_recordings: {
         Row: {
           created_at: string
+          downloaded_at: string | null
           emotional_context: string | null
           ended_at: string | null
           energy_level: number | null
@@ -1569,15 +1576,21 @@ export type Database = {
           processing_status: string | null
           proposed_schedule: Json | null
           recording_id: string | null
+          reference_code: string | null
           relationship_context: Json | null
+          source_state: string
           started_at: string
+          summary_card: Json | null
           transcript: string | null
+          transcript_deleted_at: string | null
+          transcript_expires_at: string | null
           updated_at: string
           user_id: string
           watchers: string[] | null
         }
         Insert: {
           created_at?: string
+          downloaded_at?: string | null
           emotional_context?: string | null
           ended_at?: string | null
           energy_level?: number | null
@@ -1593,15 +1606,21 @@ export type Database = {
           processing_status?: string | null
           proposed_schedule?: Json | null
           recording_id?: string | null
+          reference_code?: string | null
           relationship_context?: Json | null
+          source_state?: string
           started_at?: string
+          summary_card?: Json | null
           transcript?: string | null
+          transcript_deleted_at?: string | null
+          transcript_expires_at?: string | null
           updated_at?: string
           user_id: string
           watchers?: string[] | null
         }
         Update: {
           created_at?: string
+          downloaded_at?: string | null
           emotional_context?: string | null
           ended_at?: string | null
           energy_level?: number | null
@@ -1617,9 +1636,14 @@ export type Database = {
           processing_status?: string | null
           proposed_schedule?: Json | null
           recording_id?: string | null
+          reference_code?: string | null
           relationship_context?: Json | null
+          source_state?: string
           started_at?: string
+          summary_card?: Json | null
           transcript?: string | null
+          transcript_deleted_at?: string | null
+          transcript_expires_at?: string | null
           updated_at?: string
           user_id?: string
           watchers?: string[] | null
@@ -2222,6 +2246,7 @@ export type Database = {
           phone_number: string | null
           phone_verified: boolean | null
           planning_day_of_week: number | null
+          privacy_mode: Database["public"]["Enums"]["privacy_mode"]
           require_mfa_for_sensitive_actions: boolean | null
           support_circle_can_view_growth: boolean
           updated_at: string
@@ -2243,6 +2268,7 @@ export type Database = {
           phone_number?: string | null
           phone_verified?: boolean | null
           planning_day_of_week?: number | null
+          privacy_mode?: Database["public"]["Enums"]["privacy_mode"]
           require_mfa_for_sensitive_actions?: boolean | null
           support_circle_can_view_growth?: boolean
           updated_at?: string
@@ -2264,10 +2290,47 @@ export type Database = {
           phone_number?: string | null
           phone_verified?: boolean | null
           planning_day_of_week?: number | null
+          privacy_mode?: Database["public"]["Enums"]["privacy_mode"]
           require_mfa_for_sensitive_actions?: boolean | null
           support_circle_can_view_growth?: boolean
           updated_at?: string
           user_type?: string | null
+        }
+        Relationships: []
+      }
+      recording_consent: {
+        Row: {
+          audio_retention_days: number | null
+          consent_text: string
+          consented_at: string
+          created_at: string
+          id: string
+          privacy_mode: Database["public"]["Enums"]["privacy_mode"]
+          transcript_retention_days: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audio_retention_days?: number | null
+          consent_text: string
+          consented_at?: string
+          created_at?: string
+          id?: string
+          privacy_mode: Database["public"]["Enums"]["privacy_mode"]
+          transcript_retention_days?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audio_retention_days?: number | null
+          consent_text?: string
+          consented_at?: string
+          created_at?: string
+          id?: string
+          privacy_mode?: Database["public"]["Enums"]["privacy_mode"]
+          transcript_retention_days?: number | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -3542,6 +3605,10 @@ export type Database = {
       }
       generate_backup_codes: { Args: never; Returns: Json }
       generate_invitation_token: { Args: never; Returns: string }
+      generate_reference_code: {
+        Args: { _at: string; _prefix: string; _user_id: string }
+        Returns: string
+      }
       get_calendar_integration_tokens: {
         Args: { p_integration_id: string }
         Returns: {
@@ -3607,6 +3674,13 @@ export type Database = {
         }[]
       }
       research_pseudonym: { Args: { _user_id: string }; Returns: string }
+      retention_days_for_mode: {
+        Args: {
+          _kind: string
+          _mode: Database["public"]["Enums"]["privacy_mode"]
+        }
+        Returns: number
+      }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
         Returns: boolean
@@ -3646,6 +3720,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       growth_letter: "M1" | "Y1" | "R" | "H1" | "Y2" | "T" | "H2" | "M2"
+      privacy_mode: "light_touch" | "balanced" | "full_record"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3775,6 +3850,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       growth_letter: ["M1", "Y1", "R", "H1", "Y2", "T", "H2", "M2"],
+      privacy_mode: ["light_touch", "balanced", "full_record"],
     },
   },
 } as const
