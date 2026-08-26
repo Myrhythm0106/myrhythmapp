@@ -228,6 +228,16 @@ export function LaunchDayView({
                       </button>
                     )}
 
+                    {event.referenceCode && (
+                      <SourceRefLine
+                        referenceCode={event.referenceCode}
+                        recordingId={event.sourceRecordingId}
+                        state={event.sourceState}
+                        compact
+                      />
+                    )}
+
+
                     {event.carriedFrom && (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
                         Carried over
