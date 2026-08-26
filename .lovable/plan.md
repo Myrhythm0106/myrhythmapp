@@ -62,6 +62,8 @@ Undo is real, not cosmetic: the delete is deferred for the life of the toast, or
 - Explicit consent captured at first recording, with the chosen retention period named on screen.
 - A retention schedule and DPIA written up in `docs/` — the artefacts a rehab centre or CQC-facing partner asks for by name.
 - Account deletion removes everything, including research pseudonyms.
+- A new `docs/data-and-deletion-standard.md` records this decision permanently for reference: the privacy modes and what each keeps, the reference-code scheme, and the three delete tiers (undo / confirm / type-to-confirm) with the exact wording and which surface uses which. It is the single citable source when a partner, tester, or future contributor asks how deletion and retention behave.
+- The same standard is saved to project memory so it is applied automatically to any future screen that deletes something.
 
 ## Visible cost
 
