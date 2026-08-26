@@ -660,6 +660,8 @@ export default function LaunchMemoryBridge() {
 
   return (
     <LaunchLayout>
+      <KeepForPrompt hasCaptures={processedRecordings.size > 0} />
+
       <LaunchHeroBand
         eyebrow="Capture"
         title="Memory Bridge"
