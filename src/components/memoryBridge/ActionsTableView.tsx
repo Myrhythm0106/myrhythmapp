@@ -611,6 +611,17 @@ export function ActionsTableView({
                             <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
                           )}
 
+                          {action.reference_code && (
+                            <div className="mt-1.5">
+                              <SourceRefLine
+                                referenceCode={action.reference_code}
+                                recordingId={action.meeting_recording_id}
+                                compact
+                              />
+                            </div>
+                          )}
+
+
                           {onSuccessCriteriaChange ? (
                             <EditableText
                               value={action.success_criteria}
