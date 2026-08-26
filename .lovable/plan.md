@@ -40,25 +40,22 @@ Chosen once during onboarding as a simple preference, changeable any time in Set
 
 Before anything is purged, a reminder at 5 days and 1 day offers a download. Downloading flips the source line to the gold "I downloaded this" state.
 
-## 4. Delete confirmation — nothing goes silently
+## 4. Deletes — undo first, confirm only when it's truly irreversible
 
-Every action that removes something follows the same three beats:
+The industry standard (NN/g, Material) is: don't interrupt routine actions; make them reversible. Confirmation dialogs are reserved for destruction that genuinely can't be walked back. Most mistaken deletes here come from fatigue or a mistaken tap, and an undo toast rescues those without adding a decision to every action.
 
-1. **Ask first** — a dialog naming the exact item in quotes.
-2. **Say how permanent it is** — one plain line, always present, directly above the buttons.
-3. **Confirm it happened** — a toast afterwards, with Undo where we can genuinely offer it.
+**Tier 1 — Undo (the default, most deletes).** The item disappears immediately, and a toast appears: *"Removed 'Call the physio' · Undo"*, live for 10 seconds. No dialog. Used for: Memory Bridge step removal, Next Step item deletion, calendar action deletion, note deletion, gratitude journal swipe-to-delete, Support Circle member removal, community message removal.
 
-Three levels of permanence, so the wording always matches what actually happens:
+Where the item came from a capture, the toast carries the reassurance instead of a warning: *"Removed. Its reference code and source stay, so you can still trace it."*
 
-| Level | Wording | Used for |
-|---|---|---|
-| **Permanent** | "This is permanent. It can't be recovered." | Recordings, transcripts, calendar events, notes, Support Circle members, account deletion |
-| **Reversible briefly** | "Removed now — you have 10 seconds to undo." | Removing a step during Memory Bridge review |
-| **Removed but traceable** | "The step goes, but its reference code and source link stay, so you can still trace where it came from." | Next Step items that came from a capture |
+**Tier 2 — Confirm (irreversible, but a single item).** A dialog naming the item in quotes, with one plain line above the buttons: *"This is permanent. It can't be recovered."* Cancel is the first button; the confirm button uses the destructive colour. Used for: deleting a recording or its audio, deleting a transcript, disconnecting a calendar sync, removing a community member.
 
-Permanent deletes use the destructive colour on the icon and confirm button. The other two stay neutral so routine tidying doesn't feel like an alarm. Cancel is always the first button. Account deletion and "delete all my data" additionally require typing DELETE, with an explicit list of everything that goes.
+**Tier 3 — Type to confirm (everything at once).** Account deletion and "delete all my data" require typing DELETE, with an explicit list of what goes.
 
-**Sites that currently delete with no prompt at all**, all of which get one: Support Circle member removal, Memory Bridge step removal, calendar action deletion, calendar sync disconnect, note deletion, community message and member removal, and the gratitude journal swipe-to-delete.
+Undo is real, not cosmetic: the delete is deferred for the life of the toast, or performed and restored from the retained row. If we cannot honestly restore something, it belongs in Tier 2, not Tier 1.
+
+**Sites that currently delete with no feedback at all**, all of which get at least an undo toast: Support Circle member removal, Memory Bridge step removal, calendar action deletion, calendar sync disconnect, note deletion, community message and member removal, and the gratitude journal swipe-to-delete.
+
 
 ## 5. Consent and documentation
 
