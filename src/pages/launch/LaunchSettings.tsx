@@ -333,48 +333,8 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Storage Management */}
-        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-              <HardDrive className="h-5 w-5 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Storage Management</h3>
-              <p className="text-xs text-gray-500">Manage your recordings</p>
-            </div>
-          </div>
+        <KeepForCard />
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-700">Recording Retention</Label>
-              <Select value={retentionDays} onValueChange={setRetentionDays}>
-                <SelectTrigger className="w-full rounded-xl">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7">7 days (recommended)</SelectItem>
-                  <SelectItem value="14">14 days</SelectItem>
-                  <SelectItem value="30">30 days</SelectItem>
-                  <SelectItem value="90">90 days</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-gray-500">
-                You'll receive reminders before auto-deletion
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between py-2">
-              <div>
-                <Label className="text-sm text-gray-900">Auto-delete after transcription</Label>
-                <p className="text-xs text-gray-500">Free up space automatically</p>
-              </div>
-              <Switch 
-                checked={autoDeleteAfterTranscription}
-                onCheckedChange={setAutoDeleteAfterTranscription}
-              />
-            </div>
-          </div>
-        </LaunchCard>
 
         {/* Language & Region */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
