@@ -39,6 +39,8 @@ import { BrainHealthySettingsCard } from '@/components/launch/BrainHealthySettin
 import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettingsCard';
 import { ResearchConsentCard } from '@/components/launch/ResearchConsentCard';
 import { DeviceRemindersCard } from '@/components/launch/DeviceRemindersCard';
+import { KeepForCard } from '@/components/launch/KeepForCard';
+
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
