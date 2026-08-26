@@ -65,7 +65,7 @@ Undo is real, not cosmetic: the delete is deferred for the life of the toast, or
 
 ## Visible cost
 
-Three quiet labels, one onboarding tap, one Settings row, and confirm dialogs where there were none. Everything else is backend. The app does not get busier.
+Three quiet labels, one onboarding tap, one Settings row, and an undo toast where deletes were previously silent. Dialogs appear only for irreversible deletes. Everything else is backend. The app does not get busier.
 
 ## Technical notes
 
@@ -73,6 +73,7 @@ Three quiet labels, one onboarding tap, one Settings row, and confirm dialogs wh
 - `cleanup_expired_voice_recordings` is extended to purge transcripts on the same schedule and to leave summary cards and reference codes untouched.
 - Reference codes are generated on insert by a database function, unique per user.
 - New components: `SourceRefLine` (the calendar and table line) and `SourceSheet` (the detail view).
-- `useDeleteConfirmation` and `DeleteConfirmationDialog` already exist but are used in only one place. They gain a `permanence` field and an optional `consequences` list, and get mounted once via a provider so any screen can call `confirmDelete(...)`. The three permanence strings live in one constants file.
+- New `useUndoableDelete` hook: performs the delete after a 10s window (or performs then restores), renders the sonner toast with an Undo action, and cancels cleanly on unmount or repeat deletes.
+- `useDeleteConfirmation` and `DeleteConfirmationDialog` already exist but are used in one place. They gain a `permanence` field and an optional `consequences` list, and get mounted once via a provider so any Tier 2/3 screen can call `confirmDelete(...)`. The wording strings live in one constants file.
 - Confirm buttons keep the 56px minimum touch target.
-- No change to what any delete actually does to the data — that part is presentation only.
+- No change to what any delete ultimately does to the data — only to timing and feedback.
