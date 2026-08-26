@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
+import { SourceRefLine, type SourceState } from '@/components/traceability/SourceRefLine';
 
 interface Event {
   id?: string;
@@ -23,7 +24,11 @@ interface Event {
   carriedFrom?: Date | null;
   source?: string;
   extractedActionId?: string | null;
+  referenceCode?: string | null;
+  sourceState?: SourceState;
+  sourceRecordingId?: string | null;
 }
+
 
 interface LaunchDayViewProps {
   date: Date;
@@ -227,6 +232,16 @@ export function LaunchDayView({
                         From Memory Bridge
                       </button>
                     )}
+
+                    {event.referenceCode && (
+                      <SourceRefLine
+                        referenceCode={event.referenceCode}
+                        recordingId={event.sourceRecordingId}
+                        state={event.sourceState}
+                        compact
+                      />
+                    )}
+
 
                     {event.carriedFrom && (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">

@@ -40,6 +40,11 @@ export interface NextStepsItem {
   user_notes?: string;
   created_at: string;
   updated_at: string;
+  /** Traceability reference, e.g. MB-260826-K4.2 — survives source deletion. */
+  reference_code?: string;
+  /** The line from the capture this step came from. */
+  source_quote?: string;
+
   // Scheduling properties
   proposed_date?: string;
   proposed_time?: string;

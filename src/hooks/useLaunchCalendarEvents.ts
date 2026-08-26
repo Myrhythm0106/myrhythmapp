@@ -17,6 +17,12 @@ export interface LaunchCalendarEvent {
   description?: string | null;
   /** Set when the event came from a next step captured in Memory Bridge */
   extractedActionId?: string | null;
+  /** Traceability reference, e.g. MB-260826-K4.2 */
+  referenceCode?: string | null;
+  /** Whether the original source is still available, downloaded or retired */
+  sourceState?: 'available' | 'downloaded' | 'retired';
+  /** The capture the event traces back to */
+  sourceRecordingId?: string | null;
 }
 
 type Row = {
@@ -31,9 +37,18 @@ type Row = {
   carried_from: string | null;
   description: string | null;
   extracted_action_id: string | null;
+  extracted_actions?: {
+    reference_code: string | null;
+    meeting_recording_id: string | null;
+    meeting_recordings?: {
+      source_state: string | null;
+    } | null;
+  } | null;
 };
 
 function rowToEvent(r: Row): LaunchCalendarEvent {
+  const linked = r.extracted_actions;
+  const state = linked?.meeting_recordings?.source_state;
   return {
     id: r.id,
     title: r.title,
@@ -47,8 +62,13 @@ function rowToEvent(r: Row): LaunchCalendarEvent {
     carriedFrom: r.carried_from ? new Date(`${r.carried_from}T00:00:00`) : null,
     description: r.description,
     extractedActionId: r.extracted_action_id,
+    referenceCode: linked?.reference_code ?? null,
+    sourceState:
+      (state as LaunchCalendarEvent['sourceState']) || 'available',
+    sourceRecordingId: linked?.meeting_recording_id ?? null,
   };
 }
+
 
 
 export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
@@ -64,7 +84,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     setLoading(true);
     const { data, error } = await supabase
       .from('calendar_events')
-      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id')
+      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id, extracted_actions:extracted_action_id (reference_code, meeting_recording_id, meeting_recordings:meeting_recording_id (source_state))')
       .eq('user_id', user.id)
       .gte('date', startStr)
       .lte('date', endStr)

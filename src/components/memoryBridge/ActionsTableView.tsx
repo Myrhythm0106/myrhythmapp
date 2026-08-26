@@ -18,6 +18,8 @@ import { parseDateOnly, formatDateOnly } from '@/utils/dateOnly';
 import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
+import { SourceRefLine } from '@/components/traceability/SourceRefLine';
+
 
 
 interface ActionsTableViewProps {
@@ -610,6 +612,17 @@ export function ActionsTableView({
                           ) : (
                             <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
                           )}
+
+                          {action.reference_code && (
+                            <div className="mt-1.5">
+                              <SourceRefLine
+                                referenceCode={action.reference_code}
+                                recordingId={action.meeting_recording_id}
+                                compact
+                              />
+                            </div>
+                          )}
+
 
                           {onSuccessCriteriaChange ? (
                             <EditableText
