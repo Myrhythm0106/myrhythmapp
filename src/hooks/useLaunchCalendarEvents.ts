@@ -84,7 +84,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     setLoading(true);
     const { data, error } = await supabase
       .from('calendar_events')
-      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id')
+      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id, extracted_actions:extracted_action_id (reference_code, meeting_recording_id, meeting_recordings:meeting_recording_id (source_state))')
       .eq('user_id', user.id)
       .gte('date', startStr)
       .lte('date', endStr)
