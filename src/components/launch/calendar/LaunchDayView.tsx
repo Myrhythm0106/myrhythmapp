@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
+import { SourceRefLine, type SourceState } from '@/components/traceability/SourceRefLine';
 
 interface Event {
   id?: string;
@@ -23,7 +24,11 @@ interface Event {
   carriedFrom?: Date | null;
   source?: string;
   extractedActionId?: string | null;
+  referenceCode?: string | null;
+  sourceState?: SourceState;
+  sourceRecordingId?: string | null;
 }
+
 
 interface LaunchDayViewProps {
   date: Date;
