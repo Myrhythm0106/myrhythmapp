@@ -73,7 +73,7 @@ export function KeepForPrompt({ hasCaptures }: { hasCaptures: boolean }) {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md" hideCloseButton>
+      <DialogContent className="sm:max-w-md [&>button]:hidden">
         <DialogHeader>
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-teal-100">
             <ShieldCheck className="h-6 w-6 text-brand-teal-700" aria-hidden />
