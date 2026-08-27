@@ -287,3 +287,60 @@ Listed here so future-founder doesn't wonder if they were forgotten. Each of the
 ## 12 · The 45-second version
 
 > MyRhythm has 12 weeks to reach 100 Founding Members and 3 clinical LOIs from a hand-shared, warm-network push. Four audience rings, three channels, one CTA, five metrics, one weekly log line, one founder. No ads, no press, no public posts. If the numbers work, this plan retires on 26 October and a public-launch plan replaces it. If they don't, the diagnosis is one of three things — wrong ask, wrong audience, wrong product — and we fix one at a time.
+
+---
+
+## 13 · Positioning, messaging and conversion (added 27 Aug 2026, per the approved 3-Phase Plan)
+
+### 13.1 The single line everything hangs off
+
+> **MyRhythm is the app that keeps your plan going after the appointment ends or the commitment has been made.**
+
+- Category descriptor: **Memory-First Design™**.
+- Hero feature in all external messaging: **Memory Bridge** (record → agreed next steps → shared with the people who matter). Decision approved in `strategic-documents/Memory-Bridge-Positioning-Decision.md`; the in-app 4C loop is unchanged.
+- Three problems, in this order: the **Discharge Cliff**, the **Clinical-Ready vs Life-Ready Gap**, the **Ideal-Brain Assumption**.
+- Feature language uses the 4Rs verbatim: **Remove / Reduce / Return / Reconnect**.
+- Language discipline: confidence, identity, behaviour, quality of life. Never clinical outcome language; `docs/claims-policy.md` is binding on every asset.
+
+### 13.2 Messaging by audience
+
+| Audience | Their words for the problem | Our promise | Proof to show |
+|---|---|---|---|
+| Survivor / post-discharge | "They said I was ready. I don't feel ready." | Your plan keeps going after the appointment ends. | Discharge Bridge Kit, Memory Bridge capture |
+| Carer / family | "I'm the only one holding it all." | No one walks alone — Reconnect. | Support Circle, shared next steps |
+| ADHD / stress / focus | "I know what to do, I just don't follow through." | Follow-through that fits the day you're actually having. | Energy-matched schedule, reminder ladder |
+| Clinician / rehab centre | "We lose sight of them at discharge." | Written evidence of follow-through after discharge. | 30/60/90-day continuity report, clinical export PDF |
+| Investor / advisor | "Is there a real channel here?" | Consumer entry, clinical distribution. | Loom, data room, LOIs |
+
+### 13.3 Conversion path — one CTA, no forks
+
+```text
+Warm email  →  Landing page  →  Become a Founding Member  →  /subscribe
+                                                              ↓
+                              Access code (testers) or Stripe checkout
+                                                              ↓
+                    Assessment  →  /launch/home  →  first Memory Bridge capture
+```
+
+**Activation moment:** first capture that produces at least one scheduled next step. A member who reaches it is *activated*; a member who doesn't gets a personal follow-up from the founder. Target: ≥60% of new members activated within 7 days.
+
+### 13.4 Eight-week outreach cadence
+
+| Week | Ring | Action | Weekly target |
+|---|---|---|---|
+| 3 | Ring 1 — personal warm list | Personal emails: try it, become a Founding Member, pass to one person like you | 10 sends |
+| 4 | Ring 1 + Ring 2 — brain-injury community | Ask each contact for one survivor or carer tester | 10 sends |
+| 5 | Ring 3 — clinicians / rehab | 25-min calls, Bridge Kit handout, LOI ask | 4 calls booked |
+| 6 | Ring 3 continued | Follow-up, continuity report walkthrough, LOI sent | 2 LOIs out |
+| 7 | Ring 4 — founders / advisors | One warm intro each, into Rings 1–3 | 8 asks |
+| 8 | All rings | Second-touch on non-repliers, first Founder Update | 30 touches |
+
+### 13.5 Metrics reviewed every Monday
+
+Logged as one line per week in `docs/90-day-sprint.md` §8 (format defined there):
+
+- Sends and replies by ring (targets: warm ≥40%, cold ≥10%, clinician ≥60%).
+- Loom viewers past 3:30 — the qualified-lead signal.
+- Sign-ups · activated · weekly-active.
+- Founding Member seats against the 500 cap; Friends & Family against the 50 cap.
+- LOI funnel: contacted → call → kit sent → signed.
