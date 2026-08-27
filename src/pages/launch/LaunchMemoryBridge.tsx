@@ -579,43 +579,8 @@ export default function LaunchMemoryBridge() {
     setLastExtractionResult(null);
   };
 
-  const handlePlayRecording = async (recording: VoiceRecording) => {
-    if (playingId === recording.id) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      setPlayingId(null);
-      return;
-    }
+  // Playback is handled by the shared <RecordingPlayer /> (see useAudioPlayer).
 
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    const url = await getRecordingUrl(recording.file_path);
-    if (url) {
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      setPlayingId(recording.id);
-
-      audio.onended = () => {
-        setPlayingId(null);
-        audioRef.current = null;
-      };
-
-      audio.onerror = () => {
-        toast.error('Failed to play recording');
-        setPlayingId(null);
-        audioRef.current = null;
-      };
-
-      audio.play();
-    } else {
-      toast.error('Could not load recording');
-    }
-  };
 
   const handleProcessRecording = async (recording: VoiceRecording) => {
     if (!user) return;
