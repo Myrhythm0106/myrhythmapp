@@ -125,6 +125,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         title: input.title,
         time: input.time,
         type: input.type,
+        description: input.description || null,
         date: format(input.date, 'yyyy-MM-dd'),
         status: 'pending',
         source: 'manual',
