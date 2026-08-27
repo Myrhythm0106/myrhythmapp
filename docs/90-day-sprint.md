@@ -124,6 +124,16 @@ Same 6 questions every Monday. Answer in a running log in this file (Section 8).
 
 ## 8 · Weekly log (append as we go)
 
+**Every week opens with the metric line (no new tooling):**
+
+```
+Wk N · sends: R1 _ R2 _ R3 _ R4 _ · replies: warm _% cold _% clinician _% ·
+Loom sends: _ · past-3:30: _ · sign-ups: _ · activated: _ · weekly-active: _% ·
+FM seats: _/500 · FF seats: _/50 · LOIs: contacted _ call _ kit _ signed _
+```
+
+Activation = first Memory Bridge capture that produces at least one scheduled next step, within 7 days of sign-up.
+
 ### Week 0 · 3 Jul (today)
 - Sprint doc + 5-year vision drafted.
 - Weekend self-test partially green; five legacy redirects fixed, purchase→`/launch/welcome` wired.

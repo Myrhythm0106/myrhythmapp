@@ -1,6 +1,6 @@
 # Memory Bridge — Hero Feature Positioning Decision
 
-**Status:** Awaiting founder sign-off
+**Status:** Approved — 27 Aug 2026 (per the approved 3-Phase Plan, Phase 3.1)
 **Owner:** Marketing / brand
 **Date raised:** 27 May 2026
 
