@@ -76,12 +76,11 @@ export default function LaunchMemoryBridge() {
   const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
   const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
 
-  const [playingId, setPlayingId] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   
   // New states for streamlined flow
   const [showPostExtractionDialog, setShowPostExtractionDialog] = useState(false);
