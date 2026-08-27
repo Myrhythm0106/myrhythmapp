@@ -14,6 +14,9 @@ import { ensureSession, touchSession } from '@/utils/ensureSession';
 
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
+import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
+import { stopPlayback } from '@/hooks/useAudioPlayer';
+
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
 import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
