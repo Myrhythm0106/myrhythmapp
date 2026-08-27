@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ interface Event {
   time: string;
   title: string;
   type: string;
+  description?: string | null;
   date?: Date;
 }
 
