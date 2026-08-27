@@ -78,6 +78,7 @@ export function LaunchAddEventModal({
   selectedDate = new Date(),
 }: LaunchAddEventModalProps) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [time, setTime] = useState('09:00');
   const [type, setType] = useState('routine');
 
@@ -145,6 +146,7 @@ export function LaunchAddEventModal({
     ];
     onAdd({
       title: title.trim(),
+      description: description.trim() || undefined,
       time,
       type,
       watchers,
@@ -156,6 +158,7 @@ export function LaunchAddEventModal({
     });
     // reset
     setTitle('');
+    setDescription('');
     setTime('09:00');
     setType('routine');
     setSelectedCircle([]);
