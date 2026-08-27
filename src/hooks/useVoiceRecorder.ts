@@ -235,6 +235,8 @@ export function useVoiceRecorder() {
       mediaRecorder.start(1000); // Collect data every 1000ms
       console.log('startRecording: recording started', { mime: effectiveMime, state: mediaRecorder.state });
       setIsRecording(true);
+      setMicPermission('granted');
+
       setIsPaused(false);
 
       // Start timer
