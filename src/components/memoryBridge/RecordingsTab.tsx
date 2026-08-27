@@ -233,6 +233,15 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                       )}
                     </div>
                   </div>
+
+                  <RecordingPlayer
+                    id={recording.id}
+                    getUrl={() => getRecordingUrl(recording.file_path)}
+                    fallbackDuration={recording.duration_seconds}
+                    audioDeleted={Boolean((recording as any).audio_deleted_at)}
+                    className="mt-4"
+                  />
+
                 </CardContent>
               </Card>
             );
