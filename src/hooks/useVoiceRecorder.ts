@@ -173,7 +173,9 @@ export function useVoiceRecorder() {
       const name = (error as DOMException)?.name || '';
       console.error('startRecording: getUserMedia failed', name, error);
       if (name === 'NotAllowedError' || name === 'SecurityError') {
+        setMicPermission('denied');
         toast.error('Microphone access is blocked. Allow the microphone for this site in your browser settings, then tap record again.');
+
       } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
         toast.error('No microphone was found on this device.');
       } else if (name === 'NotReadableError') {
