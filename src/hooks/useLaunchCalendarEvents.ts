@@ -110,6 +110,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       title: string;
       time: string;
       type: string;
+      description?: string;
       date: Date;
       watchers?: string[];
       reminder_level?: 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
