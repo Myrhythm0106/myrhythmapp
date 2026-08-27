@@ -47,3 +47,17 @@ All these paths are safe — you can't charge anyone real money in Test Mode.
 
 ## Going live later
 When you're ready to accept real payments, one flag flips: `VITE_STRIPE_MODE=live`. The Test Mode banner and test-card panel disappear automatically. Access codes still work if you want to keep comping specific people.
+
+## Install on your phone (3 taps)
+
+**iPhone (Safari):**
+1. Open the app URL in **Safari** (not Chrome — Apple only allows installs from Safari).
+2. Tap the **Share** button (square with an up arrow).
+3. Tap **Add to Home Screen** → **Add**.
+
+**Android (Chrome):**
+1. Open the app URL in **Chrome**.
+2. Tap the **⋮ menu** (top right).
+3. Tap **Add to Home screen** → **Install**.
+
+The installed app opens full-screen with its own icon, keeps you signed in, and returns you to **Home** if you've already completed the assessment. Long-press the icon for one-tap shortcuts to **Capture**, **Today**, and **Check in**.

@@ -76,6 +76,22 @@ export default function LaunchWelcome() {
     }
   }, []);
 
+  // Returning users go straight home — the welcome is for the first visit,
+  // not a gate they must tap through every time the app opens.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('postCheckout') === '1' || params.get('welcome') === '1') return;
+    const saved = localStorage.getItem('myrhythm_launch_mode');
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved);
+      const hasAssessment = Boolean(
+        data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore,
+      );
+      if (hasAssessment) navigate('/launch/home', { replace: true });
+    } catch { /* noop */ }
+  }, [navigate]);
+
   // Tick the /100 number up from 0
   useEffect(() => {
     if (!bhs) return;

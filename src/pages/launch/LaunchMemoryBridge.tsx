@@ -234,6 +234,10 @@ export default function LaunchMemoryBridge() {
     if (success) {
       setState('recording');
       setRecordingTitle(`Recording ${new Date().toLocaleTimeString()}`);
+    } else {
+      // startRecording's own paths each toast + log; this catches anything
+      // unexpected so a tap can never vanish silently.
+      console.warn('handleStartRecording: startRecording returned false without a state change');
     }
   };
 

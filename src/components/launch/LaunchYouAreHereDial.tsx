@@ -4,7 +4,7 @@ import { MapPin, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   LAUNCH_ROUTES,
-  ROUTES_BY_RING,
+  FOUNDING_CORE_BY_RING,
   findLaunchRoute,
   type LaunchRoute,
 } from '@/launch/routes';
@@ -214,19 +214,19 @@ export function LaunchYouAreHereDial() {
             )}
             <RingSection
               title="Core loop"
-              routes={ROUTES_BY_RING.inner}
+              routes={FOUNDING_CORE_BY_RING.inner}
               currentPath={location.pathname}
               onJump={handleJump}
             />
             <RingSection
               title="Key features"
-              routes={ROUTES_BY_RING.middle}
+              routes={FOUNDING_CORE_BY_RING.middle}
               currentPath={location.pathname}
               onJump={handleJump}
             />
             <RingSection
               title="More"
-              routes={ROUTES_BY_RING.outer}
+              routes={FOUNDING_CORE_BY_RING.outer}
               currentPath={location.pathname}
               onJump={handleJump}
             />

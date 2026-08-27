@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { Play, Pause, Loader2, RotateCcw, VolumeX } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+import { Play, Pause, Loader2, RotateCcw, VolumeX, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
@@ -39,10 +39,12 @@ export function RecordingPlayer({
 }: RecordingPlayerProps) {
   const { isCurrent, isPlaying, isLoading, currentTime, duration, rate, toggle } =
     useAudioPlayerFor(id);
+  const [failure, setFailure] = useState<PlayFailure | null>(null);
 
   const total = duration || fallbackDuration || 0;
 
   const onFailure = useCallback((reason: PlayFailure) => {
+    setFailure(reason);
     if (reason === 'blocked') {
       toast.info('Tap play again to start the audio');
     } else if (reason === 'unavailable') {
@@ -51,6 +53,11 @@ export function RecordingPlayer({
       toast.error("Something stopped the audio — please try again");
     }
   }, []);
+
+  const handlePlay = useCallback(() => {
+    setFailure(null);
+    toggle({ getUrl, onFailure });
+  }, [toggle, getUrl, onFailure]);
 
   if (audioDeleted) {
     return (
@@ -67,67 +74,92 @@ export function RecordingPlayer({
   }
 
   return (
-    <div className={cn('flex items-center gap-3 flex-wrap', className)}>
-      <button
-        type="button"
-        onClick={() => toggle({ getUrl, onFailure })}
-        aria-label={isPlaying ? 'Pause recording' : 'Play recording'}
-        className={cn(
-          'h-14 w-14 shrink-0 rounded-full flex items-center justify-center transition-all',
-          isPlaying
-            ? 'bg-primary text-primary-foreground'
-            : 'bg-background border border-border text-foreground hover:bg-muted',
-        )}
-      >
-        {isLoading ? (
-          <Loader2 className="h-5 w-5 animate-spin" />
-        ) : isPlaying ? (
-          <Pause className="h-5 w-5" />
-        ) : (
-          <Play className="h-5 w-5 ml-0.5" />
-        )}
-      </button>
+    <div className={cn('space-y-2', className)}>
+      <div className="flex items-center gap-3 flex-wrap">
+        <button
+          type="button"
+          onClick={handlePlay}
+          aria-label={isPlaying ? 'Pause recording' : 'Play recording'}
+          className={cn(
+            'h-14 w-14 shrink-0 rounded-full flex items-center justify-center transition-all',
+            isPlaying
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-background border border-border text-foreground hover:bg-muted',
+          )}
+        >
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : isPlaying ? (
+            <Pause className="h-5 w-5" />
+          ) : (
+            <Play className="h-5 w-5 ml-0.5" />
+          )}
+        </button>
 
-      <div className="flex-1 min-w-[160px]">
-        <input
-          type="range"
-          min={0}
-          max={Math.max(total, 1)}
-          step={1}
-          value={Math.min(currentTime, total || 0)}
-          disabled={!isCurrent || !total}
-          onChange={(e) => seekTo(Number(e.target.value))}
-          aria-label="Playback position"
-          className="w-full h-2 accent-primary cursor-pointer disabled:cursor-default"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1 tabular-nums">
-          <span>{formatClock(currentTime)}</span>
-          <span>{formatClock(total)}</span>
+        <div className="flex-1 min-w-[160px]">
+          <input
+            type="range"
+            min={0}
+            max={Math.max(total, 1)}
+            step={1}
+            value={Math.min(currentTime, total || 0)}
+            disabled={!isCurrent || !total}
+            onChange={(e) => seekTo(Number(e.target.value))}
+            aria-label="Playback position"
+            className="w-full h-2 accent-primary cursor-pointer disabled:cursor-default"
+          />
+          <div className="flex justify-between text-xs text-muted-foreground mt-1 tabular-nums">
+            <span>{formatClock(currentTime)}</span>
+            <span>{formatClock(total)}</span>
+          </div>
         </div>
+
+        <button
+          type="button"
+          onClick={() => skipBy(-15)}
+          disabled={!isCurrent}
+          aria-label="Skip back 15 seconds"
+          className="h-11 px-3 rounded-xl border border-border text-xs font-medium text-foreground hover:bg-muted disabled:opacity-40 inline-flex items-center gap-1"
+        >
+          <RotateCcw className="h-4 w-4" />
+          15s
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            const next = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
+            setPlaybackRate(next);
+          }}
+          aria-label="Change playback speed"
+          className="h-11 px-3 rounded-xl border border-border text-xs font-medium text-foreground hover:bg-muted tabular-nums"
+        >
+          {rate}x
+        </button>
       </div>
 
-      <button
-        type="button"
-        onClick={() => skipBy(-15)}
-        disabled={!isCurrent}
-        aria-label="Skip back 15 seconds"
-        className="h-11 px-3 rounded-xl border border-border text-xs font-medium text-foreground hover:bg-muted disabled:opacity-40 inline-flex items-center gap-1"
-      >
-        <RotateCcw className="h-4 w-4" />
-        15s
-      </button>
-
-      <button
-        type="button"
-        onClick={() => {
-          const next = RATES[(RATES.indexOf(rate) + 1) % RATES.length];
-          setPlaybackRate(next);
-        }}
-        aria-label="Change playback speed"
-        className="h-11 px-3 rounded-xl border border-border text-xs font-medium text-foreground hover:bg-muted tabular-nums"
-      >
-        {rate}x
-      </button>
+      {failure && (
+        <div
+          role="alert"
+          className="flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2"
+        >
+          <AlertTriangle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
+          <p className="flex-1 text-sm text-foreground">
+            {failure === 'blocked'
+              ? 'Your browser paused the audio. Tap retry to start it.'
+              : failure === 'unavailable'
+                ? "That recording couldn't be loaded — the file may have expired."
+                : 'Something stopped the audio before it could play.'}
+          </p>
+          <button
+            type="button"
+            onClick={handlePlay}
+            className="min-h-[44px] shrink-0 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+          >
+            Retry
+          </button>
+        </div>
+      )}
     </div>
   );
 }
