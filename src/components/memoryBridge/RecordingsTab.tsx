@@ -208,15 +208,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                         </div>
                       ) : (
                         <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handlePlayRecording(recording)}
-                            className="flex items-center gap-1"
-                          >
-                            <Play className="h-3 w-3" />
-                            Play
-                          </Button>
+
                           
                           <Button
                             size="sm"
