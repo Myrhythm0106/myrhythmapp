@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
+import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
+
 
 interface RecordingsTabProps {
   onProcessComplete?: (meetingId: string, actionsCount: number) => void;
