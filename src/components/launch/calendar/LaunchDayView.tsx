@@ -211,7 +211,7 @@ export function LaunchDayView({
                   </p>
                 </div>
                 <div className={cn("w-1 h-12 rounded-full", getTypeColor(event.type))} />
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className={cn(
                     "font-medium",
                     event.status === 'done' ? 'text-green-700 line-through' : 
@@ -251,6 +251,7 @@ export function LaunchDayView({
                       </span>
                     )}
                   </div>
+                  <ExpandableBrief text={event.description} className="mt-1.5" />
                 </div>
                 
                 {/* Action Menu */}
