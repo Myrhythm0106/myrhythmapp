@@ -1,7 +1,48 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+
+export type MicPermission = 'granted' | 'denied' | 'prompt' | 'unknown';
+
+/**
+ * A page inside an iframe can only use the microphone when the embedding
+ * frame grants it (allow="microphone"). Chrome refuses getUserMedia outright
+ * in that case, which is the classic "I tapped record and nothing happened".
+ */
+export function detectMicBlocker(): { blocked: boolean; reason?: 'frame' | 'insecure' | 'unsupported' } {
+  if (typeof window === 'undefined') return { blocked: true, reason: 'unsupported' };
+  if (!window.isSecureContext) return { blocked: true, reason: 'insecure' };
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+    return { blocked: true, reason: 'unsupported' };
+  }
+
+  const inFrame = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
+
+  if (inFrame) {
+    const fp = (document as unknown as {
+      featurePolicy?: { allowsFeature: (f: string) => boolean };
+      permissionsPolicy?: { allowsFeature: (f: string) => boolean };
+    });
+    const policy = fp.featurePolicy ?? fp.permissionsPolicy;
+    if (policy && typeof policy.allowsFeature === 'function') {
+      try {
+        if (!policy.allowsFeature('microphone')) return { blocked: true, reason: 'frame' };
+      } catch {
+        /* fall through — let getUserMedia decide */
+      }
+    }
+  }
+
+  return { blocked: false };
+}
+
 
 interface VoiceRecording {
   id: string;
@@ -57,29 +98,66 @@ export function useVoiceRecorder() {
   const [recordedBytes, setRecordedBytes] = useState(0);
   const [recordingMimeType, setRecordingMimeType] = useState<string>('audio/webm');
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
-  
+  const [isStarting, setIsStarting] = useState(false);
+  const [micPermission, setMicPermission] = useState<MicPermission>('unknown');
+  const [micBlockReason, setMicBlockReason] = useState<'frame' | 'insecure' | 'unsupported' | null>(null);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const mimeTypeRef = useRef<string>('audio/webm');
+
+  const refreshMicStatus = useCallback(async () => {
+    const blocker = detectMicBlocker();
+    setMicBlockReason(blocker.blocked ? blocker.reason ?? 'unsupported' : null);
+    if (blocker.blocked) return;
+    try {
+      const status = await navigator.permissions?.query({ name: 'microphone' as PermissionName });
+      if (status) {
+        setMicPermission(status.state as MicPermission);
+        status.onchange = () => setMicPermission(status.state as MicPermission);
+        return;
+      }
+    } catch {
+      /* Permissions API unavailable (Safari) — leave as unknown. */
+    }
+    setMicPermission('unknown');
+  }, []);
+
+  useEffect(() => {
+    void refreshMicStatus();
+  }, [refreshMicStatus]);
 
   const startRecording = useCallback(async (): Promise<boolean> => {
     // Fail loudly and specifically — a silent "nothing happened" is the worst
     // possible outcome on a capture button.
     if (typeof window === 'undefined') return false;
 
-    if (!window.isSecureContext) {
-      toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
+    const blocker = detectMicBlocker();
+    if (blocker.blocked) {
+      setMicBlockReason(blocker.reason ?? 'unsupported');
+      console.warn('startRecording: blocked before getUserMedia', blocker.reason);
+      if (blocker.reason === 'frame') {
+        toast.error('The browser is blocking the microphone inside this preview frame. Open the app in its own tab to record.');
+      } else if (blocker.reason === 'insecure') {
+        toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
+      } else {
+        toast.error("This browser can't record audio. Please use Chrome, or Safari on iPhone.");
+      }
       return false;
     }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      toast.error("This browser won't let the app use the microphone. Try Safari on iPhone or Chrome on Android.");
-      return false;
+    setMicBlockReason(null);
+    setIsStarting(true);
+    try {
+      return await beginCapture();
+    } finally {
+      setIsStarting(false);
     }
-    if (typeof MediaRecorder === 'undefined') {
-      toast.error("This browser can't record audio. Please use Safari (iPhone) or Chrome (Android).");
-      return false;
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const beginCapture = useCallback(async (): Promise<boolean> => {
+
 
     let stream: MediaStream;
     try {
@@ -95,7 +173,9 @@ export function useVoiceRecorder() {
       const name = (error as DOMException)?.name || '';
       console.error('startRecording: getUserMedia failed', name, error);
       if (name === 'NotAllowedError' || name === 'SecurityError') {
+        setMicPermission('denied');
         toast.error('Microphone access is blocked. Allow the microphone for this site in your browser settings, then tap record again.');
+
       } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
         toast.error('No microphone was found on this device.');
       } else if (name === 'NotReadableError') {
@@ -155,6 +235,8 @@ export function useVoiceRecorder() {
       mediaRecorder.start(1000); // Collect data every 1000ms
       console.log('startRecording: recording started', { mime: effectiveMime, state: mediaRecorder.state });
       setIsRecording(true);
+      setMicPermission('granted');
+
       setIsPaused(false);
 
       // Start timer
@@ -407,8 +489,13 @@ export function useVoiceRecorder() {
     recordedBytes,
     recordingMimeType,
     mediaStream,
+    isStarting,
+    micPermission,
+    micBlockReason,
+    refreshMicStatus,
 
     startRecording,
+
     pauseRecording,
     resumeRecording,
     stopRecording,
