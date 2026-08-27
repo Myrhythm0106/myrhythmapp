@@ -689,27 +689,98 @@ export default function LaunchMemoryBridge() {
                   {/* Inner */}
                   <button
                     onClick={handleStartRecording}
-                    className="absolute inset-2 bg-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95"
+                    disabled={isStarting}
+                    aria-label="Start recording"
+                    className="absolute inset-2 bg-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95 disabled:cursor-wait"
                   >
                     <div className="bg-gradient-to-br from-launch-ember to-launch-ember/80 w-16 h-16 rounded-full flex items-center justify-center shadow-lg shadow-launch-ember/30">
-                      <Mic className="h-8 w-8 text-white" />
+                      {isStarting ? (
+                        <Loader2 className="h-8 w-8 text-white animate-spin" />
+                      ) : (
+                        <Mic className="h-8 w-8 text-white" />
+                      )}
                     </div>
                   </button>
                 </div>
-                <p className="text-lg font-semibold text-launch-ink mb-1">Tap to Record</p>
-                <p className="text-sm text-launch-ink/70">We'll listen and find the action items</p>
-                <p className="mt-2 text-xs text-launch-ink/60">
-                  {outOfAllowance
-                    ? `You've used your ${allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.`
-                    : `You can record up to ${formatMinutes(allowance.limits.perRecordingMinutes)} in one go — ${formatMinutes(allowance.remainingMinutes)} left this ${allowance.period}.`}
+                <p className="text-lg font-semibold text-launch-ink mb-1">
+                  {isStarting ? 'Starting the microphone…' : 'Tap to Record'}
                 </p>
-                {outOfAllowance && nextTierKey && (
-                  <p className="mt-1 text-xs text-launch-ember">
-                    {RECORDING_LIMITS[nextTierKey].label} gives you{' '}
-                    {formatMinutes(RECORDING_LIMITS[nextTierKey].perRecordingMinutes)} per recording and{' '}
-                    {formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.
+                <p className="text-sm text-launch-ink/70">We'll listen and find the action items</p>
+
+                {/* Microphone status — never let a tap disappear into silence */}
+                {micBlockReason === 'frame' && (
+                  <div className="mt-4 mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
+                    <p className="text-sm font-semibold text-launch-ink">
+                      Your browser is blocking the microphone inside this preview frame.
+                    </p>
+                    <p className="mt-1 text-xs text-launch-ink/70">
+                      Open the app in its own browser tab and recording will work normally.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => window.open(window.location.href, '_blank', 'noopener')}
+                      className="mt-3 inline-flex min-h-[48px] items-center justify-center rounded-xl bg-launch-ember px-4 text-sm font-semibold text-white"
+                    >
+                      Open in a new tab
+                    </button>
+                  </div>
+                )}
+                {micBlockReason === 'insecure' && (
+                  <p className="mt-4 mx-auto max-w-sm text-sm text-launch-ember">
+                    Recording needs a secure (https) address. Open the app over https and try again.
                   </p>
                 )}
+                {micBlockReason === 'unsupported' && (
+                  <p className="mt-4 mx-auto max-w-sm text-sm text-launch-ember">
+                    This browser can't record audio. Please use Chrome on a laptop, or Safari on iPhone.
+                  </p>
+                )}
+                {!micBlockReason && micPermission === 'denied' && (
+                  <div className="mt-4 mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
+                    <p className="text-sm font-semibold text-launch-ink">Microphone access is blocked.</p>
+                    <p className="mt-1 text-xs text-launch-ink/70">
+                      In Chrome, click the icon at the left of the address bar, set Microphone to
+                      Allow, then reload this page.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => void refreshMicStatus()}
+                      className="mt-3 text-sm font-medium text-launch-ink underline underline-offset-4"
+                    >
+                      Check again
+                    </button>
+                  </div>
+                )}
+                {!micBlockReason && micPermission === 'prompt' && (
+                  <p className="mt-3 text-xs text-launch-ink/60">
+                    Your browser will ask permission for the microphone the first time you tap record.
+                  </p>
+                )}
+                {!micBlockReason && micPermission === 'granted' && (
+                  <p className="mt-3 text-xs text-launch-moss">Microphone ready.</p>
+                )}
+
+                {outOfAllowance ? (
+                  <div className="mt-3 mx-auto max-w-sm rounded-xl border border-launch-gold/40 bg-launch-gold/10 p-3">
+                    <p className="text-sm font-medium text-launch-ink">
+                      You've used your {allowance.period === 'week' ? 'weekly' : 'monthly'} recording time,
+                      so a new recording can't start yet.
+                    </p>
+                    {nextTierKey && (
+                      <p className="mt-1 text-xs text-launch-ink/70">
+                        {RECORDING_LIMITS[nextTierKey].label} gives you{' '}
+                        {formatMinutes(RECORDING_LIMITS[nextTierKey].perRecordingMinutes)} per recording and{' '}
+                        {formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-xs text-launch-ink/60">
+                    You can record up to {formatMinutes(allowance.limits.perRecordingMinutes)} in one go —{' '}
+                    {formatMinutes(allowance.remainingMinutes)} left this {allowance.period}.
+                  </p>
+                )}
+
 
                 {/* Already have a recording? Upload it and get the same next steps. */}
                 <div className="mt-5">
