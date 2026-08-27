@@ -3,6 +3,7 @@ import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell } from 'lu
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { LaunchDailyBrief } from './LaunchDailyBrief';
+import { ExpandableBrief } from './ExpandableBrief';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import {
@@ -20,6 +21,7 @@ interface Event {
   time: string;
   title: string;
   type: string;
+  description?: string | null;
   status?: 'pending' | 'done' | 'cancelled' | 'carried';
   carriedFrom?: Date | null;
   source?: string;
