@@ -1,7 +1,48 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+
+export type MicPermission = 'granted' | 'denied' | 'prompt' | 'unknown';
+
+/**
+ * A page inside an iframe can only use the microphone when the embedding
+ * frame grants it (allow="microphone"). Chrome refuses getUserMedia outright
+ * in that case, which is the classic "I tapped record and nothing happened".
+ */
+export function detectMicBlocker(): { blocked: boolean; reason?: 'frame' | 'insecure' | 'unsupported' } {
+  if (typeof window === 'undefined') return { blocked: true, reason: 'unsupported' };
+  if (!window.isSecureContext) return { blocked: true, reason: 'insecure' };
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+    return { blocked: true, reason: 'unsupported' };
+  }
+
+  const inFrame = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
+
+  if (inFrame) {
+    const fp = (document as unknown as {
+      featurePolicy?: { allowsFeature: (f: string) => boolean };
+      permissionsPolicy?: { allowsFeature: (f: string) => boolean };
+    });
+    const policy = fp.featurePolicy ?? fp.permissionsPolicy;
+    if (policy && typeof policy.allowsFeature === 'function') {
+      try {
+        if (!policy.allowsFeature('microphone')) return { blocked: true, reason: 'frame' };
+      } catch {
+        /* fall through — let getUserMedia decide */
+      }
+    }
+  }
+
+  return { blocked: false };
+}
+
 
 interface VoiceRecording {
   id: string;
