@@ -64,8 +64,26 @@ export function useVoiceRecorder() {
   const mimeTypeRef = useRef<string>('audio/webm');
 
   const startRecording = useCallback(async (): Promise<boolean> => {
+    // Fail loudly and specifically — a silent "nothing happened" is the worst
+    // possible outcome on a capture button.
+    if (typeof window === 'undefined') return false;
+
+    if (!window.isSecureContext) {
+      toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
+      return false;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      toast.error("This browser won't let the app use the microphone. Try Safari on iPhone or Chrome on Android.");
+      return false;
+    }
+    if (typeof MediaRecorder === 'undefined') {
+      toast.error("This browser can't record audio. Please use Safari (iPhone) or Chrome (Android).");
+      return false;
+    }
+
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
           echoCancellation: true,
@@ -73,6 +91,32 @@ export function useVoiceRecorder() {
           autoGainControl: true,
         },
       });
+    } catch (error) {
+      const name = (error as DOMException)?.name || '';
+      console.error('startRecording: getUserMedia failed', name, error);
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        toast.error('Microphone access is blocked. Allow the microphone for this site in your browser settings, then tap record again.');
+      } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+        toast.error('No microphone was found on this device.');
+      } else if (name === 'NotReadableError') {
+        toast.error('Another app is using the microphone. Close it (calls, voice memos) and try again.');
+      } else {
+        toast.error('Could not start the microphone. Please try again.');
+      }
+      return false;
+    }
+
+    try {
+      const track = stream.getAudioTracks()[0];
+      if (!track || track.readyState !== 'live') {
+        stream.getTracks().forEach(t => t.stop());
+        toast.error('The microphone did not start. Please try again.');
+        return false;
+      }
+      if (track.muted) {
+        toast.warning('Your microphone appears muted — unmute it or the recording will be silent.');
+      }
+
       const mimeType = pickRecordingMimeType();
       const mediaRecorder = mimeType
         ? new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 64000 })
@@ -89,7 +133,7 @@ export function useVoiceRecorder() {
       audioChunksRef.current = [];
       setDuration(0);
       setRecordedBytes(0);
-      
+
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
@@ -102,7 +146,14 @@ export function useVoiceRecorder() {
         toast.error('The microphone stopped unexpectedly. Please try recording again.');
       };
 
+      // If the OS or another app grabs the mic mid-capture, say so.
+      track.onended = () => {
+        console.warn('startRecording: audio track ended unexpectedly');
+        toast.error('The microphone was disconnected. Stop and save what was captured.');
+      };
+
       mediaRecorder.start(1000); // Collect data every 1000ms
+      console.log('startRecording: recording started', { mime: effectiveMime, state: mediaRecorder.state });
       setIsRecording(true);
       setIsPaused(false);
 
@@ -113,8 +164,9 @@ export function useVoiceRecorder() {
 
       return true;
     } catch (error) {
-      console.error('Error starting recording:', error);
-      toast.error('Failed to start recording. Please check microphone permissions.');
+      console.error('startRecording: MediaRecorder setup failed', error);
+      stream.getTracks().forEach(t => t.stop());
+      toast.error('Could not start recording on this device. Please try again.');
       return false;
     }
   }, []);

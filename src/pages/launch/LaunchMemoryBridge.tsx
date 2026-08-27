@@ -893,6 +893,21 @@ export default function LaunchMemoryBridge() {
                     screen and come back, it'll be waiting in your captures.
                   </p>
                 )}
+
+                {!(isProcessing || isExtracting) && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      audioBlobRef.current = null;
+                      setRestoredDuration(null);
+                      await clearPendingRecording();
+                      setState('idle');
+                    }}
+                    className="mt-4 text-sm font-medium text-launch-ink/60 underline underline-offset-4 hover:text-launch-ink"
+                  >
+                    Discard and record something new
+                  </button>
+                )}
               </>
 
             )}
