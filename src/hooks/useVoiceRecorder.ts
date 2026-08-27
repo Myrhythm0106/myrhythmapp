@@ -489,8 +489,13 @@ export function useVoiceRecorder() {
     recordedBytes,
     recordingMimeType,
     mediaStream,
+    isStarting,
+    micPermission,
+    micBlockReason,
+    refreshMicStatus,
 
     startRecording,
+
     pauseRecording,
     resumeRecording,
     stopRecording,
