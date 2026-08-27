@@ -951,7 +951,7 @@ export default function LaunchMemoryBridge() {
             recordings.slice(0, 5).map((recording) => {
               const isProcessed = processedRecordings.has(recording.id);
               const isCurrentlyProcessing = processingId === recording.id;
-              const isPlaying = playingId === recording.id;
+              
               const actionsCount = actionsCountMap[recording.id] || 0;
 
               return (
