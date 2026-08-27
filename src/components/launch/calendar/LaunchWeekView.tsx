@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ interface Event {
   time: string;
   title: string;
   type: string;
+  description?: string | null;
   date?: Date;
 }
 
@@ -132,9 +133,16 @@ export function LaunchWeekView({
           {format(date, 'EEEE, MMMM d')}
         </h3>
         {events.filter(e => !e.date || isSameDay(e.date, date)).slice(0, 3).map((event, i) => (
-          <div key={i} className="flex items-center gap-2 py-2 border-b border-gray-50 last:border-0">
-            <span className="text-sm font-medium text-gray-500 w-12">{event.time}</span>
-            <span className="text-sm text-gray-900">{event.title}</span>
+          <div key={i} className="flex flex-col gap-0.5 py-2 border-b border-gray-50 last:border-0">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-500 w-12">{event.time}</span>
+              <span className="text-sm text-gray-900">{event.title}</span>
+            </div>
+            {event.description && (
+              <p className="text-xs text-launch-ink/70 line-clamp-1 pl-14">
+                {event.description}
+              </p>
+            )}
           </div>
         ))}
       </LaunchCard>

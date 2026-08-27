@@ -42,6 +42,7 @@ interface LaunchAddEventModalProps {
     title: string;
     time: string;
     type: string;
+    description?: string;
     watchers: string[];
     reminder_level: ReminderLevel;
     reminder_offsets_minutes: number[];
@@ -77,6 +78,7 @@ export function LaunchAddEventModal({
   selectedDate = new Date(),
 }: LaunchAddEventModalProps) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [time, setTime] = useState('09:00');
   const [type, setType] = useState('routine');
 
@@ -144,6 +146,7 @@ export function LaunchAddEventModal({
     ];
     onAdd({
       title: title.trim(),
+      description: description.trim() || undefined,
       time,
       type,
       watchers,
@@ -155,6 +158,7 @@ export function LaunchAddEventModal({
     });
     // reset
     setTitle('');
+    setDescription('');
     setTime('09:00');
     setType('routine');
     setSelectedCircle([]);
@@ -216,6 +220,19 @@ export function LaunchAddEventModal({
               placeholder="e.g., Doctor appointment"
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent text-base"
               autoFocus
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Brief / notes
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add the details you might want to remember later — what, where, who, or why."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent text-base resize-none"
             />
           </div>
 

@@ -128,6 +128,7 @@ export default function LaunchCalendar() {
     title: string;
     time: string;
     type: string;
+    description?: string;
     watchers?: string[];
     reminder_level?: 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
     reminder_offsets_minutes?: number[];
