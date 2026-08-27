@@ -108,7 +108,12 @@ export default function LaunchMemoryBridge() {
     duration,
     recordedBytes,
     mediaStream,
+    isStarting,
+    micPermission,
+    micBlockReason,
+    refreshMicStatus,
     startRecording,
+
     pauseRecording,
     resumeRecording,
     stopRecording,
