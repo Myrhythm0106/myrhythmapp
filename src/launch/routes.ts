@@ -72,6 +72,33 @@ export const ROUTES_BY_RING: Record<LaunchRing, LaunchRoute[]> = {
   outer:  LAUNCH_ROUTES.filter(r => r.ring === 'outer'),
 };
 
+/**
+ * Founding Core scope lock (v0.1): only these 9 routes are surfaced in
+ * navigation (the You-Are-Here dial). Every other /launch/* route stays
+ * reachable by direct URL and by dial search, but is not listed.
+ */
+export const FOUNDING_CORE_PATHS = [
+  '/launch/home',
+  '/launch/capture',
+  '/launch/commit',
+  '/launch/calibrate',
+  '/launch/celebrate',
+  '/launch/memory',
+  '/launch/calendar',
+  '/launch/support',
+  '/launch/settings',
+] as const;
+
+export const FOUNDING_CORE_ROUTES: LaunchRoute[] = LAUNCH_ROUTES.filter(r =>
+  (FOUNDING_CORE_PATHS as readonly string[]).includes(r.path),
+);
+
+export const FOUNDING_CORE_BY_RING: Record<LaunchRing, LaunchRoute[]> = {
+  inner:  FOUNDING_CORE_ROUTES.filter(r => r.ring === 'inner'),
+  middle: FOUNDING_CORE_ROUTES.filter(r => r.ring === 'middle'),
+  outer:  FOUNDING_CORE_ROUTES.filter(r => r.ring === 'outer'),
+};
+
 export function findLaunchRoute(pathname: string): LaunchRoute | undefined {
   // Exact match first, then longest-prefix match for nested routes
   const exact = LAUNCH_ROUTES.find(r => r.path === pathname);
