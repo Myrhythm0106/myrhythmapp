@@ -225,6 +225,19 @@ export function LaunchAddEventModal({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
+              Brief / notes
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add the details you might want to remember later — what, where, who, or why."
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent text-base resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               <Clock className="h-4 w-4 inline mr-1" />
               Time
             </label>
