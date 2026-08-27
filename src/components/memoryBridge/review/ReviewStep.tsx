@@ -65,6 +65,36 @@ const PRIORITIES = [
 
 const priorityValue = (n: number) => (n <= 2 ? '1' : n >= 4 ? '5' : '3');
 
+/** Step description field that grows to fit the full text — never truncates. */
+function StepTextField({
+  value, onChange, className,
+}: { value: string; onChange: (v: string) => void; className?: string }) {
+  const ref = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.max(el.scrollHeight, 44)}px`;
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      aria-label="Step description"
+      rows={1}
+      className={cn(
+        'flex w-full rounded-md border border-input bg-background px-3 py-2.5 text-base ring-offset-background',
+        'placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'resize-none overflow-hidden min-h-11 leading-snug',
+        className,
+      )}
+    />
+  );
+}
+
 /** Tap-friendly date control used on every breakpoint. */
 function DateField({
   value, onChange, placeholder, allowClear,
@@ -413,11 +443,9 @@ export function ReviewStep({
                           />
                         </td>
                         <td className="py-3 pr-3">
-                          <Input
+                          <StepTextField
                             value={r.text}
-                            onChange={e => patch(r.id, { text: e.target.value })}
-                            className="h-11 text-base"
-                            aria-label="Step description"
+                            onChange={v => patch(r.id, { text: v })}
                           />
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {r.needsCheck && (
@@ -521,11 +549,10 @@ export function ReviewStep({
                           className="mt-3 h-5 w-5"
                         />
                         <div className="flex-1 min-w-0">
-                          <Input
+                          <StepTextField
                             value={r.text}
-                            onChange={e => patch(r.id, { text: e.target.value })}
-                            className="min-h-11 text-base font-medium"
-                            aria-label="Step description"
+                            onChange={v => patch(r.id, { text: v })}
+                            className="font-medium"
                           />
                           {r.needsCheck && (
                             <Badge variant="outline" className="mt-2 text-[11px] border-primary/50 text-primary">
