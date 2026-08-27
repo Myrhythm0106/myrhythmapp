@@ -4,7 +4,7 @@ import { MapPin, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   LAUNCH_ROUTES,
-  ROUTES_BY_RING,
+  FOUNDING_CORE_BY_RING,
   findLaunchRoute,
   type LaunchRoute,
 } from '@/launch/routes';
