@@ -87,13 +87,6 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
     }
   };
 
-  const handlePlayRecording = async (recording: any) => {
-    const url = await getRecordingUrl(recording.file_path);
-    if (url) {
-      const audio = new Audio(url);
-      audio.play();
-    }
-  };
 
   const handleViewRecording = (recording: any) => {
     setViewingRecording({
