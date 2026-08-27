@@ -209,12 +209,10 @@ export default function LaunchMemoryBridge() {
 
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+      stopPlayback();
     };
   }, []);
+
 
   const handleStartRecording = async () => {
     if (outOfAllowance) {
