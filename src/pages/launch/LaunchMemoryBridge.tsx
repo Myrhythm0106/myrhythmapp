@@ -14,6 +14,9 @@ import { ensureSession, touchSession } from '@/utils/ensureSession';
 
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
+import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
+import { stopPlayback } from '@/hooks/useAudioPlayer';
+
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
 import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
@@ -76,12 +79,11 @@ export default function LaunchMemoryBridge() {
   const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
   const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
 
-  const [playingId, setPlayingId] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   
   // New states for streamlined flow
   const [showPostExtractionDialog, setShowPostExtractionDialog] = useState(false);
@@ -209,12 +211,10 @@ export default function LaunchMemoryBridge() {
 
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+      stopPlayback();
     };
   }, []);
+
 
   const handleStartRecording = async () => {
     if (outOfAllowance) {
@@ -579,43 +579,8 @@ export default function LaunchMemoryBridge() {
     setLastExtractionResult(null);
   };
 
-  const handlePlayRecording = async (recording: VoiceRecording) => {
-    if (playingId === recording.id) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      setPlayingId(null);
-      return;
-    }
+  // Playback is handled by the shared <RecordingPlayer /> (see useAudioPlayer).
 
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    const url = await getRecordingUrl(recording.file_path);
-    if (url) {
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      setPlayingId(recording.id);
-
-      audio.onended = () => {
-        setPlayingId(null);
-        audioRef.current = null;
-      };
-
-      audio.onerror = () => {
-        toast.error('Failed to play recording');
-        setPlayingId(null);
-        audioRef.current = null;
-      };
-
-      audio.play();
-    } else {
-      toast.error('Could not load recording');
-    }
-  };
 
   const handleProcessRecording = async (recording: VoiceRecording) => {
     if (!user) return;
@@ -951,7 +916,7 @@ export default function LaunchMemoryBridge() {
             recordings.slice(0, 5).map((recording) => {
               const isProcessed = processedRecordings.has(recording.id);
               const isCurrentlyProcessing = processingId === recording.id;
-              const isPlaying = playingId === recording.id;
+              
               const actionsCount = actionsCountMap[recording.id] || 0;
 
               return (
@@ -1003,28 +968,16 @@ export default function LaunchMemoryBridge() {
                     </div>
 
                     {/* Action buttons */}
+                    <RecordingPlayer
+                      id={recording.id}
+                      getUrl={() => getRecordingUrl(recording.file_path)}
+                      fallbackDuration={recording.duration_seconds}
+                      audioDeleted={Boolean((recording as { audio_deleted_at?: string | null }).audio_deleted_at)}
+                    />
+
+                    {/* Action buttons */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <button
-                        onClick={() => handlePlayRecording(recording)}
-                        className={cn(
-                          "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                          isPlaying
-                            ? "bg-launch-ember text-white"
-                            : "bg-white border border-launch-gold/30 text-launch-ink hover:bg-launch-gold/5"
-                        )}
-                      >
-                        {isPlaying ? (
-                          <>
-                            <VolumeX className="h-4 w-4" />
-                            Stop
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 className="h-4 w-4" />
-                            Play
-                          </>
-                        )}
-                      </button>
+
 
                       {isProcessed ? (
                         <button

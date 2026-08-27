@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
+import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
+
 
 interface RecordingsTabProps {
   onProcessComplete?: (meetingId: string, actionsCount: number) => void;
@@ -85,13 +87,6 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
     }
   };
 
-  const handlePlayRecording = async (recording: any) => {
-    const url = await getRecordingUrl(recording.file_path);
-    if (url) {
-      const audio = new Audio(url);
-      audio.play();
-    }
-  };
 
   const handleViewRecording = (recording: any) => {
     setViewingRecording({
@@ -208,15 +203,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                         </div>
                       ) : (
                         <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handlePlayRecording(recording)}
-                            className="flex items-center gap-1"
-                          >
-                            <Play className="h-3 w-3" />
-                            Play
-                          </Button>
+
                           
                           <Button
                             size="sm"
@@ -241,6 +228,15 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                       )}
                     </div>
                   </div>
+
+                  <RecordingPlayer
+                    id={recording.id}
+                    getUrl={() => getRecordingUrl(recording.file_path)}
+                    fallbackDuration={recording.duration_seconds}
+                    audioDeleted={Boolean((recording as any).audio_deleted_at)}
+                    className="mt-4"
+                  />
+
                 </CardContent>
               </Card>
             );
