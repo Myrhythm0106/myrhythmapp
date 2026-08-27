@@ -98,29 +98,66 @@ export function useVoiceRecorder() {
   const [recordedBytes, setRecordedBytes] = useState(0);
   const [recordingMimeType, setRecordingMimeType] = useState<string>('audio/webm');
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
-  
+  const [isStarting, setIsStarting] = useState(false);
+  const [micPermission, setMicPermission] = useState<MicPermission>('unknown');
+  const [micBlockReason, setMicBlockReason] = useState<'frame' | 'insecure' | 'unsupported' | null>(null);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const mimeTypeRef = useRef<string>('audio/webm');
+
+  const refreshMicStatus = useCallback(async () => {
+    const blocker = detectMicBlocker();
+    setMicBlockReason(blocker.blocked ? blocker.reason ?? 'unsupported' : null);
+    if (blocker.blocked) return;
+    try {
+      const status = await navigator.permissions?.query({ name: 'microphone' as PermissionName });
+      if (status) {
+        setMicPermission(status.state as MicPermission);
+        status.onchange = () => setMicPermission(status.state as MicPermission);
+        return;
+      }
+    } catch {
+      /* Permissions API unavailable (Safari) — leave as unknown. */
+    }
+    setMicPermission('unknown');
+  }, []);
+
+  useEffect(() => {
+    void refreshMicStatus();
+  }, [refreshMicStatus]);
 
   const startRecording = useCallback(async (): Promise<boolean> => {
     // Fail loudly and specifically — a silent "nothing happened" is the worst
     // possible outcome on a capture button.
     if (typeof window === 'undefined') return false;
 
-    if (!window.isSecureContext) {
-      toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
+    const blocker = detectMicBlocker();
+    if (blocker.blocked) {
+      setMicBlockReason(blocker.reason ?? 'unsupported');
+      console.warn('startRecording: blocked before getUserMedia', blocker.reason);
+      if (blocker.reason === 'frame') {
+        toast.error('The browser is blocking the microphone inside this preview frame. Open the app in its own tab to record.');
+      } else if (blocker.reason === 'insecure') {
+        toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
+      } else {
+        toast.error("This browser can't record audio. Please use Chrome, or Safari on iPhone.");
+      }
       return false;
     }
-    if (!navigator.mediaDevices?.getUserMedia) {
-      toast.error("This browser won't let the app use the microphone. Try Safari on iPhone or Chrome on Android.");
-      return false;
+    setMicBlockReason(null);
+    setIsStarting(true);
+    try {
+      return await beginCapture();
+    } finally {
+      setIsStarting(false);
     }
-    if (typeof MediaRecorder === 'undefined') {
-      toast.error("This browser can't record audio. Please use Safari (iPhone) or Chrome (Android).");
-      return false;
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const beginCapture = useCallback(async (): Promise<boolean> => {
+
 
     let stream: MediaStream;
     try {
