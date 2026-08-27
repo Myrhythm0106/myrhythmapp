@@ -42,6 +42,7 @@ interface LaunchAddEventModalProps {
     title: string;
     time: string;
     type: string;
+    description?: string;
     watchers: string[];
     reminder_level: ReminderLevel;
     reminder_offsets_minutes: number[];
