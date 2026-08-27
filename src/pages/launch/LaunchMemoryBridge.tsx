@@ -1003,28 +1003,16 @@ export default function LaunchMemoryBridge() {
                     </div>
 
                     {/* Action buttons */}
+                    <RecordingPlayer
+                      id={recording.id}
+                      getUrl={() => getRecordingUrl(recording.file_path)}
+                      fallbackDuration={recording.duration_seconds}
+                      audioDeleted={Boolean((recording as { audio_deleted_at?: string | null }).audio_deleted_at)}
+                    />
+
+                    {/* Action buttons */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <button
-                        onClick={() => handlePlayRecording(recording)}
-                        className={cn(
-                          "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                          isPlaying
-                            ? "bg-launch-ember text-white"
-                            : "bg-white border border-launch-gold/30 text-launch-ink hover:bg-launch-gold/5"
-                        )}
-                      >
-                        {isPlaying ? (
-                          <>
-                            <VolumeX className="h-4 w-4" />
-                            Stop
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 className="h-4 w-4" />
-                            Play
-                          </>
-                        )}
-                      </button>
+
 
                       {isProcessed ? (
                         <button
