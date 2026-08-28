@@ -266,10 +266,13 @@ const EditableDate = ({
         <Button
           variant="ghost"
           aria-label={ariaLabel}
-          className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
+          className={cn(
+            'h-11 px-1.5 justify-start gap-1 rounded-[6px] font-sora text-[13px] font-normal tabular-nums hover:bg-exhibit-surface',
+            parsed ? 'text-exhibit-ink' : 'text-exhibit-soft'
+          )}
         >
-          <Calendar className="h-3 w-3 text-muted-foreground" />
-          {parsed ? format(parsed, 'MMM d') : 'Set date'}
+          <Calendar className={cn('h-3 w-3', parsed ? 'text-exhibit-moss' : 'text-exhibit-soft')} />
+          {parsed ? format(parsed, 'd MMM') : 'Set date'}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
