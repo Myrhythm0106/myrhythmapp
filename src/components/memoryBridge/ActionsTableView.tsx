@@ -541,8 +541,32 @@ const EditableDueIn = ({
   );
 };
 
-/** Shows which reminder ladder is in force and when the next nudge lands. */
-const ReminderBadge: React.FC<{
+/** Header action: emails the visible actions to everyone involved, one digest per person. */
+const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) => {
+  const [sending, setSending] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={sending}
+      onClick={async () => {
+        setSending(true);
+        try {
+          await onSend();
+        } finally {
+          setSending(false);
+        }
+      }}
+      className="gap-2"
+    >
+      <Mail className="h-3.5 w-3.5" />
+      {sending ? 'Sending…' : 'Send to everyone'}
+    </Button>
+  );
+};
+
+
   offsets: number[];
   dueDate?: string | null;
   onClick: () => void;
@@ -612,6 +636,12 @@ export function ActionsTableView({
     <div className="relative overflow-x-auto rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
       {/* Glass reflection */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
+
+      {onSendToAll && (
+        <div className="flex justify-end px-4 pt-3">
+          <SendToAllButton onSend={onSendToAll} />
+        </div>
+      )}
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Table className="min-w-[860px]">
