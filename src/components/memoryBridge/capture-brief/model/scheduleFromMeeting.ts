@@ -145,12 +145,21 @@ export async function scheduleExtractedActions(
 
     // The action's owner (if they have an email) gets the invite too, so it
     // lands straight in their diary. Never double-invite someone already listed.
-    const ownerEmail = (row.owner_email || '').trim().toLowerCase();
-    if (ownerEmail && !people.some(p => (p.email || '').toLowerCase() === ownerEmail)) {
+    // Who's involved: "signs it off" and "ask first" also get the diary invite;
+    // "keep in the loop" is intentionally email-only.
+    const raciPeople = [
+      { name: row.assigned_to, email: row.owner_email },
+      row.accountable as { name?: string; email?: string | null } | null,
+      ...((row.consulted as { name?: string; email?: string | null }[] | null) || []),
+    ];
+    for (const person of raciPeople) {
+      const email = (person?.email || '').trim().toLowerCase();
+      if (!email) continue;
+      if (people.some(p => (p.email || '').toLowerCase() === email)) continue;
       people.push({
-        memberId: `${ADHOC_PREFIX}${ownerEmail}`,
-        name: row.assigned_to || ownerEmail,
-        email: ownerEmail,
+        memberId: `${ADHOC_PREFIX}${email}`,
+        name: person?.name || email,
+        email,
         role: 'invite',
         pre: 'manual',
         canInvite: true,
