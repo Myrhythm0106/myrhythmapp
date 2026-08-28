@@ -566,7 +566,8 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
   );
 };
 
-
+/** Shows which reminder ladder is in force and when the next nudge lands. */
+const ReminderBadge: React.FC<{
   offsets: number[];
   dueDate?: string | null;
   onClick: () => void;
