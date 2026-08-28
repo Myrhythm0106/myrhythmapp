@@ -591,24 +591,27 @@ export function ActionsTableView({
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         className={cn(
-                          "hover:bg-muted/30 transition-all duration-200",
+                          "group border-b border-brain-health-100/60 hover:bg-brain-health-50/60 transition-colors duration-150",
                           snapshot.isDragging && "bg-brand-orange-50 shadow-lg scale-[1.01] rounded-lg"
                         )}
                       >
-                        <TableCell 
-                          {...provided.dragHandleProps} 
-                          className="cursor-grab active:cursor-grabbing"
+                        <TableCell
+                          {...provided.dragHandleProps}
+                          className="cursor-grab active:cursor-grabbing py-3"
                         >
-                          <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                          <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors md:opacity-0 md:group-hover:opacity-100" />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3">
                           {onPriorityChange ? (
                             <Select
                               value={priorityValueFor(action.priority_level || 3)}
                               onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
                             >
                               <SelectTrigger
-                                className="h-9 w-full border-0 bg-transparent px-2 text-xs"
+                                className={cn(
+                                  "h-9 w-full border-0 rounded-full px-3 text-[11px] font-semibold",
+                                  priorityPillFor(action.priority_level || 3)
+                                )}
                                 aria-label="Change priority"
                               >
                                 <SelectValue />
