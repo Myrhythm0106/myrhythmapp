@@ -115,7 +115,7 @@ export default function LaunchStart() {
         <motion.div {...rise(5)} className="flex flex-col items-center gap-10">
           <div className="flex w-full max-w-md flex-col items-center gap-6">
             <button
-              onClick={() => navigate('/launch/memory?quick=1')}
+              onClick={() => navigate('/launch/memory?record=1')}
               className="prestige-cta font-worksans flex h-14 w-full items-center justify-center gap-2 rounded-full text-lg font-semibold shadow-xl md:h-16"
             >
               <Mic className="h-5 w-5" aria-hidden="true" />
