@@ -27,6 +27,8 @@ const config: Config = {
         'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
         'instrument': ['Instrument Serif', 'Georgia', 'Times New Roman', 'serif'],
         'worksans': ['Work Sans', 'Inter', 'system-ui', 'sans-serif'],
+        'sora': ['Sora', 'Inter', 'system-ui', 'sans-serif'],
+        'manrope': ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
 
       },
 
@@ -137,6 +139,18 @@ const config: Config = {
           700: "hsl(var(--neural-magenta-700))",
           800: "hsl(var(--neural-magenta-800))",
           900: "hsl(var(--neural-magenta-900))",
+        },
+        // Emerald Prestige "exhibit" tokens — consultancy-grade document surfaces
+        exhibit: {
+          ink: "hsl(var(--exhibit-ink))",
+          moss: "hsl(var(--exhibit-moss))",
+          soft: "hsl(var(--exhibit-soft))",
+          surface: "hsl(var(--exhibit-surface))",
+          paper: "hsl(var(--exhibit-paper))",
+          rule: "hsl(var(--exhibit-rule))",
+          accent: "hsl(var(--exhibit-accent))",
+          amber: "hsl(var(--exhibit-amber))",
+          alert: "hsl(var(--exhibit-alert))",
         },
         // Brain Health Spectrum: Unified emerald-teal-cyan (45-55% saturation)
         "brain-health": {
