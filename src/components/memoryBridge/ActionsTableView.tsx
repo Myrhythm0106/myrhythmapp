@@ -746,7 +746,13 @@ export function ActionsTableView({
                           ) : null}
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
-                          {onAssignedChange ? (
+                          {onOwnerChange ? (
+                            <OwnerCell
+                              name={action.assigned_to}
+                              email={(action as any).owner_email}
+                              onSave={(next) => onOwnerChange(action.id!, next)}
+                            />
+                          ) : onAssignedChange ? (
                             <EditableText
                               value={action.assigned_to}
                               onSave={(v) => onAssignedChange(action.id!, v)}
@@ -758,6 +764,7 @@ export function ActionsTableView({
                             <span className="text-sm">{action.assigned_to || 'You'}</span>
                           )}
                         </TableCell>
+
                         <TableCell>
                           <div className="space-y-1">
                             <div className="flex items-center gap-1.5">
