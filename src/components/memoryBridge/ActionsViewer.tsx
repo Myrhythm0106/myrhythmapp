@@ -400,6 +400,33 @@ export function ActionsViewer({
     toast.success(successMessage);
   };
 
+  /** Emails the action details to everyone involved (R/A/C/I with an email). */
+  const sendRaciEmails = async (actionIds: string[]) => {
+    if (actionIds.length === 0) return;
+    try {
+      const { data, error } = await supabase.functions.invoke('send-action-raci', {
+        body: { actionIds },
+      });
+      if (error) throw error;
+      const { sent = 0, failures = [] } = (data || {}) as { sent?: number; failures?: string[] };
+      if (sent > 0) {
+        toast.success(`Details sent to ${sent} ${sent === 1 ? 'person' : 'people'}`);
+        const now = new Date().toISOString();
+        setExtractedActions(actions =>
+          actions.map(a => (actionIds.includes(a.id!) ? { ...a, raci_notified_at: now } : a))
+        );
+      } else {
+        toast.info('No email addresses on these actions yet');
+      }
+      if (failures.length > 0) {
+        toast.error(`Couldn\u2019t reach: ${failures.join(', ')}`);
+      }
+    } catch (e) {
+      console.error('sendRaciEmails failed', e);
+      toast.error('Couldn\u2019t send the details — please try again');
+    }
+  };
+
 
   // Bulk actions
   const handleScheduleAll = async (actionIds?: string[], overrides?: Map<string, ActionOverride>) => {
