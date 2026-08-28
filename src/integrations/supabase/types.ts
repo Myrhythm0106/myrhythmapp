@@ -1139,6 +1139,7 @@ export type Database = {
       }
       extracted_actions: {
         Row: {
+          accountable: Json | null
           action_text: string
           action_type: string
           adhoc_loop_ins: Json
@@ -1154,6 +1155,7 @@ export type Database = {
           completion_criteria_specific: string | null
           completion_date: string | null
           confidence_score: number | null
+          consulted: Json
           created_at: string
           created_by: string | null
           detail_level: string | null
@@ -1164,6 +1166,7 @@ export type Database = {
           how_steps: string[] | null
           id: string
           if_stuck: string | null
+          informed: Json
           intent_behind: string | null
           meeting_recording_id: string
           micro_tasks: Json | null
@@ -1176,6 +1179,7 @@ export type Database = {
           priority_level: number | null
           proposed_date: string | null
           proposed_time: string | null
+          raci_notified_at: string | null
           reference_code: string | null
           relationship_impact: string | null
           requires_review: boolean | null
@@ -1199,6 +1203,7 @@ export type Database = {
           what_outcome: string | null
         }
         Insert: {
+          accountable?: Json | null
           action_text: string
           action_type?: string
           adhoc_loop_ins?: Json
@@ -1214,6 +1219,7 @@ export type Database = {
           completion_criteria_specific?: string | null
           completion_date?: string | null
           confidence_score?: number | null
+          consulted?: Json
           created_at?: string
           created_by?: string | null
           detail_level?: string | null
@@ -1224,6 +1230,7 @@ export type Database = {
           how_steps?: string[] | null
           id?: string
           if_stuck?: string | null
+          informed?: Json
           intent_behind?: string | null
           meeting_recording_id: string
           micro_tasks?: Json | null
@@ -1236,6 +1243,7 @@ export type Database = {
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
+          raci_notified_at?: string | null
           reference_code?: string | null
           relationship_impact?: string | null
           requires_review?: boolean | null
@@ -1259,6 +1267,7 @@ export type Database = {
           what_outcome?: string | null
         }
         Update: {
+          accountable?: Json | null
           action_text?: string
           action_type?: string
           adhoc_loop_ins?: Json
@@ -1274,6 +1283,7 @@ export type Database = {
           completion_criteria_specific?: string | null
           completion_date?: string | null
           confidence_score?: number | null
+          consulted?: Json
           created_at?: string
           created_by?: string | null
           detail_level?: string | null
@@ -1284,6 +1294,7 @@ export type Database = {
           how_steps?: string[] | null
           id?: string
           if_stuck?: string | null
+          informed?: Json
           intent_behind?: string | null
           meeting_recording_id?: string
           micro_tasks?: Json | null
@@ -1296,6 +1307,7 @@ export type Database = {
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
+          raci_notified_at?: string | null
           reference_code?: string | null
           relationship_impact?: string | null
           requires_review?: boolean | null
