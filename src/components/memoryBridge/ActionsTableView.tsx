@@ -355,15 +355,15 @@ const EditableDueIn = ({
         aria-label="Edit due in"
         onClick={() => setIsEditing(true)}
         className={cn(
-          'min-h-[44px] w-full text-left rounded-md px-2 py-2 -mx-2 transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40'
+          'min-h-[44px] w-full text-right rounded-[6px] px-2 py-2 -mx-2 transition-colors hover:bg-exhibit-surface focus:outline-none focus:ring-1 focus:ring-exhibit-moss/40'
         )}
       >
         <span className={cn(
-          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold',
-          label.tone === 'amber' && 'bg-sunrise-amber-100 text-sunrise-amber-700',
-          label.tone === 'red' && 'bg-red-100 text-red-700',
-          label.tone === 'green' && 'bg-memory-emerald-100 text-memory-emerald-700',
-          label.tone === 'neutral' && 'bg-muted text-muted-foreground'
+          CHIP,
+          label.tone === 'amber' && 'bg-white text-exhibit-amber ring-1 ring-inset ring-exhibit-amber/40',
+          label.tone === 'red' && 'bg-exhibit-alert text-white',
+          label.tone === 'green' && 'bg-exhibit-ink text-white',
+          label.tone === 'neutral' && 'bg-transparent text-exhibit-moss tabular-nums'
         )}>
           {label.tone === 'green' && <Check className="h-3 w-3" />}
           {label.text}
