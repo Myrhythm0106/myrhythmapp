@@ -35,7 +35,10 @@ interface ActionsTableViewProps {
   onTextChange?: (actionId: string, text: string) => void;
   onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
   onAssignedChange?: (actionId: string, assignedTo: string) => void;
-  onOwnerChange?: (actionId: string, next: { assigned_to: string; owner_email: string | null }) => void;
+  onRaciChange?: (actionId: string, payload: RaciSavePayload) => void;
+  onSendRaci?: (actionId: string, payload: RaciSavePayload) => Promise<void>;
+  /** Emails the current view's actions to everyone involved, one digest per person. */
+  onSendToAll?: () => Promise<void>;
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
