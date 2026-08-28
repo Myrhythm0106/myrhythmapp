@@ -526,304 +526,349 @@ export function ActionsTableView({
     active ? 'text-brand-orange-300' : 'text-brain-health-300'
   );
 
+  const total = openCount + doneCount;
+  const completion = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+  const dueTodayCount = actions.filter(a => {
+    if (a.archived_at || a.status === 'done') return false;
+    const d = parseDateOnly(a.completion_date || a.end_date);
+    return !!d && differenceInCalendarDays(d, new Date()) === 0;
+  }).length;
+
   return (
-    <div className="relative overflow-x-auto rounded-2xl bg-white/85 backdrop-blur-xl shadow-xl border border-brain-health-100">
-      {/* Summary strip */}
-      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-brain-health-100">
-        <p className="text-xs text-brain-health-700">
-          <span className="font-semibold text-brain-health-900">{openCount} next step{openCount === 1 ? '' : 's'}</span>
-          {doneCount > 0 && (
-            <span className="text-muted-foreground"> · {doneCount} accomplished</span>
-          )}
-        </p>
-        {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+    <div className="rounded-xl border border-exhibit-rule bg-exhibit-paper overflow-hidden">
+      {/* Exhibit title band */}
+      <div className="bg-exhibit-surface border-b border-exhibit-rule">
+        <div className="flex flex-wrap items-end justify-between gap-3 px-5 py-4">
+          <div className="min-w-0">
+            <p className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.18em] text-exhibit-moss">
+              Next step summary
+            </p>
+            <p className="mt-1.5 font-sora text-[13px] tabular-nums text-exhibit-ink">
+              <span className="font-semibold">{openCount} next step{openCount === 1 ? '' : 's'}</span>
+              {doneCount > 0 && (
+                <span className="text-exhibit-moss"> · {doneCount} accomplished</span>
+              )}
+              {dueTodayCount > 0 && (
+                <span className="text-exhibit-amber"> · {dueTodayCount} due today</span>
+              )}
+            </p>
+          </div>
+          {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+        </div>
+        {/* Completion rule */}
+        <div className="h-[3px] w-full bg-exhibit-rule/60">
+          <div
+            className="h-full bg-exhibit-moss transition-all duration-500"
+            style={{ width: `${completion}%` }}
+            aria-hidden
+          />
+        </div>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Table className="min-w-[860px]">
-          <TableHeader className="sticky top-0 z-10">
-            <TableRow className="bg-brain-health-900 hover:bg-brain-health-900 border-b-0">
-              <TableHead className="w-10"></TableHead>
-              <TableHead
-                className={cn(headCell, 'cursor-pointer transition-colors w-24 hover:bg-brain-health-800')}
-                onClick={() => onSort('priority')}
-              >
-                <div className="flex items-center gap-1">
-                  Priority
-                  <ArrowUpDown className={sortIcon(sortField === 'priority')} />
-                </div>
-              </TableHead>
-              <TableHead className={cn(headCell, 'min-w-[300px] w-[34%]')}>Action</TableHead>
-              <TableHead className={cn(headCell, 'w-40 hidden lg:table-cell')}>Who's involved</TableHead>
-              <TableHead
-                className={cn(headCell, 'cursor-pointer transition-colors w-40 hover:bg-brain-health-800')}
-                onClick={() => onSort('start')}
-              >
-                <div className="flex items-center gap-1">
-                  Schedule
-                  <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
-                </div>
-              </TableHead>
-              <TableHead className={cn(headCell, 'w-28')}>Due in</TableHead>
-              <TableHead
-                className={cn(headCell, 'cursor-pointer transition-colors w-36 hover:bg-brain-health-800')}
-                onClick={() => onSort('status')}
-              >
-                <div className="flex items-center gap-1">
-                  Status
-                  <ArrowUpDown className={sortIcon(sortField === 'status')} />
-                </div>
-              </TableHead>
-              <TableHead className={cn(headCell, 'w-32')}>Support</TableHead>
-              <TableHead className="w-10"></TableHead>
+      <div className="overflow-x-auto">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Table className="min-w-[1040px] border-separate border-spacing-0">
+            <colgroup>
+              <col style={{ width: 40 }} />
+              <col style={{ width: 108 }} />
+              <col />
+              <col className="hidden lg:table-column" style={{ width: 190 }} />
+              <col style={{ width: 172 }} />
+              <col style={{ width: 116 }} />
+              <col style={{ width: 150 }} />
+              <col style={{ width: 148 }} />
+              <col style={{ width: 44 }} />
+            </colgroup>
+            <TableHeader className="sticky top-0 z-10">
+              <TableRow className="bg-exhibit-ink hover:bg-exhibit-ink border-b-0">
+                <TableHead className="w-10 bg-exhibit-ink" />
+                <TableHead
+                  className={cn(headCell, 'cursor-pointer bg-exhibit-ink transition-colors hover:bg-exhibit-moss')}
+                  onClick={() => onSort('priority')}
+                >
+                  <div className="flex items-center gap-1">
+                    Priority
+                    <ArrowUpDown className={sortIcon(sortField === 'priority')} />
+                  </div>
+                </TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink min-w-[320px]')}>Action</TableHead>
+                <TableHead className={cn(headCell, groupEdge, 'bg-exhibit-ink hidden lg:table-cell')}>
+                  Who&apos;s involved
+                </TableHead>
+                <TableHead
+                  className={cn(headCell, groupEdge, 'cursor-pointer bg-exhibit-ink transition-colors hover:bg-exhibit-moss')}
+                  onClick={() => onSort('start')}
+                >
+                  <div className="flex items-center gap-1">
+                    Schedule
+                    <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
+                  </div>
+                </TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink text-right')}>Due in</TableHead>
+                <TableHead
+                  className={cn(headCell, 'cursor-pointer bg-exhibit-ink transition-colors hover:bg-exhibit-moss')}
+                  onClick={() => onSort('status')}
+                >
+                  <div className="flex items-center gap-1">
+                    Status
+                    <ArrowUpDown className={sortIcon(sortField === 'status')} />
+                  </div>
+                </TableHead>
+                <TableHead className={cn(headCell, groupEdge, 'bg-exhibit-ink')}>Support</TableHead>
+                <TableHead className="w-11 bg-exhibit-ink" />
+              </TableRow>
+            </TableHeader>
 
-            </TableRow>
-          </TableHeader>
-          
-          <Droppable droppableId="actions-table">
-            {(provided) => (
-              <TableBody {...provided.droppableProps} ref={provided.innerRef}>
-                {actions.map((action, index) => (
-                  <Draggable key={action.id} draggableId={action.id!} index={index}>
-                    {(provided, snapshot) => (
-                      <TableRow
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        className={cn(
-                          "group border-b border-brain-health-100/60 hover:bg-brain-health-50/60 transition-colors duration-150",
-                          snapshot.isDragging && "bg-brand-orange-50 shadow-lg scale-[1.01] rounded-lg"
-                        )}
-                      >
-                        <TableCell
-                          {...provided.dragHandleProps}
-                          className="cursor-grab active:cursor-grabbing py-3"
+            <Droppable droppableId="actions-table">
+              {(provided) => (
+                <TableBody {...provided.droppableProps} ref={provided.innerRef}>
+                  {actions.map((action, index) => (
+                    <Draggable key={action.id} draggableId={action.id!} index={index}>
+                      {(provided, snapshot) => (
+                        <TableRow
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={cn(
+                            'group border-0 transition-colors duration-150 hover:bg-exhibit-surface/70',
+                            snapshot.isDragging && 'bg-exhibit-surface shadow-lg'
+                          )}
                         >
-                          <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors md:opacity-0 md:group-hover:opacity-100" />
-                        </TableCell>
-                        <TableCell className="py-3">
-                          {onPriorityChange ? (
+                          <TableCell
+                            {...provided.dragHandleProps}
+                            className={cn(bodyCell, 'cursor-grab active:cursor-grabbing')}
+                          >
+                            <GripVertical className="h-4 w-4 text-exhibit-soft transition-colors hover:text-exhibit-ink md:opacity-0 md:group-hover:opacity-100" />
+                          </TableCell>
+
+                          <TableCell className={bodyCell}>
+                            {onPriorityChange ? (
+                              <Select
+                                value={priorityValueFor(action.priority_level || 3)}
+                                onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
+                              >
+                                <SelectTrigger
+                                  className={cn(chipSelect, priorityPillFor(action.priority_level || 3))}
+                                  aria-label="Change priority"
+                                >
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {priorityOptions.map(opt => (
+                                    <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                                      <span className="flex items-center gap-2">
+                                        <span className={cn('h-2.5 w-2.5 rounded-[2px]', opt.dot)} />
+                                        {opt.label}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <PriorityIndicator level={action.priority_level || 3} />
+                            )}
+                          </TableCell>
+
+                          <TableCell className={cn(bodyCell, 'pr-6')}>
+                            {onTextChange ? (
+                              <EditableText
+                                value={action.action_text}
+                                onSave={(v) => onTextChange(action.id!, v)}
+                                multiline
+                                required
+                                ariaLabel="Edit action"
+                                placeholder="Describe this action…"
+                                displayClassName="font-manrope font-medium text-[15px] leading-[1.45] text-exhibit-ink"
+                              />
+                            ) : (
+                              <p className="font-manrope font-medium text-[15px] leading-[1.45] text-exhibit-ink">
+                                {action.action_text}
+                              </p>
+                            )}
+
+                            {onSuccessCriteriaChange ? (
+                              <EditableText
+                                value={action.success_criteria}
+                                onSave={(v) => onSuccessCriteriaChange(action.id!, v)}
+                                multiline
+                                ariaLabel="Edit how I'll know I'm done"
+                                placeholder="I'll know I'm done when…"
+                                suggestions={getSuccessCriteriaSuggestions(action.action_text)}
+                                className="mt-0.5"
+                                displayClassName="font-manrope text-[12.5px] leading-snug text-exhibit-moss"
+                              />
+                            ) : action.success_criteria ? (
+                              <p className="font-manrope text-[12.5px] leading-snug text-exhibit-moss mt-0.5 line-clamp-1">
+                                ✓ {action.success_criteria}
+                              </p>
+                            ) : null}
+
+                            {action.reference_code && (
+                              <div className="mt-1.5 font-mono text-[10.5px] text-exhibit-soft">
+                                <SourceRefLine
+                                  referenceCode={action.reference_code}
+                                  recordingId={action.meeting_recording_id}
+                                  compact
+                                />
+                              </div>
+                            )}
+                          </TableCell>
+
+                          <TableCell className={cn(bodyCell, groupEdge, 'hidden lg:table-cell')}>
+                            {onRaciChange ? (
+                              <WhosInvolvedCell
+                                action={action}
+                                onSave={(payload) => onRaciChange(action.id!, payload)}
+                                onSend={onSendRaci ? (payload) => onSendRaci(action.id!, payload) : undefined}
+                              />
+                            ) : onAssignedChange ? (
+                              <EditableText
+                                value={action.assigned_to}
+                                onSave={(v) => onAssignedChange(action.id!, v)}
+                                ariaLabel="Edit who this is assigned to"
+                                placeholder="Me"
+                                displayClassName="font-manrope text-[13px] text-exhibit-ink"
+                              />
+                            ) : (
+                              <span className="font-manrope text-[13px] text-exhibit-ink">{action.assigned_to || 'You'}</span>
+                            )}
+                          </TableCell>
+
+                          <TableCell className={cn(bodyCell, groupEdge)}>
+                            <div className="space-y-0.5">
+                              <div className="flex items-center gap-1">
+                                <span className="font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft w-10">Start</span>
+                                {onStartDateChange ? (
+                                  <EditableDate
+                                    value={action.start_date}
+                                    onSave={(d) => onStartDateChange(action.id!, d)}
+                                    ariaLabel="Edit start date"
+                                  />
+                                ) : (
+                                  <span className="font-sora text-[13px] tabular-nums text-exhibit-ink">{formatDate(action.start_date)}</span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft w-10">Finish</span>
+                                {onDueDateChange ? (
+                                  <EditableDate
+                                    value={action.completion_date || action.end_date}
+                                    onSave={(d) => onDueDateChange(action.id!, d)}
+                                    ariaLabel="Edit finish date"
+                                  />
+                                ) : (
+                                  <span className="font-sora text-[13px] tabular-nums text-exhibit-ink">{formatDate(action.completion_date || action.end_date)}</span>
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+
+                          <TableCell className={cn(bodyCell, 'text-right')}>
+                            <EditableDueIn
+                              value={action.completion_date || action.end_date}
+                              onSave={(d) => onDueDateChange && onDueDateChange(action.id!, d)}
+                              status={action.status}
+                            />
+                          </TableCell>
+
+                          <TableCell className={bodyCell}>
                             <Select
-                              value={priorityValueFor(action.priority_level || 3)}
-                              onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
+                              value={action.status}
+                              onValueChange={(v) => onStatusChange(action.id!, v)}
                             >
                               <SelectTrigger
-                                className={cn(
-                                  "h-9 w-full border-0 rounded-full px-3 text-[11px] font-semibold",
-                                  priorityPillFor(action.priority_level || 3)
-                                )}
-                                aria-label="Change priority"
+                                className={cn(chipSelect, getStatusOption(action.status).color)}
+                                aria-label="Change status"
                               >
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {priorityOptions.map(opt => (
+                                {statusOptions.map(opt => (
                                   <SelectItem key={opt.value} value={opt.value} className="text-xs">
-                                    <span className="flex items-center gap-2">
-                                      <span className={cn('h-2.5 w-2.5 rounded-full', opt.color)} />
-                                      {opt.label}
-                                    </span>
+                                    {opt.label}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
-                          ) : (
-                            <PriorityIndicator level={action.priority_level || 3} />
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {onTextChange ? (
-                            <EditableText
-                              value={action.action_text}
-                              onSave={(v) => onTextChange(action.id!, v)}
-                              multiline
-                              required
-                              ariaLabel="Edit action"
-                              placeholder="Describe this action…"
-                              displayClassName="font-medium text-[15px] leading-snug text-brain-health-950"
-                            />
-                          ) : (
-                            <p className="font-medium text-[15px] leading-snug text-brain-health-950 line-clamp-2">{action.action_text}</p>
-                          )}
+                          </TableCell>
 
-                          {action.reference_code && (
-                            <div className="mt-1.5">
-                              <SourceRefLine
-                                referenceCode={action.reference_code}
-                                recordingId={action.meeting_recording_id}
-                                compact
+                          <TableCell className={cn(bodyCell, groupEdge)}>
+                            <div className="space-y-0.5">
+                              {onWatchersChange ? (
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <button
+                                      type="button"
+                                      aria-label="Change watchers"
+                                      className="min-h-[32px] flex items-center rounded-[6px] px-2 -mx-2 hover:bg-exhibit-surface transition-colors"
+                                    >
+                                      <WatcherAvatars watchers={action.assigned_watchers} />
+                                    </button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-80 p-3" align="end">
+                                    <ActionWatcherSelector
+                                      actionId={action.id!}
+                                      assignedWatchers={action.assigned_watchers || []}
+                                      onWatchersChange={(w) => onWatchersChange(action.id!, w)}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              ) : (
+                                <WatcherAvatars watchers={action.assigned_watchers} />
+                              )}
+                              <ReminderBadge
+                                offsets={ladders?.[action.id!] || []}
+                                dueDate={action.completion_date || action.end_date}
+                                onClick={() => onOpenReminders?.(action)}
                               />
                             </div>
-                          )}
+                          </TableCell>
 
-
-                          {onSuccessCriteriaChange ? (
-                            <EditableText
-                              value={action.success_criteria}
-                              onSave={(v) => onSuccessCriteriaChange(action.id!, v)}
-                              multiline
-                              ariaLabel="Edit how I'll know I'm done"
-                              placeholder="I'll know I'm done when…"
-                              suggestions={getSuccessCriteriaSuggestions(action.action_text)}
-                              className="mt-1"
-                              displayClassName="text-xs text-muted-foreground"
-                            />
-                          ) : action.success_criteria ? (
-                            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                              ✓ {action.success_criteria}
-                            </p>
-                          ) : null}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          {onRaciChange ? (
-                            <WhosInvolvedCell
-                              action={action}
-                              onSave={(payload) => onRaciChange(action.id!, payload)}
-                              onSend={onSendRaci ? (payload) => onSendRaci(action.id!, payload) : undefined}
-                            />
-                          ) : onAssignedChange ? (
-                            <EditableText
-                              value={action.assigned_to}
-                              onSave={(v) => onAssignedChange(action.id!, v)}
-                              ariaLabel="Edit who this is assigned to"
-                              placeholder="Me"
-                              displayClassName="text-sm"
-                            />
-                          ) : (
-                            <span className="text-sm">{action.assigned_to || 'You'}</span>
-                          )}
-                        </TableCell>
-
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Start</span>
-                              {onStartDateChange ? (
-                                <EditableDate
-                                  value={action.start_date}
-                                  onSave={(d) => onStartDateChange(action.id!, d)}
-                                  ariaLabel="Edit start date"
-                                />
-                              ) : (
-                                <span className="text-sm text-muted-foreground">{formatDate(action.start_date)}</span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Finish</span>
-                              {onDueDateChange ? (
-                                <EditableDate
-                                  value={action.completion_date || action.end_date}
-                                  onSave={(d) => onDueDateChange(action.id!, d)}
-                                  ariaLabel="Edit finish date"
-                                />
-                              ) : (
-                                <span className="text-sm text-muted-foreground">{formatDate(action.completion_date || action.end_date)}</span>
-                              )}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <EditableDueIn
-                            value={action.completion_date || action.end_date}
-                            onSave={(d) => onDueDateChange && onDueDateChange(action.id!, d)}
-                            status={action.status}
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          <Select 
-                            value={action.status} 
-                            onValueChange={(v) => onStatusChange(action.id!, v)}
-                          >
-                            <SelectTrigger className={cn(
-                              "h-9 w-full text-[11px] font-semibold border-0 rounded-full px-3",
-                              getStatusOption(action.status).color
-                            )}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {statusOptions.map(opt => (
-                                <SelectItem key={opt.value} value={opt.value} className="text-xs">
-                                  {opt.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            {onWatchersChange ? (
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <button
-                                    type="button"
-                                    aria-label="Change watchers"
-                                    className="min-h-[32px] flex items-center rounded-md px-2 -mx-2 hover:bg-muted/50 transition-colors"
-                                  >
-                                    <WatcherAvatars watchers={action.assigned_watchers} />
-                                  </button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-80 p-3" align="end">
-                                  <ActionWatcherSelector
-                                    actionId={action.id!}
-                                    assignedWatchers={action.assigned_watchers || []}
-                                    onWatchersChange={(w) => onWatchersChange(action.id!, w)}
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            ) : (
-                              <WatcherAvatars watchers={action.assigned_watchers} />
-                            )}
-                            <ReminderBadge
-                              offsets={ladders?.[action.id!] || []}
-                              dueDate={action.completion_date || action.end_date}
-                              onClick={() => onOpenReminders?.(action)}
-                            />
-                          </div>
-                        </TableCell>
-
-
-
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 md:opacity-0 md:group-hover:opacity-100 transition-opacity" aria-label="More options">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onSelect={() => onOpenNotes?.(action)}>
-                                <MessageCircle className="h-4 w-4 mr-2" />
-                                Notes &amp; encouragement
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onSelect={() => onOpenReminders?.(action)}>
-                                <Bell className="h-4 w-4 mr-2" />
-                                Reminders
-                              </DropdownMenuItem>
-                              {action.archived_at ? (
-                                <DropdownMenuItem onSelect={() => onRestore?.(action.id!)}>
-                                  <RotateCcw className="h-4 w-4 mr-2" />
-                                  Restore to open
+                          <TableCell className={bodyCell}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-exhibit-moss md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                                  aria-label="More options"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onSelect={() => onOpenNotes?.(action)}>
+                                  <MessageCircle className="h-4 w-4 mr-2" />
+                                  Notes &amp; encouragement
                                 </DropdownMenuItem>
-                              ) : (
-                                <DropdownMenuItem onSelect={() => onArchive?.(action.id!)}>
-                                  <Archive className="h-4 w-4 mr-2" />
-                                  Close &amp; archive
+                                <DropdownMenuItem onSelect={() => onOpenReminders?.(action)}>
+                                  <Bell className="h-4 w-4 mr-2" />
+                                  Reminders
                                 </DropdownMenuItem>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-
-                      </TableRow>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </TableBody>
-            )}
-          </Droppable>
-        </Table>
-      </DragDropContext>
+                                {action.archived_at ? (
+                                  <DropdownMenuItem onSelect={() => onRestore?.(action.id!)}>
+                                    <RotateCcw className="h-4 w-4 mr-2" />
+                                    Restore to open
+                                  </DropdownMenuItem>
+                                ) : (
+                                  <DropdownMenuItem onSelect={() => onArchive?.(action.id!)}>
+                                    <Archive className="h-4 w-4 mr-2" />
+                                    Close &amp; archive
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </TableBody>
+              )}
+            </Droppable>
+          </Table>
+        </DragDropContext>
+      </div>
     </div>
   );
 }
