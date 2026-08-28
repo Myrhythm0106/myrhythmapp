@@ -518,62 +518,64 @@ export function ActionsTableView({
   const formatDate = (dateStr: string | null | undefined) => formatDateOnly(dateStr, 'MMM d');
 
 
-  return (
-    <div className="relative overflow-x-auto rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
-      {/* Glass reflection */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
+  const openCount = actions.filter(a => !a.archived_at && a.status !== 'done').length;
+  const doneCount = actions.filter(a => a.status === 'done').length;
 
-      {onSendToAll && (
-        <div className="flex justify-end px-4 pt-3">
-          <SendToAllButton onSend={onSendToAll} />
-        </div>
-      )}
+  const headCell = 'text-brain-health-50 text-[11px] font-semibold uppercase tracking-[0.14em]';
+  const sortIcon = (active: boolean) => cn(
+    'h-3 w-3 transition-colors',
+    active ? 'text-brand-orange-300' : 'text-brain-health-300'
+  );
+
+  return (
+    <div className="relative overflow-x-auto rounded-2xl bg-white/85 backdrop-blur-xl shadow-xl border border-brain-health-100">
+      {/* Summary strip */}
+      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-brain-health-100">
+        <p className="text-xs text-brain-health-700">
+          <span className="font-semibold text-brain-health-900">{openCount} next step{openCount === 1 ? '' : 's'}</span>
+          {doneCount > 0 && (
+            <span className="text-muted-foreground"> · {doneCount} accomplished</span>
+          )}
+        </p>
+        {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+      </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Table className="min-w-[860px]">
-          <TableHeader>
-            <TableRow className="bg-gradient-to-r from-gray-50/90 to-white/90 hover:bg-gray-50/90">
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow className="bg-brain-health-900 hover:bg-brain-health-900 border-b-0">
               <TableHead className="w-10"></TableHead>
-              <TableHead 
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+              <TableHead
+                className={cn(headCell, 'cursor-pointer transition-colors w-24 hover:bg-brain-health-800')}
                 onClick={() => onSort('priority')}
               >
                 <div className="flex items-center gap-1">
                   Priority
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'priority' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'priority')} />
                 </div>
               </TableHead>
-              <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
-              <TableHead className="w-40 hidden lg:table-cell">Who's involved</TableHead>
+              <TableHead className={cn(headCell, 'min-w-[300px] w-[34%]')}>Action</TableHead>
+              <TableHead className={cn(headCell, 'w-40 hidden lg:table-cell')}>Who's involved</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
+                className={cn(headCell, 'cursor-pointer transition-colors w-40 hover:bg-brain-health-800')}
                 onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
                   Schedule
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    (sortField === 'start' || sortField === 'finish') ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
                 </div>
               </TableHead>
-              <TableHead className="w-28">Due in</TableHead>
+              <TableHead className={cn(headCell, 'w-28')}>Due in</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-36"
+                className={cn(headCell, 'cursor-pointer transition-colors w-36 hover:bg-brain-health-800')}
                 onClick={() => onSort('status')}
               >
                 <div className="flex items-center gap-1">
                   Status
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'status' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'status')} />
                 </div>
               </TableHead>
-              <TableHead className="w-32">Support</TableHead>
+              <TableHead className={cn(headCell, 'w-32')}>Support</TableHead>
               <TableHead className="w-10"></TableHead>
 
             </TableRow>
