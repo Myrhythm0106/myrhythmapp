@@ -176,8 +176,8 @@ const EditableText = ({
           onClick={startEditing}
           aria-label={ariaLabel}
           className={cn(
-            'w-full min-h-[44px] text-left rounded-md px-2 py-2 -mx-2 transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40',
-            !value && 'text-muted-foreground italic',
+            'w-full min-h-[44px] text-left rounded-[6px] px-2 py-1.5 -mx-2 transition-colors hover:bg-exhibit-surface focus:outline-none focus:ring-1 focus:ring-exhibit-moss/40',
+            !value && 'text-exhibit-soft',
             displayClassName
           )}
         >
