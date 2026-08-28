@@ -35,6 +35,7 @@ interface ActionsTableViewProps {
   onTextChange?: (actionId: string, text: string) => void;
   onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
   onAssignedChange?: (actionId: string, assignedTo: string) => void;
+  onOwnerChange?: (actionId: string, next: { assigned_to: string; owner_email: string | null }) => void;
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
@@ -578,6 +579,7 @@ export function ActionsTableView({
   onTextChange,
   onSuccessCriteriaChange,
   onAssignedChange,
+  onOwnerChange,
   onStartDateChange,
   onDueDateChange,
   onWatchersChange,
@@ -623,7 +625,7 @@ export function ActionsTableView({
                 </div>
               </TableHead>
               <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
-              <TableHead className="w-28 hidden lg:table-cell">Assigned</TableHead>
+              <TableHead className="w-36 hidden lg:table-cell">Assigned</TableHead>
               <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
                 onClick={() => onSort('start')}
