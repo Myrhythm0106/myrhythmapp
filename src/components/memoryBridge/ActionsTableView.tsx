@@ -54,38 +54,32 @@ interface ActionsTableViewProps {
 
 
 const priorityOptions = [
-  { value: '1', label: 'High', color: 'bg-red-500' },
-  { value: '3', label: 'Medium', color: 'bg-brand-orange-500' },
-  { value: '5', label: 'Low', color: 'bg-green-500' }
+  { value: '1', label: 'High', color: 'bg-brand-orange-500', pill: 'bg-brand-orange-500 text-white' },
+  { value: '3', label: 'Medium', color: 'bg-brain-health-500', pill: 'bg-brain-health-100 text-brain-health-700' },
+  { value: '5', label: 'Low', color: 'bg-muted-foreground/50', pill: 'bg-muted text-muted-foreground' }
 ];
 
 const priorityValueFor = (level: number) => (level <= 2 ? '1' : level >= 4 ? '5' : '3');
+const priorityPillFor = (level: number) =>
+  priorityOptions.find(o => o.value === priorityValueFor(level))?.pill || 'bg-muted text-muted-foreground';
 
 const statusOptions = [
   { value: 'not_started', label: 'Ready to Begin', color: 'bg-muted text-muted-foreground' },
-  { value: 'doing', label: 'In My Flow', color: 'bg-blue-100 text-blue-700' },
-  { value: 'done', label: 'Accomplished!', color: 'bg-green-100 text-green-700' },
-  { value: 'on_hold', label: 'Paused', color: 'bg-amber-100 text-amber-700' },
-  { value: 'cancelled', label: 'Redirected', color: 'bg-red-100 text-red-700' }
+  { value: 'doing', label: 'In My Flow', color: 'bg-brain-health-100 text-brain-health-700' },
+  { value: 'done', label: 'Accomplished!', color: 'bg-memory-emerald-100 text-memory-emerald-700' },
+  { value: 'on_hold', label: 'Paused', color: 'bg-sunrise-amber-100 text-sunrise-amber-700' },
+  { value: 'cancelled', label: 'Redirected', color: 'bg-muted text-muted-foreground' }
 ];
 
 const PriorityIndicator = ({ level }: { level: number }) => {
-  const config = {
-    1: { color: 'bg-red-500', glow: 'shadow-red-500/50', label: 'High' },
-    2: { color: 'bg-red-500', glow: 'shadow-red-500/50', label: 'High' },
-    3: { color: 'bg-brand-orange-500', glow: 'shadow-brand-orange-500/50', label: 'Medium' },
-    4: { color: 'bg-green-500', glow: 'shadow-green-500/50', label: 'Low' },
-    5: { color: 'bg-green-500', glow: 'shadow-green-500/50', label: 'Low' }
-  }[level] || { color: 'bg-gray-400', glow: '', label: 'None' };
-
+  const label = level <= 2 ? 'High' : level >= 4 ? 'Low' : 'Medium';
   return (
-    <div className="flex items-center gap-2">
-      <div 
-        className={cn("w-3 h-3 rounded-full shadow-lg animate-pulse", config.color, config.glow)} 
-        title={config.label}
-      />
-      <span className="text-xs text-muted-foreground">{config.label}</span>
-    </div>
+    <span className={cn(
+      'inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold',
+      priorityPillFor(level)
+    )}>
+      {label}
+    </span>
   );
 };
 
