@@ -1171,6 +1171,7 @@ export type Database = {
           motivation_statement: string | null
           next_natural_steps: string[] | null
           owner: string | null
+          owner_email: string | null
           potential_barriers: string[] | null
           priority_level: number | null
           proposed_date: string | null
@@ -1230,6 +1231,7 @@ export type Database = {
           motivation_statement?: string | null
           next_natural_steps?: string[] | null
           owner?: string | null
+          owner_email?: string | null
           potential_barriers?: string[] | null
           priority_level?: number | null
           proposed_date?: string | null
@@ -1289,6 +1291,7 @@ export type Database = {
           motivation_statement?: string | null
           next_natural_steps?: string[] | null
           owner?: string | null
+          owner_email?: string | null
           potential_barriers?: string[] | null
           priority_level?: number | null
           proposed_date?: string | null

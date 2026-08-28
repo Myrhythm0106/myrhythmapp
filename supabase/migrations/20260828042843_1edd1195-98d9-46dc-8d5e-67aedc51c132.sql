@@ -1,0 +1,1 @@
+ALTER TABLE public.extracted_actions ADD COLUMN IF NOT EXISTS owner_email text;
