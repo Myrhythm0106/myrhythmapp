@@ -191,17 +191,17 @@ export const WhosInvolvedCell = ({
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Change who's involved"
-        className="min-h-[44px] w-full flex items-center gap-1.5 rounded-md px-2 -mx-2 text-left hover:bg-muted/50 transition-colors"
+        className="min-h-[44px] w-full flex items-center gap-2 rounded-[6px] px-2 -mx-2 text-left hover:bg-exhibit-surface transition-colors"
       >
         <div className="flex -space-x-1.5">
-          <Avatar className="h-7 w-7 ring-2 ring-white">
-            <AvatarFallback className="text-[10px] bg-brand-orange-100 text-brand-orange-700">
+          <Avatar className="h-7 w-7 rounded-[6px] ring-2 ring-white">
+            <AvatarFallback className="rounded-[6px] font-sora text-[10px] font-semibold bg-exhibit-ink text-white">
               {initials(saved.responsible.name)}
             </AvatarFallback>
           </Avatar>
           {saved.accountable && (
-            <Avatar className="h-7 w-7 ring-2 ring-white">
-              <AvatarFallback className="text-[10px] bg-launch-sage/20 text-launch-moss">
+            <Avatar className="h-7 w-7 rounded-[6px] ring-2 ring-white">
+              <AvatarFallback className="rounded-[6px] font-sora text-[10px] font-semibold bg-exhibit-moss/12 text-exhibit-ink">
                 {initials(saved.accountable.name)}
               </AvatarFallback>
             </Avatar>
@@ -209,17 +209,19 @@ export const WhosInvolvedCell = ({
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-sm font-medium truncate max-w-[7rem]">{saved.responsible.name}</span>
-            <Badge variant="outline" className="h-4 px-1 text-[9px] leading-none">R</Badge>
+            <span className="font-manrope text-[13px] font-medium text-exhibit-ink truncate max-w-[7rem]">
+              {saved.responsible.name}
+            </span>
+            <span className="h-[16px] px-1 rounded-[4px] font-sora text-[9px] font-semibold leading-none flex items-center bg-white text-exhibit-moss ring-1 ring-inset ring-exhibit-rule">R</span>
             {saved.accountable && (
-              <Badge variant="outline" className="h-4 px-1 text-[9px] leading-none">A</Badge>
+              <span className="h-[16px] px-1 rounded-[4px] font-sora text-[9px] font-semibold leading-none flex items-center bg-white text-exhibit-moss ring-1 ring-inset ring-exhibit-rule">A</span>
             )}
             {extraCount > 0 && (
-              <span className="text-[10px] text-muted-foreground">+{extraCount}</span>
+              <span className="font-sora text-[10px] tabular-nums text-exhibit-soft">+{extraCount}</span>
             )}
           </div>
           {notifiedAt && (
-            <span className="text-[10px] text-muted-foreground">
+            <span className="font-sora text-[10px] tabular-nums text-exhibit-soft">
               Sent {format(new Date(notifiedAt), 'd MMM')}
             </span>
           )}
