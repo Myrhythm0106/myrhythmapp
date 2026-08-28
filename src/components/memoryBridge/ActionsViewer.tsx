@@ -400,6 +400,33 @@ export function ActionsViewer({
     toast.success(successMessage);
   };
 
+  /** Emails the action details to everyone involved (R/A/C/I with an email). */
+  const sendRaciEmails = async (actionIds: string[]) => {
+    if (actionIds.length === 0) return;
+    try {
+      const { data, error } = await supabase.functions.invoke('send-action-raci', {
+        body: { actionIds },
+      });
+      if (error) throw error;
+      const { sent = 0, failures = [] } = (data || {}) as { sent?: number; failures?: string[] };
+      if (sent > 0) {
+        toast.success(`Details sent to ${sent} ${sent === 1 ? 'person' : 'people'}`);
+        const now = new Date().toISOString();
+        setExtractedActions(actions =>
+          actions.map(a => (actionIds.includes(a.id!) ? { ...a, raci_notified_at: now } : a))
+        );
+      } else {
+        toast.info('No email addresses on these actions yet');
+      }
+      if (failures.length > 0) {
+        toast.error(`Couldn\u2019t reach: ${failures.join(', ')}`);
+      }
+    } catch (e) {
+      console.error('sendRaciEmails failed', e);
+      toast.error('Couldn\u2019t send the details — please try again');
+    }
+  };
+
 
   // Bulk actions
   const handleScheduleAll = async (actionIds?: string[], overrides?: Map<string, ActionOverride>) => {
@@ -692,13 +719,21 @@ export function ActionsViewer({
               onSuccessCriteriaChange={(id, criteria) =>
                 handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
               }
-              onOwnerChange={(id, next) =>
+              onRaciChange={(id, payload) =>
                 handleFieldChange(
                   id,
-                  { assigned_to: next.assigned_to, owner_email: next.owner_email } as Partial<NextStepsItem>,
-                  next.owner_email ? 'Owner updated — they\u2019ll get the invite' : 'Owner updated'
+                  {
+                    assigned_to: payload.assigned_to,
+                    owner_email: payload.owner_email,
+                    accountable: payload.accountable,
+                    consulted: payload.consulted,
+                    informed: payload.informed,
+                  } as Partial<NextStepsItem>,
+                  'Who\u2019s involved updated'
                 )
               }
+              onSendRaci={(id) => sendRaciEmails([id])}
+              onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
               }

@@ -11,10 +11,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail } from 'lucide-react';
-import { z } from 'zod';
-import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
-
-const ownerEmailSchema = z.string().trim().toLowerCase().email();
 
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
@@ -24,6 +20,7 @@ import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
 import { SourceRefLine } from '@/components/traceability/SourceRefLine';
+import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
 
 
 
@@ -35,7 +32,10 @@ interface ActionsTableViewProps {
   onTextChange?: (actionId: string, text: string) => void;
   onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
   onAssignedChange?: (actionId: string, assignedTo: string) => void;
-  onOwnerChange?: (actionId: string, next: { assigned_to: string; owner_email: string | null }) => void;
+  onRaciChange?: (actionId: string, payload: RaciSavePayload) => void;
+  onSendRaci?: (actionId: string, payload: RaciSavePayload) => Promise<void>;
+  /** Emails the current view's actions to everyone involved, one digest per person. */
+  onSendToAll?: () => Promise<void>;
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
@@ -112,116 +112,6 @@ const WatcherAvatars = ({ watchers }: { watchers: string[] | undefined }) => {
   );
 };
 
-/**
- * Owner cell: name + optional email, so the action can be sent
- * straight into that person's diary when it is scheduled.
- */
-const OwnerCell = ({
-  name,
-  email,
-  onSave,
-}: {
-  name?: string | null;
-  email?: string | null;
-  onSave: (next: { assigned_to: string; owner_email: string | null }) => void;
-}) => {
-  const { supportCircle } = useAccountabilitySystem();
-  const [open, setOpen] = useState(false);
-  const [nameDraft, setNameDraft] = useState(name || '');
-  const [emailDraft, setEmailDraft] = useState(email || '');
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (open) {
-      setNameDraft(name || '');
-      setEmailDraft(email || '');
-      setError(null);
-    }
-  }, [open, name, email]);
-
-  const commit = (n: string, e: string) => {
-    const trimmedEmail = e.trim().toLowerCase();
-    if (trimmedEmail && !ownerEmailSchema.safeParse(trimmedEmail).success) {
-      setError('Enter a valid email');
-      return;
-    }
-    onSave({ assigned_to: n.trim() || 'Me', owner_email: trimmedEmail || null });
-    setOpen(false);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label="Change who owns this and their email"
-          className="min-h-[44px] w-full flex flex-col items-start justify-center rounded-md px-2 -mx-2 text-left hover:bg-muted/50 transition-colors"
-        >
-          <span className="text-sm font-medium">{name?.trim() || 'Me'}</span>
-          {email ? (
-            <span className="flex items-center gap-1 text-[11px] text-muted-foreground truncate max-w-[9rem]">
-              <Mail className="h-3 w-3 text-launch-moss" />
-              {email}
-            </span>
-          ) : (
-            <span className="text-[11px] text-muted-foreground">No email — add to invite</span>
-          )}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-72 space-y-3 z-50 bg-popover">
-        {supportCircle.filter(m => m.member_email).length > 0 && (
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground">From my Support Circle</p>
-            <div className="max-h-36 overflow-y-auto space-y-1">
-              {supportCircle
-                .filter(m => m.member_email)
-                .map(m => (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => commit(m.member_name, m.member_email!)}
-                    className="w-full text-left rounded-md px-2 py-2 hover:bg-muted transition-colors min-h-[44px]"
-                  >
-                    <span className="text-sm block">{m.member_name}</span>
-                    <span className="text-[11px] text-muted-foreground">{m.member_email}</span>
-                  </button>
-                ))}
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-muted-foreground">Or enter details</p>
-          <Input
-            value={nameDraft}
-            onChange={e => setNameDraft(e.target.value)}
-            placeholder="Name (or Me)"
-            aria-label="Owner name"
-          />
-          <Input
-            value={emailDraft}
-            onChange={e => {
-              setEmailDraft(e.target.value);
-              setError(null);
-            }}
-            placeholder="their@email.com (optional)"
-            type="email"
-            aria-label="Owner email"
-          />
-          {error && <p className="text-xs text-destructive">{error}</p>}
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="flex-1" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button size="sm" className="flex-1" onClick={() => commit(nameDraft, emailDraft)}>
-              Save
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
 
 
 interface EditableTextProps {
@@ -537,6 +427,31 @@ const EditableDueIn = ({
   );
 };
 
+/** Header action: emails the visible actions to everyone involved, one digest per person. */
+const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) => {
+  const [sending, setSending] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={sending}
+      onClick={async () => {
+        setSending(true);
+        try {
+          await onSend();
+        } finally {
+          setSending(false);
+        }
+      }}
+      className="gap-2"
+    >
+      <Mail className="h-3.5 w-3.5" />
+      {sending ? 'Sending…' : 'Send to everyone'}
+    </Button>
+  );
+};
+
 /** Shows which reminder ladder is in force and when the next nudge lands. */
 const ReminderBadge: React.FC<{
   offsets: number[];
@@ -579,7 +494,9 @@ export function ActionsTableView({
   onTextChange,
   onSuccessCriteriaChange,
   onAssignedChange,
-  onOwnerChange,
+  onRaciChange,
+  onSendRaci,
+  onSendToAll,
   onStartDateChange,
   onDueDateChange,
   onWatchersChange,
@@ -607,6 +524,12 @@ export function ActionsTableView({
       {/* Glass reflection */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
 
+      {onSendToAll && (
+        <div className="flex justify-end px-4 pt-3">
+          <SendToAllButton onSend={onSendToAll} />
+        </div>
+      )}
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Table className="min-w-[860px]">
           <TableHeader>
@@ -625,7 +548,7 @@ export function ActionsTableView({
                 </div>
               </TableHead>
               <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
-              <TableHead className="w-36 hidden lg:table-cell">Assigned</TableHead>
+              <TableHead className="w-40 hidden lg:table-cell">Who's involved</TableHead>
               <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
                 onClick={() => onSort('start')}
@@ -748,11 +671,11 @@ export function ActionsTableView({
                           ) : null}
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
-                          {onOwnerChange ? (
-                            <OwnerCell
-                              name={action.assigned_to}
-                              email={(action as any).owner_email}
-                              onSave={(next) => onOwnerChange(action.id!, next)}
+                          {onRaciChange ? (
+                            <WhosInvolvedCell
+                              action={action}
+                              onSave={(payload) => onRaciChange(action.id!, payload)}
+                              onSend={onSendRaci ? (payload) => onSendRaci(action.id!, payload) : undefined}
                             />
                           ) : onAssignedChange ? (
                             <EditableText
