@@ -692,8 +692,12 @@ export function ActionsViewer({
               onSuccessCriteriaChange={(id, criteria) =>
                 handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
               }
-              onAssignedChange={(id, assignedTo) =>
-                handleFieldChange(id, { assigned_to: assignedTo }, 'Owner updated')
+              onOwnerChange={(id, next) =>
+                handleFieldChange(
+                  id,
+                  { assigned_to: next.assigned_to, owner_email: next.owner_email } as Partial<NextStepsItem>,
+                  next.owner_email ? 'Owner updated — they\u2019ll get the invite' : 'Owner updated'
+                )
               }
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')

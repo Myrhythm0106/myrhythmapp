@@ -143,6 +143,21 @@ export async function scheduleExtractedActions(
       } as PersonPick);
     }
 
+    // The action's owner (if they have an email) gets the invite too, so it
+    // lands straight in their diary. Never double-invite someone already listed.
+    const ownerEmail = (row.owner_email || '').trim().toLowerCase();
+    if (ownerEmail && !people.some(p => (p.email || '').toLowerCase() === ownerEmail)) {
+      people.push({
+        memberId: `${ADHOC_PREFIX}${ownerEmail}`,
+        name: row.assigned_to || ownerEmail,
+        email: ownerEmail,
+        role: 'invite',
+        pre: 'manual',
+        canInvite: true,
+        canWatch: false,
+      } as PersonPick);
+    }
+
     const dueDate = ov?.dueDate ?? (row.end_date || undefined);
     const res = await commitAction(brief, {
       startDate: date,

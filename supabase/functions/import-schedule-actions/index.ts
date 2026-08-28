@@ -419,11 +419,7 @@ serve(async (req) => {
       title: fileName,
       filePath, // returned so client can delete it after user approves
     });
-      success: true,
-      meetingId: meetingRow.id,
-      actionsCount: rows.length,
-      title: fileName,
-    });
+
   } catch (err) {
     console.error("import-schedule-actions error", err);
     return jsonResponse(
