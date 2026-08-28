@@ -581,32 +581,19 @@ export function ActionsViewer({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-xl border border-white/40 shadow-2xl">
-        {/* Premium header */}
-        <DialogHeader className="relative pb-4 border-b border-white/40">
-          {/* Neural pathway decoration */}
-          <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              <path d="M10,50 Q30,20 50,50 T90,50" stroke="currentColor" fill="none" strokeWidth="2" className="text-neural-purple-500" />
-              <path d="M10,60 Q30,30 50,60 T90,60" stroke="currentColor" fill="none" strokeWidth="1" className="text-brand-orange-500" />
-            </svg>
-          </div>
-          
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-exhibit-paper border border-exhibit-rule shadow-xl">
+        {/* Exhibit header */}
+        <DialogHeader className="relative pb-4 border-b border-exhibit-rule">
           <DialogTitle className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-gradient-to-br from-brand-orange-500 to-brand-orange-600 rounded-xl shadow-lg shadow-brand-orange-500/30">
-                  <Brain className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <span className="font-bold text-lg">My Next Step Summary</span>
-                  <span className="text-sm text-muted-foreground ml-2">• {meetingTitle}</span>
-                </div>
-                <Badge className="bg-gradient-to-r from-brand-orange-100 to-brand-orange-50 text-brand-orange-700 border border-brand-orange-200 shadow-sm">
-                  {extractedActions.length} actions
-                </Badge>
-              </div>
+            <div className="min-w-0">
+              <p className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.18em] text-exhibit-moss">
+                My next step summary
+              </p>
+              <p className="mt-1 font-sora text-[17px] font-semibold text-exhibit-ink truncate">
+                {meetingTitle}
+              </p>
             </div>
+            
             
             {/* Bulk actions bar */}
             <div className="flex items-center gap-2 flex-wrap">
