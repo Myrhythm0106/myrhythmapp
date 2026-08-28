@@ -467,17 +467,17 @@ const ReminderBadge: React.FC<{
       onClick={onClick}
       aria-label="Change reminders"
       className={cn(
-        'min-h-[44px] w-full flex flex-col items-start justify-center rounded-md px-2 -mx-2 text-left hover:bg-muted/50 transition-colors',
-        offsets.length === 0 && 'text-muted-foreground'
+        'min-h-[40px] w-full flex flex-col items-start justify-center rounded-[6px] px-2 -mx-2 text-left hover:bg-exhibit-surface transition-colors',
+        offsets.length === 0 && 'text-exhibit-soft'
       )}
     >
-      <span className="flex items-center gap-1 text-xs font-medium">
-        <Bell className={cn('h-3.5 w-3.5', offsets.length ? 'text-brand-orange-500' : 'text-muted-foreground')} />
+      <span className="flex items-center gap-1 font-sora text-[12px] font-medium text-exhibit-ink">
+        <Bell className={cn('h-3.5 w-3.5', offsets.length ? 'text-exhibit-accent' : 'text-exhibit-soft')} />
         {offsets.length === 0 ? 'Off' : preset ? presetLabel[preset] : `${offsets.length} set`}
       </span>
       {next && (
-        <span className="text-[11px] text-muted-foreground">
-          Next {format(next, 'MMM d')}
+        <span className="font-sora text-[10.5px] tabular-nums text-exhibit-soft">
+          Next {format(next, 'd MMM')}
         </span>
       )}
     </button>
