@@ -27,6 +27,8 @@ const config: Config = {
         'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
         'instrument': ['Instrument Serif', 'Georgia', 'Times New Roman', 'serif'],
         'worksans': ['Work Sans', 'Inter', 'system-ui', 'sans-serif'],
+        'sora': ['Sora', 'Inter', 'system-ui', 'sans-serif'],
+        'manrope': ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
 
       },
 
