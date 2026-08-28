@@ -692,13 +692,21 @@ export function ActionsViewer({
               onSuccessCriteriaChange={(id, criteria) =>
                 handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
               }
-              onOwnerChange={(id, next) =>
+              onRaciChange={(id, payload) =>
                 handleFieldChange(
                   id,
-                  { assigned_to: next.assigned_to, owner_email: next.owner_email } as Partial<NextStepsItem>,
-                  next.owner_email ? 'Owner updated — they\u2019ll get the invite' : 'Owner updated'
+                  {
+                    assigned_to: payload.assigned_to,
+                    owner_email: payload.owner_email,
+                    accountable: payload.accountable,
+                    consulted: payload.consulted,
+                    informed: payload.informed,
+                  } as Partial<NextStepsItem>,
+                  'Who\u2019s involved updated'
                 )
               }
+              onSendRaci={(id) => sendRaciEmails([id])}
+              onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
               }
