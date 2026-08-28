@@ -520,10 +520,16 @@ export function ActionsTableView({
   const openCount = actions.filter(a => !a.archived_at && a.status !== 'done').length;
   const doneCount = actions.filter(a => a.status === 'done').length;
 
-  const headCell = 'text-brain-health-50 text-[11px] font-semibold uppercase tracking-[0.14em]';
+  const headCell = 'h-11 font-sora text-white/85 text-[11px] font-semibold uppercase tracking-[0.14em] align-middle';
+  const bodyCell = 'py-3 align-top border-b border-exhibit-rule/70';
+  const groupEdge = 'border-l border-exhibit-rule/70';
+  const chipSelect = cn(
+    'h-[26px] w-full min-w-0 justify-between gap-1 rounded-[6px] border-0 px-2',
+    'font-sora text-[11px] font-semibold focus:ring-1 focus:ring-exhibit-moss/40'
+  );
   const sortIcon = (active: boolean) => cn(
     'h-3 w-3 transition-colors',
-    active ? 'text-brand-orange-300' : 'text-brain-health-300'
+    active ? 'text-exhibit-accent' : 'text-white/40'
   );
 
   const total = openCount + doneCount;
