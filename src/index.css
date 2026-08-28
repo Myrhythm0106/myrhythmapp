@@ -592,6 +592,23 @@ html, body {
 }
 
 /* ============================================================
+   Exhibit tokens — Emerald Prestige, consultancy-grade documents
+   Used by data exhibits (Next Step Summary etc). Deliberately not
+   part of the .launch-theme override map so exhibits stay stable.
+   ============================================================ */
+:root {
+  --exhibit-ink:     168 70% 14%;  /* #0B3B32 deep emerald ink   */
+  --exhibit-moss:    168 70% 24%;  /* #12695A mid emerald        */
+  --exhibit-soft:    160 26% 61%;  /* #7FB8A6 soft emerald       */
+  --exhibit-surface:  42 43% 95%;  /* #F7F4EC ivory surface      */
+  --exhibit-paper:     0  0% 100%; /* white grid body            */
+  --exhibit-rule:    168 24% 86%;  /* hairline rules             */
+  --exhibit-accent:   25 95% 53%;  /* #F97316 single primary     */
+  --exhibit-amber:    38 92% 40%;  /* attention state            */
+  --exhibit-alert:    10 62% 38%;  /* overdue, red-brown         */
+}
+
+/* ============================================================
    Launch theme — Emerald Prestige + burnt-orange (EMBER) accent
    Applied to LaunchLayout root so every /launch/* page inherits.
    ============================================================ */
