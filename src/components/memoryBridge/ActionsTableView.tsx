@@ -218,7 +218,7 @@ const EditableText = ({
           {!showSuggestions ? (
             <button
               type="button"
-              className="inline-flex items-center gap-1 text-[11px] text-brand-orange-600 hover:underline"
+              className="inline-flex items-center gap-1 font-sora text-[11px] text-exhibit-moss hover:underline"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => setShowSuggestions(true)}
             >
@@ -235,7 +235,7 @@ const EditableText = ({
                     setDraft(s);
                     setShowSuggestions(false);
                   }}
-                  className="text-[11px] leading-snug text-left rounded-full border border-brand-orange-200 bg-brand-orange-50 px-2.5 py-1.5 text-brand-orange-700 hover:bg-brand-orange-100 transition-colors"
+                  className="font-manrope text-[11px] leading-snug text-left rounded-[6px] border border-exhibit-rule bg-exhibit-surface px-2.5 py-1.5 text-exhibit-ink hover:border-exhibit-moss/40 transition-colors"
                 >
                   {s}
                 </button>
@@ -412,7 +412,7 @@ const EditableDueIn = ({
             key={q.label}
             type="button"
             onClick={() => commit(q.days)}
-            className="text-[11px] rounded-full border border-brand-orange-200 bg-brand-orange-50 px-2.5 py-1 text-brand-orange-700 hover:bg-brand-orange-100 transition-colors"
+            className="font-sora text-[11px] rounded-[6px] border border-exhibit-rule bg-exhibit-surface px-2.5 py-1 text-exhibit-ink hover:border-exhibit-moss/40 transition-colors"
           >
             {q.label}
           </button>
@@ -420,7 +420,7 @@ const EditableDueIn = ({
         <button
           type="button"
           onClick={() => commit(null)}
-          className="text-[11px] rounded-full border border-muted bg-muted px-2.5 py-1 text-muted-foreground hover:bg-muted/80 transition-colors"
+          className="font-sora text-[11px] rounded-[6px] border border-exhibit-rule bg-white px-2.5 py-1 text-exhibit-soft hover:bg-exhibit-surface transition-colors"
         >
           Clear
         </button>
