@@ -583,7 +583,9 @@ export function ActionsTableView({
   onTextChange,
   onSuccessCriteriaChange,
   onAssignedChange,
-  onOwnerChange,
+  onRaciChange,
+  onSendRaci,
+  onSendToAll,
   onStartDateChange,
   onDueDateChange,
   onWatchersChange,
@@ -629,7 +631,7 @@ export function ActionsTableView({
                 </div>
               </TableHead>
               <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
-              <TableHead className="w-36 hidden lg:table-cell">Assigned</TableHead>
+              <TableHead className="w-40 hidden lg:table-cell">Who's involved</TableHead>
               <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
                 onClick={() => onSort('start')}
