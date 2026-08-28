@@ -723,7 +723,7 @@ export default function LaunchMemoryBridge() {
             </svg>
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10" ref={recorderCardRef}>
             {state === 'idle' && (
               <>
                 {/* Microphone button */}
