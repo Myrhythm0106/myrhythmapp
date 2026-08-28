@@ -47,6 +47,16 @@ export interface NextStepsItem {
   /** The line from the capture this step came from. */
   source_quote?: string;
 
+  // Who's involved (everyday-language RACI)
+  /** Signs it off — single person { name, email? }. */
+  accountable?: { name: string; email?: string | null } | null;
+  /** Ask first — people consulted before it's done. */
+  consulted?: { name: string; email?: string | null }[];
+  /** Keep in the loop — people told once scheduled or done. */
+  informed?: { name: string; email?: string | null }[];
+  /** When the details were last emailed to the people involved. */
+  raci_notified_at?: string | null;
+
   // Scheduling properties
   proposed_date?: string;
   proposed_time?: string;
