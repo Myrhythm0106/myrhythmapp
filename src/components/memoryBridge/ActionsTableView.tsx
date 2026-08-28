@@ -484,12 +484,12 @@ export function ActionsTableView({
 
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
+    <div className="relative overflow-x-auto rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
       {/* Glass reflection */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
-      
+
       <DragDropContext onDragEnd={onDragEnd}>
-        <Table>
+        <Table className="min-w-[860px]">
           <TableHeader>
             <TableRow className="bg-gradient-to-r from-gray-50/90 to-white/90 hover:bg-gray-50/90">
               <TableHead className="w-10"></TableHead>
