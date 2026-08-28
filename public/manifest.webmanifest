@@ -33,7 +33,7 @@
       "name": "Capture",
       "short_name": "Capture",
       "description": "Record or note something now",
-      "url": "/launch/memory?quick=1"
+      "url": "/launch/memory?record=1"
     },
     {
       "name": "Today",

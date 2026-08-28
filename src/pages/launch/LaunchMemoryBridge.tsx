@@ -9,7 +9,7 @@ import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volu
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ensureSession, touchSession } from '@/utils/ensureSession';
 
 import { formatDistanceToNow } from 'date-fns';
@@ -39,6 +39,7 @@ import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
 import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
 import { KeepForPrompt } from '@/components/launch/KeepForPrompt';
+import { setRecordingLive } from '@/launch/capture/recordingSignal';
 
 
 function formatBytes(bytes: number): string {
@@ -68,6 +69,7 @@ interface VoiceRecording {
 export default function LaunchMemoryBridge() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [state, setState] = useState<RecordingState>('idle');
   const [showCelebration, setShowCelebration] = useState(false);
@@ -220,6 +222,12 @@ export default function LaunchMemoryBridge() {
     };
   }, []);
 
+  // Let the persistent capture button anywhere in the app show "Recording".
+  useEffect(() => {
+    setRecordingLive(isRecording);
+    return () => setRecordingLive(false);
+  }, [isRecording]);
+
 
   const handleStartRecording = async () => {
     if (outOfAllowance) {
@@ -240,6 +248,40 @@ export default function LaunchMemoryBridge() {
       console.warn('handleStartRecording: startRecording returned false without a state change');
     }
   };
+
+  // Two-tap capture: arriving with ?record=1 starts recording immediately.
+  // One attempt only — a blocked mic must never retry in a loop.
+  const autoStartedRef = useRef(false);
+  const recorderCardRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const wants = searchParams.get('record') === '1' || searchParams.get('quick') === '1';
+    if (!wants || autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    const next = new URLSearchParams(searchParams);
+    next.delete('record');
+    next.delete('quick');
+    setSearchParams(next, { replace: true });
+    if (isRecording || state === 'reviewing' || audioBlobRef.current) return;
+    void handleStartRecording().then(() => {
+      recorderCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // Two-tap recall: ?open=<recordingId> opens that conversation's record.
+  const autoOpenedRef = useRef(false);
+  useEffect(() => {
+    const openId = searchParams.get('open');
+    if (!openId || autoOpenedRef.current) return;
+    if (recordings.length === 0) return;
+    autoOpenedRef.current = true;
+    const match = recordings.find(r => r.id === openId);
+    const next = new URLSearchParams(searchParams);
+    next.delete('open');
+    setSearchParams(next, { replace: true });
+    setViewingActions({ recordingId: openId, title: match?.title || 'My conversation' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, recordings]);
 
   const handlePauseRecording = () => {
     pauseRecording();
@@ -681,7 +723,7 @@ export default function LaunchMemoryBridge() {
             </svg>
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10" ref={recorderCardRef}>
             {state === 'idle' && (
               <>
                 {/* Microphone button */}

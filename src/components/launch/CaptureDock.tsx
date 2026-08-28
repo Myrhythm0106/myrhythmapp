@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { Mic, X, Plus, Activity, Loader2 } from 'lucide-react';
+import { Mic, X, Plus, Activity, Loader2, History, Square } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useAppReady } from '@/hooks/useAppReady';
 import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
+import { supabase } from '@/integrations/supabase/client';
+import { useRecordingLive } from '@/launch/capture/recordingSignal';
 
 /**
  * CaptureDock
@@ -18,8 +20,35 @@ import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
 export function CaptureDock() {
   const appReady = useAppReady();
   const [open, setOpen] = useState(false);
+  const recordingLive = useRecordingLive();
+  const navigate = useNavigate();
 
   if (!appReady) return null;
+
+  // While a capture is running, one tap takes me straight back to it.
+  if (recordingLive) {
+    return (
+      <button
+        type="button"
+        onClick={() => navigate('/launch/memory')}
+        aria-label="Recording now — go back to my recording"
+        className={cn(
+          'fixed right-4 bottom-24 md:bottom-8 z-40',
+          'h-16 px-5 rounded-full shadow-xl',
+          'bg-red-600 hover:bg-red-700 active:scale-95',
+          'flex items-center gap-2 transition-all',
+          'focus:outline-none focus-visible:ring-4 focus-visible:ring-red-300'
+        )}
+        style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
+        </span>
+        <span className="text-white font-semibold text-sm">Recording</span>
+      </button>
+    );
+  }
 
   return (
     <>
@@ -44,12 +73,20 @@ export function CaptureDock() {
   );
 }
 
+interface LastConversation {
+  recordingId: string;
+  title: string;
+  referenceCode?: string;
+  startedAt?: string;
+}
+
 function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
   const today = new Date();
   const { addEvent } = useLaunchCalendarEvents(today, today);
   const [text, setText] = useState('');
   const [saving, setSaving] = useState(false);
+  const [last, setLast] = useState<LastConversation | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -59,7 +96,25 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
   }, [open, onClose]);
 
   useEffect(() => {
-    if (open) setText('');
+    if (!open) return;
+    setText('');
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('meeting_recordings')
+        .select('id, recording_id, meeting_title, reference_code, started_at')
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (cancelled || !data) return;
+      setLast({
+        recordingId: data.recording_id || data.id,
+        title: data.meeting_title || 'My last conversation',
+        referenceCode: data.reference_code || undefined,
+        startedAt: data.started_at || undefined,
+      });
+    })();
+    return () => { cancelled = true; };
   }, [open]);
 
   if (!open) return null;
@@ -128,7 +183,7 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
         <div className="mt-3 grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => { onClose(); navigate('/launch/memory?quick=1'); }}
+            onClick={() => { onClose(); navigate('/launch/memory?record=1'); }}
             className="min-h-[56px] rounded-2xl border border-brain-health-200 bg-white text-brain-health-900 font-medium flex items-center justify-center gap-2"
           >
             <Mic className="h-5 w-5 text-brand-orange-600" />
@@ -143,6 +198,34 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
             Check in
           </button>
         </div>
+
+        {last && (
+          <button
+            type="button"
+            onClick={() => { onClose(); navigate(`/launch/memory?open=${last.recordingId}`); }}
+            className="mt-3 w-full min-h-[56px] rounded-2xl border border-brain-health-200 bg-white px-4 flex items-center gap-3 text-left"
+          >
+            <History className="h-5 w-5 text-clarity-teal-600 shrink-0" />
+            <span className="min-w-0">
+              <span className="block text-sm font-medium text-brain-health-900 truncate">
+                {last.title}
+              </span>
+              <span className="block text-[11px] text-brain-health-500 truncate">
+                {[last.referenceCode, last.startedAt ? format(new Date(last.startedAt), 'd MMM, HH:mm') : null]
+                  .filter(Boolean)
+                  .join(' · ') || 'My last conversation'}
+              </span>
+            </span>
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={() => { onClose(); navigate('/launch/memory'); }}
+          className="mt-2 w-full text-center text-xs text-brain-health-600 underline min-h-[44px]"
+        >
+          All my conversations
+        </button>
 
         <p className="mt-3 text-center text-[11px] text-brain-health-500">
           Nothing to get right. You can change it later.
