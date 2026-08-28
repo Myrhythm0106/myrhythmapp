@@ -10,7 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail } from 'lucide-react';
+import { z } from 'zod';
+import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
+
+const ownerEmailSchema = z.string().trim().toLowerCase().email();
+
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from 'date-fns';
