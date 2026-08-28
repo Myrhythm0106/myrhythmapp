@@ -140,6 +140,18 @@ const config: Config = {
           800: "hsl(var(--neural-magenta-800))",
           900: "hsl(var(--neural-magenta-900))",
         },
+        // Emerald Prestige "exhibit" tokens — consultancy-grade document surfaces
+        exhibit: {
+          ink: "hsl(var(--exhibit-ink))",
+          moss: "hsl(var(--exhibit-moss))",
+          soft: "hsl(var(--exhibit-soft))",
+          surface: "hsl(var(--exhibit-surface))",
+          paper: "hsl(var(--exhibit-paper))",
+          rule: "hsl(var(--exhibit-rule))",
+          accent: "hsl(var(--exhibit-accent))",
+          amber: "hsl(var(--exhibit-amber))",
+          alert: "hsl(var(--exhibit-alert))",
+        },
         // Brain Health Spectrum: Unified emerald-teal-cyan (45-55% saturation)
         "brain-health": {
           50: "hsl(var(--brain-health-50))",
