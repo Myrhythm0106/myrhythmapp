@@ -432,9 +432,9 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
   return (
     <Button
       type="button"
-      variant="outline"
       size="sm"
       disabled={sending}
+      className="bg-brand-orange-500 hover:bg-brand-orange-600 text-white"
       onClick={async () => {
         setSending(true);
         try {
@@ -640,10 +640,10 @@ export function ActionsTableView({
                               required
                               ariaLabel="Edit action"
                               placeholder="Describe this action…"
-                              displayClassName="font-medium text-sm"
+                              displayClassName="font-medium text-[15px] leading-snug text-brain-health-950"
                             />
                           ) : (
-                            <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
+                            <p className="font-medium text-[15px] leading-snug text-brain-health-950 line-clamp-2">{action.action_text}</p>
                           )}
 
                           {action.reference_code && (
@@ -736,7 +736,7 @@ export function ActionsTableView({
                             onValueChange={(v) => onStatusChange(action.id!, v)}
                           >
                             <SelectTrigger className={cn(
-                              "h-8 w-full text-xs border-0",
+                              "h-9 w-full text-[11px] font-semibold border-0 rounded-full px-3",
                               getStatusOption(action.status).color
                             )}>
                               <SelectValue />
