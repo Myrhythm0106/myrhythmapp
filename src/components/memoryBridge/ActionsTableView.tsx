@@ -484,12 +484,12 @@ export function ActionsTableView({
 
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
+    <div className="relative overflow-x-auto rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
       {/* Glass reflection */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
-      
+
       <DragDropContext onDragEnd={onDragEnd}>
-        <Table>
+        <Table className="min-w-[860px]">
           <TableHeader>
             <TableRow className="bg-gradient-to-r from-gray-50/90 to-white/90 hover:bg-gray-50/90">
               <TableHead className="w-10"></TableHead>
@@ -505,29 +505,17 @@ export function ActionsTableView({
                   )} />
                 </div>
               </TableHead>
-              <TableHead className="min-w-[200px]">Action</TableHead>
-              <TableHead className="w-32">Assigned</TableHead>
+              <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
+              <TableHead className="w-28 hidden lg:table-cell">Assigned</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+                className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
                 onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
-                  Start
+                  Schedule
                   <ArrowUpDown className={cn(
                     "h-3 w-3 transition-colors",
-                    sortField === 'start' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
-                </div>
-              </TableHead>
-              <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
-                onClick={() => onSort('finish')}
-              >
-                <div className="flex items-center gap-1">
-                  Finish
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'finish' ? "text-brand-orange-500" : "text-muted-foreground"
+                    (sortField === 'start' || sortField === 'finish') ? "text-brand-orange-500" : "text-muted-foreground"
                   )} />
                 </div>
               </TableHead>
@@ -544,8 +532,7 @@ export function ActionsTableView({
                   )} />
                 </div>
               </TableHead>
-              <TableHead className="w-20">Watchers</TableHead>
-              <TableHead className="w-28">Reminders</TableHead>
+              <TableHead className="w-32">Support</TableHead>
               <TableHead className="w-10"></TableHead>
 
             </TableRow>
@@ -641,7 +628,7 @@ export function ActionsTableView({
                             </p>
                           ) : null}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden lg:table-cell">
                           {onAssignedChange ? (
                             <EditableText
                               value={action.assigned_to}
@@ -655,32 +642,32 @@ export function ActionsTableView({
                           )}
                         </TableCell>
                         <TableCell>
-                          {onStartDateChange ? (
-                            <EditableDate
-                              value={action.start_date}
-                              onSave={(d) => onStartDateChange(action.id!, d)}
-                              ariaLabel="Edit start date"
-                            />
-                          ) : (
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              {formatDate(action.start_date)}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Start</span>
+                              {onStartDateChange ? (
+                                <EditableDate
+                                  value={action.start_date}
+                                  onSave={(d) => onStartDateChange(action.id!, d)}
+                                  ariaLabel="Edit start date"
+                                />
+                              ) : (
+                                <span className="text-sm text-muted-foreground">{formatDate(action.start_date)}</span>
+                              )}
                             </div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {onDueDateChange ? (
-                            <EditableDate
-                              value={action.completion_date || action.end_date}
-                              onSave={(d) => onDueDateChange(action.id!, d)}
-                              ariaLabel="Edit finish date"
-                            />
-                          ) : (
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              {formatDate(action.completion_date || action.end_date)}
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Finish</span>
+                              {onDueDateChange ? (
+                                <EditableDate
+                                  value={action.completion_date || action.end_date}
+                                  onSave={(d) => onDueDateChange(action.id!, d)}
+                                  ariaLabel="Edit finish date"
+                                />
+                              ) : (
+                                <span className="text-sm text-muted-foreground">{formatDate(action.completion_date || action.end_date)}</span>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </TableCell>
                         <TableCell>
                           <EditableDueIn
@@ -711,36 +698,35 @@ export function ActionsTableView({
                           </Select>
                         </TableCell>
                         <TableCell>
-                          {onWatchersChange ? (
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <button
-                                  type="button"
-                                  aria-label="Change watchers"
-                                  className="min-h-[44px] flex items-center rounded-md px-2 -mx-2 hover:bg-muted/50 transition-colors"
-                                >
-                                  <WatcherAvatars watchers={action.assigned_watchers} />
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-80 p-3" align="end">
-                                <ActionWatcherSelector
-                                  actionId={action.id!}
-                                  assignedWatchers={action.assigned_watchers || []}
-                                  onWatchersChange={(w) => onWatchersChange(action.id!, w)}
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          ) : (
-                            <WatcherAvatars watchers={action.assigned_watchers} />
-                          )}
-                        </TableCell>
-
-                        <TableCell>
-                          <ReminderBadge
-                            offsets={ladders?.[action.id!] || []}
-                            dueDate={action.completion_date || action.end_date}
-                            onClick={() => onOpenReminders?.(action)}
-                          />
+                          <div className="space-y-1">
+                            {onWatchersChange ? (
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <button
+                                    type="button"
+                                    aria-label="Change watchers"
+                                    className="min-h-[32px] flex items-center rounded-md px-2 -mx-2 hover:bg-muted/50 transition-colors"
+                                  >
+                                    <WatcherAvatars watchers={action.assigned_watchers} />
+                                  </button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-80 p-3" align="end">
+                                  <ActionWatcherSelector
+                                    actionId={action.id!}
+                                    assignedWatchers={action.assigned_watchers || []}
+                                    onWatchersChange={(w) => onWatchersChange(action.id!, w)}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            ) : (
+                              <WatcherAvatars watchers={action.assigned_watchers} />
+                            )}
+                            <ReminderBadge
+                              offsets={ladders?.[action.id!] || []}
+                              dueDate={action.completion_date || action.end_date}
+                              onClick={() => onOpenReminders?.(action)}
+                            />
+                          </div>
                         </TableCell>
 
 
