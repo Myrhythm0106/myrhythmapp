@@ -252,6 +252,7 @@ export default function LaunchMemoryBridge() {
   // Two-tap capture: arriving with ?record=1 starts recording immediately.
   // One attempt only — a blocked mic must never retry in a loop.
   const autoStartedRef = useRef(false);
+  const recorderCardRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const wants = searchParams.get('record') === '1' || searchParams.get('quick') === '1';
     if (!wants || autoStartedRef.current) return;
@@ -261,7 +262,9 @@ export default function LaunchMemoryBridge() {
     next.delete('quick');
     setSearchParams(next, { replace: true });
     if (isRecording || state === 'reviewing' || audioBlobRef.current) return;
-    void handleStartRecording();
+    void handleStartRecording().then(() => {
+      recorderCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
