@@ -54,38 +54,32 @@ interface ActionsTableViewProps {
 
 
 const priorityOptions = [
-  { value: '1', label: 'High', color: 'bg-red-500' },
-  { value: '3', label: 'Medium', color: 'bg-brand-orange-500' },
-  { value: '5', label: 'Low', color: 'bg-green-500' }
+  { value: '1', label: 'High', color: 'bg-brand-orange-500', pill: 'bg-brand-orange-500 text-white' },
+  { value: '3', label: 'Medium', color: 'bg-brain-health-500', pill: 'bg-brain-health-100 text-brain-health-700' },
+  { value: '5', label: 'Low', color: 'bg-muted-foreground/50', pill: 'bg-muted text-muted-foreground' }
 ];
 
 const priorityValueFor = (level: number) => (level <= 2 ? '1' : level >= 4 ? '5' : '3');
+const priorityPillFor = (level: number) =>
+  priorityOptions.find(o => o.value === priorityValueFor(level))?.pill || 'bg-muted text-muted-foreground';
 
 const statusOptions = [
   { value: 'not_started', label: 'Ready to Begin', color: 'bg-muted text-muted-foreground' },
-  { value: 'doing', label: 'In My Flow', color: 'bg-blue-100 text-blue-700' },
-  { value: 'done', label: 'Accomplished!', color: 'bg-green-100 text-green-700' },
-  { value: 'on_hold', label: 'Paused', color: 'bg-amber-100 text-amber-700' },
-  { value: 'cancelled', label: 'Redirected', color: 'bg-red-100 text-red-700' }
+  { value: 'doing', label: 'In My Flow', color: 'bg-brain-health-100 text-brain-health-700' },
+  { value: 'done', label: 'Accomplished!', color: 'bg-memory-emerald-100 text-memory-emerald-700' },
+  { value: 'on_hold', label: 'Paused', color: 'bg-sunrise-amber-100 text-sunrise-amber-700' },
+  { value: 'cancelled', label: 'Redirected', color: 'bg-muted text-muted-foreground' }
 ];
 
 const PriorityIndicator = ({ level }: { level: number }) => {
-  const config = {
-    1: { color: 'bg-red-500', glow: 'shadow-red-500/50', label: 'High' },
-    2: { color: 'bg-red-500', glow: 'shadow-red-500/50', label: 'High' },
-    3: { color: 'bg-brand-orange-500', glow: 'shadow-brand-orange-500/50', label: 'Medium' },
-    4: { color: 'bg-green-500', glow: 'shadow-green-500/50', label: 'Low' },
-    5: { color: 'bg-green-500', glow: 'shadow-green-500/50', label: 'Low' }
-  }[level] || { color: 'bg-gray-400', glow: '', label: 'None' };
-
+  const label = level <= 2 ? 'High' : level >= 4 ? 'Low' : 'Medium';
   return (
-    <div className="flex items-center gap-2">
-      <div 
-        className={cn("w-3 h-3 rounded-full shadow-lg animate-pulse", config.color, config.glow)} 
-        title={config.label}
-      />
-      <span className="text-xs text-muted-foreground">{config.label}</span>
-    </div>
+    <span className={cn(
+      'inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold',
+      priorityPillFor(level)
+    )}>
+      {label}
+    </span>
   );
 };
 
@@ -98,7 +92,7 @@ const WatcherAvatars = ({ watchers }: { watchers: string[] | undefined }) => {
     <div className="flex -space-x-1">
       {watchers.slice(0, 3).map((id, i) => (
         <Avatar key={id} className="h-6 w-6 ring-1 ring-white">
-          <AvatarFallback className="text-[10px] bg-neural-purple-100 text-neural-purple-700">
+          <AvatarFallback className="text-[10px] bg-brain-health-100 text-brain-health-700">
             {i + 1}
           </AvatarFallback>
         </Avatar>
@@ -275,7 +269,7 @@ const EditableDate = ({
           className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
         >
           <Calendar className="h-3 w-3 text-muted-foreground" />
-          {parsed ? format(parsed, 'MMM d') : '—'}
+          {parsed ? format(parsed, 'MMM d') : 'Set date'}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -361,14 +355,19 @@ const EditableDueIn = ({
         aria-label="Edit due in"
         onClick={() => setIsEditing(true)}
         className={cn(
-          'min-h-[44px] w-full text-left rounded-md px-2 py-2 -mx-2 text-sm font-medium transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40',
-          label.tone === 'amber' && 'text-amber-600',
-          label.tone === 'red' && 'text-red-600',
-          label.tone === 'green' && 'text-green-600',
-          label.tone === 'neutral' && 'text-muted-foreground'
+          'min-h-[44px] w-full text-left rounded-md px-2 py-2 -mx-2 transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40'
         )}
       >
-        {label.text}
+        <span className={cn(
+          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold',
+          label.tone === 'amber' && 'bg-sunrise-amber-100 text-sunrise-amber-700',
+          label.tone === 'red' && 'bg-red-100 text-red-700',
+          label.tone === 'green' && 'bg-memory-emerald-100 text-memory-emerald-700',
+          label.tone === 'neutral' && 'bg-muted text-muted-foreground'
+        )}>
+          {label.tone === 'green' && <Check className="h-3 w-3" />}
+          {label.text}
+        </span>
       </button>
     );
   }
@@ -433,9 +432,9 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
   return (
     <Button
       type="button"
-      variant="outline"
       size="sm"
       disabled={sending}
+      className="gap-2 bg-brand-orange-500 hover:bg-brand-orange-600 text-white"
       onClick={async () => {
         setSending(true);
         try {
@@ -444,7 +443,6 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
           setSending(false);
         }
       }}
-      className="gap-2"
     >
       <Mail className="h-3.5 w-3.5" />
       {sending ? 'Sending…' : 'Send to everyone'}
@@ -519,62 +517,64 @@ export function ActionsTableView({
   const formatDate = (dateStr: string | null | undefined) => formatDateOnly(dateStr, 'MMM d');
 
 
-  return (
-    <div className="relative overflow-x-auto rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
-      {/* Glass reflection */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-white/50 to-transparent pointer-events-none z-10" />
+  const openCount = actions.filter(a => !a.archived_at && a.status !== 'done').length;
+  const doneCount = actions.filter(a => a.status === 'done').length;
 
-      {onSendToAll && (
-        <div className="flex justify-end px-4 pt-3">
-          <SendToAllButton onSend={onSendToAll} />
-        </div>
-      )}
+  const headCell = 'text-brain-health-50 text-[11px] font-semibold uppercase tracking-[0.14em]';
+  const sortIcon = (active: boolean) => cn(
+    'h-3 w-3 transition-colors',
+    active ? 'text-brand-orange-300' : 'text-brain-health-300'
+  );
+
+  return (
+    <div className="relative overflow-x-auto rounded-2xl bg-white/85 backdrop-blur-xl shadow-xl border border-brain-health-100">
+      {/* Summary strip */}
+      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-brain-health-100">
+        <p className="text-xs text-brain-health-700">
+          <span className="font-semibold text-brain-health-900">{openCount} next step{openCount === 1 ? '' : 's'}</span>
+          {doneCount > 0 && (
+            <span className="text-muted-foreground"> · {doneCount} accomplished</span>
+          )}
+        </p>
+        {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+      </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Table className="min-w-[860px]">
-          <TableHeader>
-            <TableRow className="bg-gradient-to-r from-gray-50/90 to-white/90 hover:bg-gray-50/90">
+          <TableHeader className="sticky top-0 z-10">
+            <TableRow className="bg-brain-health-900 hover:bg-brain-health-900 border-b-0">
               <TableHead className="w-10"></TableHead>
-              <TableHead 
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+              <TableHead
+                className={cn(headCell, 'cursor-pointer transition-colors w-24 hover:bg-brain-health-800')}
                 onClick={() => onSort('priority')}
               >
                 <div className="flex items-center gap-1">
                   Priority
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'priority' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'priority')} />
                 </div>
               </TableHead>
-              <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
-              <TableHead className="w-40 hidden lg:table-cell">Who's involved</TableHead>
+              <TableHead className={cn(headCell, 'min-w-[300px] w-[34%]')}>Action</TableHead>
+              <TableHead className={cn(headCell, 'w-40 hidden lg:table-cell')}>Who's involved</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
+                className={cn(headCell, 'cursor-pointer transition-colors w-40 hover:bg-brain-health-800')}
                 onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
                   Schedule
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    (sortField === 'start' || sortField === 'finish') ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
                 </div>
               </TableHead>
-              <TableHead className="w-28">Due in</TableHead>
+              <TableHead className={cn(headCell, 'w-28')}>Due in</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-36"
+                className={cn(headCell, 'cursor-pointer transition-colors w-36 hover:bg-brain-health-800')}
                 onClick={() => onSort('status')}
               >
                 <div className="flex items-center gap-1">
                   Status
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'status' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
+                  <ArrowUpDown className={sortIcon(sortField === 'status')} />
                 </div>
               </TableHead>
-              <TableHead className="w-32">Support</TableHead>
+              <TableHead className={cn(headCell, 'w-32')}>Support</TableHead>
               <TableHead className="w-10"></TableHead>
 
             </TableRow>
@@ -590,24 +590,27 @@ export function ActionsTableView({
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         className={cn(
-                          "hover:bg-muted/30 transition-all duration-200",
+                          "group border-b border-brain-health-100/60 hover:bg-brain-health-50/60 transition-colors duration-150",
                           snapshot.isDragging && "bg-brand-orange-50 shadow-lg scale-[1.01] rounded-lg"
                         )}
                       >
-                        <TableCell 
-                          {...provided.dragHandleProps} 
-                          className="cursor-grab active:cursor-grabbing"
+                        <TableCell
+                          {...provided.dragHandleProps}
+                          className="cursor-grab active:cursor-grabbing py-3"
                         >
-                          <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+                          <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors md:opacity-0 md:group-hover:opacity-100" />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3">
                           {onPriorityChange ? (
                             <Select
                               value={priorityValueFor(action.priority_level || 3)}
                               onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
                             >
                               <SelectTrigger
-                                className="h-9 w-full border-0 bg-transparent px-2 text-xs"
+                                className={cn(
+                                  "h-9 w-full border-0 rounded-full px-3 text-[11px] font-semibold",
+                                  priorityPillFor(action.priority_level || 3)
+                                )}
                                 aria-label="Change priority"
                               >
                                 <SelectValue />
@@ -636,10 +639,10 @@ export function ActionsTableView({
                               required
                               ariaLabel="Edit action"
                               placeholder="Describe this action…"
-                              displayClassName="font-medium text-sm"
+                              displayClassName="font-medium text-[15px] leading-snug text-brain-health-950"
                             />
                           ) : (
-                            <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
+                            <p className="font-medium text-[15px] leading-snug text-brain-health-950 line-clamp-2">{action.action_text}</p>
                           )}
 
                           {action.reference_code && (
@@ -732,7 +735,7 @@ export function ActionsTableView({
                             onValueChange={(v) => onStatusChange(action.id!, v)}
                           >
                             <SelectTrigger className={cn(
-                              "h-8 w-full text-xs border-0",
+                              "h-9 w-full text-[11px] font-semibold border-0 rounded-full px-3",
                               getStatusOption(action.status).color
                             )}>
                               <SelectValue />
@@ -783,7 +786,7 @@ export function ActionsTableView({
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More options">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 md:opacity-0 md:group-hover:opacity-100 transition-opacity" aria-label="More options">
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
