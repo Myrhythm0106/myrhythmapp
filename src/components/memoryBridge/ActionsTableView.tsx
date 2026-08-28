@@ -505,29 +505,17 @@ export function ActionsTableView({
                   )} />
                 </div>
               </TableHead>
-              <TableHead className="min-w-[200px]">Action</TableHead>
-              <TableHead className="w-32">Assigned</TableHead>
+              <TableHead className="min-w-[300px] w-[34%]">Action</TableHead>
+              <TableHead className="w-28 hidden lg:table-cell">Assigned</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+                className="cursor-pointer hover:bg-muted/50 transition-colors w-40"
                 onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
-                  Start
+                  Schedule
                   <ArrowUpDown className={cn(
                     "h-3 w-3 transition-colors",
-                    sortField === 'start' ? "text-brand-orange-500" : "text-muted-foreground"
-                  )} />
-                </div>
-              </TableHead>
-              <TableHead
-                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
-                onClick={() => onSort('finish')}
-              >
-                <div className="flex items-center gap-1">
-                  Finish
-                  <ArrowUpDown className={cn(
-                    "h-3 w-3 transition-colors",
-                    sortField === 'finish' ? "text-brand-orange-500" : "text-muted-foreground"
+                    (sortField === 'start' || sortField === 'finish') ? "text-brand-orange-500" : "text-muted-foreground"
                   )} />
                 </div>
               </TableHead>
@@ -544,8 +532,7 @@ export function ActionsTableView({
                   )} />
                 </div>
               </TableHead>
-              <TableHead className="w-20">Watchers</TableHead>
-              <TableHead className="w-28">Reminders</TableHead>
+              <TableHead className="w-32">Support</TableHead>
               <TableHead className="w-10"></TableHead>
 
             </TableRow>
