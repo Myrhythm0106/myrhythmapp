@@ -432,9 +432,8 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
   return (
     <Button
       type="button"
-      size="sm"
       disabled={sending}
-      className="gap-2 bg-brand-orange-500 hover:bg-brand-orange-600 text-white"
+      className="h-11 min-h-[44px] gap-2 rounded-[8px] bg-exhibit-accent px-4 font-sora text-[12.5px] font-semibold tracking-wide text-white shadow-none hover:bg-exhibit-accent/90"
       onClick={async () => {
         setSending(true);
         try {
@@ -444,7 +443,7 @@ const SendToAllButton: React.FC<{ onSend: () => Promise<void> }> = ({ onSend }) 
         }
       }}
     >
-      <Mail className="h-3.5 w-3.5" />
+      <Mail className="h-4 w-4" />
       {sending ? 'Sending…' : 'Send to everyone'}
     </Button>
   );
