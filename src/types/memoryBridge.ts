@@ -26,6 +26,8 @@ export interface NextStepsItem {
   category: 'action' | 'watch_out' | 'depends_on' | 'note';
   action_type: 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up';
   assigned_to?: string;
+  /** Email of the person who owns this action, so scheduling can invite them. */
+  owner_email?: string | null;
   owner?: string;
   created_by?: string;
   due_context?: string;
