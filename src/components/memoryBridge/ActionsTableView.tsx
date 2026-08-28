@@ -92,7 +92,7 @@ const WatcherAvatars = ({ watchers }: { watchers: string[] | undefined }) => {
     <div className="flex -space-x-1">
       {watchers.slice(0, 3).map((id, i) => (
         <Avatar key={id} className="h-6 w-6 ring-1 ring-white">
-          <AvatarFallback className="text-[10px] bg-neural-purple-100 text-neural-purple-700">
+          <AvatarFallback className="text-[10px] bg-brain-health-100 text-brain-health-700">
             {i + 1}
           </AvatarFallback>
         </Avatar>
@@ -269,7 +269,7 @@ const EditableDate = ({
           className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
         >
           <Calendar className="h-3 w-3 text-muted-foreground" />
-          {parsed ? format(parsed, 'MMM d') : '—'}
+          {parsed ? format(parsed, 'MMM d') : 'Set date'}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
