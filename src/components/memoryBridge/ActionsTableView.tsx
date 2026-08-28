@@ -754,11 +754,11 @@ export function ActionsTableView({
                           ) : null}
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
-                          {onOwnerChange ? (
-                            <OwnerCell
-                              name={action.assigned_to}
-                              email={(action as any).owner_email}
-                              onSave={(next) => onOwnerChange(action.id!, next)}
+                          {onRaciChange ? (
+                            <WhosInvolvedCell
+                              action={action}
+                              onSave={(payload) => onRaciChange(action.id!, payload)}
+                              onSend={onSendRaci ? (payload) => onSendRaci(action.id!, payload) : undefined}
                             />
                           ) : onAssignedChange ? (
                             <EditableText
