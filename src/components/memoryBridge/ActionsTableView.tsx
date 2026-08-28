@@ -628,7 +628,7 @@ export function ActionsTableView({
                             </p>
                           ) : null}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden lg:table-cell">
                           {onAssignedChange ? (
                             <EditableText
                               value={action.assigned_to}
@@ -642,32 +642,32 @@ export function ActionsTableView({
                           )}
                         </TableCell>
                         <TableCell>
-                          {onStartDateChange ? (
-                            <EditableDate
-                              value={action.start_date}
-                              onSave={(d) => onStartDateChange(action.id!, d)}
-                              ariaLabel="Edit start date"
-                            />
-                          ) : (
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              {formatDate(action.start_date)}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Start</span>
+                              {onStartDateChange ? (
+                                <EditableDate
+                                  value={action.start_date}
+                                  onSave={(d) => onStartDateChange(action.id!, d)}
+                                  ariaLabel="Edit start date"
+                                />
+                              ) : (
+                                <span className="text-sm text-muted-foreground">{formatDate(action.start_date)}</span>
+                              )}
                             </div>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {onDueDateChange ? (
-                            <EditableDate
-                              value={action.completion_date || action.end_date}
-                              onSave={(d) => onDueDateChange(action.id!, d)}
-                              ariaLabel="Edit finish date"
-                            />
-                          ) : (
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              {formatDate(action.completion_date || action.end_date)}
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wide text-muted-foreground w-11">Finish</span>
+                              {onDueDateChange ? (
+                                <EditableDate
+                                  value={action.completion_date || action.end_date}
+                                  onSave={(d) => onDueDateChange(action.id!, d)}
+                                  ariaLabel="Edit finish date"
+                                />
+                              ) : (
+                                <span className="text-sm text-muted-foreground">{formatDate(action.completion_date || action.end_date)}</span>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </TableCell>
                         <TableCell>
                           <EditableDueIn
