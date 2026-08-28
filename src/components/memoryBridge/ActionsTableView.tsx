@@ -53,52 +53,52 @@ interface ActionsTableViewProps {
 }
 
 
+/**
+ * Exhibit chip — one geometry for every state in the summary.
+ * Squared 6px corners read as a professional document; pills read consumer.
+ */
+const CHIP =
+  'inline-flex items-center gap-1 h-[22px] rounded-[6px] px-2 font-sora text-[11px] font-semibold leading-none whitespace-nowrap';
+
 const priorityOptions = [
-  { value: '1', label: 'High', color: 'bg-brand-orange-500', pill: 'bg-brand-orange-500 text-white' },
-  { value: '3', label: 'Medium', color: 'bg-brain-health-500', pill: 'bg-brain-health-100 text-brain-health-700' },
-  { value: '5', label: 'Low', color: 'bg-muted-foreground/50', pill: 'bg-muted text-muted-foreground' }
+  { value: '1', label: 'High', dot: 'bg-exhibit-accent', pill: 'bg-exhibit-accent text-white' },
+  { value: '3', label: 'Medium', dot: 'bg-exhibit-moss', pill: 'bg-white text-exhibit-moss ring-1 ring-inset ring-exhibit-moss/40' },
+  { value: '5', label: 'Low', dot: 'bg-exhibit-soft', pill: 'bg-white text-exhibit-soft ring-1 ring-inset ring-exhibit-rule' }
 ];
 
 const priorityValueFor = (level: number) => (level <= 2 ? '1' : level >= 4 ? '5' : '3');
 const priorityPillFor = (level: number) =>
-  priorityOptions.find(o => o.value === priorityValueFor(level))?.pill || 'bg-muted text-muted-foreground';
+  priorityOptions.find(o => o.value === priorityValueFor(level))?.pill || priorityOptions[2].pill;
 
 const statusOptions = [
-  { value: 'not_started', label: 'Ready to Begin', color: 'bg-muted text-muted-foreground' },
-  { value: 'doing', label: 'In My Flow', color: 'bg-brain-health-100 text-brain-health-700' },
-  { value: 'done', label: 'Accomplished!', color: 'bg-memory-emerald-100 text-memory-emerald-700' },
-  { value: 'on_hold', label: 'Paused', color: 'bg-sunrise-amber-100 text-sunrise-amber-700' },
-  { value: 'cancelled', label: 'Redirected', color: 'bg-muted text-muted-foreground' }
+  { value: 'not_started', label: 'Ready to Begin', color: 'bg-white text-exhibit-moss ring-1 ring-inset ring-exhibit-rule' },
+  { value: 'doing', label: 'In My Flow', color: 'bg-exhibit-moss/10 text-exhibit-ink ring-1 ring-inset ring-exhibit-moss/30' },
+  { value: 'done', label: 'Accomplished!', color: 'bg-exhibit-ink text-white' },
+  { value: 'on_hold', label: 'Paused', color: 'bg-white text-exhibit-amber ring-1 ring-inset ring-exhibit-amber/40' },
+  { value: 'cancelled', label: 'Redirected', color: 'bg-white text-exhibit-soft ring-1 ring-inset ring-exhibit-rule' }
 ];
 
 const PriorityIndicator = ({ level }: { level: number }) => {
   const label = level <= 2 ? 'High' : level >= 4 ? 'Low' : 'Medium';
-  return (
-    <span className={cn(
-      'inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold',
-      priorityPillFor(level)
-    )}>
-      {label}
-    </span>
-  );
+  return <span className={cn(CHIP, priorityPillFor(level))}>{label}</span>;
 };
 
 const WatcherAvatars = ({ watchers }: { watchers: string[] | undefined }) => {
   if (!watchers || watchers.length === 0) {
-    return <span className="text-xs text-muted-foreground">—</span>;
+    return <span className="font-sora text-[11px] text-exhibit-soft">Add</span>;
   }
 
   return (
     <div className="flex -space-x-1">
       {watchers.slice(0, 3).map((id, i) => (
-        <Avatar key={id} className="h-6 w-6 ring-1 ring-white">
-          <AvatarFallback className="text-[10px] bg-brain-health-100 text-brain-health-700">
+        <Avatar key={id} className="h-6 w-6 rounded-[6px] ring-1 ring-white">
+          <AvatarFallback className="rounded-[6px] font-sora text-[10px] bg-exhibit-moss/12 text-exhibit-ink">
             {i + 1}
           </AvatarFallback>
         </Avatar>
       ))}
       {watchers.length > 3 && (
-        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium ring-1 ring-white">
+        <div className="h-6 w-6 rounded-[6px] bg-exhibit-surface flex items-center justify-center font-sora text-[10px] font-medium text-exhibit-moss ring-1 ring-white">
           +{watchers.length - 3}
         </div>
       )}
