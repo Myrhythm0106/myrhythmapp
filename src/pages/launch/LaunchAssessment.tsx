@@ -99,8 +99,20 @@ export default function LaunchAssessment() {
       navigate('/launch/user-type', { replace: true });
       return;
     }
+    // If the stored user type no longer matches saved progress, start the
+    // matching bank clean — never carry another persona's answers over.
+    if (initial?.persona && initial.persona !== bank.persona) {
+      try {
+        localStorage.removeItem(PROGRESS_KEY);
+      } catch {/* noop */}
+      setAnswers({});
+      setFreeform({});
+      setCurrentQuestion(0);
+      setEventRecency(null);
+      setPhase('recency');
+    }
     setPersona((prev) => (prev === bank.persona ? prev : bank.persona));
-  }, [navigate]);
+  }, [navigate, initial]);
 
   const bank = useMemo(() => getAssessmentBank(persona), [persona]);
 
@@ -150,7 +162,15 @@ export default function LaunchAssessment() {
       <LaunchLayout>
         <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
           <p className="text-xs text-launch-ink/50 mb-4 -mt-2">
-            {PERSONA_LABEL[bank.persona]}
+            {PERSONA_LABEL[bank.persona]}{' '}
+            ·{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/launch/user-type')}
+              className="underline underline-offset-2 hover:text-launch-ink"
+            >
+              Not me — change this
+            </button>
           </p>
 
           <div className="mb-6">
@@ -167,10 +187,10 @@ export default function LaunchAssessment() {
 
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">
-              When did the experience happen?
+              {bank.preQuestion.title}
             </h2>
             <p className="text-launch-ink/70 text-sm">
-              This helps us calibrate today's questions to where you actually are — whether that's last month or fifteen years ago.
+              {bank.preQuestion.subtitle}
             </p>
           </div>
 
@@ -374,7 +394,17 @@ export default function LaunchAssessment() {
     <LaunchLayout>
       <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
         <div className="flex items-center justify-between gap-2 mb-3 -mt-2">
-          <p className="text-xs text-launch-ink/50">{PERSONA_LABEL[bank.persona]}</p>
+          <p className="text-xs text-launch-ink/50">
+            {PERSONA_LABEL[bank.persona]}{' '}
+            ·{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/launch/user-type')}
+              className="underline underline-offset-2 hover:text-launch-ink"
+            >
+              Not me — change this
+            </button>
+          </p>
           <FrameworkInfoSheet />
         </div>
 
