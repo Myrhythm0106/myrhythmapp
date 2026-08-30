@@ -4,14 +4,23 @@
 
 The signed-in Next Steps route is `/launch/commit`. That page currently renders a static Commit capability overview and does not import or render the Executive Summary, recordings, or extracted actions. The earlier fixes were added to recording dialogs, so they could never appear on the page you are viewing.
 
-## What will change
+## What will change — SMART, professional, never overwhelming
 
-1. **Replace the static Commit overview with the real Next Steps workspace.** `/launch/commit` will become the usable Next Steps page rather than a feature-description page.
-2. **Show the latest conversation brief immediately.** The newest processed conversation will be selected by default and its professional Executive Summary will appear above its actions—without requiring another hidden click.
-3. **Add a simple conversation selector.** A compact selector will let you move between saved conversations while keeping the page calm and within the three-choice rule.
-4. **Reuse the established professional summary and actions.** The page will use the existing `ExecutiveSummaryPanel` and consultancy-grade actions table, preserving dates, owners, RACI/everyday involvement, reminders, scheduling, and board-ready exports.
-5. **Handle every state visibly.** Loading, no recordings, incomplete meeting data, and query failure will each show a clear summary-area state rather than an empty gap.
-6. **Keep the overview without blocking the work.** The current Commit capability content will be moved into a secondary “About Commit” disclosure; nothing will be deleted.
+1. **Replace the static Commit overview with the real Next Steps workspace.** `/launch/commit` becomes the usable page, not a feature description.
+2. **One thing first: the brief.** The newest processed conversation is selected automatically and its professional Executive Summary is the first thing on screen — no extra click, no hunting.
+3. **Progressive disclosure, not a wall.** The summary opens with the narrative and the four counts only. Themes, decisions and open questions sit behind quiet expanders. The actions table sits below the fold, so the first screen is read, not scanned.
+4. **Three choices maximum on the page.** Exactly one primary action (Schedule proposed dates), plus a compact conversation selector and a single Export control. Everything else stays inside the actions table where it already lives.
+5. **Consultancy-grade presentation, unchanged tokens.** Existing Emerald/exhibit styling, Sora/Manrope typography and the current `ExecutiveSummaryPanel` and actions table are reused exactly — owners, everyday involvement labels, dates, reminders, reference codes and board-ready exports all carry over.
+6. **Honest states, never a blank gap.** Loading, no recordings yet, incomplete meeting record and query failure each render a clear, calm state with one recovery action.
+7. **Nothing lost.** The current Commit capability copy moves into a collapsed "About Commit" section at the foot of the page.
+
+## Why this is SMART
+
+- **Specific:** the Executive Summary appears on `/launch/commit` above the actions.
+- **Measurable:** visible within the first screen, no scroll and no extra tap, on phone and laptop.
+- **Achievable:** reuses components that already exist and already render correctly elsewhere.
+- **Relevant:** this is the page the Next Steps navigation actually lands on.
+- **Time-bound:** one focused pass, no schema changes.
 
 ## Technical details
 
@@ -22,7 +31,9 @@ The signed-in Next Steps route is `/launch/commit`. That page currently renders 
 
 ## Verification
 
-- Open the You-Are-Here dial → Commit/Next Steps and confirm the professional Executive Summary is visible in the first screen of useful content.
+- Open the You-Are-Here dial → Commit/Next Steps and confirm the professional Executive Summary is the first content on screen, with no extra tap.
+- Confirm the first screen shows narrative and counts only, with themes, decisions and open questions collapsed.
+- Confirm exactly one primary action is visible on the page.
 - Switch conversations and confirm the summary and actions update together.
 - Verify loading, empty, incomplete-record, and error states.
-- Check desktop and phone layouts, then confirm Excel/CSV/PDF exports still use the selected conversation’s summary.
+- Check phone and laptop layouts, then confirm Excel/CSV/PDF exports still use the selected conversation’s summary.
