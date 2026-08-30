@@ -53,7 +53,10 @@ Priority · Action · How I'll know I'm done · Owner · Owner email · Who's in
 
 ## Technical notes
 
+- New `ExecutiveSummaryPanel.tsx` in `src/components/memoryBridge/`, fed by the existing `buildExecutiveSummary` / `extractDecisions` / `extractThemes` helpers in `capture-brief/model/synthesize.ts`; rendered above the table in `ActionsViewer.tsx`.
+- Proposed dates come from `enrichWithSchedulingSuggestions`; "Schedule all proposed dates" calls the existing `scheduleExtractedActions` in `capture-brief/model/scheduleFromMeeting.ts`, so invites, owner emails, and reminders behave exactly as today.
 - New file `src/components/memoryBridge/exporters/actionsXlsx.ts` using the `exceljs` + `file-saver` pattern already proven in `capture-brief/exporters/xlsx.ts`; loaded via dynamic `import()` so it doesn't weigh down the page.
+
 - CSV built inline (BOM + quoted fields), same pattern as `src/components/roadmap/roadmapExports.ts`.
 - Header control added to `ActionsTableView.tsx` next to the existing actions, as a `DropdownMenu` with 44px+ items; exports whatever rows are currently shown (respecting any active filter/order, including drag-reordered priority).
 - Reads existing fields on `NextStepsItem` (`owner_email`, `accountable`/`consulted`/`informed`, `start_date`, `end_date`, `reference_code`, reminder ladder). No schema change, no backend work.
