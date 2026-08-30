@@ -474,15 +474,76 @@ export function ActionsViewer({
 
 
   const handleStatusChange = async (actionId: string, status: string) => {
+    const current = extractedActions.find(a => a.id === actionId);
+    const isFinished = status === 'done' || status === 'completed';
+
+    // Finishing runs the whole loop: close, tell, celebrate, count, undo.
+    if (isFinished && !current?.archived_at) {
+      const title = current?.action_text || 'this step';
+
+      setExtractedActions(actions =>
+        actions.map(a =>
+          a.id === actionId
+            ? { ...a, status: 'done' as any, archived_at: new Date().toISOString() }
+            : a
+        )
+      );
+
+      const result = await completeAction(actionId, title);
+
+      if (!result) {
+        setExtractedActions(actions =>
+          actions.map(a =>
+            a.id === actionId
+              ? { ...a, status: current?.status as any, archived_at: current?.archived_at ?? null }
+              : a
+          )
+        );
+        toast.error("That didn't save — please try again");
+        return;
+      }
+
+      refreshLadders();
+      setCelebration(result);
+
+      toast.success('Done — nicely closed off', {
+        action: {
+          label: 'Undo',
+          onClick: async () => {
+            setCelebration(null);
+            const ok = await undoCompletion(actionId);
+            if (!ok) {
+              toast.error("Couldn't undo that — please try again");
+              return;
+            }
+            setExtractedActions(actions =>
+              actions.map(a =>
+                a.id === actionId
+                  ? {
+                      ...a,
+                      status: (current?.status || 'pending') as any,
+                      archived_at: current?.archived_at ?? null,
+                      completion_date: current?.completion_date ?? null
+                    }
+                  : a
+              )
+            );
+            refreshLadders();
+            toast.success('Back on my open list');
+          }
+        }
+      });
+      return;
+    }
+
     await updateAction(actionId, { status: status as any });
 
-    // Completed or closed items leave the working list; anything else stays open.
-    const shouldArchive = status === 'done' || status === 'completed' || status === 'cancelled';
-    const current = extractedActions.find(a => a.id === actionId);
+    // Cancelled work also leaves the list; anything else stays open.
+    const shouldArchive = status === 'cancelled';
 
     if (shouldArchive && !current?.archived_at) {
-      await setArchived(actionId, new Date().toISOString(), status === 'cancelled' ? 'Closed and archived' : 'Accomplished — archived');
-    } else if (!shouldArchive && current?.archived_at) {
+      await setArchived(actionId, new Date().toISOString(), 'Closed and archived');
+    } else if (!shouldArchive && !isFinished && current?.archived_at) {
       await setArchived(actionId, null, 'Back on my open list');
     }
   };
