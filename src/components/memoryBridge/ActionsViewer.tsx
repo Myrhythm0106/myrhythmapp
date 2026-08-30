@@ -720,7 +720,7 @@ export function ActionsViewer({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-exhibit-paper border border-exhibit-rule shadow-xl">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-exhibit-paper border border-exhibit-rule shadow-xl flex flex-col">
         {/* Exhibit header */}
         <DialogHeader className="relative pb-4 border-b border-exhibit-rule">
           <DialogTitle className="flex flex-col gap-3">
@@ -822,18 +822,33 @@ export function ActionsViewer({
 
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4 max-h-[calc(95vh-140px)]">
+        {/* Always-visible narrative: keep this outside the scrolling actions area. */}
+        <div className="shrink-0 pr-4">
+          {summaryLoading && !displaySummary ? (
+            <ExecutiveSummarySkeleton />
+          ) : summaryError && !displaySummary ? (
+            <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} />
+          ) : displaySummary ? (
+            <ExecutiveSummaryPanel
+              model={displaySummary}
+              onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
+              isSchedulingAll={isSchedulingAll}
+            />
+          ) : (
+            <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} />
+          )}
+        </div>
+
+        <ScrollArea className="min-h-0 flex-1 pr-4">
           {isLoading && extractedActions.length === 0 ? (
-            <div className="space-y-5 pb-4">
-              <ExecutiveSummarySkeleton />
+            <div className="pb-4">
               <div className="text-center py-8 text-muted-foreground">
                 <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse text-brand-orange-500" />
                 Analyzing my commitments...
               </div>
             </div>
           ) : extractedActions.length === 0 && !summaryModel ? (
-            <div className="space-y-5 pb-4">
-              {summaryError ? <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} /> : <ExecutiveSummarySkeleton />}
+            <div className="pb-4">
               <div className="text-center py-12 text-muted-foreground">
                 <Target className="h-8 w-8 mx-auto mb-4" />
                 No actionable commitments found in this recording.
@@ -841,18 +856,6 @@ export function ActionsViewer({
             </div>
           ) : (
             <div className="space-y-5 pb-4">
-              {summaryLoading && !displaySummary ? (
-                <ExecutiveSummarySkeleton />
-              ) : summaryError && !displaySummary ? (
-                <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} />
-              ) : displaySummary ? (
-                <ExecutiveSummaryPanel
-                  model={displaySummary}
-                  onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
-                  isSchedulingAll={isSchedulingAll}
-                />
-              ) : null}
-
               {viewMode === 'table' ? (
                 <ActionsTableView
                   actions={visibleActions}
