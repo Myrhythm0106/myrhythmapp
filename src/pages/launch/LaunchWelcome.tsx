@@ -76,8 +76,9 @@ export default function LaunchWelcome() {
     }
   }, []);
 
-  // Returning users go straight home — the welcome is for the first visit,
-  // not a gate they must tap through every time the app opens.
+  // The report is shown once per assessment. Only skip it when this exact
+  // snapshot has already been acknowledged (Continue / Skip tapped).
+  const [ackKey, setAckKey] = useState<string | null>(null);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('postCheckout') === '1' || params.get('welcome') === '1') return;
@@ -85,12 +86,21 @@ export default function LaunchWelcome() {
     if (!saved) return;
     try {
       const data = JSON.parse(saved);
-      const hasAssessment = Boolean(
-        data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore,
-      );
-      if (hasAssessment) navigate('/launch/home', { replace: true });
+      const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+      if (!score) return;
+      const key = String(data?.assessmentResults?.completedAt ?? score?.total ?? 'snapshot');
+      setAckKey(key);
+      if (localStorage.getItem('myrhythm_report_ack') === key) {
+        navigate('/launch/home', { replace: true });
+      }
     } catch { /* noop */ }
   }, [navigate]);
+
+  const continueHome = () => {
+    if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+    navigate('/launch/home?welcome=1');
+  };
+
 
   // Tick the /100 number up from 0
   useEffect(() => {
