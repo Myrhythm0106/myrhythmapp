@@ -1343,8 +1343,16 @@ export function ActionsViewer({
           )}
         </DialogContent>
       </Dialog>
+
+      <CompletionCelebration
+        isOpen={!!celebration}
+        onClose={() => setCelebration(null)}
+        actionTitle={celebration?.actionTitle || ''}
+        streakCount={celebration?.streak}
+        isPersonalBest={celebration?.isPersonalBest}
+        notifiedCount={celebration?.notified}
+        doneThisWeek={celebration?.doneThisWeek}
+      />
     </Dialog>
-
-
   );
 }
