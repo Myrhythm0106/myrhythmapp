@@ -417,9 +417,9 @@ export function buildActionsPdf(model: MeetingSummaryModel, actions: NextStepsIt
       if (source) blockLines.push(`From the conversation: “${source}”`);
 
       const textWidth = contentW - 38;
-      const wrapped = blockLines.flatMap(l => {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
+      const wrapped = blockLines.flatMap((l, lineIndex) => {
+        doc.setFont('helvetica', lineIndex === 0 ? 'bold' : 'normal');
+        doc.setFontSize(lineIndex === 0 ? 9.5 : 9);
         return doc.splitTextToSize(l, textWidth) as string[];
       });
       const needed = wrapped.length * 12 + 18;
