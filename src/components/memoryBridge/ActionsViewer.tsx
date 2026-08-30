@@ -908,8 +908,9 @@ export function ActionsViewer({
           </DialogTitle>
         </DialogHeader>
 
-        {/* Executive summary: bounded height with its own scroll so it can never
-            consume the whole dialog and trap the actions below. */}
+        {/* Executive summary: opens as a compact strip so the actions exhibit
+            keeps the dominant space; expanding reveals the full panel inside a
+            bounded scroll zone so it can never trap the actions below. */}
         <section className="shrink-0 max-h-[42vh] overflow-y-auto pr-4" aria-label="Professional executive summary">
           {summaryLoading && !displaySummary ? (
             <ExecutiveSummarySkeleton />
@@ -919,6 +920,7 @@ export function ActionsViewer({
             <ExecutiveSummaryPanel
               model={displaySummary}
               collapsibleDetails
+              defaultCollapsedStrip
               onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
               isSchedulingAll={isSchedulingAll}
             />
