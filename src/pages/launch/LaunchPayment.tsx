@@ -52,6 +52,7 @@ export default function LaunchPayment() {
   const [code, setCode] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [needsAuth, setNeedsAuth] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const isFF = isFriendsFamilyCode(code);
 
   // Remember the plan they picked so nothing is retyped after a sign-in detour.
@@ -110,6 +111,7 @@ export default function LaunchPayment() {
 
   const handleStartTrial = async () => {
     setIsLoading(true);
+    setCheckoutError(null);
     try {
       const session = await requireSession();
       if (!session) return;
@@ -126,7 +128,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      toast.error("We couldn't start checkout just now. Nothing was charged — try again, or use an access code below.");
+      setCheckoutError("Checkout couldn't start just now. Nothing was charged. You can try again — or skip payment entirely with an access code below.");
     } finally {
       setIsLoading(false);
     }
@@ -173,6 +175,35 @@ export default function LaunchPayment() {
             </div>
           )}
 
+
+          {checkoutError && (
+            <div
+              className="mb-6 rounded-2xl border-2 border-launch-ember/50 bg-white px-4 py-4"
+              role="alert"
+            >
+              <p className="font-semibold text-launch-ink">Checkout didn't start</p>
+              <p className="mt-1 text-sm text-launch-ink/70">{checkoutError}</p>
+              <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                <Button
+                  className="min-h-[56px] sm:flex-1"
+                  onClick={handleStartTrial}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Try again'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-[56px] sm:flex-1 border-launch-gold/40"
+                  onClick={() => {
+                    setCheckoutError(null);
+                    document.getElementById('access-code-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                >
+                  Use an access code instead
+                </Button>
+              </div>
+            </div>
+          )}
 
           {IS_TEST_MODE && (
             <motion.div
@@ -249,7 +280,7 @@ export default function LaunchPayment() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <Card className="bg-launch-ivory border-2 border-launch-gold/30 shadow-md mb-6">
+            <Card id="access-code-panel" className="bg-launch-ivory border-2 border-launch-gold/30 shadow-md mb-6">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <KeyRound className="h-5 w-5 text-launch-moss" />
