@@ -58,7 +58,7 @@ const toNextStep = (action: Record<string, unknown>): NextStepsItem => ({
 });
 
 export default function LaunchCommit() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [meetings, setMeetings] = useState<MeetingRecord[]>([]);
   const [selectedMeetingId, setSelectedMeetingId] = useState<string>('');
   const [actions, setActions] = useState<NextStepsItem[]>([]);
