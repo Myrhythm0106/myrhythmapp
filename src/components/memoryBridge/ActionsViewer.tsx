@@ -106,6 +106,10 @@ export function ActionsViewer({
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
   const [ladders, setLadders] = useState<Record<string, number[]>>({});
   const [summaryModel, setSummaryModel] = useState<MeetingSummaryModel | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState(false);
+  const [summaryReloadKey, setSummaryReloadKey] = useState(0);
+
 
   const refreshLadders = React.useCallback(async () => {
     const ids = extractedActions.map(a => a.id).filter((id): id is string => !!id);
