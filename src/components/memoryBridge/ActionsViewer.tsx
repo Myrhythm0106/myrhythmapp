@@ -183,6 +183,8 @@ export function ActionsViewer({
 
     const fetchActions = async () => {
       setIsLoading(true);
+      setExtractedActions([]);
+      setMeetingId(null);
       setSummaryModel(null);
       setSummaryError(false);
       setSummaryLoading(true);
