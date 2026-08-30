@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,9 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ExtractedAction } from '@/types/memoryBridge';
+import { ExecutiveSummaryPanel, ExecutiveSummarySkeleton } from './ExecutiveSummaryPanel';
+import { buildExecutiveSummary, extractDecisions, extractOpenQuestions, extractThemes } from './capture-brief/model/synthesize';
+import type { BriefAction } from './capture-brief/model/types';
 
 interface RecordingDetailsViewProps {
   recordingId: string;
@@ -134,6 +137,55 @@ export function RecordingDetailsView({
     return baseMessages[messageIndex];
   };
 
+  const summaryModel = useMemo(() => {
+    if (!meetingData) return null;
+
+    const participants = Array.isArray(meetingData.participants)
+      ? meetingData.participants
+          .map(participant => typeof participant === 'string' ? participant : participant?.name)
+          .filter((participant): participant is string => Boolean(participant))
+      : [];
+    const briefActions: BriefAction[] = extractedActions.map(action => ({
+      id: String(action.id || action.action_text),
+      text: action.action_text,
+      owner: action.assigned_to || 'Me',
+      due: action.due_context || undefined,
+      priority: action.priority_level || 3,
+      priorityLabel: action.priority_level <= 2 ? 'High' : action.priority_level >= 4 ? 'Low' : 'Medium',
+      confidence: action.confidence_score || 0.7,
+      category: action.category,
+    }));
+    const transcript = meetingData.transcript || '';
+    const decisions = extractDecisions(briefActions, transcript);
+    const themes = extractThemes(transcript);
+    const openQuestions = extractOpenQuestions(transcript, briefActions);
+
+    return {
+      title: meetingData.meeting_title || meetingTitle,
+      date: new Date(meetingData.created_at).toLocaleDateString(undefined, {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+      }),
+      participants,
+      context: meetingData.meeting_context || undefined,
+      summary: buildExecutiveSummary({
+        title: meetingData.meeting_title || meetingTitle,
+        participants,
+        actions: briefActions,
+        decisions,
+        themes,
+      }),
+      themes,
+      decisions,
+      openQuestions,
+      counts: {
+        total: extractedActions.length,
+        withProposedDate: extractedActions.filter(action => Boolean(action.scheduled_date)).length,
+        scheduled: extractedActions.filter(action => action.status === 'scheduled').length,
+        complete: extractedActions.filter(action => action.status === 'done' || action.status === 'completed').length,
+      },
+    };
+  }, [meetingData, extractedActions, meetingTitle]);
+
   if (!isOpen) return null;
 
   return (
@@ -148,6 +200,26 @@ export function RecordingDetailsView({
 
         <ScrollArea className="flex-1 pr-4">
           <div className="space-y-6">
+            {/* The meeting narrative must always precede the detailed record and actions. */}
+            {isLoading ? (
+              <ExecutiveSummarySkeleton />
+            ) : summaryModel ? (
+              <ExecutiveSummaryPanel model={summaryModel} />
+            ) : (
+              <ExecutiveSummaryPanel
+                model={{
+                  title: meetingTitle || 'My conversation',
+                  date: new Date().toLocaleDateString(),
+                  participants: [],
+                  summary: 'This conversation summary is still being prepared. Any captured next steps remain available below.',
+                  themes: [],
+                  decisions: [],
+                  openQuestions: [],
+                  counts: { total: extractedActions.length, withProposedDate: 0, scheduled: 0, complete: 0 },
+                }}
+              />
+            )}
+
             {/* Recording Info */}
             <Card>
               <CardHeader>
