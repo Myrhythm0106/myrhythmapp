@@ -451,7 +451,32 @@ export default function LaunchWelcome() {
             </div>
           </div>
         </motion.div>
+
+        {bhs && (
+          <div className="mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <p className="text-xs" style={{ color: `${INK}99` }}>
+              This is my MYRHYTHM snapshot. I can come back to it any time from Home.
+            </p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={continueHome}
+                className="text-[10px] uppercase tracking-[0.2em] font-bold min-h-[44px] underline underline-offset-4"
+                style={{ color: `${INK}80` }}
+              >
+                Skip for now
+              </button>
+              <button
+                onClick={continueHome}
+                className="min-h-[56px] px-8 font-bold text-xs tracking-[0.3em] uppercase"
+                style={{ backgroundColor: INK, color: CREAM, ...SORA }}
+              >
+                Continue to Home →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
 
       <AssessmentRetakeCard />
 
