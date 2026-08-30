@@ -821,25 +821,36 @@ export function ActionsViewer({
         </DialogHeader>
 
         <ScrollArea className="flex-1 pr-4 max-h-[calc(95vh-140px)]">
-          {isLoading ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse text-brand-orange-500" />
-              Analyzing my commitments...
+          {isLoading && extractedActions.length === 0 ? (
+            <div className="space-y-5 pb-4">
+              <ExecutiveSummarySkeleton />
+              <div className="text-center py-8 text-muted-foreground">
+                <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse text-brand-orange-500" />
+                Analyzing my commitments...
+              </div>
             </div>
-          ) : extractedActions.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Target className="h-8 w-8 mx-auto mb-4" />
-              No actionable commitments found in this recording.
+          ) : extractedActions.length === 0 && !summaryModel ? (
+            <div className="space-y-5 pb-4">
+              {summaryError ? <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} /> : <ExecutiveSummarySkeleton />}
+              <div className="text-center py-12 text-muted-foreground">
+                <Target className="h-8 w-8 mx-auto mb-4" />
+                No actionable commitments found in this recording.
+              </div>
             </div>
           ) : (
             <div className="space-y-5 pb-4">
-              {summaryModel && (
+              {summaryLoading && !displaySummary ? (
+                <ExecutiveSummarySkeleton />
+              ) : summaryError && !displaySummary ? (
+                <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} />
+              ) : displaySummary ? (
                 <ExecutiveSummaryPanel
-                  model={summaryModel}
+                  model={displaySummary}
                   onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
                   isSchedulingAll={isSchedulingAll}
                 />
-              )}
+              ) : null}
+
               {viewMode === 'table' ? (
                 <ActionsTableView
                   actions={visibleActions}
