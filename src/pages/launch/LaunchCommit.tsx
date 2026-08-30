@@ -76,7 +76,10 @@ export default function LaunchCommit() {
   );
 
   const loadMeetings = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(false);
 
