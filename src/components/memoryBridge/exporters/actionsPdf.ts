@@ -416,7 +416,12 @@ export function buildActionsPdf(model: MeetingSummaryModel, actions: NextStepsIt
       const source = action.source_quote || action.transcript_excerpt;
       if (source) blockLines.push(`From the conversation: “${source}”`);
 
-      const wrapped = blockLines.flatMap(l => doc.splitTextToSize(l, contentW - 12) as string[]);
+      const textWidth = contentW - 38;
+      const wrapped = blockLines.flatMap(l => {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        return doc.splitTextToSize(l, textWidth) as string[];
+      });
       const needed = wrapped.length * 12 + 18;
       if (ay + needed > pageH - 60) {
         footer(doc, doc.getNumberOfPages());
