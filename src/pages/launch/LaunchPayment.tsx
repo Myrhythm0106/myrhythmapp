@@ -194,7 +194,10 @@ export default function LaunchPayment() {
                 <Button
                   variant="outline"
                   className="min-h-[56px] sm:flex-1 border-launch-gold/40"
-                  onClick={() => setCheckoutError(null)}
+                  onClick={() => {
+                    setCheckoutError(null);
+                    document.getElementById('access-code-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
                 >
                   Use an access code instead
                 </Button>
@@ -277,7 +280,7 @@ export default function LaunchPayment() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <Card className="bg-launch-ivory border-2 border-launch-gold/30 shadow-md mb-6">
+            <Card id="access-code-panel" className="bg-launch-ivory border-2 border-launch-gold/30 shadow-md mb-6">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <KeyRound className="h-5 w-5 text-launch-moss" />
