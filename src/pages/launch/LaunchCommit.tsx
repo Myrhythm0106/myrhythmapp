@@ -235,7 +235,7 @@ export default function LaunchCommit() {
     };
   }, [actions, selectedMeeting]);
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <LaunchLayout>
         <div className="py-20 text-center text-launch-ink/70">
