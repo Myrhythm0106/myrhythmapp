@@ -121,8 +121,9 @@ export default function LaunchCommit() {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
     void loadMeetings();
-  }, [loadMeetings]);
+  }, [authLoading, loadMeetings]);
 
   useEffect(() => {
     if (selectedMeetingId) void loadActions(selectedMeetingId);
