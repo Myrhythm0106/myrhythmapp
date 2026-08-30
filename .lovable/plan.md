@@ -38,10 +38,11 @@ No separate Google Sheets integration is needed: .xlsx opens natively in Google 
 
 The workbook is written as a document you could hand to a board or senior management team without touching it:
 
-- **Cover sheet** — "Next Step Summary" title, conversation name, date, participants, prepared-on timestamp, and a one-line status roll-up (total actions, complete, in progress, not started, overdue). Emerald/ivory MyRhythm styling, Calibri throughout.
-- **Actions sheet** — the exhibit table itself: emerald header band in white bold text, frozen header row, auto-filter enabled, banded rows, disciplined column widths, wrapped text on long columns, real date values (right-aligned, `dd mmm yyyy`, sortable), squared status/priority labels rather than emoji.
+- **Executive Summary sheet** — the same briefing as on screen: title, date, participants, context, summary paragraph, themes, decisions, open questions, and the at-a-glance counts. Emerald/ivory MyRhythm styling, Calibri throughout.
+- **Actions sheet** — the exhibit table itself: emerald header band in white bold text, frozen header row, auto-filter enabled, banded rows, disciplined column widths, wrapped text on long columns, real date values (right-aligned, `dd mmm yyyy`, sortable), squared status/priority labels rather than emoji, and proposed dates flagged as "Proposed" so a reader never mistakes them for commitments.
 - **Print setup** — landscape, fit-to-width on one page, repeating header row on every page, page numbers, and the standard confidentiality footer ("MyRhythm · Confidential — Not medical advice.") on every sheet.
 - No stray gridlines, no truncated cells, no raw database values (`not_started` reads as "Not started").
+
 
 ## What's in the sheet
 
