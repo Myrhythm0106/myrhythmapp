@@ -358,7 +358,7 @@ export function useVoiceRecorder() {
       const { data: recording, error: dbError } = await supabase
         .from('voice_recordings')
         .insert({
-          user_id: user.id,
+          user_id: userId,
           title,
           description,
           category,
@@ -381,7 +381,7 @@ export function useVoiceRecorder() {
       const { data: usageData } = await supabase
         .from('recording_usage_tracking')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .eq('period_start', periodStart.toISOString().split('T')[0])
         .maybeSingle();
 
