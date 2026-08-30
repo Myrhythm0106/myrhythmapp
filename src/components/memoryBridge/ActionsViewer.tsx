@@ -775,56 +775,55 @@ export function ActionsViewer({
               {viewMode === 'table' ? (
                 <ActionsTableView
                   actions={visibleActions}
-                  ladders={ladders}
                   meetingSummary={summaryModel || undefined}
-
-              onDragEnd={handleDragEnd}
-              onStatusChange={handleStatusChange}
-              onPriorityChange={handlePriorityChange}
-              onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
-              onSuccessCriteriaChange={(id, criteria) =>
-                handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
-              }
-              onRaciChange={(id, payload) =>
-                handleFieldChange(
-                  id,
-                  {
-                    assigned_to: payload.assigned_to,
-                    owner_email: payload.owner_email,
-                    accountable: payload.accountable,
-                    consulted: payload.consulted,
-                    informed: payload.informed,
-                  } as Partial<NextStepsItem>,
-                  'Who\u2019s involved updated'
-                )
-              }
-              onSendRaci={(id) => sendRaciEmails([id])}
-              onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
-              onStartDateChange={(id, date) =>
-                handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
-              }
-              onDueDateChange={async (id, date) => {
-                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
-                if (!date) {
-                  await clearActionReminders(id);
-                } else if (user) {
-                  const target = extractedActions.find(a => a.id === id);
-                  await ensureDefaultLadder(id, user.id, date, target?.priority_level);
-                }
-                refreshLadders();
-              }}
-
-              onWatchersChange={(id, watchers) =>
-                handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
-              }
-              onOpenNotes={(action) => setNotesTarget(action)}
-              onOpenReminders={(action) => setRemindersTarget(action)}
-              onArchive={handleArchive}
-              onRestore={handleRestore}
-              onSort={handleSort}
-              sortField={sortField}
-              sortDirection={sortDirection}
-            />
+                  ladders={ladders}
+                  onDragEnd={handleDragEnd}
+                  onStatusChange={handleStatusChange}
+                  onPriorityChange={handlePriorityChange}
+                  onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
+                  onSuccessCriteriaChange={(id, criteria) =>
+                    handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
+                  }
+                  onRaciChange={(id, payload) =>
+                    handleFieldChange(
+                      id,
+                      {
+                        assigned_to: payload.assigned_to,
+                        owner_email: payload.owner_email,
+                        accountable: payload.accountable,
+                        consulted: payload.consulted,
+                        informed: payload.informed,
+                      } as Partial<NextStepsItem>,
+                      'Who\u2019s involved updated'
+                    )
+                  }
+                  onSendRaci={(id) => sendRaciEmails([id])}
+                  onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
+                  onStartDateChange={(id, date) =>
+                    handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
+                  }
+                  onDueDateChange={async (id, date) => {
+                    handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
+                    if (!date) {
+                      await clearActionReminders(id);
+                    } else if (user) {
+                      const target = extractedActions.find(a => a.id === id);
+                      await ensureDefaultLadder(id, user.id, date, target?.priority_level);
+                    }
+                    refreshLadders();
+                  }}
+                  onAcceptProposedDate={acceptProposedDate}
+                  onWatchersChange={(id, watchers) =>
+                    handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
+                  }
+                  onOpenNotes={(action) => setNotesTarget(action)}
+                  onOpenReminders={(action) => setRemindersTarget(action)}
+                  onArchive={handleArchive}
+                  onRestore={handleRestore}
+                  onSort={handleSort}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                />
 
           ) : (
             <DragDropContext onDragEnd={handleDragEnd}>
