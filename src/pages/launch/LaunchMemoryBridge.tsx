@@ -1126,7 +1126,7 @@ export default function LaunchMemoryBridge() {
                           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium bg-launch-moss text-white hover:bg-launch-moss/90 transition-all"
                         >
                           <Eye className="h-4 w-4" />
-                          View {actionsCount} Action{actionsCount !== 1 ? 's' : ''}
+                          Open Executive Summary &amp; {actionsCount} Action{actionsCount !== 1 ? 's' : ''}
                         </button>
                       ) : (
                         <button

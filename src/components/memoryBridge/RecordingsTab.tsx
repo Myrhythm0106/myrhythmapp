@@ -198,7 +198,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                             className="flex items-center gap-1"
                           >
                             <Brain className="h-3 w-3" />
-                            View Actions
+                            Executive Summary &amp; Actions
                           </Button>
                         </div>
                       ) : (

@@ -16,6 +16,9 @@ import { toast } from 'sonner';
 import { format, parseISO, addDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { ExecutiveSummaryPanel, type MeetingSummaryModel } from '@/components/memoryBridge/ExecutiveSummaryPanel';
+import { buildExecutiveSummary, extractDecisions, extractOpenQuestions, extractThemes } from '@/components/memoryBridge/capture-brief/model/synthesize';
+import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/types';
 
 export interface ReviewRowState {
   id: string;
@@ -169,6 +172,12 @@ export function ReviewStep({
   const [confirmedAccurate, setConfirmedAccurate] = useState(false);
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState('');
+  const [meetingSummaryData, setMeetingSummaryData] = useState<{
+    date: string;
+    participants: string[];
+    context?: string;
+    transcript: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!isOpen || !meetingId) return;
@@ -176,12 +185,38 @@ export function ReviewStep({
     setLoading(true);
     setConfirmedAccurate(false);
     (async () => {
-      const { data, error } = await supabase
-        .from('extracted_actions')
-        .select('*')
-        .eq('meeting_recording_id', meetingId)
-        .is('calendar_event_id', null);
+      const [actionsResult, meetingResult] = await Promise.all([
+        supabase
+          .from('extracted_actions')
+          .select('*')
+          .eq('meeting_recording_id', meetingId)
+          .is('calendar_event_id', null),
+        supabase
+          .from('meeting_recordings')
+          .select('started_at, created_at, participants, meeting_context, transcript')
+          .eq('id', meetingId)
+          .maybeSingle(),
+      ]);
       if (cancelled) return;
+      const { data, error } = actionsResult;
+      const meeting = meetingResult.data;
+      if (meeting) {
+        const participantNames = Array.isArray(meeting.participants)
+          ? (meeting.participants as any[])
+              .map(person => typeof person === 'string' ? person : person?.name)
+              .filter((name): name is string => Boolean(name))
+          : [];
+        setMeetingSummaryData({
+          date: new Date(meeting.started_at || meeting.created_at).toLocaleDateString(undefined, {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+          }),
+          participants: participantNames,
+          context: meeting.meeting_context || undefined,
+          transcript: meeting.transcript || '',
+        });
+      } else {
+        setMeetingSummaryData(null);
+      }
       if (error) {
         console.warn('ReviewStep: failed to load actions', error);
         setRows([]);
@@ -213,6 +248,44 @@ export function ReviewStep({
   }, [isOpen, meetingId]);
 
   const included = useMemo(() => rows.filter(r => r.include), [rows]);
+
+  const executiveSummary = useMemo<MeetingSummaryModel>(() => {
+    const actions: BriefAction[] = rows.map(row => ({
+      id: row.id,
+      text: row.text,
+      owner: row.owner || 'Me',
+      due: row.dueDate || row.date || undefined,
+      priority: row.priority,
+      priorityLabel: row.priority <= 2 ? 'High' : row.priority >= 4 ? 'Low' : 'Medium',
+      confidence: row.needsCheck ? 0.6 : 0.9,
+      sourceQuote: row.sourceQuote,
+    }));
+    const transcript = meetingSummaryData?.transcript || '';
+    const decisions = extractDecisions(actions, transcript);
+    const themes = extractThemes(transcript);
+    const openQuestions = extractOpenQuestions(transcript, actions);
+    const participants = meetingSummaryData?.participants || [];
+    const summary = actions.length > 0
+      ? buildExecutiveSummary({ title: meetingTitle, participants, actions, decisions, themes })
+      : 'No next steps were captured from this conversation yet.';
+
+    return {
+      title: meetingTitle || 'My conversation',
+      date: meetingSummaryData?.date || new Date().toLocaleDateString(),
+      participants,
+      context: meetingSummaryData?.context,
+      summary,
+      themes,
+      decisions,
+      openQuestions,
+      counts: {
+        total: rows.length,
+        withProposedDate: rows.filter(row => Boolean(row.date)).length,
+        scheduled: 0,
+        complete: 0,
+      },
+    };
+  }, [meetingSummaryData, meetingTitle, rows]);
 
   const patch = (id: string, next: Partial<ReviewRowState>) =>
     setRows(prev => prev.map(r => (r.id === id ? { ...r, ...next } : r)));
@@ -411,6 +484,10 @@ export function ReviewStep({
             </div>
           ) : (
             <>
+              <div className="mb-6">
+                <ExecutiveSummaryPanel model={executiveSummary} />
+              </div>
+
               {/* ---------- Laptop / large tablet: table ---------- */}
               <div className="hidden lg:block">
                 <table className="w-full text-left">
