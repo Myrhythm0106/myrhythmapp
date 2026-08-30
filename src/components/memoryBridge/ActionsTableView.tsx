@@ -802,7 +802,7 @@ export function ActionsTableView({
                             {action.proposed_date && !action.start_date ? (
                               <div className="space-y-1">
                                 <div className="font-sora text-[12px] tabular-nums text-exhibit-ink">
-                                  {formatDate(action.proposed_date, 'MMM d')}
+                                  {formatDate(action.proposed_date)}
                                   {action.proposed_time && (
                                     <span className="text-exhibit-soft ml-1">@ {action.proposed_time}</span>
                                   )}
