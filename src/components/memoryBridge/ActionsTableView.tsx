@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail, Download } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
@@ -21,6 +21,9 @@ import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
 import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
+import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
+import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
+
 
 
 
