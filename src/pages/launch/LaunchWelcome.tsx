@@ -153,7 +153,7 @@ export default function LaunchWelcome() {
               My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home.
             </p>
             <button
-              onClick={() => navigate('/launch/home?welcome=1')}
+              onClick={continueHome}
               className="mt-4 w-full md:w-auto min-h-[56px] px-8 rounded-xl font-semibold text-white"
               style={{ backgroundColor: INK }}
             >
