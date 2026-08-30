@@ -76,8 +76,9 @@ export default function LaunchWelcome() {
     }
   }, []);
 
-  // Returning users go straight home — the welcome is for the first visit,
-  // not a gate they must tap through every time the app opens.
+  // The report is shown once per assessment. Only skip it when this exact
+  // snapshot has already been acknowledged (Continue / Skip tapped).
+  const [ackKey, setAckKey] = useState<string | null>(null);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('postCheckout') === '1' || params.get('welcome') === '1') return;
@@ -85,12 +86,21 @@ export default function LaunchWelcome() {
     if (!saved) return;
     try {
       const data = JSON.parse(saved);
-      const hasAssessment = Boolean(
-        data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore,
-      );
-      if (hasAssessment) navigate('/launch/home', { replace: true });
+      const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+      if (!score) return;
+      const key = String(data?.assessmentResults?.completedAt ?? score?.total ?? 'snapshot');
+      setAckKey(key);
+      if (localStorage.getItem('myrhythm_report_ack') === key) {
+        navigate('/launch/home', { replace: true });
+      }
     } catch { /* noop */ }
   }, [navigate]);
+
+  const continueHome = () => {
+    if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+    navigate('/launch/home?welcome=1');
+  };
+
 
   // Tick the /100 number up from 0
   useEffect(() => {
@@ -143,7 +153,7 @@ export default function LaunchWelcome() {
               My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home.
             </p>
             <button
-              onClick={() => navigate('/launch/home?welcome=1')}
+              onClick={continueHome}
               className="mt-4 w-full md:w-auto min-h-[56px] px-8 rounded-xl font-semibold text-white"
               style={{ backgroundColor: INK }}
             >
@@ -441,7 +451,32 @@ export default function LaunchWelcome() {
             </div>
           </div>
         </motion.div>
+
+        {bhs && (
+          <div className="mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <p className="text-xs" style={{ color: `${INK}99` }}>
+              This is my MYRHYTHM snapshot. I can come back to it any time from Home.
+            </p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={continueHome}
+                className="text-[10px] uppercase tracking-[0.2em] font-bold min-h-[44px] underline underline-offset-4"
+                style={{ color: `${INK}80` }}
+              >
+                Skip for now
+              </button>
+              <button
+                onClick={continueHome}
+                className="min-h-[56px] px-8 font-bold text-xs tracking-[0.3em] uppercase"
+                style={{ backgroundColor: INK, color: CREAM, ...SORA }}
+              >
+                Continue to Home →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
 
       <AssessmentRetakeCard />
 
