@@ -78,6 +78,8 @@ export function ActionsViewer({
   onClose
 }: ActionsViewerProps) {
   const { user } = useAuth();
+  const { completeAction, undoCompletion } = useCompleteAction();
+  const [celebration, setCelebration] = useState<CompletionResult | null>(null);
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewModeState] = useState<'cards' | 'table'>(() => {
