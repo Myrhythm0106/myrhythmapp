@@ -323,16 +323,26 @@ export function useVoiceRecorder() {
     title: string,
     category: string = 'general',
     description?: string,
-    shareWithHealthcare: boolean = false
+    shareWithHealthcare: boolean = false,
+    overrideUserId?: string
   ): Promise<VoiceRecording | null> => {
-    if (!user) return null;
+    // Never trust stale React auth state — resolve (and silently refresh) the
+    // real session, otherwise a long-open tab makes Save do nothing at all.
+    const userId = overrideUserId ?? user?.id ?? (await ensureSession());
+    if (!userId) {
+      console.warn('saveRecording: blocked — no authenticated session');
+      toast.error('Your session timed out — your recording is safe.', {
+        description: 'Sign in again and tap Save & extract actions.',
+      });
+      return null;
+    }
 
     try {
       setIsProcessing(true);
 
       const contentType = audioBlob.type || mimeTypeRef.current || 'audio/webm';
       const extension = extensionForMimeType(contentType);
-      const fileName = `${user.id}/${Date.now()}.${extension}`;
+      const fileName = `${userId}/${Date.now()}.${extension}`;
       const durationMinutes = Math.ceil(duration / 60);
       
       // Upload to storage — content type must match the real bytes, otherwise
