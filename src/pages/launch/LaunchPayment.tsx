@@ -52,6 +52,7 @@ export default function LaunchPayment() {
   const [code, setCode] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [needsAuth, setNeedsAuth] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const isFF = isFriendsFamilyCode(code);
 
   // Remember the plan they picked so nothing is retyped after a sign-in detour.
