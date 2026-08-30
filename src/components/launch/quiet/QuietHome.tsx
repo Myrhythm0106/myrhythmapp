@@ -20,6 +20,7 @@ import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanni
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
+import { HomeAssessmentCard } from './HomeAssessmentCard';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -77,6 +78,9 @@ export function QuietHome() {
       {/* Next action — the one thing that matters right now */}
       <NextActionStrip />
       <CompletionStatsStrip />
+
+      {/* MYRHYTHM Brain Health Assessment — take or retake */}
+      <HomeAssessmentCard />
 
       {/* Weekly planning nudge (only on the user's planning day) */}
       <LaunchWeeklyPlanningCard />

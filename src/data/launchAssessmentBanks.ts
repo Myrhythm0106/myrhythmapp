@@ -43,6 +43,11 @@ export interface AssessmentQuestion {
 export interface AssessmentBank {
   persona: PersonaKey;
   intro: string;
+  /** The "before we begin" step — framed per persona so nobody is asked recovery questions by mistake. */
+  preQuestion: {
+    title: string;
+    subtitle: string;
+  };
   questions: AssessmentQuestion[]; // 8 MYRHYTHM letters + follow-through, in order
 }
 
@@ -60,6 +65,10 @@ export function resolveHasSupport(answerValue: string | undefined): boolean {
 const brainInjury: AssessmentBank = {
   persona: 'brain-injury',
   intro: 'Eight gentle questions, one per letter of MYRHYTHM.',
+  preQuestion: {
+    title: 'When did the experience happen?',
+    subtitle: "This helps us calibrate today's questions to where you actually are — whether that's last month or fifteen years ago.",
+  },
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
@@ -164,6 +173,10 @@ const brainInjury: AssessmentBank = {
 const caregiver: AssessmentBank = {
   persona: 'caregiver',
   intro: 'Eight questions shaped around your reality as a carer.',
+  preQuestion: {
+    title: 'When did this season of caring begin?',
+    subtitle: "This helps us calibrate today's questions to where you actually are — whether that's last month or fifteen years ago.",
+  },
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
@@ -267,6 +280,10 @@ const caregiver: AssessmentBank = {
 const executive: AssessmentBank = {
   persona: 'executive',
   intro: 'Eight questions to shape your focus and defend your best thinking.',
+  preQuestion: {
+    title: "How long has focus been the thing you're fighting?",
+    subtitle: "This helps us calibrate today's questions to your season — a new role, a long grind, or a fresh start.",
+  },
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
@@ -370,6 +387,10 @@ const executive: AssessmentBank = {
 const student: AssessmentBank = {
   persona: 'student',
   intro: 'Eight questions to pace your term.',
+  preQuestion: {
+    title: 'How long has this study season been running?',
+    subtitle: "This helps us calibrate today's questions to where you actually are — first weeks of a course or deep into a long haul.",
+  },
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
