@@ -105,6 +105,7 @@ export function ActionsViewer({
   const [showUnsavedGuard, setShowUnsavedGuard] = useState(false);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
   const [ladders, setLadders] = useState<Record<string, number[]>>({});
+  const [summaryModel, setSummaryModel] = useState<MeetingSummaryModel | null>(null);
 
   const refreshLadders = React.useCallback(async () => {
     const ids = extractedActions.map(a => a.id).filter((id): id is string => !!id);
