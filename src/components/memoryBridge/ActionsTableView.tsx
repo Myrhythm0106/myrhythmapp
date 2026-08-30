@@ -493,6 +493,7 @@ const ReminderBadge: React.FC<{
 
 export function ActionsTableView({
   actions,
+  meetingSummary,
   onDragEnd,
   onStatusChange,
   onPriorityChange,
@@ -504,6 +505,7 @@ export function ActionsTableView({
   onSendToAll,
   onStartDateChange,
   onDueDateChange,
+  onAcceptProposedDate,
   onWatchersChange,
   onOpenNotes,
   onOpenReminders,
