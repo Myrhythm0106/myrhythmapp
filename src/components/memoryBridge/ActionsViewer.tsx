@@ -324,7 +324,25 @@ export function ActionsViewer({
 
 
     fetchActions();
-  }, [recordingId, isOpen, meetingTitle]);
+    return () => {
+      cancelled = true;
+    };
+  }, [recordingId, isOpen, meetingTitle, summaryReloadKey]);
+
+  // Counts stay in step with what is actually on screen.
+  const displaySummary = React.useMemo(() => {
+    if (!summaryModel) return null;
+    return {
+      ...summaryModel,
+      counts: {
+        total: extractedActions.length,
+        withProposedDate: extractedActions.filter(a => a.proposed_date && !a.calendar_event_id).length,
+        scheduled: extractedActions.filter(a => a.calendar_event_id || a.status === 'scheduled').length,
+        complete: extractedActions.filter(a => a.status === 'done').length,
+      },
+    };
+  }, [summaryModel, extractedActions]);
+
 
   const updateAction = async (actionId: string, updates: Partial<NextStepsItem>) => {
     try {
