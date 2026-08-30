@@ -63,6 +63,7 @@ export type Database = {
           target_members: string[]
           title: string
           user_id: string
+          withdrawn_at: string | null
         }
         Insert: {
           acknowledged_by?: string[] | null
@@ -76,6 +77,7 @@ export type Database = {
           target_members?: string[]
           title: string
           user_id: string
+          withdrawn_at?: string | null
         }
         Update: {
           acknowledged_by?: string[] | null
@@ -89,6 +91,7 @@ export type Database = {
           target_members?: string[]
           title?: string
           user_id?: string
+          withdrawn_at?: string | null
         }
         Relationships: []
       }
@@ -3669,6 +3672,18 @@ export type Database = {
         }
         Returns: string
       }
+      my_completion_stats: {
+        Args: never
+        Returns: {
+          current_streak: number
+          done_this_week: number
+          open_steps: number
+        }[]
+      }
+      notify_circle_of_step_completion: {
+        Args: { p_action_id: string }
+        Returns: Json
+      }
       notify_watchers_of_action_completion: {
         Args: {
           p_action_id: string
@@ -3731,6 +3746,10 @@ export type Database = {
         Returns: boolean
       }
       withdraw_research_consent: { Args: never; Returns: boolean }
+      withdraw_step_completion_notice: {
+        Args: { p_action_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
