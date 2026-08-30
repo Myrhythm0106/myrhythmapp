@@ -301,7 +301,7 @@ export async function exportActionsXlsx(
   saveAs(new Blob([blob], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `${safeName}.xlsx`);
 }
 
-export function exportActionsCsv(model: MeetingSummaryModel, actions: NextStepsItem[], filename?: string) {
+export function buildActionsCsv(model: MeetingSummaryModel, actions: NextStepsItem[]): string {
   const rows = [
     ['MyRhythm — Next Step Summary'],
     [`${model.title} · ${model.date}`],
@@ -341,7 +341,11 @@ export function exportActionsCsv(model: MeetingSummaryModel, actions: NextStepsI
     ]),
   ];
 
-  const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+  return rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+}
+
+export function exportActionsCsv(model: MeetingSummaryModel, actions: NextStepsItem[], filename?: string) {
+  const csv = buildActionsCsv(model, actions);
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const safeName = (filename || `${model.title.replace(/[^a-z0-9]+/gi, '_').slice(0, 40)}_MyRhythm_Next_Steps`).replace(/^_+|_+$/g, '');
   saveAs(blob, `${safeName}.csv`);
