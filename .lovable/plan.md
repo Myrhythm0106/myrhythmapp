@@ -1,8 +1,30 @@
 # Download My Next Step Summary as Excel or Google Sheets
 
-Yes. Today the Next Step Summary table has no download at all — the only spreadsheet export lives on the Capture Brief screen. This adds a proper Download control to the summary itself.
+# Next Step Summary: executive summary intro + Excel / Google Sheets download
 
-## What you'll get
+Two additions to the Next Step Summary: an executive summary of the conversation at the top, and a board-ready spreadsheet download.
+
+## 1. Executive summary intro
+
+A short briefing panel above the actions table, so the reader understands the conversation before reading the list:
+
+- **What this was** — conversation title, date, participants, and context in one line.
+- **Summary paragraph** — a plain-language recap of what was discussed and agreed, generated from the transcript (reusing the existing `buildExecutiveSummary` logic already proven on the Capture Brief screen, so no new AI cost or model work).
+- **Key themes and decisions** — up to five quiet chips; open questions listed only if any exist.
+- **At a glance** — total actions, how many already have proposed dates, how many are scheduled, how many are complete.
+- Collapsible ("Read more") so it never overwhelms the screen; expanded by default on desktop, collapsed on mobile.
+
+Then, immediately beneath it, the actions table as it is today.
+
+## 2. Proposed dates that can be scheduled in one tap
+
+Every action shows a **proposed date and time** where one isn't set yet — the energy-aware suggestion the app already computes. These are visibly marked as proposals (dashed outline, "Proposed") rather than committed entries.
+
+- Tap a proposed date to accept it, or edit it inline.
+- A single **Schedule all proposed dates** button in the summary panel commits every accepted proposal to the calendar at once, using the existing scheduling path (so Support Circle invitations, owner emails, and reminder ladders all fire as they do now).
+- Nothing reaches the diary until you accept — review stays in your hands.
+
+## 3. Download as Excel or Google Sheets
 
 A **Download** button in the Next Step Summary header, with two choices:
 
@@ -10,6 +32,7 @@ A **Download** button in the Next Step Summary header, with two choices:
 - **CSV** — plain fallback for any system.
 
 No separate Google Sheets integration is needed: .xlsx opens natively in Google Sheets, and the download stays offline and private (nothing leaves your device).
+
 
 ## Board-ready by default
 
