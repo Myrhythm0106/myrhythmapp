@@ -568,7 +568,26 @@ export function ActionsTableView({
               )}
             </p>
           </div>
-          {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+          <div className="flex items-center gap-2">
+            {meetingSummary && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface">
+                    <Download className="h-4 w-4 mr-1.5" /> Download
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onSelect={() => exportActionsXlsx(meetingSummary, actions)}>
+                    Excel (.xlsx)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => exportActionsCsv(meetingSummary, actions)}>
+                    CSV
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+          </div>
         </div>
         {/* Completion rule */}
         <div className="h-[3px] w-full bg-exhibit-rule/60">
