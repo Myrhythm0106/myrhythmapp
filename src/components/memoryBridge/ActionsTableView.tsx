@@ -798,6 +798,33 @@ export function ActionsTableView({
                             </div>
                           </TableCell>
 
+                          <TableCell className={cn(bodyCell)}>
+                            {action.proposed_date && !action.start_date ? (
+                              <div className="space-y-1">
+                                <div className="font-sora text-[12px] tabular-nums text-exhibit-ink">
+                                  {formatDate(action.proposed_date, 'MMM d')}
+                                  {action.proposed_time && (
+                                    <span className="text-exhibit-soft ml-1">@ {action.proposed_time}</span>
+                                  )}
+                                </div>
+                                {onStartDateChange && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onStartDateChange(action.id!, action.proposed_date!);
+                                      onAcceptProposedDate?.(action);
+                                    }}
+                                    className="font-sora text-[10px] font-semibold uppercase tracking-wide text-brand-orange-600 hover:text-brand-orange-700"
+                                  >
+                                    Accept
+                                  </button>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="font-sora text-[12px] text-exhibit-soft">—</span>
+                            )}
+                          </TableCell>
+
                           <TableCell className={cn(bodyCell, 'text-right')}>
                             <EditableDueIn
                               value={action.completion_date || action.end_date}
