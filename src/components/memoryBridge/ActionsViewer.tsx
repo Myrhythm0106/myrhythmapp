@@ -241,7 +241,7 @@ export function ActionsViewer({
           : [];
 
         const briefActions: BriefAction[] = mapped.map(action => ({
-          id: action.id!,
+          id: String(action.id),
           text: action.action_text,
           owner: action.assigned_to || action.owner || 'Me',
           due: action.due_context || undefined,
