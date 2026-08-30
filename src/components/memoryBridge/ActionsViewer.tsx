@@ -763,10 +763,20 @@ export function ActionsViewer({
               <Target className="h-8 w-8 mx-auto mb-4" />
               No actionable commitments found in this recording.
             </div>
-          ) : viewMode === 'table' ? (
-            <ActionsTableView
-              actions={visibleActions}
-              ladders={ladders}
+          ) : (
+            <div className="space-y-5 pb-4">
+              {summaryModel && (
+                <ExecutiveSummaryPanel
+                  model={summaryModel}
+                  onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
+                  isSchedulingAll={isSchedulingAll}
+                />
+              )}
+              {viewMode === 'table' ? (
+                <ActionsTableView
+                  actions={visibleActions}
+                  ladders={ladders}
+                  meetingSummary={summaryModel || undefined}
 
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
