@@ -378,9 +378,21 @@ export default function LaunchCommit() {
                 onScheduleAll={handleScheduleAll}
                 isSchedulingAll={isScheduling}
               />
+              <div className="mt-3 flex justify-end">
+                <a
+                  href="#my-next-steps"
+                  onClick={event => {
+                    event.preventDefault();
+                    document.getElementById('my-next-steps')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="inline-flex min-h-[44px] items-center gap-1 font-sora text-[12.5px] font-semibold text-launch-ink/70 underline-offset-4 hover:text-launch-ink hover:underline"
+                >
+                  Skip to my next steps ↓
+                </a>
+              </div>
             </section>
 
-            <section aria-labelledby="actions-heading" className="space-y-3">
+            <section id="my-next-steps" aria-labelledby="actions-heading" className="scroll-mt-24 space-y-3">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-launch-gold">The exhibit</p>

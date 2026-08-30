@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -30,7 +36,9 @@ import {
   Users,
   Loader2,
   CalendarPlus,
-  MessageCircle
+  MessageCircle,
+  MoreHorizontal,
+  ChevronDown
 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -804,8 +812,8 @@ export function ActionsViewer({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-exhibit-paper border border-exhibit-rule shadow-xl flex flex-col">
         {/* Exhibit header */}
-        <DialogHeader className="relative pb-4 border-b border-exhibit-rule">
-          <DialogTitle className="flex flex-col gap-3">
+        <DialogHeader className="relative pb-3 border-b border-exhibit-rule">
+          <DialogTitle className="flex flex-col gap-2.5">
             <div className="min-w-0">
               <p className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.18em] text-exhibit-moss">
                 My next step summary
@@ -814,9 +822,9 @@ export function ActionsViewer({
                 {meetingTitle}
               </p>
             </div>
-            
-            
-            {/* Bulk actions bar */}
+
+            {/* Single control row: one primary action, secondary actions in a menu,
+                view toggle and archive filter share the row. */}
             <div className="flex items-center gap-2 flex-wrap">
               <Button
                 onClick={() => setShowReview(true)}
@@ -830,27 +838,50 @@ export function ActionsViewer({
                   <><CalendarPlus className="h-4 w-4 mr-1" /> Review &amp; schedule</>
                 )}
               </Button>
-              <Button
-                onClick={() => setShowBulkWatcherDialog(true)}
-                variant="outline"
-                size="sm"
-              >
-                <Users className="h-4 w-4 mr-1" /> Add Watchers to All
-              </Button>
 
-              <Button
-                onClick={() => setShowCaptureNotes(true)}
-                variant="outline"
-                size="sm"
-                disabled={!meetingId}
-              >
-                <MessageCircle className="h-4 w-4 mr-1" /> Capture notes
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <MoreHorizontal className="h-4 w-4 mr-1" /> More actions
+                    <ChevronDown className="h-3.5 w-3.5 ml-1 opacity-70" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onSelect={() => setShowBulkWatcherDialog(true)}>
+                    <Users className="h-4 w-4 mr-2" /> Add Watchers to All
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={!meetingId} onSelect={() => setShowCaptureNotes(true)}>
+                    <MessageCircle className="h-4 w-4 mr-2" /> Capture notes
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-              
+              {/* Open / Archived filter */}
+              <div className="flex gap-1 p-1 bg-muted/50 rounded-lg">
+                {([
+                  { key: 'open' as const, label: `Open (${openCount})` },
+                  { key: 'archived' as const, label: `Archived (${archivedCount})` },
+                  { key: 'all' as const, label: 'All' }
+                ]).map(tab => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setArchiveFilter(tab.key)}
+                    className={cn(
+                      'text-xs rounded-md px-3 py-2 min-h-[36px] transition-colors',
+                      archiveFilter === tab.key
+                        ? 'bg-white shadow-sm font-medium'
+                        : 'text-muted-foreground hover:bg-white/60'
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
               {/* View toggle */}
               <div className="flex gap-1 p-1 bg-muted/50 rounded-lg backdrop-blur-sm ml-auto">
-                <Button 
+                <Button
                   variant={viewMode === 'cards' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('cards')}
@@ -861,7 +892,7 @@ export function ActionsViewer({
                 >
                   <LayoutGrid className="h-4 w-4 mr-1" /> Cards
                 </Button>
-                <Button 
+                <Button
                   variant={viewMode === 'table' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setViewMode('table')}
@@ -874,38 +905,12 @@ export function ActionsViewer({
                 </Button>
               </div>
             </div>
-
-            {/* Open / Archived filter */}
-            <div className="flex gap-1 p-1 bg-muted/50 rounded-lg w-fit">
-              {([
-                { key: 'open' as const, label: `Open (${openCount})` },
-                { key: 'archived' as const, label: `Archived (${archivedCount})` },
-                { key: 'all' as const, label: 'All' }
-              ]).map(tab => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setArchiveFilter(tab.key)}
-                  className={cn(
-                    'text-xs rounded-md px-3 py-2 min-h-[36px] transition-colors',
-                    archiveFilter === tab.key
-                      ? 'bg-white shadow-sm font-medium'
-                      : 'text-muted-foreground hover:bg-white/60'
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
           </DialogTitle>
-          <p className="text-sm text-muted-foreground mt-1">
-            Drag to reorder • <strong>W</strong>hat • <strong>W</strong>ho • <strong>W</strong>hen — Brain-friendly and empowering
-          </p>
-
         </DialogHeader>
 
-        {/* Executive summary: bounded height with its own scroll so it can never
-            consume the whole dialog and trap the actions below. */}
+        {/* Executive summary: opens as a compact strip so the actions exhibit
+            keeps the dominant space; expanding reveals the full panel inside a
+            bounded scroll zone so it can never trap the actions below. */}
         <section className="shrink-0 max-h-[42vh] overflow-y-auto pr-4" aria-label="Professional executive summary">
           {summaryLoading && !displaySummary ? (
             <ExecutiveSummarySkeleton />
@@ -915,6 +920,7 @@ export function ActionsViewer({
             <ExecutiveSummaryPanel
               model={displaySummary}
               collapsibleDetails
+              defaultCollapsedStrip
               onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
               isSchedulingAll={isSchedulingAll}
             />
