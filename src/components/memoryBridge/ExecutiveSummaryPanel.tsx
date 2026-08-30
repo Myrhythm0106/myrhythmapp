@@ -50,8 +50,11 @@ function CountPill({ value, label, icon: Icon, tone }: { value: number; label: s
   );
 }
 
-export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }: ExecutiveSummaryPanelProps) {
+export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll, collapsibleDetails }: ExecutiveSummaryPanelProps) {
   const hasExtras = model.themes.length > 0 || model.decisions.length > 0 || model.openQuestions.length > 0;
+  const [detailsOpen, setDetailsOpen] = React.useState(!collapsibleDetails);
+  const showDetails = collapsibleDetails ? detailsOpen : true;
+  const detailCount = model.themes.length + model.decisions.length + model.openQuestions.length;
 
   return (
     <article
