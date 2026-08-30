@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw, Mail, Download } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
@@ -21,11 +21,15 @@ import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
 import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
+import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
+import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
+
 
 
 
 interface ActionsTableViewProps {
   actions: NextStepsItem[];
+  meetingSummary?: MeetingSummaryModel;
   onDragEnd: (result: DropResult) => void;
   onStatusChange: (actionId: string, status: string) => void;
   onPriorityChange?: (actionId: string, priorityLevel: number) => void;
@@ -38,6 +42,7 @@ interface ActionsTableViewProps {
   onSendToAll?: () => Promise<void>;
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
+  onAcceptProposedDate?: (action: NextStepsItem) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
   onOpenNotes?: (action: NextStepsItem) => void;
   onOpenReminders?: (action: NextStepsItem) => void;
@@ -488,6 +493,7 @@ const ReminderBadge: React.FC<{
 
 export function ActionsTableView({
   actions,
+  meetingSummary,
   onDragEnd,
   onStatusChange,
   onPriorityChange,
@@ -499,6 +505,7 @@ export function ActionsTableView({
   onSendToAll,
   onStartDateChange,
   onDueDateChange,
+  onAcceptProposedDate,
   onWatchersChange,
   onOpenNotes,
   onOpenReminders,
@@ -561,7 +568,26 @@ export function ActionsTableView({
               )}
             </p>
           </div>
-          {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+          <div className="flex items-center gap-2">
+            {meetingSummary && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface">
+                    <Download className="h-4 w-4 mr-1.5" /> Download
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onSelect={() => exportActionsXlsx(meetingSummary, actions)}>
+                    Excel (.xlsx)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => exportActionsCsv(meetingSummary, actions)}>
+                    CSV
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            {onSendToAll && <SendToAllButton onSend={onSendToAll} />}
+          </div>
         </div>
         {/* Completion rule */}
         <div className="h-[3px] w-full bg-exhibit-rule/60">
@@ -578,13 +604,14 @@ export function ActionsTableView({
           <Table className="min-w-[1040px] border-separate border-spacing-0">
             <colgroup>
               <col style={{ width: 40 }} />
-              <col style={{ width: 108 }} />
+              <col style={{ width: 96 }} />
               <col />
-              <col className="hidden lg:table-column" style={{ width: 190 }} />
-              <col style={{ width: 172 }} />
-              <col style={{ width: 116 }} />
-              <col style={{ width: 150 }} />
-              <col style={{ width: 148 }} />
+              <col className="hidden lg:table-column" style={{ width: 180 }} />
+              <col style={{ width: 152 }} />
+              <col style={{ width: 120 }} />
+              <col style={{ width: 104 }} />
+              <col style={{ width: 140 }} />
+              <col style={{ width: 140 }} />
               <col style={{ width: 44 }} />
             </colgroup>
             <TableHeader className="sticky top-0 z-10">
@@ -599,7 +626,7 @@ export function ActionsTableView({
                     <ArrowUpDown className={sortIcon(sortField === 'priority')} />
                   </div>
                 </TableHead>
-                <TableHead className={cn(headCell, 'bg-exhibit-ink min-w-[320px]')}>Action</TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink min-w-[300px]')}>Action</TableHead>
                 <TableHead className={cn(headCell, groupEdge, 'bg-exhibit-ink hidden lg:table-cell')}>
                   Who&apos;s involved
                 </TableHead>
@@ -612,6 +639,7 @@ export function ActionsTableView({
                     <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
                   </div>
                 </TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink')}>Proposed</TableHead>
                 <TableHead className={cn(headCell, 'bg-exhibit-ink text-right')}>Due in</TableHead>
                 <TableHead
                   className={cn(headCell, 'cursor-pointer bg-exhibit-ink transition-colors hover:bg-exhibit-moss')}
@@ -768,6 +796,33 @@ export function ActionsTableView({
                                 )}
                               </div>
                             </div>
+                          </TableCell>
+
+                          <TableCell className={cn(bodyCell)}>
+                            {action.proposed_date && !action.start_date ? (
+                              <div className="space-y-1">
+                                <div className="font-sora text-[12px] tabular-nums text-exhibit-ink">
+                                  {formatDate(action.proposed_date)}
+                                  {action.proposed_time && (
+                                    <span className="text-exhibit-soft ml-1">@ {action.proposed_time}</span>
+                                  )}
+                                </div>
+                                {onStartDateChange && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onStartDateChange(action.id!, action.proposed_date!);
+                                      onAcceptProposedDate?.(action);
+                                    }}
+                                    className="font-sora text-[10px] font-semibold uppercase tracking-wide text-brand-orange-600 hover:text-brand-orange-700"
+                                  >
+                                    Accept
+                                  </button>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="font-sora text-[12px] text-exhibit-soft">—</span>
+                            )}
                           </TableCell>
 
                           <TableCell className={cn(bodyCell, 'text-right')}>

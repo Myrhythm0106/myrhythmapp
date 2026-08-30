@@ -53,6 +53,11 @@ import {
   ensureDefaultLadder,
   loadLaddersForActions
 } from '@/utils/reminderLadder';
+import { buildExecutiveSummary, extractDecisions, extractThemes, extractOpenQuestions } from '@/components/memoryBridge/capture-brief/model/synthesize';
+import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/types';
+import { enrichWithSchedulingSuggestions } from '@/components/memoryBridge/capture-brief/model/scheduleActions';
+import { ExecutiveSummaryPanel, MeetingSummaryModel } from './ExecutiveSummaryPanel';
+
 
 
 
@@ -100,6 +105,7 @@ export function ActionsViewer({
   const [showUnsavedGuard, setShowUnsavedGuard] = useState(false);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
   const [ladders, setLadders] = useState<Record<string, number[]>>({});
+  const [summaryModel, setSummaryModel] = useState<MeetingSummaryModel | null>(null);
 
   const refreshLadders = React.useCallback(async () => {
     const ids = extractedActions.map(a => a.id).filter((id): id is string => !!id);
@@ -171,10 +177,11 @@ export function ActionsViewer({
 
     const fetchActions = async () => {
       setIsLoading(true);
+      setSummaryModel(null);
       try {
         const { data: meetingRecording } = await supabase
           .from('meeting_recordings')
-          .select('id')
+          .select('id, meeting_title, started_at, participants, meeting_context, transcript')
           .eq('recording_id', recordingId)
           .single();
 
@@ -186,7 +193,7 @@ export function ActionsViewer({
             .eq('meeting_recording_id', meetingRecording.id)
             .order('priority_level', { ascending: true });
 
-          setExtractedActions((actions || []).map(action => ({ 
+          const mapped = (actions || []).map(action => ({ 
             ...action, 
             category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
             action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
@@ -195,7 +202,69 @@ export function ActionsViewer({
             alternative_phrasings: Array.isArray(action.alternative_phrasings) 
               ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
               : []
-          })));
+          }));
+
+          const transcript = (meetingRecording.transcript as string) || '';
+          const participants = Array.isArray(meetingRecording.participants)
+            ? (meetingRecording.participants as any[]).map(p => p.name || p).filter(Boolean)
+            : [];
+
+          const briefActions: BriefAction[] = mapped.map(action => ({
+            id: action.id!,
+            text: action.action_text,
+            owner: action.assigned_to || action.owner || 'Me',
+            due: action.due_context || undefined,
+            priority: action.priority_level ?? 3,
+            priorityLabel: (action.priority_level ?? 3) <= 2 ? 'High' : (action.priority_level ?? 3) >= 4 ? 'Low' : 'Medium',
+            confidence: action.confidence_score ?? 0.7,
+            category: action.category,
+            sourceQuote: action.transcript_excerpt || action.source_quote || undefined,
+            context: action.intent_behind || action.relationship_impact || undefined,
+          }));
+
+          const decisions = extractDecisions(briefActions, transcript);
+          const themes = extractThemes(transcript);
+          const openQuestions = extractOpenQuestions(transcript, briefActions);
+
+          const { actions: enrichedBriefs } = await enrichWithSchedulingSuggestions(briefActions, transcript);
+
+          const enriched = mapped.map(action => {
+            const brief = enrichedBriefs.find(b => b.id === action.id);
+            const top = brief?.suggestions?.[0];
+            return {
+              ...action,
+              proposed_date: top?.date || action.proposed_date,
+              proposed_time: top?.time || action.proposed_time,
+            };
+          });
+
+          const summary: MeetingSummaryModel = {
+            title: meetingRecording.meeting_title || meetingTitle,
+            date: meetingRecording.started_at
+              ? new Date(meetingRecording.started_at).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+              : new Date().toLocaleDateString(),
+            participants,
+            context: meetingRecording.meeting_context || undefined,
+            summary: buildExecutiveSummary({
+              title: meetingRecording.meeting_title || meetingTitle,
+              participants,
+              actions: briefActions,
+              decisions,
+              themes,
+            }),
+            themes,
+            decisions,
+            openQuestions,
+            counts: {
+              total: enriched.length,
+              withProposedDate: enriched.filter(a => a.proposed_date && !a.calendar_event_id).length,
+              scheduled: enriched.filter(a => a.calendar_event_id || a.status === 'scheduled').length,
+              complete: enriched.filter(a => a.status === 'done').length,
+            },
+          };
+
+          setSummaryModel(summary);
+          setExtractedActions(enriched);
         }
       } catch (error) {
         console.error('Error fetching actions:', error);
@@ -205,7 +274,7 @@ export function ActionsViewer({
     };
 
     fetchActions();
-  }, [recordingId, isOpen]);
+  }, [recordingId, isOpen, meetingTitle]);
 
   const updateAction = async (actionId: string, updates: Partial<NextStepsItem>) => {
     try {
@@ -694,58 +763,67 @@ export function ActionsViewer({
               <Target className="h-8 w-8 mx-auto mb-4" />
               No actionable commitments found in this recording.
             </div>
-          ) : viewMode === 'table' ? (
-            <ActionsTableView
-              actions={visibleActions}
-              ladders={ladders}
-
-              onDragEnd={handleDragEnd}
-              onStatusChange={handleStatusChange}
-              onPriorityChange={handlePriorityChange}
-              onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
-              onSuccessCriteriaChange={(id, criteria) =>
-                handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
-              }
-              onRaciChange={(id, payload) =>
-                handleFieldChange(
-                  id,
-                  {
-                    assigned_to: payload.assigned_to,
-                    owner_email: payload.owner_email,
-                    accountable: payload.accountable,
-                    consulted: payload.consulted,
-                    informed: payload.informed,
-                  } as Partial<NextStepsItem>,
-                  'Who\u2019s involved updated'
-                )
-              }
-              onSendRaci={(id) => sendRaciEmails([id])}
-              onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
-              onStartDateChange={(id, date) =>
-                handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
-              }
-              onDueDateChange={async (id, date) => {
-                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
-                if (!date) {
-                  await clearActionReminders(id);
-                } else if (user) {
-                  const target = extractedActions.find(a => a.id === id);
-                  await ensureDefaultLadder(id, user.id, date, target?.priority_level);
-                }
-                refreshLadders();
-              }}
-
-              onWatchersChange={(id, watchers) =>
-                handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
-              }
-              onOpenNotes={(action) => setNotesTarget(action)}
-              onOpenReminders={(action) => setRemindersTarget(action)}
-              onArchive={handleArchive}
-              onRestore={handleRestore}
-              onSort={handleSort}
-              sortField={sortField}
-              sortDirection={sortDirection}
-            />
+          ) : (
+            <div className="space-y-5 pb-4">
+              {summaryModel && (
+                <ExecutiveSummaryPanel
+                  model={summaryModel}
+                  onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
+                  isSchedulingAll={isSchedulingAll}
+                />
+              )}
+              {viewMode === 'table' ? (
+                <ActionsTableView
+                  actions={visibleActions}
+                  meetingSummary={summaryModel || undefined}
+                  ladders={ladders}
+                  onDragEnd={handleDragEnd}
+                  onStatusChange={handleStatusChange}
+                  onPriorityChange={handlePriorityChange}
+                  onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
+                  onSuccessCriteriaChange={(id, criteria) =>
+                    handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
+                  }
+                  onRaciChange={(id, payload) =>
+                    handleFieldChange(
+                      id,
+                      {
+                        assigned_to: payload.assigned_to,
+                        owner_email: payload.owner_email,
+                        accountable: payload.accountable,
+                        consulted: payload.consulted,
+                        informed: payload.informed,
+                      } as Partial<NextStepsItem>,
+                      'Who\u2019s involved updated'
+                    )
+                  }
+                  onSendRaci={(id) => sendRaciEmails([id])}
+                  onSendToAll={() => sendRaciEmails(visibleActions.map(a => a.id!))}
+                  onStartDateChange={(id, date) =>
+                    handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
+                  }
+                  onDueDateChange={async (id, date) => {
+                    handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
+                    if (!date) {
+                      await clearActionReminders(id);
+                    } else if (user) {
+                      const target = extractedActions.find(a => a.id === id);
+                      await ensureDefaultLadder(id, user.id, date, target?.priority_level);
+                    }
+                    refreshLadders();
+                  }}
+                  onAcceptProposedDate={acceptProposedDate}
+                  onWatchersChange={(id, watchers) =>
+                    handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
+                  }
+                  onOpenNotes={(action) => setNotesTarget(action)}
+                  onOpenReminders={(action) => setRemindersTarget(action)}
+                  onArchive={handleArchive}
+                  onRestore={handleRestore}
+                  onSort={handleSort}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                />
 
           ) : (
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -977,6 +1055,8 @@ export function ActionsViewer({
                 )}
               </Droppable>
             </DragDropContext>
+          )}
+            </div>
           )}
         </ScrollArea>
       </DialogContent>
