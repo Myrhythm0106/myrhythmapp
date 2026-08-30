@@ -24,6 +24,11 @@ interface ExecutiveSummaryPanelProps {
   model: MeetingSummaryModel;
   onScheduleAll?: () => void;
   isSchedulingAll?: boolean;
+  /**
+   * Progressive disclosure: open with the narrative and counts only, and keep
+   * themes / decisions / open questions behind one quiet expander.
+   */
+  collapsibleDetails?: boolean;
 }
 
 const CHIP =
