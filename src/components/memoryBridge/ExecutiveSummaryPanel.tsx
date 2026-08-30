@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarPlus, Users, FileText, CheckCircle2, Clock, Target, Lightbulb, HelpCircle } from 'lucide-react';
+import { CalendarPlus, Users, FileText, CheckCircle2, Clock, Target, Lightbulb, HelpCircle, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
