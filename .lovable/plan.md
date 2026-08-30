@@ -48,7 +48,7 @@ The workbook is written as a document you could hand to a board or senior manage
 
 One row per action, columns matching the on-screen table:
 
-Priority · Action · How I'll know I'm done · Owner · Owner email · Who's involved (signs off / ask first / keep in the loop) · Start date · Finish date · Due in · Status · Reminder level · Reference code · Source conversation
+Priority · Action · How I'll know I'm done · Owner · Owner email · Who's involved (signs off / ask first / keep in the loop) · Start date · Finish date · Proposed date · Due in · Status · Reminder level · Reference code · Source conversation
 
 
 ## Technical notes
