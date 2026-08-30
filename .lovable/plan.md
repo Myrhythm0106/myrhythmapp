@@ -31,7 +31,9 @@ The signed-in Next Steps route is `/launch/commit`. That page currently renders 
 
 ## Verification
 
-- Open the You-Are-Here dial → Commit/Next Steps and confirm the professional Executive Summary is visible in the first screen of useful content.
+- Open the You-Are-Here dial → Commit/Next Steps and confirm the professional Executive Summary is the first content on screen, with no extra tap.
+- Confirm the first screen shows narrative and counts only, with themes, decisions and open questions collapsed.
+- Confirm exactly one primary action is visible on the page.
 - Switch conversations and confirm the summary and actions update together.
 - Verify loading, empty, incomplete-record, and error states.
-- Check desktop and phone layouts, then confirm Excel/CSV/PDF exports still use the selected conversation’s summary.
+- Check phone and laptop layouts, then confirm Excel/CSV/PDF exports still use the selected conversation’s summary.
