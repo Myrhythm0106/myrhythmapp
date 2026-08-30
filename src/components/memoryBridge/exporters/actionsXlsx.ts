@@ -189,7 +189,7 @@ export async function exportActionsXlsx(
   if (model.openQuestions.length) {
     summarySheet.mergeCells(`A${row}:F${row}`);
     summarySheet.getCell(`A${row}`).value = 'Open questions';
-    summarySheet.getCell(`A${row}`).font = { name: 'Sora', size: 10, bold: true, color: { argb: EXHIBIT.amber } };
+    summarySheet.getCell(`A${row}`).font = { name: 'Sora', size: 10, bold: true, color: { argb: EXHIBIT.accent } };
     row++;
     summarySheet.mergeCells(`A${row}:F${row + 2}`);
     summarySheet.getCell(`A${row}`).value = model.openQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n');
@@ -207,7 +207,7 @@ export async function exportActionsXlsx(
   sheet.pageSetup.fitToPage = true;
   sheet.pageSetup.fitToWidth = 1;
   sheet.pageSetup.horizontalCentered = true;
-  sheet.pageSetup.printTitleRows = '1:2';
+  sheet.pageSetup.printTitlesRow = '1:2';
 
   const headers = [
     'Priority',
