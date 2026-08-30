@@ -386,12 +386,16 @@ export default function LaunchMemoryBridge() {
         title,
         'memory-bridge',
         undefined,
-        notifySupport
+        notifySupport,
+        userId
       );
 
       if (!saved) {
-        // saveRecording already surfaced a toast
         console.warn('handleSave: stage 1 failed — upload/insert returned nothing');
+        toast.error("Couldn't upload that recording.", {
+          description: 'Your audio is still here — check your connection and tap Save again.',
+          duration: 10000,
+        });
         return;
       }
       console.log('handleSave: stage 2 — recording row saved', saved.id);
