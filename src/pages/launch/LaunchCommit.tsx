@@ -292,6 +292,17 @@ export default function LaunchCommit() {
               <RefreshCw className="mr-2 h-4 w-4" /> Try again
             </Button>
           </LaunchCard>
+        ) : !user ? (
+          <LaunchCard className="border-launch-gold/30 bg-launch-ivory p-8 text-center">
+            <Sparkles className="mx-auto h-8 w-8 text-launch-gold" />
+            <h2 className="mt-4 font-display text-2xl font-semibold text-launch-ink">Sign in to see my next steps</h2>
+            <p className="mx-auto mt-2 max-w-md text-[15px] leading-7 text-launch-ink/70">
+              My saved conversations, actions and diary links will be waiting here when I sign in.
+            </p>
+            <Button onClick={() => window.location.assign('/launch/signin')} className="mt-5 min-h-14 bg-launch-ink text-white hover:bg-launch-ink/90">
+              <FileText className="mr-2 h-4 w-4" /> Sign in
+            </Button>
+          </LaunchCard>
         ) : !selectedMeeting || !summary ? (
           <LaunchCard className="border-launch-gold/30 bg-launch-ivory p-8 text-center">
             <Sparkles className="mx-auto h-8 w-8 text-launch-gold" />
