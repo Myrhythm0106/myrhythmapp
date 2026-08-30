@@ -175,103 +175,149 @@ export function ActionsViewer({
   useEffect(() => {
     if (!isOpen || !recordingId) return;
 
+    let cancelled = false;
+
     const fetchActions = async () => {
       setIsLoading(true);
       setSummaryModel(null);
+      setSummaryError(false);
+      setSummaryLoading(true);
       try {
         const { data: meetingRecording } = await supabase
           .from('meeting_recordings')
           .select('id, meeting_title, started_at, participants, meeting_context, transcript')
           .eq('recording_id', recordingId)
-          .single();
+          .maybeSingle();
 
-        if (meetingRecording) {
-          setMeetingId(meetingRecording.id);
-          const { data: actions } = await supabase
-            .from('extracted_actions')
-            .select('*')
-            .eq('meeting_recording_id', meetingRecording.id)
-            .order('priority_level', { ascending: true });
-
-          const mapped = (actions || []).map(action => ({ 
-            ...action, 
-            category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
-            action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
-            status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled',
-            detail_level: (action.detail_level || 'standard') as 'minimal' | 'standard' | 'complete',
-            alternative_phrasings: Array.isArray(action.alternative_phrasings) 
-              ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
-              : []
-          }));
-
-          const transcript = (meetingRecording.transcript as string) || '';
-          const participants = Array.isArray(meetingRecording.participants)
-            ? (meetingRecording.participants as any[]).map(p => p.name || p).filter(Boolean)
-            : [];
-
-          const briefActions: BriefAction[] = mapped.map(action => ({
-            id: action.id!,
-            text: action.action_text,
-            owner: action.assigned_to || action.owner || 'Me',
-            due: action.due_context || undefined,
-            priority: action.priority_level ?? 3,
-            priorityLabel: (action.priority_level ?? 3) <= 2 ? 'High' : (action.priority_level ?? 3) >= 4 ? 'Low' : 'Medium',
-            confidence: action.confidence_score ?? 0.7,
-            category: action.category,
-            sourceQuote: action.transcript_excerpt || action.source_quote || undefined,
-            context: action.intent_behind || action.relationship_impact || undefined,
-          }));
-
-          const decisions = extractDecisions(briefActions, transcript);
-          const themes = extractThemes(transcript);
-          const openQuestions = extractOpenQuestions(transcript, briefActions);
-
-          const { actions: enrichedBriefs } = await enrichWithSchedulingSuggestions(briefActions, transcript);
-
-          const enriched = mapped.map(action => {
-            const brief = enrichedBriefs.find(b => b.id === action.id);
-            const top = brief?.suggestions?.[0];
-            return {
-              ...action,
-              proposed_date: top?.date || action.proposed_date,
-              proposed_time: top?.time || action.proposed_time,
-            };
+        if (!meetingRecording) {
+          if (cancelled) return;
+          // No meeting record for this recording — still give an honest summary shell.
+          setSummaryModel({
+            title: meetingTitle,
+            date: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+            participants: [],
+            summary:
+              'This conversation has no saved meeting record yet, so there is no narrative to summarise. Any next steps below were captured directly.',
+            themes: [],
+            decisions: [],
+            openQuestions: [],
+            counts: { total: 0, withProposedDate: 0, scheduled: 0, complete: 0 },
           });
+          setSummaryLoading(false);
+          return;
+        }
 
-          const summary: MeetingSummaryModel = {
+        setMeetingId(meetingRecording.id);
+        const { data: actions } = await supabase
+          .from('extracted_actions')
+          .select('*')
+          .eq('meeting_recording_id', meetingRecording.id)
+          .order('priority_level', { ascending: true });
+
+        const mapped = (actions || []).map(action => ({
+          ...action,
+          category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
+          action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
+          status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled',
+          detail_level: (action.detail_level || 'standard') as 'minimal' | 'standard' | 'complete',
+          alternative_phrasings: Array.isArray(action.alternative_phrasings)
+            ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
+            : []
+        }));
+
+        if (cancelled) return;
+
+        // ---- Stage 1: actions + executive summary, no AI dependency ----
+        setExtractedActions(mapped);
+        setIsLoading(false);
+
+        const transcript = (meetingRecording.transcript as string) || '';
+        const participants = Array.isArray(meetingRecording.participants)
+          ? (meetingRecording.participants as any[]).map(p => p.name || p).filter(Boolean)
+          : [];
+
+        const briefActions: BriefAction[] = mapped.map(action => ({
+          id: action.id!,
+          text: action.action_text,
+          owner: action.assigned_to || action.owner || 'Me',
+          due: action.due_context || undefined,
+          priority: action.priority_level ?? 3,
+          priorityLabel: (action.priority_level ?? 3) <= 2 ? 'High' : (action.priority_level ?? 3) >= 4 ? 'Low' : 'Medium',
+          confidence: action.confidence_score ?? 0.7,
+          category: action.category,
+          sourceQuote: action.transcript_excerpt || action.source_quote || undefined,
+          context: action.intent_behind || action.relationship_impact || undefined,
+        }));
+
+        let decisions: string[] = [];
+        let themes: string[] = [];
+        let openQuestions: string[] = [];
+        let narrative = '';
+        try {
+          decisions = extractDecisions(briefActions, transcript);
+          themes = extractThemes(transcript);
+          openQuestions = extractOpenQuestions(transcript, briefActions);
+          narrative = buildExecutiveSummary({
             title: meetingRecording.meeting_title || meetingTitle,
-            date: meetingRecording.started_at
-              ? new Date(meetingRecording.started_at).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-              : new Date().toLocaleDateString(),
             participants,
-            context: meetingRecording.meeting_context || undefined,
-            summary: buildExecutiveSummary({
-              title: meetingRecording.meeting_title || meetingTitle,
-              participants,
-              actions: briefActions,
-              decisions,
-              themes,
-            }),
-            themes,
+            actions: briefActions,
             decisions,
-            openQuestions,
-            counts: {
-              total: enriched.length,
-              withProposedDate: enriched.filter(a => a.proposed_date && !a.calendar_event_id).length,
-              scheduled: enriched.filter(a => a.calendar_event_id || a.status === 'scheduled').length,
-              complete: enriched.filter(a => a.status === 'done').length,
-            },
-          };
+            themes,
+          });
+        } catch (e) {
+          console.error('Executive summary build failed, using fallback narrative', e);
+        }
 
-          setSummaryModel(summary);
-          setExtractedActions(enriched);
+        if (!narrative) {
+          narrative =
+            mapped.length > 0
+              ? `This conversation produced ${mapped.length} next ${mapped.length === 1 ? 'step' : 'steps'}. The detail below shows who does what, by when, and who needs to be kept in the loop.`
+              : 'No next steps were captured from this conversation yet.';
+        }
+
+        if (cancelled) return;
+        setSummaryModel({
+          title: meetingRecording.meeting_title || meetingTitle,
+          date: meetingRecording.started_at
+            ? new Date(meetingRecording.started_at).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+            : new Date().toLocaleDateString(),
+          participants,
+          context: meetingRecording.meeting_context || undefined,
+          summary: narrative,
+          themes,
+          decisions,
+          openQuestions,
+          counts: { total: mapped.length, withProposedDate: 0, scheduled: 0, complete: 0 },
+        });
+        setSummaryLoading(false);
+
+        // ---- Stage 2: AI proposed dates (never blocks the summary) ----
+        try {
+          const { actions: enrichedBriefs } = await enrichWithSchedulingSuggestions(briefActions, transcript);
+          if (cancelled) return;
+          setExtractedActions(prev =>
+            prev.map(action => {
+              const brief = enrichedBriefs.find(b => b.id === action.id);
+              const top = brief?.suggestions?.[0];
+              return top
+                ? { ...action, proposed_date: top.date || action.proposed_date, proposed_time: top.time || action.proposed_time }
+                : action;
+            })
+          );
+        } catch (e) {
+          console.error('Scheduling suggestions unavailable', e);
         }
       } catch (error) {
         console.error('Error fetching actions:', error);
+        if (!cancelled) setSummaryError(true);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+          setSummaryLoading(false);
+        }
       }
     };
+
 
     fetchActions();
   }, [recordingId, isOpen, meetingTitle]);
