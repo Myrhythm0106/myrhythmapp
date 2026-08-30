@@ -23,6 +23,7 @@ import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
 import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
 import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
+import { exportActionsPdf } from './exporters/actionsPdf';
 
 
 
@@ -576,7 +577,13 @@ export function ActionsTableView({
                     <Download className="h-4 w-4 mr-1.5" /> Download
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onSelect={() => exportActionsPdf(meetingSummary, actions)}>
+                    <span className="flex flex-col">
+                      <span>PDF — board ready</span>
+                      <span className="text-[11px] text-muted-foreground">Summary + actions exhibit</span>
+                    </span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => exportActionsXlsx(meetingSummary, actions)}>
                     Excel (.xlsx)
                   </DropdownMenuItem>
