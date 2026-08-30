@@ -36,7 +36,9 @@ import {
   Users,
   Loader2,
   CalendarPlus,
-  MessageCircle
+  MessageCircle,
+  MoreHorizontal,
+  ChevronDown
 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
