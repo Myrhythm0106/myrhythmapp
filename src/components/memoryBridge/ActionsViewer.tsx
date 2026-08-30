@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 import { 
   Brain, 
   CheckCircle, 
@@ -904,8 +904,9 @@ export function ActionsViewer({
 
         </DialogHeader>
 
-        {/* Always-visible narrative: keep this outside the scrolling actions area. */}
-        <section className="shrink-0 pr-4" aria-label="Professional executive summary">
+        {/* Executive summary: bounded height with its own scroll so it can never
+            consume the whole dialog and trap the actions below. */}
+        <section className="shrink-0 max-h-[42vh] overflow-y-auto pr-4" aria-label="Professional executive summary">
           {summaryLoading && !displaySummary ? (
             <ExecutiveSummarySkeleton />
           ) : summaryError && !displaySummary ? (
@@ -913,6 +914,7 @@ export function ActionsViewer({
           ) : displaySummary ? (
             <ExecutiveSummaryPanel
               model={displaySummary}
+              collapsibleDetails
               onScheduleAll={() => handleScheduleAll(visibleActions.map(a => a.id!).filter(Boolean))}
               isSchedulingAll={isSchedulingAll}
             />
@@ -921,7 +923,7 @@ export function ActionsViewer({
           )}
         </section>
 
-        <ScrollArea className="min-h-0 flex-1 pr-4">
+        <div className="min-h-0 flex-1 overflow-y-auto pr-4" data-actions-scroll>
           {isLoading && extractedActions.length === 0 ? (
             <div className="pb-4">
               <div className="text-center py-8 text-muted-foreground">
@@ -1224,7 +1226,7 @@ export function ActionsViewer({
           )}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </DialogContent>
 
       {/* Bulk Watcher Dialog */}
