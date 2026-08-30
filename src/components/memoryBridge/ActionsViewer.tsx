@@ -1057,6 +1057,8 @@ export function ActionsViewer({
               </Droppable>
             </DragDropContext>
           )}
+            </div>
+          )}
         </ScrollArea>
       </DialogContent>
 
