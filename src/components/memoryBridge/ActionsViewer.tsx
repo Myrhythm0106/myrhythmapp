@@ -189,11 +189,26 @@ export function ActionsViewer({
       setSummaryError(false);
       setSummaryLoading(true);
       try {
-        const { data: meetingRecording } = await supabase
+        const { data: meetingByRecording, error: meetingByRecordingError } = await supabase
           .from('meeting_recordings')
           .select('id, meeting_title, started_at, participants, meeting_context, transcript')
           .eq('recording_id', recordingId)
           .maybeSingle();
+
+        if (meetingByRecordingError) throw meetingByRecordingError;
+
+        // Some entry points already hold the meeting-recording id rather than the
+        // original voice-recording id. Support both so the brief cannot disappear.
+        let meetingRecording = meetingByRecording;
+        if (!meetingRecording) {
+          const { data: meetingById, error: meetingByIdError } = await supabase
+            .from('meeting_recordings')
+            .select('id, meeting_title, started_at, participants, meeting_context, transcript')
+            .eq('id', recordingId)
+            .maybeSingle();
+          if (meetingByIdError) throw meetingByIdError;
+          meetingRecording = meetingById;
+        }
 
         if (!meetingRecording) {
           if (cancelled) return;
@@ -214,11 +229,13 @@ export function ActionsViewer({
         }
 
         setMeetingId(meetingRecording.id);
-        const { data: actions } = await supabase
+        const { data: actions, error: actionsError } = await supabase
           .from('extracted_actions')
           .select('*')
           .eq('meeting_recording_id', meetingRecording.id)
           .order('priority_level', { ascending: true });
+
+        if (actionsError) throw actionsError;
 
         const mapped = (actions || []).map(action => ({
           ...action,
@@ -823,7 +840,7 @@ export function ActionsViewer({
         </DialogHeader>
 
         {/* Always-visible narrative: keep this outside the scrolling actions area. */}
-        <div className="shrink-0 pr-4">
+        <section className="shrink-0 pr-4" aria-label="Professional executive summary">
           {summaryLoading && !displaySummary ? (
             <ExecutiveSummarySkeleton />
           ) : summaryError && !displaySummary ? (
@@ -837,7 +854,7 @@ export function ActionsViewer({
           ) : (
             <ExecutiveSummaryError onRetry={() => setSummaryReloadKey(v => v + 1)} />
           )}
-        </div>
+        </section>
 
         <ScrollArea className="min-h-0 flex-1 pr-4">
           {isLoading && extractedActions.length === 0 ? (

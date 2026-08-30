@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronDown, CalendarPlus, Users, FileText, Sparkles, CheckCircle2, Clock, Target, Lightbulb, HelpCircle } from 'lucide-react';
+import React from 'react';
+import { CalendarPlus, Users, FileText, CheckCircle2, Clock, Target, Lightbulb, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -46,25 +46,26 @@ function CountPill({ value, label, icon: Icon, tone }: { value: number; label: s
 }
 
 export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }: ExecutiveSummaryPanelProps) {
-  const [expanded, setExpanded] = useState(true);
   const hasExtras = model.themes.length > 0 || model.decisions.length > 0 || model.openQuestions.length > 0;
 
   return (
-    <div className="rounded-xl border border-exhibit-rule bg-exhibit-paper overflow-hidden shadow-sm">
-      {/* Header band */}
-      <div className="bg-exhibit-surface border-b border-exhibit-rule px-5 py-4">
+    <article
+      className="overflow-hidden rounded-lg border-2 border-exhibit-ink bg-exhibit-paper shadow-lg"
+      data-testid="executive-summary"
+    >
+      <div className="bg-exhibit-ink px-5 py-4 text-exhibit-paper">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <FileText className="h-4 w-4 text-exhibit-moss" />
-              <span className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.18em] text-exhibit-moss">
-                Executive summary
+              <FileText className="h-5 w-5 text-exhibit-accent" />
+              <span className="font-sora text-xs font-bold uppercase tracking-[0.18em] text-exhibit-paper">
+                Professional executive summary
               </span>
             </div>
-            <h3 className="mt-1.5 font-sora text-[17px] font-semibold text-exhibit-ink leading-tight">
+            <h2 className="mt-2 font-sora text-xl font-semibold leading-tight text-exhibit-paper">
               {model.title}
-            </h3>
-            <p className="mt-1 font-manrope text-[13px] text-exhibit-soft">
+            </h2>
+            <p className="mt-1 font-manrope text-[13px] text-exhibit-paper/80">
               {model.date}
               {model.participants.length > 0 && ` · ${model.participants.join(', ')}`}
               {model.context && ` · ${model.context}`}
@@ -91,20 +92,12 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
                 )}
               </Button>
             )}
-            <button
-              type="button"
-              onClick={() => setExpanded(v => !v)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-exhibit-rule bg-white text-exhibit-moss hover:bg-exhibit-surface transition-colors"
-              aria-label={expanded ? 'Collapse summary' : 'Expand summary'}
-              title={expanded ? 'Show less' : 'Show more'}
-            >
-              <ChevronDown className={cn('h-4 w-4 transition-transform', expanded && 'rotate-180')} />
-            </button>
           </div>
         </div>
+      </div>
 
-        {/* Counts */}
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="border-b border-exhibit-rule bg-exhibit-surface px-5 py-3">
+        <div className="flex flex-wrap items-center gap-2">
           <CountPill value={model.counts.total} label="actions" icon={Target} tone="ink" />
           <CountPill value={model.counts.withProposedDate} label="proposed" icon={Clock} tone="moss" />
           <CountPill value={model.counts.scheduled} label="scheduled" icon={Users} tone="moss" />
@@ -112,23 +105,18 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
         </div>
       </div>
 
-      {/* Expandable body */}
-      {expanded && (
-        <div className="px-5 py-4 space-y-4">
-          <div>
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-exhibit-accent" />
-              <span className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
-                What this means
-              </span>
-            </div>
-            <p className="font-manrope text-[14px] leading-relaxed text-exhibit-ink">
-              {model.summary}
-            </p>
-          </div>
+      <div className="space-y-5 px-5 py-5">
+        <section className="border-l-4 border-exhibit-accent pl-4">
+          <p className="mb-1.5 font-sora text-[10.5px] font-bold uppercase tracking-[0.14em] text-exhibit-moss">
+            Meeting overview
+          </p>
+          <p className="font-manrope text-[15px] leading-7 text-exhibit-ink">
+            {model.summary}
+          </p>
+        </section>
 
-          {model.themes.length > 0 && (
-            <div>
+        {model.themes.length > 0 && (
+            <section>
               <div className="flex items-center gap-1.5 mb-2">
                 <Lightbulb className="h-3.5 w-3.5 text-exhibit-moss" />
                 <span className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
@@ -142,7 +130,7 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
                   </span>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
           {(model.decisions.length > 0 || model.openQuestions.length > 0) && (
@@ -187,14 +175,13 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
             </div>
           )}
 
-          {!hasExtras && (
-            <p className="font-manrope text-[12.5px] text-exhibit-soft italic">
-              No themes, decisions or open questions were extracted from this conversation.
-            </p>
-          )}
-        </div>
-      )}
-    </div>
+        {!hasExtras && (
+          <p className="border-t border-exhibit-rule pt-4 font-manrope text-[12.5px] italic text-exhibit-soft">
+            No additional themes, decisions or open questions were extracted from this conversation.
+          </p>
+        )}
+      </div>
+    </article>
   );
 }
 
