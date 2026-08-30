@@ -23,6 +23,7 @@ import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
 import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
 import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
+import { exportActionsPdf } from './exporters/actionsPdf';
 
 
 
