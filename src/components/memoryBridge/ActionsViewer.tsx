@@ -1226,7 +1226,7 @@ export function ActionsViewer({
           )}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </DialogContent>
 
       {/* Bulk Watcher Dialog */}
