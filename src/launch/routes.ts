@@ -11,7 +11,7 @@
 import {
   Home, Mic, CheckSquare, Activity, Sparkles,
   Calendar, Brain, Users, Gamepad2, Target, Flag,
-  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy,
+  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy, ClipboardList,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -45,6 +45,7 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   // Middle ring — key features
   { path: '/launch/calendar',        label: 'Calendar',       icon: Calendar, ring: 'middle', group: 'key-features', description: 'Day view & smart schedule' },
   { path: '/launch/memory',          label: 'Memory Bridge',  icon: Brain,    ring: 'middle', group: 'key-features', description: 'Record → next steps → share' },
+  { path: '/launch/assessment',      label: 'MYRHYTHM Assessment', icon: ClipboardList, ring: 'middle', group: 'key-features', description: 'My 8-letter brain health snapshot' },
   { path: '/launch/support',         label: 'Support Circle', icon: Users,    ring: 'middle', group: 'key-features', description: 'No one walks alone' },
   { path: '/launch/games',           label: 'Brain Games',    icon: Gamepad2, ring: 'middle', group: 'key-features', description: 'Gentle cognitive practice' },
   { path: '/launch/vision-statement',label: 'Vision',         icon: Target,   ring: 'middle', group: 'key-features', description: 'My north-star statement' },

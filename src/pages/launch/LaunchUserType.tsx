@@ -122,12 +122,13 @@ export default function LaunchUserType() {
         <div className="text-center space-y-1">
           <button
             onClick={() => {
-              localStorage.setItem('myrhythm_user_type', 'brain-injury');
+              // Neutral default: the general focus questions, never the recovery lens.
+              localStorage.setItem('myrhythm_user_type', 'executive');
               navigate('/launch/assessment');
             }}
             className="text-sm text-launch-ink/70 hover:text-launch-ink underline underline-offset-4"
           >
-            I'm not sure yet — show me around
+            I'm not sure yet — start with the everyday focus questions
           </button>
           <p className="text-xs text-launch-ink/40">You can change this any time in Settings.</p>
         </div>
