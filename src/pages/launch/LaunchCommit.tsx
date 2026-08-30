@@ -16,6 +16,9 @@ import { buildExecutiveSummary, extractDecisions, extractOpenQuestions, extractT
 import { scheduleExtractedActions } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/types';
 import type { NextStepsItem } from '@/types/memoryBridge';
+import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
+import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
+import { useCompleteAction, type CompletionResult } from '@/hooks/useCompleteAction';
 import { cn } from '@/lib/utils';
 
 interface MeetingRecord {
@@ -59,6 +62,8 @@ const toNextStep = (action: Record<string, unknown>): NextStepsItem => ({
 
 export default function LaunchCommit() {
   const { user, loading: authLoading } = useAuth();
+  const { completeAction, undoCompletion } = useCompleteAction();
+  const [celebration, setCelebration] = useState<CompletionResult | null>(null);
   const [meetings, setMeetings] = useState<MeetingRecord[]>([]);
   const [selectedMeetingId, setSelectedMeetingId] = useState<string>('');
   const [actions, setActions] = useState<NextStepsItem[]>([]);
