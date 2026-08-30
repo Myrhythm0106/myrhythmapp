@@ -604,13 +604,14 @@ export function ActionsTableView({
           <Table className="min-w-[1040px] border-separate border-spacing-0">
             <colgroup>
               <col style={{ width: 40 }} />
-              <col style={{ width: 108 }} />
+              <col style={{ width: 96 }} />
               <col />
-              <col className="hidden lg:table-column" style={{ width: 190 }} />
-              <col style={{ width: 172 }} />
-              <col style={{ width: 116 }} />
-              <col style={{ width: 150 }} />
-              <col style={{ width: 148 }} />
+              <col className="hidden lg:table-column" style={{ width: 180 }} />
+              <col style={{ width: 152 }} />
+              <col style={{ width: 120 }} />
+              <col style={{ width: 104 }} />
+              <col style={{ width: 140 }} />
+              <col style={{ width: 140 }} />
               <col style={{ width: 44 }} />
             </colgroup>
             <TableHeader className="sticky top-0 z-10">
@@ -625,7 +626,7 @@ export function ActionsTableView({
                     <ArrowUpDown className={sortIcon(sortField === 'priority')} />
                   </div>
                 </TableHead>
-                <TableHead className={cn(headCell, 'bg-exhibit-ink min-w-[320px]')}>Action</TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink min-w-[300px]')}>Action</TableHead>
                 <TableHead className={cn(headCell, groupEdge, 'bg-exhibit-ink hidden lg:table-cell')}>
                   Who&apos;s involved
                 </TableHead>
@@ -638,6 +639,7 @@ export function ActionsTableView({
                     <ArrowUpDown className={sortIcon(sortField === 'start' || sortField === 'finish')} />
                   </div>
                 </TableHead>
+                <TableHead className={cn(headCell, 'bg-exhibit-ink')}>Proposed</TableHead>
                 <TableHead className={cn(headCell, 'bg-exhibit-ink text-right')}>Due in</TableHead>
                 <TableHead
                   className={cn(headCell, 'cursor-pointer bg-exhibit-ink transition-colors hover:bg-exhibit-moss')}
