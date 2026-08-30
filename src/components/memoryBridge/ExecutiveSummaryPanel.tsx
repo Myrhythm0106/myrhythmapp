@@ -197,3 +197,50 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
     </div>
   );
 }
+
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="rounded-xl border border-exhibit-rule bg-exhibit-paper overflow-hidden shadow-sm">
+      <div className="bg-exhibit-surface border-b border-exhibit-rule px-5 py-4">
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-exhibit-moss" />
+          <span className="font-sora text-[10.5px] font-semibold uppercase tracking-[0.18em] text-exhibit-moss">
+            Executive summary
+          </span>
+        </div>
+      </div>
+      <div className="px-5 py-4">{children}</div>
+    </div>
+  );
+}
+
+export function ExecutiveSummarySkeleton() {
+  return (
+    <Shell>
+      <div className="space-y-2.5 animate-pulse">
+        <div className="h-4 w-2/3 rounded bg-exhibit-surface" />
+        <div className="h-3 w-full rounded bg-exhibit-surface" />
+        <div className="h-3 w-11/12 rounded bg-exhibit-surface" />
+        <div className="h-3 w-3/5 rounded bg-exhibit-surface" />
+      </div>
+    </Shell>
+  );
+}
+
+export function ExecutiveSummaryError({ onRetry }: { onRetry?: () => void }) {
+  return (
+    <Shell>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="font-manrope text-[13.5px] text-exhibit-ink">
+          Summary is still being prepared. Your next steps below are unaffected.
+        </p>
+        {onRetry && (
+          <Button variant="outline" size="sm" onClick={onRetry} className="border-exhibit-rule text-exhibit-ink">
+            Retry
+          </Button>
+        )}
+      </div>
+    </Shell>
+  );
+}
+
