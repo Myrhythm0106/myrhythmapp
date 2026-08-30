@@ -16,6 +16,9 @@ import { buildExecutiveSummary, extractDecisions, extractOpenQuestions, extractT
 import { scheduleExtractedActions } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/types';
 import type { NextStepsItem } from '@/types/memoryBridge';
+import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
+import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
+import { useCompleteAction, type CompletionResult } from '@/hooks/useCompleteAction';
 import { cn } from '@/lib/utils';
 
 interface MeetingRecord {
@@ -59,6 +62,8 @@ const toNextStep = (action: Record<string, unknown>): NextStepsItem => ({
 
 export default function LaunchCommit() {
   const { user, loading: authLoading } = useAuth();
+  const { completeAction, undoCompletion } = useCompleteAction();
+  const [celebration, setCelebration] = useState<CompletionResult | null>(null);
   const [meetings, setMeetings] = useState<MeetingRecord[]>([]);
   const [selectedMeetingId, setSelectedMeetingId] = useState<string>('');
   const [actions, setActions] = useState<NextStepsItem[]>([]);
@@ -149,6 +154,45 @@ export default function LaunchCommit() {
       return;
     }
     toast.success(message);
+  };
+
+  const handleStatusChange = async (actionId: string, status: string) => {
+    const action = actions.find(item => item.id === actionId);
+    if (!action) return;
+
+    if ((status === 'done' || status === 'completed') && action.status !== 'done' && action.status !== 'completed') {
+      const result = await completeAction(actionId, action.action_text);
+      if (!result) {
+        toast.error("That didn't save — please try again");
+        return;
+      }
+      setActions(current => current.map(item => item.id === actionId
+        ? { ...item, status: 'done', completion_date: new Date().toISOString().slice(0, 10), archived_at: new Date().toISOString() }
+        : item));
+      setCelebration(result);
+      toast.success('Done — nicely closed off', {
+        action: {
+          label: 'Undo',
+          onClick: async () => {
+            setCelebration(null);
+            if (await undoCompletion(actionId)) {
+              setActions(current => current.map(item => item.id === actionId
+                ? { ...item, status: action.status, completion_date: action.completion_date ?? null, archived_at: action.archived_at ?? null }
+                : item));
+              toast.success('Back on my open list');
+            } else {
+              toast.error("Couldn't undo that — please try again");
+            }
+          }
+        }
+      });
+      return;
+    }
+
+    await updateAction(actionId, {
+      status: status as NextStepsItem['status'],
+      ...(status === 'cancelled' ? { archived_at: new Date().toISOString() } : {})
+    }, status === 'cancelled' ? 'Closed and archived' : 'Status updated');
   };
 
   const handleReorder = async (result: DropResult) => {
@@ -251,6 +295,8 @@ export default function LaunchCommit() {
       <div className="max-w-6xl mx-auto px-1 pb-16">
         <LaunchPageHeader fallbackPath="/launch/home" />
 
+        <CompletionStatsStrip className="mb-5" />
+
         <header className="mb-6 flex flex-col gap-4 border-b border-launch-gold/20 pb-6 md:flex-row md:items-end md:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-launch-gold">
@@ -347,7 +393,7 @@ export default function LaunchCommit() {
                   actions={actions}
                   meetingSummary={summary}
                   onDragEnd={handleReorder}
-                  onStatusChange={(id, status) => void updateAction(id, { status: status as NextStepsItem['status'] }, 'Status updated')}
+                   onStatusChange={(id, status) => void handleStatusChange(id, status)}
                   onPriorityChange={(id, priority) => void updateAction(id, { priority_level: priority }, 'Priority updated')}
                   onTextChange={(id, text) => void updateAction(id, { action_text: text }, 'Action updated')}
                   onStartDateChange={(id, date) => void updateAction(id, { start_date: date || null }, 'Start date updated')}
@@ -370,6 +416,16 @@ export default function LaunchCommit() {
             Commit turns a saved conversation into clear, reviewable next steps. I can accept, amend, schedule, involve people and keep the source reference without losing the original context.
           </div>
         </details>
+
+        <CompletionCelebration
+          isOpen={!!celebration}
+          onClose={() => setCelebration(null)}
+          actionTitle={celebration?.actionTitle || ''}
+          streakCount={celebration?.streak}
+          isPersonalBest={celebration?.isPersonalBest}
+          notifiedCount={celebration?.notified}
+          doneThisWeek={celebration?.doneThisWeek}
+        />
       </div>
     </LaunchLayout>
   );

@@ -19,6 +19,7 @@ import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
+import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -75,6 +76,7 @@ export function QuietHome() {
 
       {/* Next action — the one thing that matters right now */}
       <NextActionStrip />
+      <CompletionStatsStrip />
 
       {/* Weekly planning nudge (only on the user's planning day) */}
       <LaunchWeeklyPlanningCard />
