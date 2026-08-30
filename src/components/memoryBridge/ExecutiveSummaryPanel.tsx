@@ -29,6 +29,11 @@ interface ExecutiveSummaryPanelProps {
    * themes / decisions / open questions behind one quiet expander.
    */
   collapsibleDetails?: boolean;
+  /**
+   * Render collapsed to a single strip (title, date, counts, "Show summary")
+   * so the actions exhibit keeps the dominant space. One tap expands it.
+   */
+  defaultCollapsedStrip?: boolean;
 }
 
 const CHIP =
