@@ -399,7 +399,7 @@ export function buildActionsPdf(model: MeetingSummaryModel, actions: NextStepsIt
 
   // ---------- Appendix ----------
   const detailed = actions.filter(
-    a => (a.action_text?.length || 0) > 140 || a.source_quote || a.transcript_excerpt || a.notes
+    a => (a.action_text?.length || 0) > 140 || a.source_quote || a.transcript_excerpt
   );
   if (detailed.length) {
     doc.addPage('a4', 'landscape');
@@ -415,7 +415,6 @@ export function buildActionsPdf(model: MeetingSummaryModel, actions: NextStepsIt
       blockLines.push(involvementDetail(action));
       const source = action.source_quote || action.transcript_excerpt;
       if (source) blockLines.push(`From the conversation: “${source}”`);
-      if (action.notes) blockLines.push(`Notes: ${action.notes}`);
 
       const wrapped = blockLines.flatMap(l => doc.splitTextToSize(l, contentW - 12) as string[]);
       const needed = wrapped.length * 12 + 18;
