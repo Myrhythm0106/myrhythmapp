@@ -29,6 +29,7 @@ import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
 
 interface ActionsTableViewProps {
   actions: NextStepsItem[];
+  meetingSummary?: MeetingSummaryModel;
   onDragEnd: (result: DropResult) => void;
   onStatusChange: (actionId: string, status: string) => void;
   onPriorityChange?: (actionId: string, priorityLevel: number) => void;
@@ -41,6 +42,7 @@ interface ActionsTableViewProps {
   onSendToAll?: () => Promise<void>;
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
+  onAcceptProposedDate?: (action: NextStepsItem) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
   onOpenNotes?: (action: NextStepsItem) => void;
   onOpenReminders?: (action: NextStepsItem) => void;
