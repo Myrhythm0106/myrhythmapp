@@ -854,7 +854,7 @@ export function ActionsViewer({
               {viewMode === 'table' ? (
                 <ActionsTableView
                   actions={visibleActions}
-                  meetingSummary={summaryModel || undefined}
+                  meetingSummary={displaySummary || undefined}
                   ladders={ladders}
                   onDragEnd={handleDragEnd}
                   onStatusChange={handleStatusChange}
