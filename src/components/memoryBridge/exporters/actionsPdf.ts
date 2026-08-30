@@ -377,7 +377,7 @@ export function buildActionsPdf(model: MeetingSummaryModel, actions: NextStepsIt
       3: { cellWidth: 128 },
       4: { cellWidth: 90 },
       5: { cellWidth: 74 },
-      6: { cellWidth: 50 },
+      6: { cellWidth: 56 },
     },
     didParseCell: data => {
       if (data.section !== 'body') return;
