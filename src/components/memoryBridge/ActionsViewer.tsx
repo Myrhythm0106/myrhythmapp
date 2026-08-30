@@ -56,7 +56,7 @@ import {
 import { buildExecutiveSummary, extractDecisions, extractThemes, extractOpenQuestions } from '@/components/memoryBridge/capture-brief/model/synthesize';
 import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/types';
 import { enrichWithSchedulingSuggestions } from '@/components/memoryBridge/capture-brief/model/scheduleActions';
-import { ExecutiveSummaryPanel, MeetingSummaryModel } from './ExecutiveSummaryPanel';
+import { ExecutiveSummaryPanel, ExecutiveSummarySkeleton, ExecutiveSummaryError, MeetingSummaryModel } from './ExecutiveSummaryPanel';
 
 
 
