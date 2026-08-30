@@ -114,7 +114,6 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll }:
             {model.summary}
           </p>
         </section>
-          </div>
 
         {model.themes.length > 0 && (
             <section>
