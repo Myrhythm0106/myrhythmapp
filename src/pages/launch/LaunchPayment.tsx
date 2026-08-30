@@ -111,6 +111,7 @@ export default function LaunchPayment() {
 
   const handleStartTrial = async () => {
     setIsLoading(true);
+    setCheckoutError(null);
     try {
       const session = await requireSession();
       if (!session) return;
@@ -127,7 +128,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      toast.error("We couldn't start checkout just now. Nothing was charged — try again, or use an access code below.");
+      setCheckoutError("Checkout couldn't start just now. Nothing was charged. You can try again — or skip payment entirely with an access code below.");
     } finally {
       setIsLoading(false);
     }
