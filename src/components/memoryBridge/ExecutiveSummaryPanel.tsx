@@ -123,7 +123,21 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll, c
           </p>
         </section>
 
-        {model.themes.length > 0 && (
+        {collapsibleDetails && hasExtras && (
+          <button
+            type="button"
+            onClick={() => setDetailsOpen(open => !open)}
+            aria-expanded={detailsOpen}
+            className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-exhibit-rule bg-exhibit-surface/60 px-3 py-2.5 text-left transition-colors hover:bg-exhibit-surface"
+          >
+            <span className="font-sora text-[11.5px] font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
+              {detailsOpen ? 'Hide detail' : `Show detail · ${detailCount} item${detailCount === 1 ? '' : 's'}`}
+            </span>
+            <ChevronDown className={cn('h-4 w-4 text-exhibit-moss transition-transform', detailsOpen && 'rotate-180')} />
+          </button>
+        )}
+
+        {showDetails && model.themes.length > 0 && (
             <section>
               <div className="flex items-center gap-1.5 mb-2">
                 <Lightbulb className="h-3.5 w-3.5 text-exhibit-moss" />
@@ -141,7 +155,7 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll, c
             </section>
           )}
 
-          {(model.decisions.length > 0 || model.openQuestions.length > 0) && (
+          {showDetails && (model.decisions.length > 0 || model.openQuestions.length > 0) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {model.decisions.length > 0 && (
                 <div className="rounded-lg bg-exhibit-surface/50 border border-exhibit-rule/60 p-3">
