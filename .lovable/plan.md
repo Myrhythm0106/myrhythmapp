@@ -34,3 +34,4 @@ Priority · Action · How I'll know I'm done · Owner · Owner email · Who's in
 - Header control added to `ActionsTableView.tsx` next to the existing actions, as a `DropdownMenu` with 44px+ items; exports whatever rows are currently shown (respecting any active filter/order, including drag-reordered priority).
 - Reads existing fields on `NextStepsItem` (`owner_email`, `accountable`/`consulted`/`informed`, `start_date`, `end_date`, `reference_code`, reminder ladder). No schema change, no backend work.
 - Filename: `MyRhythm_Next_Steps_<conversation>_<YYYY-MM-DD>`.
+- Before shipping, the generated workbook is opened and each sheet inspected for clipped text, wrong widths, or broken formatting, and fixed until clean.
