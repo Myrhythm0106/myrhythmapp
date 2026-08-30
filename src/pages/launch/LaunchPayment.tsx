@@ -176,6 +176,32 @@ export default function LaunchPayment() {
           )}
 
 
+          {checkoutError && (
+            <div
+              className="mb-6 rounded-2xl border-2 border-launch-ember/50 bg-white px-4 py-4"
+              role="alert"
+            >
+              <p className="font-semibold text-launch-ink">Checkout didn't start</p>
+              <p className="mt-1 text-sm text-launch-ink/70">{checkoutError}</p>
+              <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                <Button
+                  className="min-h-[56px] sm:flex-1"
+                  onClick={handleStartTrial}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Try again'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="min-h-[56px] sm:flex-1 border-launch-gold/40"
+                  onClick={() => setCheckoutError(null)}
+                >
+                  Use an access code instead
+                </Button>
+              </div>
+            </div>
+          )}
+
           {IS_TEST_MODE && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
