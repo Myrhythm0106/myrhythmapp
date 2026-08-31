@@ -448,20 +448,40 @@ export function useVoiceRecorder() {
 
       if (fetchError) throw fetchError;
 
-      // Delete from storage
+      const { data: meetings, error: meetingsError } = await supabase
+        .from('meeting_recordings')
+        .select('id')
+        .eq('recording_id', id)
+        .eq('user_id', user.id);
+      if (meetingsError) throw meetingsError;
+
+      const meetingIds = (meetings || []).map(meeting => meeting.id);
+      if (meetingIds.length > 0) {
+        const { error: actionsError } = await supabase
+          .from('extracted_actions')
+          .delete()
+          .in('meeting_recording_id', meetingIds);
+        if (actionsError) throw actionsError;
+
+        const { error: meetingsDeleteError } = await supabase
+          .from('meeting_recordings')
+          .delete()
+          .in('id', meetingIds)
+          .eq('user_id', user.id);
+        if (meetingsDeleteError) throw meetingsDeleteError;
+      }
+
+      // Delete storage only after linked Memory Bridge rows are removed.
       const { error: storageError } = await supabase.storage
         .from('voice-recordings')
         .remove([recording.file_path]);
-
       if (storageError) throw storageError;
 
-      // Delete from database
       const { error: dbError } = await supabase
         .from('voice_recordings')
         .delete()
         .eq('id', id)
         .eq('user_id', user.id);
-
       if (dbError) throw dbError;
 
       await fetchRecordings();
