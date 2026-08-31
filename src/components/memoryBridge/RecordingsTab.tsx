@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
 import { processSavedRecording } from '@/utils/processSavedRecording';
@@ -16,7 +17,8 @@ import {
   FileAudio,
   ChevronRight,
   Loader2,
-  Eye
+  Eye,
+  Trash2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
@@ -28,13 +30,15 @@ interface RecordingsTabProps {
 }
 
 export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
-  const { recordings, fetchRecordings, getRecordingUrl } = useVoiceRecorder();
+  const { recordings, fetchRecordings, getRecordingUrl, deleteRecording } = useVoiceRecorder();
   const { user } = useAuth();
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
   const [viewingRecording, setViewingRecording] = useState<{ id: string; title: string } | null>(null);
   const [viewingTranscript, setViewingTranscript] = useState<{ recordingId: string; title: string } | null>(null);
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
+  const [recordingToDelete, setRecordingToDelete] = useState<any | null>(null);
+  const [deletingRecording, setDeletingRecording] = useState(false);
 
   useEffect(() => {
     fetchRecordings();
@@ -93,6 +97,21 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
       id: recording.id,
       title: recording.title
     });
+  };
+
+  const handleDeleteRecording = async () => {
+    if (!recordingToDelete) return;
+    setDeletingRecording(true);
+    try {
+      await deleteRecording(recordingToDelete.id);
+      setRecordingToDelete(null);
+      toast.success('Recording, transcript and extracted steps deleted.');
+    } catch (error) {
+      console.error('Failed to delete recording:', error);
+      toast.error(error instanceof Error ? error.message : 'I could not delete that recording. Nothing else was changed.');
+    } finally {
+      setDeletingRecording(false);
+    }
   };
 
   const formatDuration = (seconds: number | undefined) => {
@@ -170,6 +189,17 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                     </div>
 
                     <div className="flex items-center gap-2 ml-4">
+                      {!Boolean((recording as { legal_retention_required?: boolean }).legal_retention_required) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          aria-label="Delete recording"
+                          onClick={() => setRecordingToDelete(recording)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      )}
                       {isProcessed ? (
                         <div className="flex items-center gap-2">
                           <Badge className="bg-green-100 text-green-800">
@@ -243,6 +273,24 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
           })}
         </CardContent>
       </Card>
+
+      <AlertDialog open={Boolean(recordingToDelete)} onOpenChange={(open) => !open && setRecordingToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this recording permanently?</AlertDialogTitle>
+            <AlertDialogDescription>
+              “{recordingToDelete?.title || 'This recording'}” will be deleted with its audio, transcript and extracted steps. Any diary entries already created stay in my diary, but this source conversation will no longer be available.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingRecording}>Keep it</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteRecording} disabled={deletingRecording} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {deletingRecording ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              Delete permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Transcript Viewer Modal */}
       {viewingTranscript && (
