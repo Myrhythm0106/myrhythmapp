@@ -309,7 +309,8 @@ export function useVoiceRecorder() {
       
       // Resume timer
       timerRef.current = setInterval(() => {
-        setDuration(prev => prev + 1);
+        durationRef.current += 1;
+        setDuration(durationRef.current);
       }, 1000);
     }
   }, [isRecording, isPaused]);
