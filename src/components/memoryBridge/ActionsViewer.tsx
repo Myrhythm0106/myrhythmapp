@@ -87,12 +87,12 @@ function InvitationStatus({ eventId }: { eventId: string }) {
     supabase
       .from('event_invitations')
       .select('invitee_name, invitee_email, status')
-      .eq('event_id', actionId)
+      .eq('event_id', eventId)
       .then(({ data }) => {
         if (active) setInvites((data || []) as Array<{ invitee_name: string | null; invitee_email: string; status: string }>);
       });
     return () => { active = false; };
-  }, [actionId]);
+  }, [eventId]);
 
   if (!invites.length) return null;
   return (
