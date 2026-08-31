@@ -1029,6 +1029,52 @@ export function ActionsTableView({
         </div>
       </div>
 
+      {viewMode === 'cards' ? (
+        <div className="px-4 py-5 sm:px-5">
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="actions-cards">
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="mx-auto max-w-3xl space-y-4"
+                >
+                  {actions.map((action, index) => (
+                    <Draggable key={action.id} draggableId={action.id!} index={index}>
+                      {(dragProvided, snapshot) => (
+                        <ActionCard
+                          action={action}
+                          isActive={action.id === activeCardId}
+                          draggableProps={dragProvided.draggableProps}
+                          dragHandleProps={dragProvided.dragHandleProps}
+                          innerRef={dragProvided.innerRef}
+                          isDragging={snapshot.isDragging}
+                          onStatusChange={onStatusChange}
+                          onPriorityChange={onPriorityChange}
+                          onTextChange={onTextChange}
+                          onSuccessCriteriaChange={onSuccessCriteriaChange}
+                          onRaciChange={onRaciChange}
+                          onSendRaci={onSendRaci}
+                          onStartDateChange={onStartDateChange}
+                          onDueDateChange={onDueDateChange}
+                          onAcceptProposedDate={onAcceptProposedDate}
+                          onWatchersChange={onWatchersChange}
+                          onOpenNotes={onOpenNotes}
+                          onOpenReminders={onOpenReminders}
+                          onArchive={onArchive}
+                          onRestore={onRestore}
+                          ladders={ladders}
+                        />
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
+      ) : (
       <div className="overflow-x-auto">
         <DragDropContext onDragEnd={onDragEnd}>
           <Table className="min-w-[1040px] border-separate border-spacing-0">
