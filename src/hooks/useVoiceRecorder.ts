@@ -4,6 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ensureSession } from '@/utils/ensureSession';
 import { deleteVoiceRecording } from '@/utils/voiceRecording';
+import {
+  appendCaptureSegment,
+  beginCaptureSession,
+  deleteCaptureSession,
+  finishCaptureSession,
+  newCaptureSessionId,
+} from '@/utils/captureSegments';
+
 
 export type MicPermission = 'granted' | 'denied' | 'prompt' | 'unknown';
 
