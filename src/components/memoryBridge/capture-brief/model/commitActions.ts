@@ -60,7 +60,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       description: action.context || action.sourceQuote || null,
       date: input.startDate,
       time: input.startTime,
-      end_time: addMinutes(input.startTime, 30),
+      end_time: addMinutes(input.startTime, input.durationMinutes || 30),
       type: 'action',
       category: action.category || 'commitment',
       is_system_generated: true,
