@@ -42,12 +42,13 @@ New card near the top of the `/launch/welcome` report:
 - **Good for other people** — the window where meetings are safest for me.
 - Four pillar bars (Biological / Psychological / Social / Spiritual) beneath the existing letter bars, each with a one-line "what this means for my week".
 
-## 4. The calendar uses it
+## 4. The calendar uses it — as a preference, on by default
 
-- On assessment completion, write the derived window to `user_schedule_preferences` (the existing table and shape).
-- Fix `mapAssessmentToPreferences` so it reads the keys the assessment actually writes (`rhythm`, `focusEndurance`, `drains`, `heal`), with the old keys kept as fallbacks.
-- Smart scheduling suggestions then label times honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour".
-- Retaking the assessment updates the window; existing events are never moved automatically.
+- New setting in Launch Settings → Scheduling: **"Plan around my best window"** — on by default after the first assessment. Turning it off keeps the window on the report but stops the scheduler from favouring or protecting it.
+- On assessment completion, write the derived window to `user_schedule_preferences` (the existing table and shape) alongside a `best_window_enabled: true` flag.
+- Fix `mapAssessmentToPreferences` so it reads the keys the assessment actually writes (`rhythm`, `focusEndurance`, `drains`, `heal`), with the old keys kept as fallbacks, and respects the enabled flag.
+- Smart scheduling suggestions then label times honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour". When the preference is off, suggestions are time-neutral again.
+- Retaking the assessment updates the window; the toggle state is never reset, and existing events are never moved automatically.
 
 ## Technical notes
 
