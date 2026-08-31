@@ -68,7 +68,7 @@ The scheduler turns the levels into ranking weights: "Decides it" dominates, "Co
 
 **Nothing is ever refused.** The app has no mode in which it declines to book a time the user chose. The window is a hint that can always be ignored in one tap, and the app does not repeat the hint for that booking.
 
-Retaking the assessment updates the window; the mode chips, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
+Retaking the assessment updates the window; the per-type priority levels and any saved overrides are never reset, and existing events are never moved automatically.
 
 
 ## Technical notes
