@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { recordAction, SURFACES } from '@/lib/evidence/track';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
@@ -263,7 +263,7 @@ export default function LaunchMemoryBridge() {
   }, [isRecording]);
 
 
-  const handleStartRecording = async () => {
+  const handleStartRecording = useCallback(async () => {
     if (outOfAllowance) {
       toast.error(
         nextTierKey
@@ -281,7 +281,7 @@ export default function LaunchMemoryBridge() {
       // unexpected so a tap can never vanish silently.
       console.warn('handleStartRecording: startRecording returned false without a state change');
     }
-  };
+  }, [outOfAllowance, nextTierKey, allowance.period, startRecording, setRecordingTitle]);
 
   // Two-tap capture: arriving with ?record=1 starts recording immediately.
   // One attempt only — a blocked mic must never retry in a loop.
@@ -327,7 +327,7 @@ export default function LaunchMemoryBridge() {
     setState('recording');
   };
 
-  const handleStopRecording = async () => {
+  const handleStopRecording = useCallback(async () => {
     const blob = await stopRecording();
     if (!blob || blob.size === 0) {
       // stopRecording already explained the empty capture.
@@ -352,14 +352,14 @@ export default function LaunchMemoryBridge() {
     } catch (err) {
       console.warn('handleStopRecording: could not park recording', err);
     }
-  };
+  }, [duration, recordingTitle, stopRecording]);
 
   // The safety-net prompt finishes through the same save path as a normal Stop.
   useEffect(() => {
     if (!quietFinishRequested || !isRecording) return;
     setQuietFinishRequested(false);
     void handleStopRecording();
-  }, [quietFinishRequested, isRecording]);
+  }, [quietFinishRequested, isRecording, handleStopRecording]);
 
   // Publish a small, global status so I always know the app is listening and
   // can return to or stop the capture from another signed-in page.
@@ -377,7 +377,7 @@ export default function LaunchMemoryBridge() {
       registerCaptureStopHandler(null);
       if (!isRecording) publishCaptureStatus({ active: false, paused: false, seconds: 0, level: 0, title: null });
     };
-  }, [isRecording, isPaused, duration, micLevel.level, recordingTitle]);
+  }, [isRecording, isPaused, duration, micLevel.level, recordingTitle, handleStopRecording]);
 
   // Auto-stop cleanly at the per-recording cap for this tier.
   const autoStoppedRef = useRef(false);
