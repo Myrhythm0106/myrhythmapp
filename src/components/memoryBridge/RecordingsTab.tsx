@@ -197,6 +197,11 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                           getUrl={() => getRecordingUrl(recording.file_path)}
                           onChanged={fetchRecordings}
                         />
+                        <TranscriptKeepToggle
+                          recordingId={recording.id}
+                          keepTranscript={Boolean((recording as any).keep_transcript)}
+                          onChanged={fetchRecordings}
+                        />
                       </div>
                     </div>
 
