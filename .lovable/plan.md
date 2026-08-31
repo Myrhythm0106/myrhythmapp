@@ -81,4 +81,6 @@ Retaking the assessment updates the window; the toggle, per-type exceptions and 
 - Scheduling a Memory Bridge action proposes a time inside that window and says why.
 - A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
+- Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
+- An action with a hard due date is scheduled on that date even when it falls outside the window.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
