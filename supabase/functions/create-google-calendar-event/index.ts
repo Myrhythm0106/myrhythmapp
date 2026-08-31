@@ -35,6 +35,7 @@ serve(async (req) => {
       calendar_event_id: z.string().uuid('Invalid calendar event ID'),
       action_id: z.string().uuid('Invalid action ID').optional(),
       attendees: z.array(z.object({ email: z.string().email() })).optional(),
+      timeZone: z.string().max(64).optional(),
     });
     
     const body = await req.json();
@@ -51,7 +52,8 @@ serve(async (req) => {
       );
     }
     
-    const { calendar_event_id, action_id, attendees } = validation.data;
+    const { calendar_event_id, action_id, attendees, timeZone } = validation.data;
+    const eventTimeZone = timeZone || 'UTC';
 
     console.log('Creating Google Calendar event for:', { calendar_event_id, action_id, user_id: user.id });
 
@@ -153,12 +155,20 @@ serve(async (req) => {
     }
 
     // Parse date and time
-    const startDateTime = `${eventData.date}T${eventData.time}:00`;
-    const endDateTime = new Date(new Date(startDateTime).getTime() + 30 * 60000).toISOString();
+    const startDateTime = `${eventData.date}T${String(eventData.time).slice(0, 5)}:00`;
+    const endDateTime = eventData.end_time
+      ? `${eventData.date}T${String(eventData.end_time).slice(0, 5)}:00`
+      : `${eventData.date}T${String(
+          new Date(new Date(`${eventData.date}T${String(eventData.time).slice(0, 5)}:00`).getTime() + 30 * 60000)
+            .toTimeString()
+            .slice(0, 5),
+        )}:00`;
 
     // Create event in Google Calendar
     const calendarResponse = await fetch(
-      'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=${
+        attendees && attendees.length > 0 ? 'all' : 'none'
+      }`,
       {
         method: 'POST',
         headers: {
@@ -170,12 +180,13 @@ serve(async (req) => {
           description: eventDescription,
           start: {
             dateTime: startDateTime,
-            timeZone: 'UTC',
+            timeZone: eventTimeZone,
           },
           end: {
             dateTime: endDateTime,
-            timeZone: 'UTC',
+            timeZone: eventTimeZone,
           },
+          guestsCanSeeOtherGuests: true,
           ...(attendees && attendees.length > 0 ? { attendees } : {}),
           reminders: {
             useDefault: false,
