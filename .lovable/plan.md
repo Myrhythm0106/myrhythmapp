@@ -54,11 +54,15 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 - **Show my best times** — the nearest in-window slots.
 - **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
 
-**Who drives this booking?** — a one-tap chip at the top of the scheduler, remembered per event type:
+**What matters most for this booking?** — instead of picking one driver, each of the three factors gets a simple priority, so they blend rather than compete:
 
-- **My rhythm** (default for solo focus work) — the window ranks the options.
-- **Stakeholder-first** (default for Meetings) — other people's availability and the invitee list rank the options; my window is shown only as a small note, never as a warning. If the only time everyone can make is 4pm, 4pm is the top suggestion, full stop.
-- **Deadline-first** — the due date or project date drives the slot; the window only chooses between candidate times on that date.
+- **My best window** — how much my clearest hours shape the suggestions.
+- **People's availability** — how much the invitees' diaries shape the suggestions.
+- **The deadline / project date** — how much the fixed date shapes the suggestions.
+
+Each factor is set to one of three everyday levels: **Decides it** (this wins), **Counts** (influences ranking), or **Doesn't matter** (ignored for this booking). Defaults come from the event type — Meetings default to People's availability = Decides it, My best window = Counts; solo focus work defaults to My best window = Decides it — and the chosen levels are remembered per event type so the user never re-sets them.
+
+The scheduler turns the levels into ranking weights: "Decides it" dominates, "Counts" breaks ties, "Doesn't matter" is skipped. So a board meeting set as People = Decides it, Deadline = Counts, My window = Doesn't matter simply ranks by when everyone can make it before the due date — my window is silent, not flagged. A solo report-writing block with My window = Decides it, Deadline = Counts puts my clearest hours first but never past the due date.
 
 **Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. They are ranked and labelled honestly: "Inside my clearest window", "Best time everyone can make", "Driven by your Friday deadline". No red, no warning icons, no confirmation friction.
 
