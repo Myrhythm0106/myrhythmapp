@@ -3754,7 +3754,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       growth_letter: "M1" | "Y1" | "R" | "H1" | "Y2" | "T" | "H2" | "M2"
-      privacy_mode: "light_touch" | "balanced" | "full_record"
+      privacy_mode: "light_touch" | "balanced" | "full_record" | "writeup_only"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3884,7 +3884,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       growth_letter: ["M1", "Y1", "R", "H1", "Y2", "T", "H2", "M2"],
-      privacy_mode: ["light_touch", "balanced", "full_record"],
+      privacy_mode: ["light_touch", "balanced", "full_record", "writeup_only"],
     },
   },
 } as const
