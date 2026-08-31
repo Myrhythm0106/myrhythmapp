@@ -438,52 +438,7 @@ export function useVoiceRecorder() {
     if (!user) return;
 
     try {
-      // Get recording info
-      const { data: recording, error: fetchError } = await supabase
-        .from('voice_recordings')
-        .select('file_path')
-        .eq('id', id)
-        .eq('user_id', user.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      const { data: meetings, error: meetingsError } = await supabase
-        .from('meeting_recordings')
-        .select('id')
-        .eq('recording_id', id)
-        .eq('user_id', user.id);
-      if (meetingsError) throw meetingsError;
-
-      const meetingIds = (meetings || []).map(meeting => meeting.id);
-      if (meetingIds.length > 0) {
-        const { error: actionsError } = await supabase
-          .from('extracted_actions')
-          .delete()
-          .in('meeting_recording_id', meetingIds);
-        if (actionsError) throw actionsError;
-
-        const { error: meetingsDeleteError } = await supabase
-          .from('meeting_recordings')
-          .delete()
-          .in('id', meetingIds)
-          .eq('user_id', user.id);
-        if (meetingsDeleteError) throw meetingsDeleteError;
-      }
-
-      // Delete storage only after linked Memory Bridge rows are removed.
-      const { error: storageError } = await supabase.storage
-        .from('voice-recordings')
-        .remove([recording.file_path]);
-      if (storageError) throw storageError;
-
-      const { error: dbError } = await supabase
-        .from('voice_recordings')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
-      if (dbError) throw dbError;
-
+      await deleteVoiceRecording(id, user.id);
       await fetchRecordings();
       toast.success('Recording deleted successfully');
     } catch (error) {
