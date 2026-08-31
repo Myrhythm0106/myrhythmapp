@@ -232,6 +232,30 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     }
   }, [meetingData, saveRecording, startMeetingRecording, triggerProcessing]);
 
+  const handleStop = useCallback(async () => {
+    const audioBlob = await stopRecording();
+    stopTranscription();
+    setAudioBlob(audioBlob);
+    if (!audioBlob) return;
+
+    // Before saving, a first-time user chooses how long to keep it.
+    const needsChoice = await keepForGate.needsChoice();
+    if (needsChoice) {
+      keepForGate.openAsk();
+      return;
+    }
+    await handleSaveAndProcess(audioBlob);
+  }, [stopRecording, stopTranscription, keepForGate, handleSaveAndProcess]);
+
+  const handleKeepForConfirm = useCallback(async (choice: PrivacyMode) => {
+    const ok = await keepForGate.confirmChoice(choice);
+    if (ok && audioBlob) {
+      await handleSaveAndProcess(audioBlob);
+    } else if (!ok) {
+      toast.error("Couldn't save that choice. Please try again.");
+    }
+  }, [keepForGate, audioBlob, handleSaveAndProcess]);
+
   const handleRetryProcessing = useCallback(async () => {
     if (!lastVoiceRecordingPath || !lastMeetingId) {
       toast.error('No recording to retry');
