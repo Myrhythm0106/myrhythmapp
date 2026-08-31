@@ -97,7 +97,8 @@ Yes, and this plan holds itself to it:
 - Every question visibly belongs to one of the four pillars in the report.
 - The report states a specific best window and focus-block length in first-person language.
 - Scheduling a Memory Bridge action proposes a sensible time with zero questions asked — the priority levels come from Settings defaults, not per-booking prompts.
-- A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
+- One plain-English toggle — "Suggest times that suit my rhythm" — exists in Settings, defaults to on, and turning it off stops window-based suggestions instantly and completely, without losing the data. A 13-year-old can find it, understand it, and flip it.
+- The Advanced priority levels are collapsed by default; the app works perfectly if they are never opened.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
 - After the same override repeats for an event type, the app adjusts that type's suggestion default once, with a visible undo — and never asks again.
