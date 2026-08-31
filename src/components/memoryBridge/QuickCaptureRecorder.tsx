@@ -29,6 +29,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAudioDuration } from '@/utils/audioHelpers';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import type { ProcessingProgress as ProcessingProgressType } from '@/types/processing';
+import { useKeepForGate } from '@/hooks/useKeepForGate';
+import { KeepForPrompt } from '@/components/launch/KeepForPrompt';
+import type { PrivacyMode } from '@/hooks/usePrivacyMode';
 
 interface QuickCaptureRecorderProps {
   onComplete?: (data: { meetingId: string; actionsCount: number }) => void;
@@ -238,6 +241,8 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     }
   }, [saveRecording, startMeetingRecording, user, session, emailVerificationStatus]);
 
+  const keepForGate = useKeepForGate();
+
   const handleSecondTap = useCallback(async () => {
     console.log('👆 Tap 2: Stopping recording...');
     setTapCount(2);
@@ -247,6 +252,15 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     const blob = await stopRecording();
     if (blob) {
       setAudioBlob(blob);
+      // Before saving, a first-time user chooses how long to keep it.
+      const needsChoice = await keepForGate.needsChoice();
+      if (needsChoice) {
+        setRecordingState('ready');
+        setTapCount(0);
+        setProcessingMessage('');
+        keepForGate.openAsk();
+        return;
+      }
       toast.success('Recording complete! Processing...');
       await processRecordingAutomatically(blob);
     } else {
@@ -254,7 +268,19 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       setTapCount(0);
       toast.error('Failed to stop recording');
     }
-  }, [stopRecording, processRecordingAutomatically]);
+  }, [stopRecording, processRecordingAutomatically, keepForGate]);
+
+  const handleKeepForConfirm = useCallback(async (choice: PrivacyMode) => {
+    const ok = await keepForGate.confirmChoice(choice);
+    if (ok && audioBlob) {
+      setRecordingState('processing');
+      setProcessingMessage('Saving recording...');
+      toast.success('Recording complete! Processing...');
+      await processRecordingAutomatically(audioBlob);
+    } else if (!ok) {
+      toast.error("Couldn't save that choice. Please try again.");
+    }
+  }, [keepForGate, audioBlob, processRecordingAutomatically]);
 
   const handleThirdTap = useCallback(() => {
     console.log('👆 Tap 3: Viewing results...');
@@ -680,6 +706,12 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
             </div>
           )}
         </div>
+        {/* Pre-save keep-for choice (first recording only) */}
+        <KeepForPrompt
+          open={keepForGate.askOpen}
+          onConfirm={handleKeepForConfirm}
+          onDismiss={keepForGate.dismiss}
+        />
       </CardContent>
     </Card>
   );

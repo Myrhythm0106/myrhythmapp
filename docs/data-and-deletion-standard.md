@@ -67,7 +67,9 @@ the transcript are gone.
 ## 3. Retention — chosen by the person, not by us
 
 Retention is a preference, not a legal checkbox. It is offered **after the first
-recording**, not during onboarding, and can be changed at any time in Settings.
+recording is made but before it is saved** — the "How long shall I keep this?"
+choice gates the first save in both the Memory Bridge recorder and Quick
+Capture — and can be changed at any time in Settings.
 
 | Mode            | Audio                      | Write-up   | Summary card |
 | --------------- | -------------------------- | ---------- | ------------ |
@@ -93,6 +95,14 @@ write-up, steps, summary card and reference code are never touched. The audio
 clock (`audio_expires_at`) is independent of the write-up clock (`expires_at`),
 so the two tidy themselves on their own schedules.
 
+### Keeping the full transcript
+
+Every capture card also carries a per-recording switch: **"Keep the full
+transcript, like my Next Steps"** (`voice_recordings.keep_transcript`). When on,
+the scheduled tidy-up skips that recording's transcript entirely — the full
+write-up stays indefinitely, exactly like the steps and summary card. It can be
+switched off at any time, after which the normal write-up clock applies.
+
 Enforced in the database, not the client:
 
 - `profiles.privacy_mode` holds the choice.
@@ -100,8 +110,8 @@ Enforced in the database, not the client:
   and `expires_at` (write-up clock) on every new recording from that choice.
 - `cleanup_expired_voice_recordings()` runs on schedule: it removes the audio
   file when `audio_expires_at` passes, clears transcripts when `expires_at`
-  passes, sets the source state to `downloaded` or `retired`, and never touches
-  summary cards or reference codes.
+  passes (unless `keep_transcript` is set), sets the source state to
+  `downloaded` or `retired`, and never touches summary cards or reference codes.
 - `recording_consent` records what the person agreed to and which retention
   period was in force at the time.
 

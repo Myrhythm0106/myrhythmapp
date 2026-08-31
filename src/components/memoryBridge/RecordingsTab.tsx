@@ -25,6 +25,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
 import { AudioCountdownLine } from '@/components/memoryBridge/AudioCountdownLine';
+import { TranscriptKeepToggle } from '@/components/memoryBridge/TranscriptKeepToggle';
 
 
 interface RecordingsTabProps {
@@ -195,6 +196,11 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                           audioDeletedAt={(recording as any).audio_deleted_at ?? null}
                           legalHold={Boolean((recording as any).legal_retention_required)}
                           getUrl={() => getRecordingUrl(recording.file_path)}
+                          onChanged={fetchRecordings}
+                        />
+                        <TranscriptKeepToggle
+                          recordingId={recording.id}
+                          keepTranscript={Boolean((recording as any).keep_transcript)}
                           onChanged={fetchRecordings}
                         />
                       </div>
