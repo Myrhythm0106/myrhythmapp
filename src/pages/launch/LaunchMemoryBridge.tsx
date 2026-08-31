@@ -250,31 +250,6 @@ export default function LaunchMemoryBridge() {
     }
   }, [isRecording, isPaused]);
 
-  // The safety-net prompt finishes through the same save path as a normal Stop.
-  useEffect(() => {
-    if (!quietFinishRequested || !isRecording) return;
-    setQuietFinishRequested(false);
-    void handleStopRecording();
-  }, [quietFinishRequested, isRecording]);
-
-  // Publish a small, global status so I always know the app is listening and
-  // can return to or stop the capture from another signed-in page.
-  useEffect(() => {
-    publishCaptureStatus({
-      active: isRecording,
-      paused: isPaused,
-      seconds: duration,
-      level: micLevel.level,
-      title: recordingTitle || 'My conversation',
-    });
-    setRecordingLive(isRecording);
-    registerCaptureStopHandler(isRecording ? () => void handleStopRecording() : null);
-    return () => {
-      registerCaptureStopHandler(null);
-      if (!isRecording) publishCaptureStatus({ active: false, paused: false, seconds: 0, level: 0, title: null });
-    };
-  }, [isRecording, isPaused, duration, micLevel.level, recordingTitle]);
-
   useEffect(() => {
     return () => {
       stopPlayback();
@@ -378,6 +353,31 @@ export default function LaunchMemoryBridge() {
       console.warn('handleStopRecording: could not park recording', err);
     }
   };
+
+  // The safety-net prompt finishes through the same save path as a normal Stop.
+  useEffect(() => {
+    if (!quietFinishRequested || !isRecording) return;
+    setQuietFinishRequested(false);
+    void handleStopRecording();
+  }, [quietFinishRequested, isRecording]);
+
+  // Publish a small, global status so I always know the app is listening and
+  // can return to or stop the capture from another signed-in page.
+  useEffect(() => {
+    publishCaptureStatus({
+      active: isRecording,
+      paused: isPaused,
+      seconds: duration,
+      level: micLevel.level,
+      title: recordingTitle || 'My conversation',
+    });
+    setRecordingLive(isRecording);
+    registerCaptureStopHandler(isRecording ? () => void handleStopRecording() : null);
+    return () => {
+      registerCaptureStopHandler(null);
+      if (!isRecording) publishCaptureStatus({ active: false, paused: false, seconds: 0, level: 0, title: null });
+    };
+  }, [isRecording, isPaused, duration, micLevel.level, recordingTitle]);
 
   // Auto-stop cleanly at the per-recording cap for this tier.
   const autoStoppedRef = useRef(false);
