@@ -42,11 +42,13 @@ New card near the top of the `/launch/welcome` report:
 - **Good for other people** — the window where meetings are safest for me.
 - Four pillar bars (Biological / Psychological / Social / Spiritual) beneath the existing letter bars, each with a one-line "what this means for my week".
 
-## 4. The calendar uses it — as a preference, on by default, always overridable
+## 4. The calendar uses it — invisibly, with one big switch
 
 The window is advice, never a gate. Real life has other people's diaries, deadlines and priority dates in it.
 
-**Global preference** — Launch Settings → Scheduling: **"Plan around my best window"**, on by default after the first assessment. Off keeps the window visible in the report but makes suggestions time-neutral.
+**The 13-year-old test — the whole feature is one switch.** Launch Settings → Scheduling shows a single prominent toggle in plain words: **"Suggest times that suit my rhythm"** — on by default after the first assessment. On = the app quietly favours my clearest hours. Off = it stops, instantly and completely. That one switch is the entire user-facing cost of this feature. A user who never opens Settings gets sensible behaviour forever; a user who hates it kills it in one tap. No modes, no jargon, no per-booking questions — ever.
+
+**The three priority levels live behind a collapsed "Advanced" section** inside the same Settings page, pre-filled sensibly (People's availability decides Meetings, My best window decides solo focus work, Deadline decides anything with a fixed due date). They are optional fine-tuning for the curious — never required, never surfaced elsewhere. If the Advanced section is never opened, the app works perfectly.
 
 **Per-event override** — in the Add Event modal and in the action scheduler, a time outside the window is never blocked. If I pick one, the app shows a single quiet line — "This is outside my clearest window" — with three ways forward, all one tap:
 
