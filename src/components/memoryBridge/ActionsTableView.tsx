@@ -1408,6 +1408,7 @@ export function ActionsTableView({
           </Table>
         </DragDropContext>
       </div>
+      )}
     </div>
   );
 }
