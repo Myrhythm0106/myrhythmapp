@@ -79,7 +79,7 @@ interface ActionsViewerProps {
   onClose: () => void;
 }
 
-function InvitationStatus({ actionId }: { actionId: string }) {
+function InvitationStatus({ eventId }: { eventId: string }) {
   const [invites, setInvites] = React.useState<Array<{ invitee_name: string | null; invitee_email: string; status: string }>>([]);
 
   React.useEffect(() => {
