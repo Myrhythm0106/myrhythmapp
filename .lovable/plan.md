@@ -54,11 +54,17 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 - **Show my best times** — the nearest in-window slots.
 - **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
 
-**Sorting, not blocking** — smart suggestions still surface out-of-window times when a due date or an invitee's availability demands it; they are simply ranked lower and labelled honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour, but your due date is Friday".
+**Who drives this booking?** — a one-tap chip at the top of the scheduler, remembered per event type:
 
-**Priority dates win.** When an action has a hard due date, the due date drives the slot and the window only chooses between candidate times on that date.
+- **My rhythm** (default for solo focus work) — the window ranks the options.
+- **Stakeholder-first** (default for Meetings) — other people's availability and the invitee list rank the options; my window is shown only as a small note, never as a warning. If the only time everyone can make is 4pm, 4pm is the top suggestion, full stop.
+- **Deadline-first** — the due date or project date drives the slot; the window only chooses between candidate times on that date.
 
-Retaking the assessment updates the window; the toggle, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
+**Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. They are ranked and labelled honestly: "Inside my clearest window", "Best time everyone can make", "Driven by your Friday deadline". No red, no warning icons, no confirmation friction.
+
+**Nothing is ever refused.** The app has no mode in which it declines to book a time the user chose. The window is a hint that can always be ignored in one tap, and the app does not repeat the hint for that booking.
+
+Retaking the assessment updates the window; the mode chips, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
 
 
 ## Technical notes
