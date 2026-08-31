@@ -634,7 +634,10 @@ export function ActionsViewer({
     if (actionIds.length === 0) return;
     try {
       const { data, error } = await supabase.functions.invoke('send-action-raci', {
-        body: { actionIds },
+        body: {
+          actionIds,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
       });
       if (error) throw error;
       const { sent = 0, failures = [] } = (data || {}) as { sent?: number; failures?: string[] };
