@@ -174,6 +174,8 @@ export function ReviewStep({
   const [confirmedAccurate, setConfirmedAccurate] = useState(false);
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState('');
+  const [pendingRemove, setPendingRemove] = useState<ReviewRowState | null>(null);
+  const { deleteWithUndo } = useUndoableDelete();
   const [meetingSummaryData, setMeetingSummaryData] = useState<{
     date: string;
     participants: string[];
@@ -289,8 +291,19 @@ export function ReviewStep({
     };
   }, [meetingSummaryData, meetingTitle, rows]);
 
-  const patch = (id: string, next: Partial<ReviewRowState>) =>
+  const patch = (id: string, next: Partial<ReviewRowState>) => {
+    const current = rows.find(row => row.id === id);
+    if (!current) return;
+    const startDate = next.date ?? current.date;
+    const finishDate = next.dueDate ?? current.dueDate;
+    if (startDate && finishDate && finishDate < startDate) {
+      toast.error('The finish date is before the start date.', {
+        description: 'Please choose a finish date on or after the start date.',
+      });
+      return;
+    }
     setRows(prev => prev.map(r => (r.id === id ? { ...r, ...next } : r)));
+  };
 
   const toggleExpanded = (id: string) =>
     setExpanded(prev => {
@@ -301,7 +314,14 @@ export function ReviewStep({
 
   const handleAddStep = async () => {
     const text = newText.trim();
-    if (!text || !meetingId) return;
+    if (!text) {
+      toast.error('A next step needs some words.');
+      return;
+    }
+    if (!meetingId) {
+      toast.error("I can't add a step until this conversation is ready.");
+      return;
+    }
     const { data: userRes } = await supabase.auth.getUser();
     const userId = userRes?.user?.id;
     if (!userId) return;
@@ -343,9 +363,32 @@ export function ReviewStep({
     setAdding(false);
   };
 
-  const handleRemove = async (id: string) => {
-    setRows(prev => prev.filter(r => r.id !== id));
-    await supabase.from('extracted_actions').delete().eq('id', id);
+  const requestRemove = (id: string) => {
+    const row = rows.find(item => item.id === id);
+    if (row) setPendingRemove(row);
+  };
+
+  const confirmRemove = () => {
+    const row = pendingRemove;
+    if (!row) return;
+    const index = rows.findIndex(item => item.id === row.id);
+    setPendingRemove(null);
+    deleteWithUndo({
+      id: row.id,
+      label: row.text || 'this next step',
+      fromCapture: true,
+      onOptimisticRemove: () => setRows(prev => prev.filter(item => item.id !== row.id)),
+      onRestore: () => setRows(prev => {
+        if (prev.some(item => item.id === row.id)) return prev;
+        const next = [...prev];
+        next.splice(Math.max(0, Math.min(index, next.length)), 0, row);
+        return next;
+      }),
+      onCommit: async () => {
+        const { error } = await supabase.from('extracted_actions').delete().eq('id', row.id);
+        if (error) throw error;
+      },
+    });
   };
 
   const cleanupSourceDocument = async (approvedCount: number) => {
@@ -393,13 +436,31 @@ export function ReviewStep({
   };
 
   const handleCommit = async () => {
-    if (included.length === 0) return;
-    if (sourceFilePath && !confirmedAccurate) return;
+    if (included.length === 0) {
+      toast.info('Tick at least one step first.');
+      return;
+    }
+    const blankStep = included.find(row => !row.text.trim());
+    if (blankStep) {
+      toast.error('A next step needs some words.');
+      setExpanded(prev => new Set(prev).add(blankStep.id));
+      return;
+    }
+    const invalidDates = included.find(row => row.date && row.dueDate && row.dueDate < row.date);
+    if (invalidDates) {
+      toast.error('The finish date is before the start date.');
+      setExpanded(prev => new Set(prev).add(invalidDates.id));
+      return;
+    }
+    if (sourceFilePath && !confirmedAccurate) {
+      toast.info('Please confirm the reviewed document before adding it to my diary.');
+      return;
+    }
     setSaving(true);
     try {
       // 1. Persist every edit so the review reflects reality if I come back.
       for (const r of rows) {
-        await supabase
+        const { error } = await supabase
           .from('extracted_actions')
           .update({
             action_text: r.text,
@@ -413,6 +474,7 @@ export function ReviewStep({
             adhoc_loop_ins: r.adhocLoopIns as any,
           })
           .eq('id', r.id);
+        if (error) throw error;
       }
 
       // 2. Commit only the included rows, with exactly the agreed slots.
@@ -597,7 +659,7 @@ export function ReviewStep({
                             size="icon"
                             aria-label="Remove this step"
                             className="h-11 w-11 text-muted-foreground hover:text-destructive"
-                            onClick={() => handleRemove(r.id)}
+                            onClick={() => requestRemove(r.id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -701,7 +763,7 @@ export function ReviewStep({
                               <Button
                                 variant="ghost"
                                 className="min-h-11 w-full text-destructive"
-                                onClick={() => handleRemove(r.id)}
+                                onClick={() => requestRemove(r.id)}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" /> Remove this step
                               </Button>
@@ -782,6 +844,22 @@ export function ReviewStep({
           </div>
         </div>
       </DialogContent>
+      <AlertDialog open={Boolean(pendingRemove)} onOpenChange={(open) => !open && setPendingRemove(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove this step?</AlertDialogTitle>
+            <AlertDialogDescription>
+              “{pendingRemove?.text || 'This next step'}” will be removed from this review. I can bring it back for 10 seconds if I change my mind.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPendingRemove(null)}>Keep it</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmRemove} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
