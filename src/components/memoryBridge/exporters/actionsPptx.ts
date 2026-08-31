@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver';
-import { format, parseISO, differenceInCalendarDays } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import type { NextStepsItem } from '@/types/memoryBridge';
 import { involvementFromAction } from '@/components/memoryBridge/WhosInvolvedCell';
 import type { MeetingSummaryModel } from '@/components/memoryBridge/ExecutiveSummaryPanel';
@@ -193,5 +193,3 @@ export async function exportActionsPptx(
   const safeTitle = (meeting.title || 'next-steps').replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').toLowerCase();
   saveAs(blob as Blob, `myrhythm-${safeTitle}-slides.pptx`);
 }
-
-export const _internal = { displayDate, statusLabel, priorityLabel, ownerName, differenceInCalendarDays };
