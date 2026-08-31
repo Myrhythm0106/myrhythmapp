@@ -205,6 +205,7 @@ function App() {
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
      {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
+                     <Route path="/dev-cards" element={<DevCardsPreview />} />
                      <Route path="/prototype" element={<PrototypeLanding />} />
                      <Route path="/prototype/assessment" element={<PrototypeAssessment />} />
                      <Route path="/prototype/capture" element={<PrototypeCapture />} />
