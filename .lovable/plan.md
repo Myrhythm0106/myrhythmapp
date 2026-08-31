@@ -85,11 +85,11 @@ Retaking the assessment updates the window; the global priority levels and learn
 
 - Every question visibly belongs to one of the four pillars in the report.
 - The report states a specific best window and focus-block length in first-person language.
-- Scheduling a Memory Bridge action proposes a time inside that window and says why.
+- Scheduling a Memory Bridge action proposes a sensible time with zero questions asked — the priority levels come from Settings defaults, not per-booking prompts.
 - A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
-- Setting People's availability to "Decides it" ranks by invitee availability and the window is silent — never flagged as a problem.
-- The three priority levels blend: a "Decides it" deadline plus a "Counts" window still surfaces in-window times on the due date first.
+- After the same override repeats for an event type, the app adjusts that type's suggestion default once, with a visible undo — and never asks again.
+- Meetings rank by people's availability by default and the window is silent — never flagged as a problem.
 - An action with a hard due date is scheduled on that date even when it falls outside the window.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
