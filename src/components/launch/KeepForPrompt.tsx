@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -11,69 +10,35 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { usePrivacyMode, type PrivacyMode } from "@/hooks/usePrivacyMode";
 
-const CONSENT_TEXT =
-  "I've chosen how long MyRhythm keeps my recordings and write-ups. My summary and reference codes stay either way.";
+interface KeepForPromptProps {
+  open: boolean;
+  /** Called with the chosen mode after the choice has been saved. */
+  onConfirm: (mode: PrivacyMode) => void;
+  /** Optional escape hatch — treated as "keep the current default". */
+  onDismiss?: () => void;
+}
 
 /**
- * Asked once, after the first capture — never during onboarding.
- * A helpful preference, not a legal gate.
+ * "How long shall I keep this?" — asked once, after the person stops their
+ * first recording and before anything is saved, so the very first capture
+ * carries the retention clock they actually chose.
  */
-export function KeepForPrompt({ hasCaptures }: { hasCaptures: boolean }) {
-  const { user } = useAuth();
-  const { mode, options, updateMode, saving } = usePrivacyMode();
-  const [open, setOpen] = useState(false);
-  const [choice, setChoice] = useState<PrivacyMode>("balanced");
+export function KeepForPrompt({ open, onConfirm, onDismiss }: KeepForPromptProps) {
+  const { mode, options, saving } = usePrivacyMode();
+  const [choice, setChoice] = useState<PrivacyMode | null>(null);
 
-  useEffect(() => {
-    setChoice(mode);
-  }, [mode]);
-
-  useEffect(() => {
-    let cancelled = false;
-    if (!user?.id || !hasCaptures) return;
-
-    (async () => {
-      const { count } = await supabase
-        .from("recording_consent")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id);
-
-      if (!cancelled && !count) setOpen(true);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.id, hasCaptures]);
-
-  const confirm = async () => {
-    if (!user?.id) return;
-    const option = options.find((o) => o.value === choice)!;
-
-    const ok = await updateMode(choice);
-    const { error } = await supabase.from("recording_consent").insert({
-      user_id: user.id,
-      privacy_mode: choice,
-      audio_retention_days: option.audioDays,
-      transcript_retention_days: option.transcriptDays,
-      consent_text: CONSENT_TEXT,
-    } as never);
-
-    if (ok && !error) {
-      setOpen(false);
-      toast.success("Saved. You can change this any time in Settings.");
-    } else {
-      toast.error("Couldn't save that — please try again.");
-    }
-  };
+  const effectiveChoice = choice ?? mode;
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md [&>button]:hidden">
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onDismiss?.();
+      }}
+    >
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-teal-100">
             <ShieldCheck className="h-6 w-6 text-brand-teal-700" aria-hidden />
@@ -82,14 +47,14 @@ export function KeepForPrompt({ hasCaptures }: { hasCaptures: boolean }) {
             How long shall I keep this?
           </DialogTitle>
           <DialogDescription className="text-center">
-            Your first capture is saved. Choose what happens to the recording
-            afterwards — your summary and reference codes always stay.
+            Lovely — that's recorded. Before I save it, choose what happens to
+            the audio afterwards. Your summary and reference codes always stay.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3">
           {options.map((option) => {
-            const selected = option.value === choice;
+            const selected = option.value === effectiveChoice;
             return (
               <button
                 key={option.value}
@@ -127,11 +92,11 @@ export function KeepForPrompt({ hasCaptures }: { hasCaptures: boolean }) {
 
         <DialogFooter>
           <Button
-            onClick={confirm}
+            onClick={() => onConfirm(effectiveChoice)}
             disabled={saving}
             className="w-full min-h-[56px]"
           >
-            That's my choice
+            That's my choice — save it
           </Button>
         </DialogFooter>
       </DialogContent>
