@@ -5,7 +5,7 @@ Goal: one fixed account you can sign into at any time, on phone or laptop, witho
 ## The account
 
 - Email: `annabelaaron@yahoo.com` (your real inbox, so email flows can be tested end to end)
-- Password: a strong fixed password you choose (I'll use the one you give me, or generate one and show it once)
+- Password: `Myrhythm2026` (fixed, never expires)
 - Confirmed immediately, so no email link is needed
 - Marked as a founding-tier tester so recording limits and paid surfaces are unlocked
 
