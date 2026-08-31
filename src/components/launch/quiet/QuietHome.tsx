@@ -21,6 +21,7 @@ import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
 import { HomeAssessmentCard } from './HomeAssessmentCard';
+import { ArriveAndArmCard } from './ArriveAndArmCard';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
