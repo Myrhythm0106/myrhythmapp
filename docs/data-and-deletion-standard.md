@@ -72,17 +72,36 @@ recording**, not during onboarding, and can be changed at any time in Settings.
 | Mode            | Audio                      | Write-up   | Summary card |
 | --------------- | -------------------------- | ---------- | ------------ |
 | **Light touch** | removed after processing   | 7 days     | kept         |
+| **Write-up only** | 3-day countdown          | kept       | kept         |
 | **Balanced** (default) | 30 days             | 30 days    | kept         |
 | **Full record** | 12 months                  | 12 months  | kept         |
+
+### The audio countdown
+
+Write-up only runs a visible countdown on each capture card — "Audio goes in
+3 days", then 2, then 1, then "today". The line always carries three actions:
+
+- **Download** — the audio is theirs to keep on their own device before the
+  clock runs out.
+- **Keep it longer** — pushes the clock out by 7 days (tracked via
+  `audio_hold_count`).
+- **Remove now** — deletes the audio immediately.
+
+When the clock expires, the audio file is removed and the card confirms it in
+place: "Audio removed on {date} — write-up, steps and reference kept." The
+write-up, steps, summary card and reference code are never touched. The audio
+clock (`audio_expires_at`) is independent of the write-up clock (`expires_at`),
+so the two tidy themselves on their own schedules.
 
 Enforced in the database, not the client:
 
 - `profiles.privacy_mode` holds the choice.
-- `apply_retention_to_voice_recording()` stamps `expires_at` on every new recording
-  from that choice.
-- `cleanup_expired_voice_recordings()` runs on schedule and clears audio **and**
-  transcripts, sets the source state to `downloaded` or `retired`, and never
-  touches summary cards or reference codes.
+- `apply_retention_to_voice_recording()` stamps `audio_expires_at` (audio clock)
+  and `expires_at` (write-up clock) on every new recording from that choice.
+- `cleanup_expired_voice_recordings()` runs on schedule: it removes the audio
+  file when `audio_expires_at` passes, clears transcripts when `expires_at`
+  passes, sets the source state to `downloaded` or `retired`, and never touches
+  summary cards or reference codes.
 - `recording_consent` records what the person agreed to and which retention
   period was in force at the time.
 
