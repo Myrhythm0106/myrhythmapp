@@ -70,6 +70,7 @@ export function useCapturePreferences() {
           'id, capture_prompt_enabled, auto_finish_enabled, quiet_finish_minutes, companion_capture_enabled',
         )
         .eq('user_id', user.id)
+        .eq('preference_type', 'general')
         .order('created_at', { ascending: true })
         .limit(1)
         .maybeSingle();

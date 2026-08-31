@@ -828,7 +828,7 @@ export default function LaunchMemoryBridge() {
             <AlertDialogHeader>
               <AlertDialogTitle>It has been quiet for a while</AlertDialogTitle>
               <AlertDialogDescription>
-                I can keep listening, or I can safely stop and save what I have captured. I will save automatically in {quietSecondsLeft} seconds if I do not choose.
+                I can keep listening, or I can safely stop and place what I have captured ready to save. I will stop the capture in {quietSecondsLeft} seconds if I do not choose.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
