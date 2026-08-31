@@ -512,8 +512,8 @@ interface ActionCardProps {
   action: NextStepsItem;
   /** The single "In My Flow" card gets the soft emerald glow. */
   isActive: boolean;
-  draggableProps: Record<string, unknown>;
-  dragHandleProps: Record<string, unknown> | null | undefined;
+  draggableProps: React.HTMLAttributes<HTMLElement> & { style?: React.CSSProperties };
+  dragHandleProps: React.HTMLAttributes<HTMLElement> | null | undefined;
   innerRef: (el: HTMLElement | null) => void;
   isDragging: boolean;
   onStatusChange: (actionId: string, status: string) => void;
