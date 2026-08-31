@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,6 +12,7 @@ import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 import {
   Loader2, CalendarPlus, Plus, Trash2, ChevronDown, ChevronUp, CalendarDays, Clock, X,
 } from 'lucide-react';
+import { useUndoableDelete } from '@/hooks/useUndoableDelete';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { format, parseISO, addDays } from 'date-fns';
