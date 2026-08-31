@@ -1066,7 +1066,7 @@ export function ActionsViewer({
                                   {/* Header with status and priority */}
                                   <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 space-y-4">
-                                      {action.calendar_event_id && <InvitationStatus actionId={action.id!} />}
+                                      {action.calendar_event_id && <InvitationStatus eventId={action.calendar_event_id} />}
                                       {/* ACTION block - Premium burnt orange glass */}
                                       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-orange-50/90 to-brand-orange-100/70 backdrop-blur-sm border border-brand-orange-200/50 shadow-lg p-5">
                                         <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
