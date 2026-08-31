@@ -706,6 +706,12 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
             </div>
           )}
         </div>
+        {/* Pre-save keep-for choice (first recording only) */}
+        <KeepForPrompt
+          open={keepForGate.askOpen}
+          onConfirm={handleKeepForConfirm}
+          onDismiss={keepForGate.dismiss}
+        />
       </CardContent>
     </Card>
   );
