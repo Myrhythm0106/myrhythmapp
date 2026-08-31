@@ -25,6 +25,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
 import { AudioCountdownLine } from '@/components/memoryBridge/AudioCountdownLine';
+import { TranscriptKeepToggle } from '@/components/memoryBridge/TranscriptKeepToggle';
 
 
 interface RecordingsTabProps {
