@@ -194,6 +194,7 @@ export async function commitAllRecommended(
       dueDate: a.dueDate?.date,
       reminders,
       people,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     if (res.ok && res.calendarEventId) {
       committed++;
