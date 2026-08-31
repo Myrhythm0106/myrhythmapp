@@ -78,9 +78,9 @@ Retaking the assessment updates the window; the per-type priority levels and any
 - `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`) and `priority_levels_by_type: Record<BlockType, { window: PriorityLevel; people: PriorityLevel; deadline: PriorityLevel }>` where `PriorityLevel = 'decides' | 'counts' | 'off'` (meetings default to people=decides/window=counts, focus to window=decides), plus the derived window fields; Settings writes through this hook.
 - `src/launch/assessment/productivityWindow.ts` — new: pure function turning answers into `{ peak, productiveHours, focusBlockMinutes, protectHours, meetingHours }`.
 - `src/pages/launch/LaunchAssessment.tsx` — persist the derived window alongside the existing results, and call the new preference write.
-- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and take a `bias` argument that decides the ranking weight order (window vs invitee availability vs due date). Out-of-window candidates are always returned, only re-ranked.
-- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the mode chip plus the non-blocking out-of-window note with Keep / Show best times / Always allow this kind.
-- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` and the chosen bias in their existing metadata. No schema migration is required.
+- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and take the three priority levels, converting them to ranking weights (decides > counts > off). Out-of-window candidates are always returned, only re-ranked.
+- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the three-level priority picker (Decides it / Counts / Doesn't matter) plus the non-blocking out-of-window note with Keep / Show best times / Always allow this kind.
+- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` and the chosen priority levels in their existing metadata. No schema migration is required.
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
 - Older assessment runs without the new fields keep working through defaults.
 
