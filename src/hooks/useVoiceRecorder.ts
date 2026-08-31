@@ -114,8 +114,12 @@ export function useVoiceRecorder() {
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mimeTypeRef = useRef<string>('audio/webm');
+  const captureSessionIdRef = useRef<string | null>(null);
+  const segmentIndexRef = useRef(0);
+  const captureStartedAtRef = useRef<number | null>(null);
+  const durationRef = useRef(0);
 
   const refreshMicStatus = useCallback(async () => {
     const blocker = detectMicBlocker();
