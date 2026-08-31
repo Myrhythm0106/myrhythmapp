@@ -42,11 +42,13 @@ New card near the top of the `/launch/welcome` report:
 - **Good for other people** — the window where meetings are safest for me.
 - Four pillar bars (Biological / Psychological / Social / Spiritual) beneath the existing letter bars, each with a one-line "what this means for my week".
 
-## 4. The calendar uses it — as a preference, on by default, always overridable
+## 4. The calendar uses it — invisibly, with one big switch
 
 The window is advice, never a gate. Real life has other people's diaries, deadlines and priority dates in it.
 
-**Global preference** — Launch Settings → Scheduling: **"Plan around my best window"**, on by default after the first assessment. Off keeps the window visible in the report but makes suggestions time-neutral.
+**The 13-year-old test — the whole feature is one switch.** Launch Settings → Scheduling shows a single prominent toggle in plain words: **"Suggest times that suit my rhythm"** — on by default after the first assessment. On = the app quietly favours my clearest hours. Off = it stops, instantly and completely. That one switch is the entire user-facing cost of this feature. A user who never opens Settings gets sensible behaviour forever; a user who hates it kills it in one tap. No modes, no jargon, no per-booking questions — ever.
+
+**The three priority levels live behind a collapsed "Advanced" section** inside the same Settings page, pre-filled sensibly (People's availability decides Meetings, My best window decides solo focus work, Deadline decides anything with a fixed due date). They are optional fine-tuning for the curious — never required, never surfaced elsewhere. If the Advanced section is never opened, the app works perfectly.
 
 **Per-event override** — in the Add Event modal and in the action scheduler, a time outside the window is never blocked. If I pick one, the app shows a single quiet line — "This is outside my clearest window" — with three ways forward, all one tap:
 
@@ -56,7 +58,7 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 
 **No per-booking questions — smart defaults that learn.** Setting priorities on every event, action or meeting is too much friction, so the app decides silently and only ever asks once, globally:
 
-- **One place, set once** — Launch Settings → Scheduling holds the three priority levels (My best window / People's availability / Deadline — each Decides it / Counts / Doesn't matter). Out of the box they are pre-filled sensibly: People's availability decides Meetings, My best window decides solo focus work, Deadline decides anything with a fixed due date. Most users never open it.
+- **One switch, set once** — the toggle described above. The Advanced priority levels sit collapsed beneath it; most users never open them.
 - **Applied automatically by event type** — the scheduler reads the defaults and ranks options without asking anything. The booking screen shows only the result: honest labels like "Best time everyone can make" or "Inside my clearest window". Nothing to tap, nothing to configure.
 - **Learns from overrides** — when the user keeps a time the suggestion ranked lower (e.g. picks a 4pm slot when mornings were suggested), that choice is remembered. After the same kind of override repeats for the same event type, the app quietly adjusts that type's default once, with a small note: "I've noticed your meetings usually land in the afternoon — I've adjusted your meeting suggestions. Change this in Settings." One line, one undo, never a dialog that blocks.
 - **The only visible control** — if the user picks a time outside their window, the single quiet line stays: "Keep this time / Show my best times / Always allow this kind". That is the entirety of the per-booking UI. Everything else is invisible.
@@ -81,12 +83,22 @@ Retaking the assessment updates the window; the global priority levels and learn
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
 - Older assessment runs without the new fields keep working through defaults.
 
+## Primary-audience check — does this stay true to the app?
+
+Yes, and this plan holds itself to it:
+
+- **The primary audience is people whose planning capacity is already taxed** — brain injury and memory challenges first, then caregivers, then stressed professionals and students. Every rule in this plan serves them: zero questions at the point of action, zero required settings, one obvious switch, honest plain-English labels, and nothing that can fail loudly.
+- **The purpose is continuity — keeping life going after the appointment ends.** This feature exists only to make the 4C loop's Commit step easier: it helps good intentions land at times the person can actually keep. It adds no new surface, no new habit to learn, no new screen on the dial.
+- **Nothing here is clinical.** The window is described as "when I'm at my clearest", never as therapy, treatment or recovery management. No named practitioner or programme appears anywhere.
+- **If any part of this ever requires the user to understand the system to benefit from it, that part is cut.** The default path — assessment once, one switch, app quietly does the rest — must carry 100% of the value.
+
 ## Success criteria
 
 - Every question visibly belongs to one of the four pillars in the report.
 - The report states a specific best window and focus-block length in first-person language.
 - Scheduling a Memory Bridge action proposes a sensible time with zero questions asked — the priority levels come from Settings defaults, not per-booking prompts.
-- A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
+- One plain-English toggle — "Suggest times that suit my rhythm" — exists in Settings, defaults to on, and turning it off stops window-based suggestions instantly and completely, without losing the data. A 13-year-old can find it, understand it, and flip it.
+- The Advanced priority levels are collapsed by default; the app works perfectly if they are never opened.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
 - After the same override repeats for an event type, the app adjusts that type's suggestion default once, with a visible undo — and never asks again.
