@@ -83,6 +83,15 @@ Retaking the assessment updates the window; the global priority levels and learn
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
 - Older assessment runs without the new fields keep working through defaults.
 
+## Primary-audience check — does this stay true to the app?
+
+Yes, and this plan holds itself to it:
+
+- **The primary audience is people whose planning capacity is already taxed** — brain injury and memory challenges first, then caregivers, then stressed professionals and students. Every rule in this plan serves them: zero questions at the point of action, zero required settings, one obvious switch, honest plain-English labels, and nothing that can fail loudly.
+- **The purpose is continuity — keeping life going after the appointment ends.** This feature exists only to make the 4C loop's Commit step easier: it helps good intentions land at times the person can actually keep. It adds no new surface, no new habit to learn, no new screen on the dial.
+- **Nothing here is clinical.** The window is described as "when I'm at my clearest", never as therapy, treatment or recovery management. No named practitioner or programme appears anywhere.
+- **If any part of this ever requires the user to understand the system to benefit from it, that part is cut.** The default path — assessment once, one switch, app quietly does the rest — must carry 100% of the value.
+
 ## Success criteria
 
 - Every question visibly belongs to one of the four pillars in the report.
