@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ensureSession } from '@/utils/ensureSession';
+import { deleteVoiceRecording } from '@/utils/voiceRecording';
 
 export type MicPermission = 'granted' | 'denied' | 'prompt' | 'unknown';
 
