@@ -39,15 +39,18 @@ Replace the crammed 11-column exhibit table with the selected **Adaptive sequenc
 - Mobile-first: single column, no horizontal scrolling; desktop keeps `max-w-2xl/3xl` reading measure.
 - Accessibility: 16px body floor, ≥56px primary targets, semantic tokens only (`exhibit-*`), WCAG AA contrast, `aria-expanded` on cards, keyboard-operable expand (button, not div).
 
-### 4. Legacy table kept as fallback
-- The current table markup moves to an internal `TableFallback` kept behind a **"View as table"** toggle in More actions (per-session preference, default cards). Nothing is deleted.
+### 4. Cards are default; tabular form always one tap away
+- The exhibit table remains as the **"View as table"** mode (see 2a) — nothing is deleted, and the tabular form is what feeds the Google Sheets / Google Slides downloads.
 
 ## Files touched
-- `src/components/memoryBridge/ActionsTableView.tsx` — main rework (new `ActionSequenceCard` component inside; table retained as fallback)
+- `src/components/memoryBridge/ActionsTableView.tsx` — main rework (new `ActionSequenceCard` presentation; table retained as the "View as table" mode)
 - Possibly a small `src/components/memoryBridge/ActionSequenceCard.tsx` split if the file grows unwieldy
-- No database, edge function, route, or export changes
+- NEW `src/components/memoryBridge/exporters/actionsPptx.ts` — Slides export (pptxgenjs, dynamic import); export menu in the header gains "Download as Slides"
+- `package.json` — add `pptxgenjs`
+- No database, edge function, or route changes; existing XLSX/CSV/PDF exporters untouched
 
 ## Verification
 - `bunx tsgo --noEmit` + `git diff --check`
 - Static render check of the card layout at mobile (390px) and desktop widths via a scratch harness screenshot
-- Confirm all handlers still wired (type-level) and the table fallback renders
+- Confirm all handlers still wired (type-level) and "View as table" renders
+- Generate a sample .pptx, convert each slide to an image, and inspect for overflow/clipping; confirm the .xlsx still imports cleanly into Google Sheets
