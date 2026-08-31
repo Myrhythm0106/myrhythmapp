@@ -12,6 +12,8 @@ export interface CommitInput {
   dueDate?: string;
   reminders: ActionReminder[];
   people: PersonPick[];
+  durationMinutes?: number;
+  timeZone?: string;
 }
 
 export interface CommitResult {
