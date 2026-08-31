@@ -3217,11 +3217,14 @@ export type Database = {
       user_schedule_preferences: {
         Row: {
           auto_accept_scheduling: boolean | null
+          auto_finish_enabled: boolean
           auto_insert_breaks: boolean
           brain_healthy_enabled: boolean
           break_length_minutes: number
           break_style: string
           break_style_custom_label: string | null
+          capture_prompt_enabled: boolean
+          companion_capture_enabled: boolean
           created_at: string
           daily_meeting_cap: number
           energy_level: number | null
@@ -3234,6 +3237,7 @@ export type Database = {
           pomodoro_preset: string
           preference_type: string
           protected_windows: Json
+          quiet_finish_minutes: number
           reminder_buffer_minutes: number
           time_block_template: string
           time_blocking_enabled: boolean
@@ -3243,11 +3247,14 @@ export type Database = {
         }
         Insert: {
           auto_accept_scheduling?: boolean | null
+          auto_finish_enabled?: boolean
           auto_insert_breaks?: boolean
           brain_healthy_enabled?: boolean
           break_length_minutes?: number
           break_style?: string
           break_style_custom_label?: string | null
+          capture_prompt_enabled?: boolean
+          companion_capture_enabled?: boolean
           created_at?: string
           daily_meeting_cap?: number
           energy_level?: number | null
@@ -3260,6 +3267,7 @@ export type Database = {
           pomodoro_preset?: string
           preference_type: string
           protected_windows?: Json
+          quiet_finish_minutes?: number
           reminder_buffer_minutes?: number
           time_block_template?: string
           time_blocking_enabled?: boolean
@@ -3269,11 +3277,14 @@ export type Database = {
         }
         Update: {
           auto_accept_scheduling?: boolean | null
+          auto_finish_enabled?: boolean
           auto_insert_breaks?: boolean
           brain_healthy_enabled?: boolean
           break_length_minutes?: number
           break_style?: string
           break_style_custom_label?: string | null
+          capture_prompt_enabled?: boolean
+          companion_capture_enabled?: boolean
           created_at?: string
           daily_meeting_cap?: number
           energy_level?: number | null
@@ -3286,6 +3297,7 @@ export type Database = {
           pomodoro_preset?: string
           preference_type?: string
           protected_windows?: Json
+          quiet_finish_minutes?: number
           reminder_buffer_minutes?: number
           time_block_template?: string
           time_blocking_enabled?: boolean

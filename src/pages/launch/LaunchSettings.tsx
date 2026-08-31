@@ -23,6 +23,7 @@ import {
   Sparkles, MessageCircle, ChevronRight, ListTree, HeartPulse, Activity,
 } from 'lucide-react';
 import { useSchedulingPreferences } from '@/hooks/useSchedulingPreferences';
+import { useCapturePreferences, QUIET_FINISH_CHOICES } from '@/hooks/useCapturePreferences';
 import { usePlanningDay } from '@/hooks/usePlanningScope';
 
 import { useNavigate } from 'react-router-dom';
@@ -51,6 +52,7 @@ export default function LaunchSettings() {
   const [exporting, setExporting] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const { prefs: schedulingPrefs, update: updateScheduling } = useSchedulingPreferences();
+  const { prefs: capturePrefs, update: updateCapture } = useCapturePreferences();
 
 
   const handleConfirmExport = async () => {
@@ -218,6 +220,70 @@ export default function LaunchSettings() {
 
         {/* Brain-Healthy Scheduling — editable defaults with ranges */}
         <DeviceRemindersCard />
+
+        {/* Capture safety — help that follows me across devices */}
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+              <Activity className="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">Capture safety</h3>
+              <p className="text-xs text-gray-500">Gentle help when I forget to start, stop or save</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <Label className="text-sm text-gray-900">Remind me when a meeting starts</Label>
+                <p className="text-xs text-gray-500 mt-0.5">I choose whether MyRhythm asks if I want to capture it.</p>
+              </div>
+              <Switch
+                checked={capturePrefs.capturePromptEnabled}
+                onCheckedChange={(checked) => void updateCapture({ capturePromptEnabled: checked })}
+              />
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <Label className="text-sm text-gray-900">Finish after a quiet stretch</Label>
+                <p className="text-xs text-gray-500 mt-0.5">I get a 30-second chance to keep listening first.</p>
+              </div>
+              <Switch
+                checked={capturePrefs.autoFinishEnabled}
+                onCheckedChange={(checked) => void updateCapture({ autoFinishEnabled: checked })}
+              />
+            </div>
+            {capturePrefs.autoFinishEnabled && (
+              <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
+                <div>
+                  <Label className="text-sm text-gray-900">Quiet time before asking</Label>
+                  <p className="text-xs text-gray-500 mt-0.5">Longer is less interruptive; shorter saves sooner.</p>
+                </div>
+                <Select
+                  value={String(capturePrefs.quietFinishMinutes)}
+                  onValueChange={(value) => void updateCapture({ quietFinishMinutes: Number(value) })}
+                >
+                  <SelectTrigger className="w-28" aria-label="Quiet time before asking"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {QUIET_FINISH_CHOICES.map((minutes) => (
+                      <SelectItem key={minutes} value={String(minutes)}>{minutes} minutes</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
+              <div>
+                <Label className="text-sm text-gray-900">Allow my Support Circle to prompt a capture</Label>
+                <p className="text-xs text-gray-500 mt-0.5">Only people I have already permitted can use this.</p>
+              </div>
+              <Switch
+                checked={capturePrefs.companionCaptureEnabled}
+                onCheckedChange={(checked) => void updateCapture({ companionCaptureEnabled: checked })}
+              />
+            </div>
+          </div>
+        </LaunchCard>
 
         <BrainHealthySettingsCard />
 

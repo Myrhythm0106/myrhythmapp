@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { recordAction, SURFACES } from '@/lib/evidence/track';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2 } from 'lucide-react';
+import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
@@ -41,6 +41,14 @@ import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/confi
 import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
 
 import { setRecordingLive } from '@/launch/capture/recordingSignal';
+import { useCapturePreferences } from '@/hooks/useCapturePreferences';
+import { useQuietEnd } from '@/hooks/memoryBridge/useQuietEnd';
+import { publishCaptureStatus, registerCaptureStopHandler } from '@/launch/capture/captureStatus';
+import {
+  assembleCaptureSession,
+  deleteCaptureSession,
+  listRecoverableSessions,
+} from '@/utils/captureSegments';
 
 
 function formatBytes(bytes: number): string {
@@ -78,6 +86,8 @@ export default function LaunchMemoryBridge() {
   const [recordingTitle, setRecordingTitle] = useState('');
   const audioBlobRef = useRef<Blob | null>(null);
   const [restoredDuration, setRestoredDuration] = useState<number | null>(null);
+  const [recoverableCapture, setRecoverableCapture] = useState<Awaited<ReturnType<typeof assembleCaptureSession>>>(null);
+  const [quietFinishRequested, setQuietFinishRequested] = useState(false);
 
   const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
   const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
@@ -129,12 +139,19 @@ export default function LaunchMemoryBridge() {
     formatDuration
   } = useVoiceRecorder();
 
+  const { prefs: capturePrefs } = useCapturePreferences();
   const micLevel = useMicLevel(mediaStream, isRecording && !isPaused);
   const allowance = useRecordingAllowance();
   const sessionCapSeconds = allowance.limits.perRecordingMinutes * 60;
   const remainingSessionSeconds = Math.max(0, sessionCapSeconds - duration);
   const outOfAllowance = allowance.remainingMinutes <= 0;
   const nextTierKey = NEXT_TIER[allowance.tier];
+  const { promptOpen: quietPromptOpen, secondsLeft: quietSecondsLeft, keepGoing, finishNow: finishQuietly } = useQuietEnd({
+    active: isRecording && !isPaused,
+    silentSeconds: micLevel.silentSeconds,
+    quietMinutes: capturePrefs.autoFinishEnabled ? capturePrefs.quietFinishMinutes : null,
+    onFinish: () => setQuietFinishRequested(true),
+  });
 
   useEffect(() => {
     fetchRecordings();
@@ -146,13 +163,26 @@ export default function LaunchMemoryBridge() {
     let cancelled = false;
     (async () => {
       const pending = await loadPendingRecording();
-      if (cancelled || !pending) return;
-      if (audioBlobRef.current) return;
+      if (cancelled || !pending || audioBlobRef.current) return;
       audioBlobRef.current = pending.blob;
       setRestoredDuration(pending.duration);
       setRecordingTitle(prev => prev || pending.title);
       setState(prev => (prev === 'idle' ? 'reviewing' : prev));
       toast.info('We recovered your last recording — it\'s ready to save.');
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // If the tab closed before Save, offer the segments already safe on this
+  // device. Nothing is uploaded or shared until I choose to continue.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const sessions = await listRecoverableSessions();
+      const candidate = sessions.find((session) => !session.finished);
+      if (cancelled || !candidate) return;
+      const assembled = await assembleCaptureSession(candidate.id);
+      if (!cancelled && assembled) setRecoverableCapture(assembled);
     })();
     return () => { cancelled = true; };
   }, []);
@@ -233,7 +263,7 @@ export default function LaunchMemoryBridge() {
   }, [isRecording]);
 
 
-  const handleStartRecording = async () => {
+  const handleStartRecording = useCallback(async () => {
     if (outOfAllowance) {
       toast.error(
         nextTierKey
@@ -251,7 +281,7 @@ export default function LaunchMemoryBridge() {
       // unexpected so a tap can never vanish silently.
       console.warn('handleStartRecording: startRecording returned false without a state change');
     }
-  };
+  }, [outOfAllowance, nextTierKey, allowance.period, startRecording, setRecordingTitle]);
 
   // Two-tap capture: arriving with ?record=1 starts recording immediately.
   // One attempt only — a blocked mic must never retry in a loop.
@@ -297,7 +327,7 @@ export default function LaunchMemoryBridge() {
     setState('recording');
   };
 
-  const handleStopRecording = async () => {
+  const handleStopRecording = useCallback(async () => {
     const blob = await stopRecording();
     if (!blob || blob.size === 0) {
       // stopRecording already explained the empty capture.
@@ -306,6 +336,7 @@ export default function LaunchMemoryBridge() {
     }
     audioBlobRef.current = blob;
     setRestoredDuration(null);
+    setRecoverableCapture(null);
     const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
     setState('reviewing');
     // Park it durably so a reload or backgrounded tab can't lose it.
@@ -321,7 +352,32 @@ export default function LaunchMemoryBridge() {
     } catch (err) {
       console.warn('handleStopRecording: could not park recording', err);
     }
-  };
+  }, [duration, recordingTitle, stopRecording]);
+
+  // The safety-net prompt finishes through the same save path as a normal Stop.
+  useEffect(() => {
+    if (!quietFinishRequested || !isRecording) return;
+    setQuietFinishRequested(false);
+    void handleStopRecording();
+  }, [quietFinishRequested, isRecording, handleStopRecording]);
+
+  // Publish a small, global status so I always know the app is listening and
+  // can return to or stop the capture from another signed-in page.
+  useEffect(() => {
+    publishCaptureStatus({
+      active: isRecording,
+      paused: isPaused,
+      seconds: duration,
+      level: micLevel.level,
+      title: recordingTitle || 'My conversation',
+    });
+    setRecordingLive(isRecording);
+    registerCaptureStopHandler(isRecording ? () => void handleStopRecording() : null);
+    return () => {
+      registerCaptureStopHandler(null);
+      if (!isRecording) publishCaptureStatus({ active: false, paused: false, seconds: 0, level: 0, title: null });
+    };
+  }, [isRecording, isPaused, duration, micLevel.level, recordingTitle, handleStopRecording]);
 
   // Auto-stop cleanly at the per-recording cap for this tier.
   const autoStoppedRef = useRef(false);
@@ -406,6 +462,8 @@ export default function LaunchMemoryBridge() {
 
       audioBlobRef.current = null;
       await clearPendingRecording();
+      if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
+      setRecoverableCapture(null);
       allowance.refresh();
 
       // Automatically start extraction
@@ -712,6 +770,43 @@ export default function LaunchMemoryBridge() {
 
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
         {/* Import from a document (schedule, discharge letter, care plan, notes) */}
+        {recoverableCapture && (
+          <LaunchCard className="mb-6 border-launch-gold/40 bg-launch-gold/10 p-5">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 rounded-full bg-launch-gold/20 p-2">
+                <History className="h-5 w-5 text-launch-gold" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-launch-ink">I found a conversation that was safely kept on this device.</p>
+                <p className="mt-1 text-sm text-launch-ink/70">
+                  {formatDuration(recoverableCapture.meta.duration)} captured · not uploaded or shared yet
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <LaunchButton
+                    onClick={() => {
+                      audioBlobRef.current = recoverableCapture.blob;
+                      setRestoredDuration(recoverableCapture.meta.duration);
+                      setRecordingTitle(recoverableCapture.meta.title);
+                      setState('reviewing');
+                    }}
+                  >
+                    Continue with this recording
+                  </LaunchButton>
+                  <LaunchButton
+                    variant="outline"
+                    onClick={async () => {
+                      await deleteCaptureSession(recoverableCapture.meta.id);
+                      setRecoverableCapture(null);
+                    }}
+                  >
+                    Discard it
+                  </LaunchButton>
+                </div>
+              </div>
+            </div>
+          </LaunchCard>
+        )}
+
         <DocumentImportCard
           onExtracted={(res: DocumentImportResult) => {
             setLastExtractionResult({
@@ -726,6 +821,22 @@ export default function LaunchMemoryBridge() {
             setShowPostExtractionDialog(true);
           }}
         />
+
+        {/* Gentle safety-net pause before a long quiet stretch is auto-saved. */}
+        <AlertDialog open={quietPromptOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>It has been quiet for a while</AlertDialogTitle>
+              <AlertDialogDescription>
+                I can keep listening, or I can safely stop and place what I have captured ready to save. I will stop the capture in {quietSecondsLeft} seconds if I do not choose.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={keepGoing}>Keep listening</AlertDialogCancel>
+              <AlertDialogAction onClick={finishQuietly}>Stop and save</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Recording Interface */}
         <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">

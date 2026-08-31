@@ -4,6 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ensureSession } from '@/utils/ensureSession';
 import { deleteVoiceRecording } from '@/utils/voiceRecording';
+import {
+  appendCaptureSegment,
+  beginCaptureSession,
+  deleteCaptureSession,
+  finishCaptureSession,
+  newCaptureSessionId,
+} from '@/utils/captureSegments';
+
 
 export type MicPermission = 'granted' | 'denied' | 'prompt' | 'unknown';
 
@@ -106,8 +114,12 @@ export function useVoiceRecorder() {
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mimeTypeRef = useRef<string>('audio/webm');
+  const captureSessionIdRef = useRef<string | null>(null);
+  const segmentIndexRef = useRef(0);
+  const captureStartedAtRef = useRef<number | null>(null);
+  const durationRef = useRef(0);
 
   const refreshMicStatus = useCallback(async () => {
     const blocker = detectMicBlocker();
@@ -216,16 +228,36 @@ export function useVoiceRecorder() {
       setDuration(0);
       setRecordedBytes(0);
 
+      const captureSessionId = newCaptureSessionId();
+      captureSessionIdRef.current = captureSessionId;
+      segmentIndexRef.current = 0;
+      captureStartedAtRef.current = Date.now();
+      durationRef.current = 0;
+      await beginCaptureSession({
+        id: captureSessionId,
+        title: `Recording ${new Date().toLocaleTimeString()}`,
+        mimeType: effectiveMime,
+      });
+
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
           setRecordedBytes(prev => prev + event.data.size);
+          const sessionId = captureSessionIdRef.current;
+          if (sessionId) {
+            void appendCaptureSegment(
+              sessionId,
+              event.data,
+              segmentIndexRef.current++,
+              durationRef.current,
+            );
+          }
         }
       };
 
       mediaRecorder.onerror = (event) => {
         console.error('MediaRecorder error:', event);
-        toast.error('The microphone stopped unexpectedly. Please try recording again.');
+        toast.error('The microphone stopped unexpectedly. What was captured is safe on this device.');
       };
 
       // If the OS or another app grabs the mic mid-capture, say so.
@@ -234,7 +266,7 @@ export function useVoiceRecorder() {
         toast.error('The microphone was disconnected. Stop and save what was captured.');
       };
 
-      mediaRecorder.start(1000); // Collect data every 1000ms
+      mediaRecorder.start(1000); // Flush a recoverable segment every second.
       console.log('startRecording: recording started', { mime: effectiveMime, state: mediaRecorder.state });
       setIsRecording(true);
       setMicPermission('granted');
@@ -243,7 +275,8 @@ export function useVoiceRecorder() {
 
       // Start timer
       timerRef.current = setInterval(() => {
-        setDuration(prev => prev + 1);
+        durationRef.current += 1;
+        setDuration(durationRef.current);
       }, 1000);
 
       return true;
@@ -276,7 +309,8 @@ export function useVoiceRecorder() {
       
       // Resume timer
       timerRef.current = setInterval(() => {
-        setDuration(prev => prev + 1);
+        durationRef.current += 1;
+        setDuration(durationRef.current);
       }, 1000);
     }
   }, [isRecording, isPaused]);
@@ -288,30 +322,38 @@ export function useVoiceRecorder() {
         return;
       }
 
-      mediaRecorderRef.current.onstop = () => {
+      mediaRecorderRef.current.onstop = async () => {
+        const sessionId = captureSessionIdRef.current;
+        const finalDuration = durationRef.current;
         const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current });
-        
-        // Clean up
+
+        // Clean up the hardware and timer first; the last timeslice has already
+        // been delivered by MediaRecorder before onstop runs.
         mediaRecorderRef.current?.stream.getTracks().forEach(track => track.stop());
         mediaRecorderRef.current = null;
         audioChunksRef.current = [];
-        
+
         if (timerRef.current) {
           clearInterval(timerRef.current);
           timerRef.current = null;
         }
-        
+
         setIsRecording(false);
         setIsPaused(false);
         setMediaStream(null);
 
-        if (audioBlob.size === 0) {
+        if (sessionId) {
+          await finishCaptureSession(sessionId, 'user', finalDuration);
+          captureSessionIdRef.current = null;
+        }
+
+          if (audioBlob.size === 0) {
           console.error('stopRecording: captured 0 bytes of audio');
           toast.error('That recording came through empty — check your microphone and try again.');
           resolve(null);
           return;
         }
-        
+
         resolve(audioBlob);
       };
 
@@ -344,7 +386,7 @@ export function useVoiceRecorder() {
       const contentType = audioBlob.type || mimeTypeRef.current || 'audio/webm';
       const extension = extensionForMimeType(contentType);
       const fileName = `${userId}/${Date.now()}.${extension}`;
-      const durationMinutes = Math.ceil(duration / 60);
+      const durationMinutes = Math.ceil(durationRef.current / 60);
       
       // Upload to storage — content type must match the real bytes, otherwise
       // transcription rejects the file (iOS records MP4, not WebM).
