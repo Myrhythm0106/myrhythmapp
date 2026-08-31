@@ -66,5 +66,6 @@ New card near the top of the `/launch/welcome` report:
 - Every question visibly belongs to one of the four pillars in the report.
 - The report states a specific best window and focus-block length in first-person language.
 - Scheduling a Memory Bridge action proposes a time inside that window and says why.
+- A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
