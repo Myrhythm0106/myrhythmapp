@@ -77,6 +77,9 @@ export function QuietHome() {
 
 
       {/* Next action — the one thing that matters right now */}
+      {/* If a conversation is happening right now, offer to capture it — once */}
+      <ArriveAndArmCard />
+
       <NextActionStrip />
       <CompletionStatsStrip />
 
