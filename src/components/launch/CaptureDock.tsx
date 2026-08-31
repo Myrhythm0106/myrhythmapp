@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useAppReady } from '@/hooks/useAppReady';
 import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
 import { supabase } from '@/integrations/supabase/client';
-import { useRecordingLive } from '@/launch/capture/recordingSignal';
+import { useCaptureStatus, requestCaptureStop } from '@/launch/capture/captureStatus';
 
 /**
  * CaptureDock
@@ -20,33 +20,45 @@ import { useRecordingLive } from '@/launch/capture/recordingSignal';
 export function CaptureDock() {
   const appReady = useAppReady();
   const [open, setOpen] = useState(false);
-  const recordingLive = useRecordingLive();
+  const capture = useCaptureStatus();
   const navigate = useNavigate();
 
   if (!appReady) return null;
 
-  // While a capture is running, one tap takes me straight back to it.
-  if (recordingLive) {
+  // While a capture is running, keep both reassurance and Stop available from
+  // every signed-in page.
+  if (capture.active) {
     return (
-      <button
-        type="button"
-        onClick={() => navigate('/launch/memory')}
-        aria-label="Recording now — go back to my recording"
+      <div
         className={cn(
           'fixed right-4 bottom-24 md:bottom-8 z-40',
-          'h-16 px-5 rounded-full shadow-xl',
-          'bg-red-600 hover:bg-red-700 active:scale-95',
-          'flex items-center gap-2 transition-all',
-          'focus:outline-none focus-visible:ring-4 focus-visible:ring-red-300'
+          'min-h-16 rounded-full shadow-xl bg-launch-ember px-2 py-2',
+          'flex items-center gap-1 transition-all'
         )}
         style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
-        </span>
-        <span className="text-white font-semibold text-sm">Recording</span>
-      </button>
+        <button
+          type="button"
+          onClick={() => navigate('/launch/memory')}
+          aria-label="Recording now — go back to my recording"
+          className="min-h-12 flex items-center gap-2 rounded-full px-3 text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-launch-gold/50"
+        >
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
+          </span>
+          <span className="font-semibold text-sm">Listening · {Math.floor(capture.seconds / 60)}:{(capture.seconds % 60).toString().padStart(2, '0')}</span>
+        </button>
+        <button
+          type="button"
+          onClick={requestCaptureStop}
+          aria-label="Stop recording"
+          title="Stop recording"
+          className="h-12 w-12 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-launch-gold/50"
+        >
+          <Square className="h-5 w-5 fill-current" />
+        </button>
+      </div>
     );
   }
 
