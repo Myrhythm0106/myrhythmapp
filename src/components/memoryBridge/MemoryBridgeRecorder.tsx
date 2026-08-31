@@ -687,6 +687,13 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
           hoursUntilReset={getHoursUntilReset()}
           minutesUntilReset={getMinutesUntilReset()}
         />
+
+        {/* Pre-save keep-for choice (first recording only) */}
+        <KeepForPrompt
+          open={keepForGate.askOpen}
+          onConfirm={handleKeepForConfirm}
+          onDismiss={keepForGate.dismiss}
+        />
       </DialogContent>
     </Dialog>
   );
