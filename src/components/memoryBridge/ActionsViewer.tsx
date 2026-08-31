@@ -79,7 +79,35 @@ interface ActionsViewerProps {
   onClose: () => void;
 }
 
-export function ActionsViewer({ 
+function InvitationStatus({ actionId }: { actionId: string }) {
+  const [invites, setInvites] = React.useState<Array<{ invitee_name: string | null; invitee_email: string; status: string }>>([]);
+
+  React.useEffect(() => {
+    let active = true;
+    supabase
+      .from('event_invitations')
+      .select('invitee_name, invitee_email, status')
+      .eq('event_id', actionId)
+      .then(({ data }) => {
+        if (active) setInvites((data || []) as Array<{ invitee_name: string | null; invitee_email: string; status: string }>);
+      });
+    return () => { active = false; };
+  }, [actionId]);
+
+  if (!invites.length) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <span className="font-semibold">Invite status:</span>
+      {invites.map((invite) => (
+        <Badge key={invite.invitee_email} variant="outline">
+          {invite.invitee_name || invite.invitee_email}: {invite.status || 'pending'}
+        </Badge>
+      ))}
+    </div>
+  );
+}
+
+export function ActionsViewer({
   recordingId, 
   meetingTitle, 
   isOpen, 
