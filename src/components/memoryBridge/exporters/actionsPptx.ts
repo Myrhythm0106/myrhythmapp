@@ -98,8 +98,8 @@ export async function exportActionsPptx(
       { x: 0.6, y: 5.1, w: 12.1, h: 0.5, fontSize: 16 },
     );
     if (actions[0]?.reference_code) {
-      s.addText(`Ref ${actions[0].reference_code.split('-A')[0]}`, {
-        x: 0.6, y: 6.7, w: 6, h: 0.35, fontSize: 11, color: SOFT, fontFace: 'Consolas',
+      s.addText(`Reference ${actions[0].reference_code.split('-A')[0]}`, {
+        x: 0.6, y: 6.7, w: 6, h: 0.35, fontSize: 11, color: SOFT,
       });
     }
     addFooter(s);
@@ -111,19 +111,20 @@ export async function exportActionsPptx(
     s.background = { color: SURFACE };
     s.addText('EXECUTIVE SUMMARY', { x: 0.6, y: 0.5, w: 12, h: 0.4, fontSize: 13, bold: true, color: MOSS, charSpacing: 3 });
     s.addText(meeting.summary || 'No summary recorded for this conversation.', {
-      x: 0.6, y: 1.0, w: 12.1, h: 2.1, fontSize: 16, color: INK, valign: 'top', lineSpacingMultiple: 1.25,
+      x: 0.6, y: 1.0, w: 12.1, h: 1.8, fontSize: 16, color: INK, valign: 'top', lineSpacingMultiple: 1.25,
     });
 
-    let y = 3.3;
+    let y = 3.0;
     const section = (heading: string, items: string[], bulletColor: string) => {
       if (!items.length) return;
-      s.addText(heading.toUpperCase(), { x: 0.6, y, w: 12, h: 0.35, fontSize: 12, bold: true, color: MOSS, charSpacing: 2 });
-      y += 0.42;
+      const shown = items.slice(0, 4);
+      s.addText(heading.toUpperCase(), { x: 0.6, y, w: 12, h: 0.32, fontSize: 12, bold: true, color: MOSS, charSpacing: 2 });
+      y += 0.38;
       s.addText(
-        items.slice(0, 4).map(t => ({ text: t, options: { bullet: { code: '2022', indent: 12 }, fontSize: 13.5, color: INK, paraSpaceAfter: 4 } })),
-        { x: 0.6, y, w: 12.1, h: Math.min(items.length, 4) * 0.42, valign: 'top', color: bulletColor },
+        shown.map(t => ({ text: t, options: { bullet: { code: '2022', indent: 12 }, fontSize: 13.5, color: INK, paraSpaceAfter: 3 } })),
+        { x: 0.6, y, w: 12.1, h: shown.length * 0.36, valign: 'top', color: bulletColor },
       );
-      y += Math.min(items.length, 4) * 0.42 + 0.18;
+      y += shown.length * 0.36 + 0.14;
     };
     section('Key themes', meeting.themes || [], INK);
     section('Decisions', meeting.decisions || [], INK);
@@ -177,7 +178,7 @@ export async function exportActionsPptx(
     if (rows.length) {
       s.addTable([header, ...rows] as never, {
         x: 0.6, y: 1.05, w: 12.13,
-        colW: [1.2, 5.33, 1.7, 1.5, 1.2, 1.2],
+        colW: [1.1, 4.93, 1.6, 1.6, 1.2, 1.7],
         border: { type: 'solid', pt: 0.75, color: RULE },
         rowH: 0.55,
         autoPage: false,
