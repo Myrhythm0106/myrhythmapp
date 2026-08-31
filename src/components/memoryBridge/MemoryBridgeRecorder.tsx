@@ -135,30 +135,6 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
   const keepForGate = useKeepForGate();
 
-  const handleStop = useCallback(async () => {
-    const audioBlob = await stopRecording();
-    stopTranscription();
-    setAudioBlob(audioBlob);
-    if (!audioBlob) return;
-
-    // Before saving, a first-time user chooses how long to keep it.
-    const needsChoice = await keepForGate.needsChoice();
-    if (needsChoice) {
-      keepForGate.openAsk();
-      return;
-    }
-    await handleSaveAndProcess(audioBlob);
-  }, [stopRecording, stopTranscription, keepForGate, handleSaveAndProcess]);
-
-  const handleKeepForConfirm = useCallback(async (choice: PrivacyMode) => {
-    const ok = await keepForGate.confirmChoice(choice);
-    if (ok && audioBlob) {
-      await handleSaveAndProcess(audioBlob);
-    } else if (!ok) {
-      toast.error("Couldn't save that choice. Please try again.");
-    }
-  }, [keepForGate, audioBlob, handleSaveAndProcess]);
-
   // Process with retry logic
   const triggerProcessing = useCallback(async (filePath: string, meetingId: string, attempt: number = 1): Promise<boolean> => {
     try {
