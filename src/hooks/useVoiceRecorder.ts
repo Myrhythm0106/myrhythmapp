@@ -386,7 +386,7 @@ export function useVoiceRecorder() {
       const contentType = audioBlob.type || mimeTypeRef.current || 'audio/webm';
       const extension = extensionForMimeType(contentType);
       const fileName = `${userId}/${Date.now()}.${extension}`;
-      const durationMinutes = Math.ceil(duration / 60);
+      const durationMinutes = Math.ceil(durationRef.current / 60);
       
       // Upload to storage — content type must match the real bytes, otherwise
       // transcription rejects the file (iOS records MP4, not WebM).
