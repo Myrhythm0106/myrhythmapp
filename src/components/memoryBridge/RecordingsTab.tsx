@@ -24,6 +24,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
+import { AudioCountdownLine } from '@/components/memoryBridge/AudioCountdownLine';
 
 
 interface RecordingsTabProps {
@@ -177,7 +178,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                           </p>
                         )}
                         
-                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                         <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {formatDuration(recording.duration_seconds)}
@@ -186,6 +187,16 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                             {new Date(recording.created_at).toLocaleDateString()}
                           </span>
                         </div>
+
+                        <AudioCountdownLine
+                          recordingId={recording.id}
+                          filePath={recording.file_path}
+                          audioExpiresAt={(recording as any).audio_expires_at ?? null}
+                          audioDeletedAt={(recording as any).audio_deleted_at ?? null}
+                          legalHold={Boolean((recording as any).legal_retention_required)}
+                          getUrl={() => getRecordingUrl(recording.file_path)}
+                          onChanged={fetchRecordings}
+                        />
                       </div>
                     </div>
 
