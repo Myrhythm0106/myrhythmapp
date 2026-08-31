@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { buildInviteIcs, toBase64 } from "../_shared/ics.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,6 +23,8 @@ interface Payload {
   startTime: string; // HH:mm
   dueDate?: string;
   context?: string;
+  timeZone?: string;
+  durationMinutes?: number;
   invites?: Person[];
   watchers?: Person[];
 }
@@ -31,43 +34,6 @@ function esc(s: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-}
-
-function icsEscape(s: string): string {
-  return String(s ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\n/g, "\\n");
-}
-
-function toUtcStamp(date: string, time: string, addMinutes = 0): string {
-  const [y, m, d] = date.split("-").map(Number);
-  const [hh, mm] = time.split(":").map(Number);
-  const dt = new Date(Date.UTC(y, (m || 1) - 1, d || 1, hh || 9, mm || 0));
-  dt.setUTCMinutes(dt.getUTCMinutes() + addMinutes);
-  return dt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-}
-
-function buildIcs(p: Payload, organiser: string): string {
-  const uid = `${crypto.randomUUID()}@myrhythmapp.com`;
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//MyRhythm//Capture//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:REQUEST",
-    "BEGIN:VEVENT",
-    `UID:${uid}`,
-    `DTSTAMP:${toUtcStamp(p.startDate, p.startTime)}`,
-    `DTSTART:${toUtcStamp(p.startDate, p.startTime)}`,
-    `DTEND:${toUtcStamp(p.startDate, p.startTime, 30)}`,
-    `SUMMARY:${icsEscape(p.actionText.slice(0, 120))}`,
-    `DESCRIPTION:${icsEscape(p.context || "Shared from MyRhythm")}`,
-    `ORGANIZER;CN=${icsEscape(organiser)}:mailto:noreply@myrhythmapp.com`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
 }
 
 function shell(inner: string): string {
@@ -80,6 +46,20 @@ function shell(inner: string): string {
       <p style="color:#999;font-size:12px;text-align:center;margin-top:24px;">
         Sent from MyRhythm. If you weren't expecting this, you can ignore it.
       </p>
+    </div>`;
+}
+
+function rsvpButtons(base: string, token: string): string {
+  const btn = (answer: string, label: string, bg: string) =>
+    `<a href="${base}/functions/v1/rsvp-response?token=${encodeURIComponent(token)}&answer=${answer}"
+        style="display:inline-block;padding:12px 20px;margin:0 6px 8px 0;border-radius:10px;
+               background:${bg};color:#fff;text-decoration:none;font-weight:600;font-size:15px;">${label}</a>`;
+  return `
+    <p style="margin:18px 0 8px;color:#555;font-size:13px;">Can you make it?</p>
+    <div>
+      ${btn("accepted", "Yes", "#c2410c")}
+      ${btn("maybe", "Maybe", "#6b7280")}
+      ${btn("declined", "No", "#374151")}
     </div>`;
 }
 
@@ -98,10 +78,8 @@ const handler = async (req: Request): Promise<Response> => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabase = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
     const { data: userData, error: userErr } = await supabase.auth.getUser(token);
     if (userErr || !userData?.user) {
       return new Response(JSON.stringify({ error: "Not authenticated" }), {
@@ -109,6 +87,7 @@ const handler = async (req: Request): Promise<Response> => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const admin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
     const body = (await req.json()) as Payload;
     if (!body?.actionText || !body?.startDate || !body?.startTime) {
@@ -118,8 +97,8 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const invites = (body.invites || []).filter(p => p?.email);
-    const watchers = (body.watchers || []).filter(p => p?.email);
+    const invites = (body.invites || []).filter((p) => p?.email);
+    const watchers = (body.watchers || []).filter((p) => p?.email);
     if (invites.length === 0 && watchers.length === 0) {
       return new Response(JSON.stringify({ sent: 0, failures: [] }), {
         status: 200,
@@ -131,32 +110,110 @@ const handler = async (req: Request): Promise<Response> => {
       (userData.user.user_metadata?.name as string) ||
       userData.user.email ||
       "Someone in MyRhythm";
+    const organiserEmail = userData.user.email || "noreply@myrhythmapp.com";
+
+    // --- Stable UID + version, so replies and updates match the same entry ---
+    let uid = "";
+    let sequence = 0;
+    if (body.eventId) {
+      const { data: ev } = await admin
+        .from("calendar_events")
+        .select("ics_uid, ics_sequence")
+        .eq("id", body.eventId)
+        .maybeSingle();
+      uid = ev?.ics_uid || `${body.eventId}@myrhythmapp.com`;
+      sequence = (ev?.ics_sequence ?? 0) + (ev?.ics_uid ? 1 : 0);
+      await admin
+        .from("calendar_events")
+        .update({ ics_uid: uid, ics_sequence: sequence })
+        .eq("id", body.eventId);
+    } else {
+      uid = `${crypto.randomUUID()}@myrhythmapp.com`;
+    }
+
+    // --- One-tap reply tokens, for clients without RSVP buttons ---
+    const tokens = new Map<string, string>();
+    if (body.eventId) {
+      const { data: rows } = await admin
+        .from("event_invitations")
+        .select("id, invitee_email, response_token")
+        .eq("event_id", body.eventId);
+      for (const p of invites) {
+        const row = (rows || []).find(
+          (r: any) => (r.invitee_email || "").toLowerCase() === p.email.toLowerCase(),
+        );
+        if (row) {
+          let t = row.response_token as string | null;
+          if (!t) {
+            t = crypto.randomUUID().replace(/-/g, "");
+            await admin.from("event_invitations").update({ response_token: t }).eq("id", row.id);
+          }
+          tokens.set(p.email.toLowerCase(), t);
+        } else {
+          const t = crypto.randomUUID().replace(/-/g, "");
+          const { error: insErr } = await admin.from("event_invitations").insert({
+            event_id: body.eventId,
+            invitee_email: p.email,
+            invitee_name: p.name || null,
+            inviter_id: userData.user.id,
+            status: "pending",
+            response_token: t,
+          });
+          if (!insErr) tokens.set(p.email.toLowerCase(), t);
+        }
+      }
+    }
 
     const when = `${body.startDate} at ${body.startTime}`;
-    const ics = buildIcs(body, organiser);
-    const icsBase64 = btoa(ics);
+    const duration = body.durationMinutes && body.durationMinutes > 0 ? body.durationMinutes : 30;
 
     const failures: { email: string; error: string }[] = [];
     let sent = 0;
 
     for (const person of invites) {
       try {
+        const ics = buildInviteIcs({
+          uid,
+          sequence,
+          title: body.actionText,
+          description: body.context,
+          startDate: body.startDate,
+          startTime: body.startTime,
+          durationMinutes: duration,
+          timeZone: body.timeZone,
+          organiserName: organiser,
+          organiserEmail,
+          dueDate: body.dueDate,
+          attendees: [{ email: person.email, name: person.name }],
+        });
+        const tok = tokens.get(person.email.toLowerCase());
         const res = await resend.emails.send({
           from: "MyRhythm <noreply@myrhythmapp.com>",
+          replyTo: organiserEmail,
           to: [person.email],
-          subject: `${organiser} invited you: ${body.actionText.slice(0, 60)}`,
+          subject: `Invitation: ${body.actionText.slice(0, 60)} — ${when}`,
           html: shell(`
             <p style="margin:0 0 12px;"><strong>${esc(organiser)}</strong> has invited you to:</p>
             <p style="font-size:17px;font-weight:600;margin:0 0 12px;">${esc(body.actionText)}</p>
-            <p style="margin:0 0 8px;"><strong>When:</strong> ${esc(when)}</p>
-            ${body.dueDate ? `<p style="margin:0 0 8px;"><strong>Due by:</strong> ${esc(body.dueDate)}</p>` : ""}
+            <p style="margin:0 0 8px;"><strong>When:</strong> ${esc(when)}${
+            body.timeZone ? ` (${esc(body.timeZone)})` : ""
+          }</p>
+            <p style="margin:0 0 8px;"><strong>How long:</strong> ${duration} minutes</p>
+            ${body.dueDate ? `<p style="margin:0 0 8px;"><strong>Finish by:</strong> ${esc(body.dueDate)}</p>` : ""}
             ${body.context ? `<p style="margin:12px 0 0;color:#555;">${esc(body.context)}</p>` : ""}
+            ${tok ? rsvpButtons(supabaseUrl, tok) : ""}
             <p style="margin:16px 0 0;color:#555;font-size:13px;">
-              The attached calendar file will add this to your own calendar.
+              Your calendar should show Yes / No / Maybe on this invitation. Accepting adds it to
+              your own Google, Outlook or Apple calendar.
             </p>`),
           attachments: [
-            { filename: "invitation.ics", content: icsBase64 },
+            {
+              filename: "invite.ics",
+              content: toBase64(ics),
+              contentType: 'text/calendar; charset=utf-8; method=REQUEST; name="invite.ics"',
+            } as any,
           ],
+          headers: { "Content-Class": "urn:content-classes:calendarmessage" },
         });
         if ((res as any)?.error) throw new Error((res as any).error.message || "Send failed");
         sent++;

@@ -207,6 +207,7 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
       dueDate,
       reminders,
       people,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     setCommitting(false);
     if (!res.ok || !res.calendarEventId) {

@@ -3,11 +3,13 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { buildInviteIcs, toBase64 } from "../_shared/ics.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const BodySchema = z.object({
   actionIds: z.array(z.string().uuid()).min(1).max(100),
+  timeZone: z.string().max(64).optional(),
 });
 
 const ROLE_LINES: Record<string, string> = {
@@ -87,7 +89,7 @@ serve(async (req: Request) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const { actionIds } = parsed.data;
+    const { actionIds, timeZone } = parsed.data;
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -114,7 +116,7 @@ serve(async (req: Request) => {
     // Only the caller's own actions
     const { data: actions, error: fetchErr } = await admin
       .from("extracted_actions")
-      .select("id, action_text, assigned_to, owner_email, accountable, consulted, informed, start_date, end_date, priority_level, success_criteria, reference_code")
+      .select("id, action_text, assigned_to, owner_email, accountable, consulted, informed, start_date, end_date, priority_level, success_criteria, reference_code, scheduled_date, scheduled_time, calendar_event_id")
       .in("id", actionIds)
       .eq("user_id", userId);
     if (fetchErr) throw fetchErr;
@@ -126,9 +128,33 @@ serve(async (req: Request) => {
     for (const action of actions || []) {
       const recipients = collectRecipients(action);
       if (recipients.length === 0) continue;
+      // People who own or sign off the step get a real calendar invitation
+      const inviteDate = action.scheduled_date || action.start_date;
+      const inviteTime = String(action.scheduled_time || "09:00").slice(0, 5);
       for (const { person, role } of recipients) {
+        const wantsInvite = (role === "responsible" || role === "accountable") && !!inviteDate;
+        const attachments = wantsInvite
+          ? [{
+            filename: "invite.ics",
+            content: toBase64(buildInviteIcs({
+              uid: `${action.calendar_event_id || action.id}@myrhythmapp.com`,
+              title: action.action_text,
+              description: action.success_criteria || undefined,
+              startDate: inviteDate!,
+              startTime: inviteTime,
+              durationMinutes: 30,
+              timeZone,
+              organiserName: senderName,
+              organiserEmail: profile?.email || "noreply@myrhythmapp.com",
+              dueDate: action.end_date || undefined,
+              attendees: [{ email: person.email!, name: person.name }],
+            })),
+            contentType: 'text/calendar; charset=utf-8; method=REQUEST; name="invite.ics"',
+          }]
+          : undefined;
         try {
           const { error: sendErr } = await resend.emails.send({
+            ...(attachments ? { attachments: attachments as any } : {}),
             from: "MyRhythm <noreply@myrhythmapp.com>",
             to: [person.email!],
             subject: `A next step that involves you${action.reference_code ? ` (${action.reference_code})` : ""}`,

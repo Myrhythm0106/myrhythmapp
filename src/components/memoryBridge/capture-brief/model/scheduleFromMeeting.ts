@@ -174,6 +174,7 @@ export async function scheduleExtractedActions(
       dueDate,
       reminders: defaultReminders(ov?.priority ?? row.priority_level ?? 3, dueDate, date),
       people,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 
     if (res.ok) {

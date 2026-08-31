@@ -370,6 +370,8 @@ export type Database = {
           end_time: string | null
           extracted_action_id: string | null
           google_event_id: string | null
+          ics_sequence: number
+          ics_uid: string | null
           id: string
           is_system_generated: boolean
           last_push_error: string | null
@@ -399,6 +401,8 @@ export type Database = {
           end_time?: string | null
           extracted_action_id?: string | null
           google_event_id?: string | null
+          ics_sequence?: number
+          ics_uid?: string | null
           id?: string
           is_system_generated?: boolean
           last_push_error?: string | null
@@ -428,6 +432,8 @@ export type Database = {
           end_time?: string | null
           extracted_action_id?: string | null
           google_event_id?: string | null
+          ics_sequence?: number
+          ics_uid?: string | null
           id?: string
           is_system_generated?: boolean
           last_push_error?: string | null
@@ -952,12 +958,15 @@ export type Database = {
           created_at: string
           event_id: string
           id: string
+          invite_source: string
           invitee_email: string
           invitee_name: string | null
           inviter_id: string
           message: string | null
+          responded_at: string | null
           response_date: string | null
           response_message: string | null
+          response_token: string | null
           status: string
           updated_at: string
         }
@@ -965,12 +974,15 @@ export type Database = {
           created_at?: string
           event_id: string
           id?: string
+          invite_source?: string
           invitee_email: string
           invitee_name?: string | null
           inviter_id: string
           message?: string | null
+          responded_at?: string | null
           response_date?: string | null
           response_message?: string | null
+          response_token?: string | null
           status?: string
           updated_at?: string
         }
@@ -978,12 +990,15 @@ export type Database = {
           created_at?: string
           event_id?: string
           id?: string
+          invite_source?: string
           invitee_email?: string
           invitee_name?: string | null
           inviter_id?: string
           message?: string | null
+          responded_at?: string | null
           response_date?: string | null
           response_message?: string | null
+          response_token?: string | null
           status?: string
           updated_at?: string
         }

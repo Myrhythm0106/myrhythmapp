@@ -12,6 +12,8 @@ export interface CommitInput {
   dueDate?: string;
   reminders: ActionReminder[];
   people: PersonPick[];
+  durationMinutes?: number;
+  timeZone?: string;
 }
 
 export interface CommitResult {
@@ -58,7 +60,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       description: action.context || action.sourceQuote || null,
       date: input.startDate,
       time: input.startTime,
-      end_time: addMinutes(input.startTime, 30),
+      end_time: addMinutes(input.startTime, input.durationMinutes || 30),
       type: 'action',
       category: action.category || 'commitment',
       is_system_generated: true,
@@ -132,6 +134,8 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
           startTime: input.startTime,
           dueDate: input.dueDate,
           context: action.context || action.sourceQuote || undefined,
+          durationMinutes: input.durationMinutes || 30,
+          timeZone: input.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
           invites: invitePeople,
           watchers: watchPeople,
         },
@@ -190,6 +194,7 @@ export async function commitAllRecommended(
       dueDate: a.dueDate?.date,
       reminders,
       people,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     if (res.ok && res.calendarEventId) {
       committed++;

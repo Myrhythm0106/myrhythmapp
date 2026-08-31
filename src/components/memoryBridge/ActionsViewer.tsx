@@ -79,7 +79,35 @@ interface ActionsViewerProps {
   onClose: () => void;
 }
 
-export function ActionsViewer({ 
+function InvitationStatus({ eventId }: { eventId: string }) {
+  const [invites, setInvites] = React.useState<Array<{ invitee_name: string | null; invitee_email: string; status: string }>>([]);
+
+  React.useEffect(() => {
+    let active = true;
+    supabase
+      .from('event_invitations')
+      .select('invitee_name, invitee_email, status')
+      .eq('event_id', eventId)
+      .then(({ data }) => {
+        if (active) setInvites((data || []) as Array<{ invitee_name: string | null; invitee_email: string; status: string }>);
+      });
+    return () => { active = false; };
+  }, [eventId]);
+
+  if (!invites.length) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <span className="font-semibold">Invite status:</span>
+      {invites.map((invite) => (
+        <Badge key={invite.invitee_email} variant="outline">
+          {invite.invitee_name || invite.invitee_email}: {invite.status || 'pending'}
+        </Badge>
+      ))}
+    </div>
+  );
+}
+
+export function ActionsViewer({
   recordingId, 
   meetingTitle, 
   isOpen, 
@@ -634,7 +662,10 @@ export function ActionsViewer({
     if (actionIds.length === 0) return;
     try {
       const { data, error } = await supabase.functions.invoke('send-action-raci', {
-        body: { actionIds },
+        body: {
+          actionIds,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
       });
       if (error) throw error;
       const { sent = 0, failures = [] } = (data || {}) as { sent?: number; failures?: string[] };
@@ -1035,6 +1066,7 @@ export function ActionsViewer({
                                   {/* Header with status and priority */}
                                   <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 space-y-4">
+                                      {action.calendar_event_id && <InvitationStatus eventId={action.calendar_event_id} />}
                                       {/* ACTION block - Premium burnt orange glass */}
                                       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-orange-50/90 to-brand-orange-100/70 backdrop-blur-sm border border-brand-orange-200/50 shadow-lg p-5">
                                         <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
