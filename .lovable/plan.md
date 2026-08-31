@@ -88,5 +88,6 @@ Retaking the assessment updates the window; the mode chips, per-type exceptions 
 - A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
+- Switching a meeting to Stakeholder-first ranks by invitee availability and stops mentioning the window as a problem.
 - An action with a hard due date is scheduled on that date even when it falls outside the window.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
