@@ -3407,6 +3407,7 @@ export type Database = {
           file_path: string
           file_size_bytes: number
           id: string
+          keep_transcript: boolean
           key_insights: Json | null
           legal_retention_required: boolean | null
           metadata: Json | null
@@ -3434,6 +3435,7 @@ export type Database = {
           file_path: string
           file_size_bytes: number
           id?: string
+          keep_transcript?: boolean
           key_insights?: Json | null
           legal_retention_required?: boolean | null
           metadata?: Json | null
@@ -3461,6 +3463,7 @@ export type Database = {
           file_path?: string
           file_size_bytes?: number
           id?: string
+          keep_transcript?: boolean
           key_insights?: Json | null
           legal_retention_required?: boolean | null
           metadata?: Json | null
