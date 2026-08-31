@@ -134,6 +134,8 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
           startTime: input.startTime,
           dueDate: input.dueDate,
           context: action.context || action.sourceQuote || undefined,
+          durationMinutes: input.durationMinutes || 30,
+          timeZone: input.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone,
           invites: invitePeople,
           watchers: watchPeople,
         },
