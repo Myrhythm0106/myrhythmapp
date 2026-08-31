@@ -228,16 +228,36 @@ export function useVoiceRecorder() {
       setDuration(0);
       setRecordedBytes(0);
 
+      const captureSessionId = newCaptureSessionId();
+      captureSessionIdRef.current = captureSessionId;
+      segmentIndexRef.current = 0;
+      captureStartedAtRef.current = Date.now();
+      durationRef.current = 0;
+      await beginCaptureSession({
+        id: captureSessionId,
+        title: `Recording ${new Date().toLocaleTimeString()}`,
+        mimeType: effectiveMime,
+      });
+
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
           setRecordedBytes(prev => prev + event.data.size);
+          const sessionId = captureSessionIdRef.current;
+          if (sessionId) {
+            void appendCaptureSegment(
+              sessionId,
+              event.data,
+              segmentIndexRef.current++,
+              durationRef.current,
+            );
+          }
         }
       };
 
       mediaRecorder.onerror = (event) => {
         console.error('MediaRecorder error:', event);
-        toast.error('The microphone stopped unexpectedly. Please try recording again.');
+        toast.error('The microphone stopped unexpectedly. What was captured is safe on this device.');
       };
 
       // If the OS or another app grabs the mic mid-capture, say so.
@@ -246,7 +266,7 @@ export function useVoiceRecorder() {
         toast.error('The microphone was disconnected. Stop and save what was captured.');
       };
 
-      mediaRecorder.start(1000); // Collect data every 1000ms
+      mediaRecorder.start(1000); // Flush a recoverable segment every second.
       console.log('startRecording: recording started', { mime: effectiveMime, state: mediaRecorder.state });
       setIsRecording(true);
       setMicPermission('granted');
@@ -255,7 +275,8 @@ export function useVoiceRecorder() {
 
       // Start timer
       timerRef.current = setInterval(() => {
-        setDuration(prev => prev + 1);
+        durationRef.current += 1;
+        setDuration(durationRef.current);
       }, 1000);
 
       return true;
