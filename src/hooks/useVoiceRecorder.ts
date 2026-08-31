@@ -347,7 +347,7 @@ export function useVoiceRecorder() {
           captureSessionIdRef.current = null;
         }
 
-        if (audioBlob.size === 0) {
+          if (audioBlob.size === 0) {
           console.error('stopRecording: captured 0 bytes of audio');
           toast.error('That recording came through empty — check your microphone and try again.');
           resolve(null);
