@@ -945,7 +945,45 @@ export function ActionsTableView({
               )}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface"
+              onClick={() => setViewMode(v => (v === 'cards' ? 'table' : 'cards'))}
+            >
+              {viewMode === 'cards' ? (
+                <><Table2 className="h-4 w-4 mr-1.5" /> View as table</>
+              ) : (
+                <><LayoutList className="h-4 w-4 mr-1.5" /> View as cards</>
+              )}
+            </Button>
+            {viewMode === 'cards' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface">
+                    <ArrowUpDown className="h-4 w-4 mr-1.5" /> Sort
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {([
+                    ['priority', 'Priority'],
+                    ['start', 'Start date'],
+                    ['finish', 'Finish date'],
+                    ['status', 'Status'],
+                  ] as const).map(([field, label]) => (
+                    <DropdownMenuItem key={field} onSelect={() => onSort(field)}>
+                      {label}
+                      {sortField === field && (
+                        <span className="ml-2 text-[11px] text-muted-foreground">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             {meetingSummary && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -953,15 +991,24 @@ export function ActionsTableView({
                     <Download className="h-4 w-4 mr-1.5" /> Download
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-64">
                   <DropdownMenuItem onSelect={() => exportActionsPdf(meetingSummary, actions)}>
                     <span className="flex flex-col">
                       <span>PDF — board ready</span>
                       <span className="text-[11px] text-muted-foreground">Summary + actions exhibit</span>
                     </span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => exportActionsPptx(meetingSummary, actions)}>
+                    <span className="flex flex-col">
+                      <span className="flex items-center gap-1.5"><Presentation className="h-3.5 w-3.5" /> Slides (.pptx)</span>
+                      <span className="text-[11px] text-muted-foreground">Imports straight into Google Slides</span>
+                    </span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => exportActionsXlsx(meetingSummary, actions)}>
-                    Excel (.xlsx)
+                    <span className="flex flex-col">
+                      <span>Excel (.xlsx)</span>
+                      <span className="text-[11px] text-muted-foreground">Opens in Google Sheets</span>
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => exportActionsCsv(meetingSummary, actions)}>
                     CSV
