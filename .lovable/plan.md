@@ -42,13 +42,24 @@ New card near the top of the `/launch/welcome` report:
 - **Good for other people** — the window where meetings are safest for me.
 - Four pillar bars (Biological / Psychological / Social / Spiritual) beneath the existing letter bars, each with a one-line "what this means for my week".
 
-## 4. The calendar uses it — as a preference, on by default
+## 4. The calendar uses it — as a preference, on by default, always overridable
 
-- New setting in Launch Settings → Scheduling: **"Plan around my best window"** — on by default after the first assessment. Turning it off keeps the window on the report but stops the scheduler from favouring or protecting it.
-- On assessment completion, write the derived window to `user_schedule_preferences` (the existing table and shape) alongside a `best_window_enabled: true` flag.
-- Fix `mapAssessmentToPreferences` so it reads the keys the assessment actually writes (`rhythm`, `focusEndurance`, `drains`, `heal`), with the old keys kept as fallbacks, and respects the enabled flag.
-- Smart scheduling suggestions then label times honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour". When the preference is off, suggestions are time-neutral again.
-- Retaking the assessment updates the window; the toggle state is never reset, and existing events are never moved automatically.
+The window is advice, never a gate. Real life has other people's diaries, deadlines and priority dates in it.
+
+**Global preference** — Launch Settings → Scheduling: **"Plan around my best window"**, on by default after the first assessment. Off keeps the window visible in the report but makes suggestions time-neutral.
+
+**Per-event override** — in the Add Event modal and in the action scheduler, a time outside the window is never blocked. If I pick one, the app shows a single quiet line — "This is outside my clearest window" — with three ways forward, all one tap:
+
+- **Keep this time** — the stakeholder's availability or the deadline wins. Saved with `window_override: true` so it is never re-flagged.
+- **Show my best times** — the nearest in-window slots.
+- **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
+
+**Sorting, not blocking** — smart suggestions still surface out-of-window times when a due date or an invitee's availability demands it; they are simply ranked lower and labelled honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour, but your due date is Friday".
+
+**Priority dates win.** When an action has a hard due date, the due date drives the slot and the window only chooses between candidate times on that date.
+
+Retaking the assessment updates the window; the toggle, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
+
 
 ## Technical notes
 
