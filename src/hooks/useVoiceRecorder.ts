@@ -468,7 +468,8 @@ export function useVoiceRecorder() {
       toast.success('Recording deleted successfully');
     } catch (error) {
       console.error('Error deleting recording:', error);
-      toast.error('Failed to delete recording');
+      toast.error(error instanceof Error ? error.message : 'Failed to delete recording');
+      throw error;
     }
   }, [user, fetchRecordings]);
 
