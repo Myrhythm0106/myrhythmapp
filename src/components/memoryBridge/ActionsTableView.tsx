@@ -892,6 +892,10 @@ export function ActionsTableView({
   sortDirection
 }: ActionsTableViewProps) {
 
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  /** The first open "In My Flow" action carries the soft emerald glow. */
+  const activeCardId = actions.find(a => a.status === 'doing' && !a.archived_at)?.id;
+
   const getStatusOption = (status: string) => {
     return statusOptions.find(opt => opt.value === status) || statusOptions[0];
   };
