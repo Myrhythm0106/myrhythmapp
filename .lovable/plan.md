@@ -54,29 +54,33 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 - **Show my best times** — the nearest in-window slots.
 - **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
 
-**Who drives this booking?** — a one-tap chip at the top of the scheduler, remembered per event type:
+**What matters most for this booking?** — instead of picking one driver, each of the three factors gets a simple priority, so they blend rather than compete:
 
-- **My rhythm** (default for solo focus work) — the window ranks the options.
-- **Stakeholder-first** (default for Meetings) — other people's availability and the invitee list rank the options; my window is shown only as a small note, never as a warning. If the only time everyone can make is 4pm, 4pm is the top suggestion, full stop.
-- **Deadline-first** — the due date or project date drives the slot; the window only chooses between candidate times on that date.
+- **My best window** — how much my clearest hours shape the suggestions.
+- **People's availability** — how much the invitees' diaries shape the suggestions.
+- **The deadline / project date** — how much the fixed date shapes the suggestions.
+
+Each factor is set to one of three everyday levels: **Decides it** (this wins), **Counts** (influences ranking), or **Doesn't matter** (ignored for this booking). Defaults come from the event type — Meetings default to People's availability = Decides it, My best window = Counts; solo focus work defaults to My best window = Decides it — and the chosen levels are remembered per event type so the user never re-sets them.
+
+The scheduler turns the levels into ranking weights: "Decides it" dominates, "Counts" breaks ties, "Doesn't matter" is skipped. So a board meeting set as People = Decides it, Deadline = Counts, My window = Doesn't matter simply ranks by when everyone can make it before the due date — my window is silent, not flagged. A solo report-writing block with My window = Decides it, Deadline = Counts puts my clearest hours first but never past the due date.
 
 **Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. They are ranked and labelled honestly: "Inside my clearest window", "Best time everyone can make", "Driven by your Friday deadline". No red, no warning icons, no confirmation friction.
 
 **Nothing is ever refused.** The app has no mode in which it declines to book a time the user chose. The window is a hint that can always be ignored in one tap, and the app does not repeat the hint for that booking.
 
-Retaking the assessment updates the window; the mode chips, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
+Retaking the assessment updates the window; the per-type priority levels and any saved overrides are never reset, and existing events are never moved automatically.
 
 
 ## Technical notes
 
 - `src/launch/framework/cognitiveCapital.ts` — new: pillar definitions and letter-to-pillar map, sourced from `myrhythm.ts` so the two can never drift.
 - `src/data/launchAssessmentBanks.ts` — add `pillar` to `AssessmentQuestion`, add the rhythm-detail step to all four persona banks, extend `BrainHealthScore` with `pillars` and bump `version` to 3.
-- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`) and `scheduling_bias_by_type: Record<BlockType, 'my_rhythm' | 'stakeholder_first' | 'deadline_first'>` (meetings default to `stakeholder_first`, focus to `my_rhythm`), plus the derived window fields; Settings writes through this hook.
+- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`) and `priority_levels_by_type: Record<BlockType, { window: PriorityLevel; people: PriorityLevel; deadline: PriorityLevel }>` where `PriorityLevel = 'decides' | 'counts' | 'off'` (meetings default to people=decides/window=counts, focus to window=decides), plus the derived window fields; Settings writes through this hook.
 - `src/launch/assessment/productivityWindow.ts` — new: pure function turning answers into `{ peak, productiveHours, focusBlockMinutes, protectHours, meetingHours }`.
 - `src/pages/launch/LaunchAssessment.tsx` — persist the derived window alongside the existing results, and call the new preference write.
-- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and take a `bias` argument that decides the ranking weight order (window vs invitee availability vs due date). Out-of-window candidates are always returned, only re-ranked.
-- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the mode chip plus the non-blocking out-of-window note with Keep / Show best times / Always allow this kind.
-- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` and the chosen bias in their existing metadata. No schema migration is required.
+- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and take the three priority levels, converting them to ranking weights (decides > counts > off). Out-of-window candidates are always returned, only re-ranked.
+- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the three-level priority picker (Decides it / Counts / Doesn't matter) plus the non-blocking out-of-window note with Keep / Show best times / Always allow this kind.
+- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` and the chosen priority levels in their existing metadata. No schema migration is required.
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
 - Older assessment runs without the new fields keep working through defaults.
 
@@ -88,6 +92,7 @@ Retaking the assessment updates the window; the mode chips, per-type exceptions 
 - A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
-- Switching a meeting to Stakeholder-first ranks by invitee availability and stops mentioning the window as a problem.
+- Setting People's availability to "Decides it" ranks by invitee availability and the window is silent — never flagged as a problem.
+- The three priority levels blend: a "Decides it" deadline plus a "Counts" window still surfaces in-window times on the due date first.
 - An action with a hard due date is scheduled on that date even when it falls outside the window.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
