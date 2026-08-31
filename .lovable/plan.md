@@ -54,21 +54,18 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 - **Show my best times** — the nearest in-window slots.
 - **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
 
-**What matters most for this booking?** — instead of picking one driver, each of the three factors gets a simple priority, so they blend rather than compete:
+**No per-booking questions — smart defaults that learn.** Setting priorities on every event, action or meeting is too much friction, so the app decides silently and only ever asks once, globally:
 
-- **My best window** — how much my clearest hours shape the suggestions.
-- **People's availability** — how much the invitees' diaries shape the suggestions.
-- **The deadline / project date** — how much the fixed date shapes the suggestions.
+- **One place, set once** — Launch Settings → Scheduling holds the three priority levels (My best window / People's availability / Deadline — each Decides it / Counts / Doesn't matter). Out of the box they are pre-filled sensibly: People's availability decides Meetings, My best window decides solo focus work, Deadline decides anything with a fixed due date. Most users never open it.
+- **Applied automatically by event type** — the scheduler reads the defaults and ranks options without asking anything. The booking screen shows only the result: honest labels like "Best time everyone can make" or "Inside my clearest window". Nothing to tap, nothing to configure.
+- **Learns from overrides** — when the user keeps a time the suggestion ranked lower (e.g. picks a 4pm slot when mornings were suggested), that choice is remembered. After the same kind of override repeats for the same event type, the app quietly adjusts that type's default once, with a small note: "I've noticed your meetings usually land in the afternoon — I've adjusted your meeting suggestions. Change this in Settings." One line, one undo, never a dialog that blocks.
+- **The only visible control** — if the user picks a time outside their window, the single quiet line stays: "Keep this time / Show my best times / Always allow this kind". That is the entirety of the per-booking UI. Everything else is invisible.
 
-Each factor is set to one of three everyday levels: **Decides it** (this wins), **Counts** (influences ranking), or **Doesn't matter** (ignored for this booking). Defaults come from the event type — Meetings default to People's availability = Decides it, My best window = Counts; solo focus work defaults to My best window = Decides it — and the chosen levels are remembered per event type so the user never re-sets them.
-
-The scheduler turns the levels into ranking weights: "Decides it" dominates, "Counts" breaks ties, "Doesn't matter" is skipped. So a board meeting set as People = Decides it, Deadline = Counts, My window = Doesn't matter simply ranks by when everyone can make it before the due date — my window is silent, not flagged. A solo report-writing block with My window = Decides it, Deadline = Counts puts my clearest hours first but never past the due date.
-
-**Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. They are ranked and labelled honestly: "Inside my clearest window", "Best time everyone can make", "Driven by your Friday deadline". No red, no warning icons, no confirmation friction.
+**Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. No red, no warning icons, no confirmation friction.
 
 **Nothing is ever refused.** The app has no mode in which it declines to book a time the user chose. The window is a hint that can always be ignored in one tap, and the app does not repeat the hint for that booking.
 
-Retaking the assessment updates the window; the per-type priority levels and any saved overrides are never reset, and existing events are never moved automatically.
+Retaking the assessment updates the window; the global priority levels and learned adjustments are never reset, and existing events are never moved automatically.
 
 
 ## Technical notes
