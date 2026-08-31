@@ -491,7 +491,378 @@ const ReminderBadge: React.FC<{
   );
 };
 
+/** Calm status line: label + dot (the "In My Flow" dot pulses gently). */
+const statusLineFor = (status: string) => {
+  switch (status) {
+    case 'doing':
+      return { label: 'In My Flow', dot: 'bg-exhibit-moss', pulse: true };
+    case 'done':
+    case 'completed':
+      return { label: 'Accomplished!', dot: 'bg-exhibit-ink', pulse: false };
+    case 'on_hold':
+      return { label: 'Paused', dot: 'bg-exhibit-amber', pulse: false };
+    case 'cancelled':
+      return { label: 'Redirected', dot: 'bg-exhibit-soft', pulse: false };
+    default:
+      return { label: 'Ready to Begin', dot: 'bg-exhibit-soft', pulse: false };
+  }
+};
 
+interface ActionCardProps {
+  action: NextStepsItem;
+  /** The single "In My Flow" card gets the soft emerald glow. */
+  isActive: boolean;
+  draggableProps: Record<string, unknown>;
+  dragHandleProps: Record<string, unknown> | null | undefined;
+  innerRef: (el: HTMLElement | null) => void;
+  isDragging: boolean;
+  onStatusChange: (actionId: string, status: string) => void;
+  onPriorityChange?: (actionId: string, priorityLevel: number) => void;
+  onTextChange?: (actionId: string, text: string) => void;
+  onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
+  onRaciChange?: (actionId: string, payload: RaciSavePayload) => void;
+  onSendRaci?: (actionId: string, payload: RaciSavePayload) => Promise<void>;
+  onStartDateChange?: (actionId: string, date: string | null) => void;
+  onDueDateChange?: (actionId: string, date: string | null) => void;
+  onAcceptProposedDate?: (action: NextStepsItem) => void;
+  onWatchersChange?: (actionId: string, watchers: string[]) => void;
+  onOpenNotes?: (action: NextStepsItem) => void;
+  onOpenReminders?: (action: NextStepsItem) => void;
+  onArchive?: (actionId: string) => void;
+  onRestore?: (actionId: string) => void;
+  ladders?: Record<string, number[]>;
+}
+
+/**
+ * Adaptive sequence card — scannable at a glance, everything revealed on tap.
+ * Same handlers as the exhibit table; nothing is lost in the friendlier view.
+ */
+const ActionCard = ({
+  action,
+  isActive,
+  draggableProps,
+  dragHandleProps,
+  innerRef,
+  isDragging,
+  onStatusChange,
+  onPriorityChange,
+  onTextChange,
+  onSuccessCriteriaChange,
+  onRaciChange,
+  onSendRaci,
+  onStartDateChange,
+  onDueDateChange,
+  onAcceptProposedDate,
+  onWatchersChange,
+  onOpenNotes,
+  onOpenReminders,
+  onArchive,
+  onRestore,
+  ladders,
+}: ActionCardProps) => {
+  const [expanded, setExpanded] = useState(false);
+  const isDone = action.status === 'done' || action.status === 'completed';
+  const statusLine = statusLineFor(action.status);
+  const due = dueInLabel(action.completion_date || action.end_date, action.status);
+  const showProposed = action.proposed_date && !action.start_date;
+
+  return (
+    <div
+      ref={innerRef}
+      {...draggableProps}
+      className={cn(
+        'rounded-2xl border bg-white p-5 transition-shadow duration-200 motion-reduce:transition-none',
+        isActive
+          ? 'border-exhibit-moss/30 ring-1 ring-exhibit-moss/40 shadow-[0_8px_30px_rgba(18,105,90,0.14)]'
+          : 'border-exhibit-ink/10 hover:shadow-md',
+        isDragging && 'shadow-xl rotate-[0.5deg]',
+        isDone && 'opacity-75'
+      )}
+    >
+      {/* Status line + reference + grip */}
+      <div className="flex items-center justify-between gap-2">
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="relative flex h-2 w-2 shrink-0">
+            {statusLine.pulse && (
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-exhibit-moss opacity-60 motion-reduce:animate-none" />
+            )}
+            <span className={cn('relative inline-flex h-2 w-2 rounded-full', statusLine.dot)} />
+          </span>
+          <span className="truncate font-sora text-[11px] font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
+            {statusLine.label}
+          </span>
+        </span>
+        <div className="flex items-center gap-1">
+          {action.reference_code && (
+            <span className="font-mono text-[10.5px] text-exhibit-soft">{action.reference_code}</span>
+          )}
+          <span
+            {...(dragHandleProps || {})}
+            className="cursor-grab rounded-[6px] p-1.5 text-exhibit-soft hover:text-exhibit-ink active:cursor-grabbing"
+            aria-label="Drag to reorder"
+          >
+            <GripVertical className="h-4 w-4" />
+          </span>
+        </div>
+      </div>
+
+      {/* Title */}
+      <div className="mt-2">
+        {onTextChange ? (
+          <EditableText
+            value={action.action_text}
+            onSave={(v) => onTextChange(action.id!, v)}
+            multiline
+            required
+            ariaLabel="Edit action"
+            placeholder="Describe this action…"
+            displayClassName={cn(
+              'font-sora font-semibold text-[16px] leading-snug text-exhibit-ink',
+              isDone && 'line-through decoration-exhibit-soft'
+            )}
+          />
+        ) : (
+          <p className={cn('font-sora text-[16px] font-semibold leading-snug text-exhibit-ink', isDone && 'line-through decoration-exhibit-soft')}>
+            {action.action_text}
+          </p>
+        )}
+      </div>
+
+      {/* Ivory success callout with orange rule */}
+      <div className="mt-3 rounded-r-[8px] border-l-2 border-exhibit-accent bg-exhibit-surface px-3 py-2">
+        {onSuccessCriteriaChange ? (
+          <EditableText
+            value={action.success_criteria}
+            onSave={(v) => onSuccessCriteriaChange(action.id!, v)}
+            multiline
+            ariaLabel="Edit how I'll know I'm done"
+            placeholder="Add: I'll know I'm done when…"
+            suggestions={getSuccessCriteriaSuggestions(action.action_text)}
+            displayClassName="font-manrope text-[13px] leading-snug text-exhibit-moss"
+          />
+        ) : action.success_criteria ? (
+          <p className="font-manrope text-[13px] leading-snug text-exhibit-moss">
+            I&apos;ll know I&apos;m done when… {action.success_criteria}
+          </p>
+        ) : (
+          <p className="font-manrope text-[13px] text-exhibit-soft">I&apos;ll know I&apos;m done when… (not set yet)</p>
+        )}
+      </div>
+
+      {/* Slim meta strip — the whole strip is the expander */}
+      <button
+        type="button"
+        aria-expanded={expanded}
+        onClick={() => setExpanded(e => !e)}
+        className="mt-3 flex w-full min-h-[56px] items-center justify-between gap-3 rounded-[8px] px-2 -mx-2 text-left transition-colors hover:bg-exhibit-surface focus:outline-none focus:ring-1 focus:ring-exhibit-moss/40"
+      >
+        <span className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+          <span className={cn(CHIP, priorityPillFor(action.priority_level || 3))}>
+            {(action.priority_level || 3) <= 2 ? 'High' : (action.priority_level || 3) >= 4 ? 'Low' : 'Medium'}
+          </span>
+          <span className={cn(
+            'font-sora text-[12px] tabular-nums',
+            due.tone === 'amber' && 'text-exhibit-amber font-semibold',
+            due.tone === 'red' && 'text-exhibit-alert font-semibold',
+            due.tone === 'green' && 'text-exhibit-moss font-semibold',
+            due.tone === 'neutral' && 'text-exhibit-soft'
+          )}>
+            {due.text}
+          </span>
+          <WatcherAvatars watchers={action.assigned_watchers} />
+        </span>
+        <span className="flex shrink-0 items-center gap-1 font-sora text-[11px] font-medium text-exhibit-soft">
+          Details
+          <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', expanded && 'rotate-180')} />
+        </span>
+      </button>
+
+      {/* Expanded detail — full control surface, same handlers as the table */}
+      {expanded && (
+        <div className="mt-3 space-y-4 border-t border-exhibit-rule/70 pt-4">
+          {/* Dates */}
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded-[8px] border border-exhibit-rule/70 bg-white px-3 py-2">
+              <p className="font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft">Proposed</p>
+              {showProposed ? (
+                <div className="mt-0.5">
+                  <span className="font-sora text-[13px] tabular-nums text-exhibit-ink">
+                    {formatDateOnly(action.proposed_date, 'd MMM')}
+                    {action.proposed_time && <span className="ml-1 text-exhibit-soft">@ {action.proposed_time}</span>}
+                  </span>
+                  {onStartDateChange && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onStartDateChange(action.id!, action.proposed_date!);
+                        onAcceptProposedDate?.(action);
+                      }}
+                      className="ml-2 font-sora text-[10px] font-semibold uppercase tracking-wide text-brand-orange-600 hover:text-brand-orange-700"
+                    >
+                      Accept
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-0.5 font-sora text-[13px] text-exhibit-soft">—</p>
+              )}
+            </div>
+            <div className="rounded-[8px] border border-exhibit-rule/70 bg-white px-3 py-2">
+              <p className="font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft">Start</p>
+              {onStartDateChange ? (
+                <EditableDate
+                  value={action.start_date}
+                  onSave={(d) => onStartDateChange(action.id!, d)}
+                  ariaLabel="Edit start date"
+                />
+              ) : (
+                <p className="mt-0.5 font-sora text-[13px] tabular-nums text-exhibit-ink">{formatDateOnly(action.start_date, 'd MMM')}</p>
+              )}
+            </div>
+            <div className="rounded-[8px] border border-exhibit-rule/70 bg-white px-3 py-2">
+              <p className="font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft">Finish</p>
+              {onDueDateChange ? (
+                <EditableDate
+                  value={action.completion_date || action.end_date}
+                  onSave={(d) => onDueDateChange(action.id!, d)}
+                  ariaLabel="Edit finish date"
+                />
+              ) : (
+                <p className="mt-0.5 font-sora text-[13px] tabular-nums text-exhibit-ink">{formatDateOnly(action.completion_date || action.end_date, 'd MMM')}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Who's involved */}
+          <div>
+            <p className="mb-1 font-sora text-[9.5px] uppercase tracking-[0.12em] text-exhibit-soft">Who&apos;s involved</p>
+            {onRaciChange ? (
+              <WhosInvolvedCell
+                action={action}
+                onSave={(payload) => onRaciChange(action.id!, payload)}
+                onSend={onSendRaci ? (payload) => onSendRaci(action.id!, payload) : undefined}
+              />
+            ) : (
+              <span className="font-manrope text-[13px] text-exhibit-ink">{action.assigned_to || 'You'}</span>
+            )}
+          </div>
+
+          {/* Support: watchers + reminders */}
+          <div className="flex flex-wrap items-center gap-3">
+            {onWatchersChange && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Change watchers"
+                    className="flex min-h-[44px] items-center gap-2 rounded-[8px] border border-exhibit-rule/70 px-3 hover:bg-exhibit-surface transition-colors"
+                  >
+                    <Eye className="h-3.5 w-3.5 text-exhibit-moss" />
+                    <WatcherAvatars watchers={action.assigned_watchers} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-3" align="start">
+                  <ActionWatcherSelector
+                    actionId={action.id!}
+                    assignedWatchers={action.assigned_watchers || []}
+                    onWatchersChange={(w) => onWatchersChange(action.id!, w)}
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
+            <div className="min-w-[140px]">
+              <ReminderBadge
+                offsets={ladders?.[action.id!] || []}
+                dueDate={action.completion_date || action.end_date}
+                onClick={() => onOpenReminders?.(action)}
+              />
+            </div>
+          </div>
+
+          {/* Status + priority + quick due-in */}
+          <div className="grid gap-2 sm:grid-cols-3">
+            <Select value={action.status} onValueChange={(v) => onStatusChange(action.id!, v)}>
+              <SelectTrigger
+                className={cn('h-11 rounded-[8px] font-sora text-[12px] font-semibold focus:ring-1 focus:ring-exhibit-moss/40', statusOptions.find(o => o.value === action.status)?.color)}
+                aria-label="Change status"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map(opt => (
+                  <SelectItem key={opt.value} value={opt.value} className="text-xs">{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {onPriorityChange && (
+              <Select
+                value={priorityValueFor(action.priority_level || 3)}
+                onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
+              >
+                <SelectTrigger
+                  className={cn('h-11 rounded-[8px] font-sora text-[12px] font-semibold focus:ring-1 focus:ring-exhibit-moss/40', priorityPillFor(action.priority_level || 3))}
+                  aria-label="Change priority"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {priorityOptions.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                      <span className="flex items-center gap-2">
+                        <span className={cn('h-2.5 w-2.5 rounded-[2px]', opt.dot)} />
+                        {opt.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <EditableDueIn
+              value={action.completion_date || action.end_date}
+              onSave={(d) => onDueDateChange && onDueDateChange(action.id!, d)}
+              status={action.status}
+            />
+          </div>
+
+          {/* Row actions */}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button" variant="outline" size="sm"
+              className="h-11 min-h-[44px] gap-1.5 rounded-[8px] border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface"
+              onClick={() => onOpenNotes?.(action)}
+            >
+              <MessageCircle className="h-3.5 w-3.5" /> Notes &amp; encouragement
+            </Button>
+            <Button
+              type="button" variant="outline" size="sm"
+              className="h-11 min-h-[44px] gap-1.5 rounded-[8px] border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface"
+              onClick={() => onOpenReminders?.(action)}
+            >
+              <Bell className="h-3.5 w-3.5" /> Reminders
+            </Button>
+            {action.archived_at ? (
+              <Button
+                type="button" variant="outline" size="sm"
+                className="h-11 min-h-[44px] gap-1.5 rounded-[8px] border-exhibit-rule text-exhibit-moss hover:bg-exhibit-surface"
+                onClick={() => onRestore?.(action.id!)}
+              >
+                <RotateCcw className="h-3.5 w-3.5" /> Restore to open
+              </Button>
+            ) : (
+              <Button
+                type="button" variant="outline" size="sm"
+                className="h-11 min-h-[44px] gap-1.5 rounded-[8px] border-exhibit-rule text-exhibit-ink hover:bg-exhibit-surface"
+                onClick={() => onArchive?.(action.id!)}
+              >
+                <Archive className="h-3.5 w-3.5" /> Close &amp; archive
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export function ActionsTableView({
   actions,
