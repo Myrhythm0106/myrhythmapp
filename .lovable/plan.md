@@ -21,7 +21,18 @@ Replace the crammed 11-column exhibit table with the selected **Adaptive sequenc
 
 ### 2. Header & toolbar
 - Title "My Next Step Summary" + count line ("6 steps · 2 accomplished") + reference code, as today but with more air.
-- Primary action stays **Review & schedule**; exports (Board PDF / Excel / CSV), Send to everyone, and sort live under **More actions**. Export content is unchanged — board pack stays table-formatted.
+- Primary action stays **Review & schedule**; exports, Send to everyone, and sort live under **More actions**.
+
+### 2a. Tabular view + board-pack downloads (Google Sheets & Google Slides ready)
+- **"View as table"** toggle (in More actions) switches the cards to the full tabular exhibit — disciplined columns, emerald header band, no horizontal cramming; per-session preference. This tabular form is always available on screen, not just in downloads.
+- **Excel (.xlsx)** — existing board-ready workbook (Executive Summary sheet + formatted Actions sheet); opens natively in Google Sheets via File → Import or drag into Drive. Unchanged content, verified formatting.
+- **CSV** — existing plain fallback.
+- **Board PDF** — existing 2-page exhibit. Unchanged.
+- **NEW: Slides (.pptx)** — a "Download as Slides" export that produces a professionally formatted deck which imports cleanly into Google Slides (File → Import slides, or open the .pptx in Drive):
+  - Slide 1: Title — conversation title, date, participants, reference code, confidentiality footer, Emerald Prestige styling (ink/ivory/orange, Sora-style headings).
+  - Slide 2: Executive Summary — briefing paragraph, themes, decisions, open questions, at-a-glance counts.
+  - Slide 3(+): Actions as a **native table** (not an image) — Priority / Action / Owner / Start / Finish / Status, chunked at ~6 rows per slide so nothing overflows; proposed dates marked "Proposed".
+  - Built with `pptxgenjs` (added dependency, dynamically imported so page weight is unaffected); one generated deck is opened and inspected slide-by-slide for overflow before shipping.
 
 ### 3. No functional regressions
 - Every existing prop/handler in `ActionsTableView` keeps working (drag, status, priority, dates, RACI, watchers, notes, reminders, archive/restore, proposed-date accept, ladders, source ref line).
