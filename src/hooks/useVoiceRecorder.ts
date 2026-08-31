@@ -322,22 +322,30 @@ export function useVoiceRecorder() {
         return;
       }
 
-      mediaRecorderRef.current.onstop = () => {
+      mediaRecorderRef.current.onstop = async () => {
+        const sessionId = captureSessionIdRef.current;
+        const finalDuration = durationRef.current;
         const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current });
-        
-        // Clean up
+
+        // Clean up the hardware and timer first; the last timeslice has already
+        // been delivered by MediaRecorder before onstop runs.
         mediaRecorderRef.current?.stream.getTracks().forEach(track => track.stop());
         mediaRecorderRef.current = null;
         audioChunksRef.current = [];
-        
+
         if (timerRef.current) {
           clearInterval(timerRef.current);
           timerRef.current = null;
         }
-        
+
         setIsRecording(false);
         setIsPaused(false);
         setMediaStream(null);
+
+        if (sessionId) {
+          await finishCaptureSession(sessionId, 'user', finalDuration);
+          captureSessionIdRef.current = null;
+        }
 
         if (audioBlob.size === 0) {
           console.error('stopRecording: captured 0 bytes of audio');
@@ -345,7 +353,7 @@ export function useVoiceRecorder() {
           resolve(null);
           return;
         }
-        
+
         resolve(audioBlob);
       };
 
