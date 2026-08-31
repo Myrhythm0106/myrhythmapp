@@ -438,37 +438,13 @@ export function useVoiceRecorder() {
     if (!user) return;
 
     try {
-      // Get recording info
-      const { data: recording, error: fetchError } = await supabase
-        .from('voice_recordings')
-        .select('file_path')
-        .eq('id', id)
-        .eq('user_id', user.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      // Delete from storage
-      const { error: storageError } = await supabase.storage
-        .from('voice-recordings')
-        .remove([recording.file_path]);
-
-      if (storageError) throw storageError;
-
-      // Delete from database
-      const { error: dbError } = await supabase
-        .from('voice_recordings')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
-
-      if (dbError) throw dbError;
-
+      await deleteVoiceRecording(id, user.id);
       await fetchRecordings();
       toast.success('Recording deleted successfully');
     } catch (error) {
       console.error('Error deleting recording:', error);
-      toast.error('Failed to delete recording');
+      toast.error(error instanceof Error ? error.message : 'Failed to delete recording');
+      throw error;
     }
   }, [user, fetchRecordings]);
 

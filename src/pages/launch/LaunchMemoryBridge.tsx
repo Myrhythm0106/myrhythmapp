@@ -5,7 +5,7 @@ import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload } from 'lucide-react';
+import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +22,7 @@ import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { OutputActions } from '@/components/shared/OutputActions';
@@ -85,6 +86,8 @@ export default function LaunchMemoryBridge() {
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
+  const [recordingToDelete, setRecordingToDelete] = useState<VoiceRecording | null>(null);
+  const [deletingRecording, setDeletingRecording] = useState(false);
 
   
   // New states for streamlined flow
@@ -122,6 +125,7 @@ export default function LaunchMemoryBridge() {
     saveRecording,
     fetchRecordings,
     getRecordingUrl,
+    deleteRecording,
     formatDuration
   } = useVoiceRecorder();
 
@@ -672,6 +676,21 @@ export default function LaunchMemoryBridge() {
     });
   };
 
+  const handleDeleteRecording = async () => {
+    if (!recordingToDelete) return;
+    setDeletingRecording(true);
+    try {
+      await deleteRecording(recordingToDelete.id);
+      setRecordingToDelete(null);
+      toast.success('Recording, transcript and extracted steps deleted.');
+    } catch (error) {
+      console.error('Failed to delete recording:', error);
+      toast.error(error instanceof Error ? error.message : 'I could not delete that recording. Nothing else was changed.');
+    } finally {
+      setDeletingRecording(false);
+    }
+  };
+
   const formatRecordingDate = (dateStr: string) => {
     try {
       return formatDistanceToNow(new Date(dateStr), { addSuffix: true });
@@ -1154,6 +1173,19 @@ export default function LaunchMemoryBridge() {
                       )}
                     </div>
 
+                    <div className="flex justify-end">
+                      {!Boolean((recording as { legal_retention_required?: boolean }).legal_retention_required) && (
+                        <button
+                          type="button"
+                          onClick={() => setRecordingToDelete(recording)}
+                          className="flex min-h-[44px] items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-launch-ink/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete recording
+                        </button>
+                      )}
+                    </div>
+
                     {/* Output toolbar: Copy / Email / Download — cognitive-load-safe takeaway */}
                     <OutputActions
                       text={[
@@ -1202,6 +1234,28 @@ export default function LaunchMemoryBridge() {
       />
 
       <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
+
+      <AlertDialog open={Boolean(recordingToDelete)} onOpenChange={(open) => !open && setRecordingToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this recording permanently?</AlertDialogTitle>
+            <AlertDialogDescription>
+              “{recordingToDelete?.title || 'This recording'}” will be deleted with its audio, transcript and extracted steps. Any diary entries already created stay in my diary, but this source conversation will no longer be available.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingRecording}>Keep it</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteRecording}
+              disabled={deletingRecording}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deletingRecording ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              Delete permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Actions Viewer */}
       {viewingActions && (

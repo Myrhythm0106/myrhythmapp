@@ -1,6 +1,5 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 import { VoiceRecording } from '@/types/voiceRecording';
 
@@ -85,7 +84,7 @@ export const fetchUserRecordings = async (userId: string): Promise<VoiceRecordin
 };
 
 export const deleteVoiceRecording = async (recordingId: string, userId: string) => {
-  // Get the recording to find the file path
+  // Find the file and any Memory Bridge record before permanently removing anything.
   const { data: recording, error: fetchError } = await supabase
     .from('voice_recordings')
     .select('file_path, legal_retention_required')
@@ -94,25 +93,43 @@ export const deleteVoiceRecording = async (recordingId: string, userId: string) 
     .single();
 
   if (fetchError) throw fetchError;
-
   if (recording.legal_retention_required) {
     throw new Error('This recording cannot be deleted due to legal retention requirements');
   }
 
-  // Delete from storage
+  const { data: meetings, error: meetingsError } = await supabase
+    .from('meeting_recordings')
+    .select('id')
+    .eq('recording_id', recordingId)
+    .eq('user_id', userId);
+  if (meetingsError) throw meetingsError;
+
+  const meetingIds = (meetings || []).map(meeting => meeting.id);
+  if (meetingIds.length > 0) {
+    const { error: actionsError } = await supabase
+      .from('extracted_actions')
+      .delete()
+      .in('meeting_recording_id', meetingIds);
+    if (actionsError) throw actionsError;
+
+    const { error: meetingsDeleteError } = await supabase
+      .from('meeting_recordings')
+      .delete()
+      .in('id', meetingIds)
+      .eq('user_id', userId);
+    if (meetingsDeleteError) throw meetingsDeleteError;
+  }
+
   const { error: storageError } = await supabase.storage
     .from('voice-recordings')
     .remove([recording.file_path]);
-
   if (storageError) throw storageError;
 
-  // Delete from database
   const { error: dbError } = await supabase
     .from('voice_recordings')
     .delete()
     .eq('id', recordingId)
     .eq('user_id', userId);
-
   if (dbError) throw dbError;
 };
 
