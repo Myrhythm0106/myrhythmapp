@@ -54,23 +54,29 @@ The window is advice, never a gate. Real life has other people's diaries, deadli
 - **Show my best times** — the nearest in-window slots.
 - **Always allow this kind** — turns the nudge off for that event type (e.g. meetings) while keeping it for solo focus work.
 
-**Sorting, not blocking** — smart suggestions still surface out-of-window times when a due date or an invitee's availability demands it; they are simply ranked lower and labelled honestly: "Inside my clearest window", "Outside my best window — still fine for a short one", "I'd protect this hour, but your due date is Friday".
+**Who drives this booking?** — a one-tap chip at the top of the scheduler, remembered per event type:
 
-**Priority dates win.** When an action has a hard due date, the due date drives the slot and the window only chooses between candidate times on that date.
+- **My rhythm** (default for solo focus work) — the window ranks the options.
+- **Stakeholder-first** (default for Meetings) — other people's availability and the invitee list rank the options; my window is shown only as a small note, never as a warning. If the only time everyone can make is 4pm, 4pm is the top suggestion, full stop.
+- **Deadline-first** — the due date or project date drives the slot; the window only chooses between candidate times on that date.
 
-Retaking the assessment updates the window; the toggle, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
+**Sorting, not blocking** — out-of-window times are always offered, never hidden or greyed out. They are ranked and labelled honestly: "Inside my clearest window", "Best time everyone can make", "Driven by your Friday deadline". No red, no warning icons, no confirmation friction.
+
+**Nothing is ever refused.** The app has no mode in which it declines to book a time the user chose. The window is a hint that can always be ignored in one tap, and the app does not repeat the hint for that booking.
+
+Retaking the assessment updates the window; the mode chips, per-type exceptions and any saved overrides are never reset, and existing events are never moved automatically.
 
 
 ## Technical notes
 
 - `src/launch/framework/cognitiveCapital.ts` — new: pillar definitions and letter-to-pillar map, sourced from `myrhythm.ts` so the two can never drift.
 - `src/data/launchAssessmentBanks.ts` — add `pillar` to `AssessmentQuestion`, add the rhythm-detail step to all four persona banks, extend `BrainHealthScore` with `pillars` and bump `version` to 3.
-- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`), `window_exempt_types: BlockType[]` (the "always allow this kind" list) plus the derived window fields; Settings writes through this hook.
+- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`) and `scheduling_bias_by_type: Record<BlockType, 'my_rhythm' | 'stakeholder_first' | 'deadline_first'>` (meetings default to `stakeholder_first`, focus to `my_rhythm`), plus the derived window fields; Settings writes through this hook.
 - `src/launch/assessment/productivityWindow.ts` — new: pure function turning answers into `{ peak, productiveHours, focusBlockMinutes, protectHours, meetingHours }`.
 - `src/pages/launch/LaunchAssessment.tsx` — persist the derived window alongside the existing results, and call the new preference write.
-- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, rank rather than filter out-of-window slots, and let a hard due date take precedence over the window.
-- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the non-blocking out-of-window notice with Keep / Show best times / Always allow this kind.
-- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` in their existing metadata. No schema migration is required.
+- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and take a `bias` argument that decides the ranking weight order (window vs invitee availability vs due date). Out-of-window candidates are always returned, only re-ranked.
+- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the mode chip plus the non-blocking out-of-window note with Keep / Show best times / Always allow this kind.
+- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` and the chosen bias in their existing metadata. No schema migration is required.
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
 - Older assessment runs without the new fields keep working through defaults.
 
@@ -82,5 +88,6 @@ Retaking the assessment updates the window; the toggle, per-type exceptions and 
 - A "Plan around my best window" toggle exists in Settings, defaults to on, and turning it off stops window-based suggestions without losing the data.
 - The assessment still completes in under two minutes.
 - Choosing a time outside the window is never blocked — one tap keeps it, and the app does not nag about it again.
+- Switching a meeting to Stakeholder-first ranks by invitee availability and stops mentioning the window as a problem.
 - An action with a hard due date is scheduled on that date even when it falls outside the window.
 - No named practitioner or programme, and no clinical claim, anywhere in the new copy.
