@@ -4,7 +4,7 @@ Goal: one fixed account you can sign into at any time, on phone or laptop, witho
 
 ## The account
 
-- Email: `tester@myrhythmapp.com`
+- Email: `annabelaaron@yahoo.com` (your real inbox, so email flows can be tested end to end)
 - Password: a strong fixed password you choose (I'll use the one you give me, or generate one and show it once)
 - Confirmed immediately, so no email link is needed
 - Marked as a founding-tier tester so recording limits and paid surfaces are unlocked
@@ -13,7 +13,7 @@ Goal: one fixed account you can sign into at any time, on phone or laptop, witho
 
 A one-off admin task run against your Supabase project (service-role, server side only — never in the browser):
 
-1. Create the user with `email_confirm: true` so it can sign in straight away.
+1. If `annabelaaron@yahoo.com` already exists, reset its password to the fixed one and mark it confirmed. If it doesn't exist, create it with `email_confirm: true` so it can sign in straight away. Either way real email still reaches that inbox, so reminders, invites and reset emails can be tested.
 2. Insert its profile row and give it the founding/tester entitlement used elsewhere in the app, so the paywall and Stripe trial never block it.
 3. Skip the assessment gate if you want it to land straight on Home — otherwise the first sign-in walks the normal flow once and then remembers.
 
