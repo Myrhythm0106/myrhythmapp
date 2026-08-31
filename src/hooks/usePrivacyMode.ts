@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export type PrivacyMode = "light_touch" | "balanced" | "full_record";
+export type PrivacyMode =
+  | "light_touch"
+  | "writeup_only"
+  | "balanced"
+  | "full_record";
 
 export interface PrivacyModeOption {
   value: PrivacyMode;
@@ -21,6 +25,15 @@ export const PRIVACY_MODES: PrivacyModeOption[] = [
     audioDays: 0,
     transcriptDays: 7,
     retentionLine: "Audio removed after processing · write-up kept 7 days",
+  },
+  {
+    value: "writeup_only",
+    title: "Write-up only",
+    blurb: "Keep my summary and steps for good. Let the audio go after 3 days.",
+    audioDays: 3,
+    transcriptDays: 3650,
+    retentionLine:
+      "Audio removed after a 3-day countdown · write-up, steps and reference kept",
   },
   {
     value: "balanced",
