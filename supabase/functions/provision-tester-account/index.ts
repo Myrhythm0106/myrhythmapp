@@ -69,16 +69,27 @@ Deno.serve(async (req) => {
     if (!userId) return json({ error: 'No user id resolved' }, 500);
 
     // Ensure a profile row exists and is comped so no paywall blocks testing.
-    const { error: profileError } = await admin
+    const { data: existingProfile } = await admin
       .from('profiles')
-      .upsert({ id: userId, email: TESTER_EMAIL, founding_comped: true }, { onConflict: 'id' });
+      .select('id')
+      .eq('id', userId)
+      .maybeSingle();
+
+    const profileResult = existingProfile
+      ? await admin
+          .from('profiles')
+          .update({ email: TESTER_EMAIL, name: 'Annabel Aaron', founding_comped: true })
+          .eq('id', userId)
+      : await admin
+          .from('profiles')
+          .insert({ id: userId, email: TESTER_EMAIL, name: 'Annabel Aaron', founding_comped: true });
 
     return json({
       ok: true,
       created,
       user_id: userId,
       email: TESTER_EMAIL,
-      profile_warning: profileError?.message ?? null,
+      profile_warning: profileResult.error?.message ?? null,
     });
   } catch (err) {
     return json({ error: (err as Error).message }, 500);
