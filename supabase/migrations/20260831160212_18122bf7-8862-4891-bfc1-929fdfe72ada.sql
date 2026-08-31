@@ -1,0 +1,1 @@
+ALTER TYPE public.privacy_mode ADD VALUE IF NOT EXISTS 'writeup_only';
