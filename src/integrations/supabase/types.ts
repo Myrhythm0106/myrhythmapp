@@ -3396,6 +3396,8 @@ export type Database = {
           access_level: string
           ai_summary: string | null
           audio_deleted_at: string | null
+          audio_expires_at: string | null
+          audio_hold_count: number
           category: string
           created_at: string
           description: string | null
@@ -3421,6 +3423,8 @@ export type Database = {
           access_level?: string
           ai_summary?: string | null
           audio_deleted_at?: string | null
+          audio_expires_at?: string | null
+          audio_hold_count?: number
           category?: string
           created_at?: string
           description?: string | null
@@ -3446,6 +3450,8 @@ export type Database = {
           access_level?: string
           ai_summary?: string | null
           audio_deleted_at?: string | null
+          audio_expires_at?: string | null
+          audio_hold_count?: number
           category?: string
           created_at?: string
           description?: string | null
