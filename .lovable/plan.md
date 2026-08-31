@@ -65,12 +65,14 @@ Retaking the assessment updates the window; the toggle, per-type exceptions and 
 
 - `src/launch/framework/cognitiveCapital.ts` — new: pillar definitions and letter-to-pillar map, sourced from `myrhythm.ts` so the two can never drift.
 - `src/data/launchAssessmentBanks.ts` — add `pillar` to `AssessmentQuestion`, add the rhythm-detail step to all four persona banks, extend `BrainHealthScore` with `pillars` and bump `version` to 3.
-- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`) plus the derived window fields; the Launch Settings toggle writes through this hook.
+- `src/hooks/useBrainHealthyPrefs.ts` — extend `BrainHealthyPrefs` with `best_window_enabled: boolean` (default `true`), `window_exempt_types: BlockType[]` (the "always allow this kind" list) plus the derived window fields; Settings writes through this hook.
 - `src/launch/assessment/productivityWindow.ts` — new: pure function turning answers into `{ peak, productiveHours, focusBlockMinutes, protectHours, meetingHours }`.
 - `src/pages/launch/LaunchAssessment.tsx` — persist the derived window alongside the existing results, and call the new preference write.
-- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, and update the suggestion reason strings.
+- `src/utils/smartScheduler.ts` — repair the key mapping, honour `focusBlockMinutes`, rank rather than filter out-of-window slots, and let a hard due date take precedence over the window.
+- `src/components/launch/LaunchAddEventModal.tsx` and the action scheduler — the non-blocking out-of-window notice with Keep / Show best times / Always allow this kind.
+- Overrides ride on the existing per-action `schedulingOverride` shape in `capture-brief/model/types.ts`; calendar events store `window_override` in their existing metadata. No schema migration is required.
 - `src/pages/launch/LaunchWelcome.tsx` — the "My best window" card and pillar bars.
-- Older assessment runs without the new fields keep working through defaults; no migration is required.
+- Older assessment runs without the new fields keep working through defaults.
 
 ## Success criteria
 
