@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Brain, ArrowRight, Loader2, Eye, EyeOff, Mail, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,8 @@ const signInSchema = z.object({
 
 export default function LaunchSignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = (location.state as { from?: string } | null)?.from ?? '/launch/home';
   const { signIn, resendVerification } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -57,7 +59,7 @@ export default function LaunchSignIn() {
       }
 
       // Success - navigate to home
-      navigate('/launch/home');
+      navigate(redirectTo);
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {

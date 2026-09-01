@@ -163,9 +163,16 @@ import PrototypeReview from "./pages/prototype/PrototypeReview";
 import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
 import PrototypeReminders from "./pages/prototype/PrototypeReminders";
 import PrototypeDone from "./pages/prototype/PrototypeDone";
-
+import { LaunchGuard } from "./components/launch/LaunchGuard";
 
 const queryClient = new QueryClient();
+
+// Signed-in-only /launch surfaces
+const LaunchPrivate = ({ children }: { children: React.ReactNode }) => (
+  <LaunchModeProvider>
+    <LaunchGuard>{children}</LaunchGuard>
+  </LaunchModeProvider>
+);
 
 // Network status component
 function NetworkStatusMonitor() {
@@ -385,36 +392,36 @@ function App() {
                         <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
                         <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
 
-                       <Route path="/launch/home" element={<LaunchModeProvider><LaunchDashboard /></LaunchModeProvider>} />
-                       <Route path="/launch/calendar" element={<LaunchModeProvider><LaunchCalendar /></LaunchModeProvider>} />
-                       <Route path="/launch/memory" element={<LaunchModeProvider><LaunchMemoryBridge /></LaunchModeProvider>} />
-                       <Route path="/launch/games" element={<LaunchModeProvider><LaunchBrainGames /></LaunchModeProvider>} />
-                       <Route path="/launch/celebrate" element={<LaunchModeProvider><LaunchGratitude /></LaunchModeProvider>} />
+                       <Route path="/launch/home" element={<LaunchPrivate><LaunchDashboard /></LaunchPrivate>} />
+                       <Route path="/launch/calendar" element={<LaunchPrivate><LaunchCalendar /></LaunchPrivate>} />
+                       <Route path="/launch/memory" element={<LaunchPrivate><LaunchMemoryBridge /></LaunchPrivate>} />
+                       <Route path="/launch/games" element={<LaunchPrivate><LaunchBrainGames /></LaunchPrivate>} />
+                       <Route path="/launch/celebrate" element={<LaunchPrivate><LaunchGratitude /></LaunchPrivate>} />
                        <Route path="/launch/gratitude" element={<Navigate to="/launch/celebrate" replace />} />
-                       <Route path="/launch/support" element={<LaunchModeProvider><LaunchSupportCircle /></LaunchModeProvider>} />
-                       <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
-                       <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
-                       <Route path="/launch/settings" element={<LaunchModeProvider><LaunchSettings /></LaunchModeProvider>} />
-                       <Route path="/launch/settings/edition" element={<LaunchModeProvider><LaunchEditionAbout /></LaunchModeProvider>} />
-                       <Route path="/launch/goals" element={<LaunchModeProvider><LaunchGoals /></LaunchModeProvider>} />
-                       <Route path="/launch/analytics" element={<LaunchModeProvider><LaunchAnalytics /></LaunchModeProvider>} />
-                       <Route path="/launch/whats-new" element={<LaunchModeProvider><LaunchWhatsNew /></LaunchModeProvider>} />
-                       <Route path="/launch/science" element={<LaunchModeProvider><LaunchScience /></LaunchModeProvider>} />
-                        <Route path="/launch/help" element={<LaunchModeProvider><LaunchHelp /></LaunchModeProvider>} />
-                        <Route path="/launch/roadmap" element={<LaunchModeProvider><LaunchRoadmap /></LaunchModeProvider>} />
-                       <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
-                       <Route path="/launch/circle/:memberId/growth" element={<LaunchModeProvider><LaunchCircleGrowth /></LaunchModeProvider>} />
-                       <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
-                       <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
-                       <Route path="/launch/sc/capture/:subjectId/:subjectName" element={<LaunchModeProvider><LaunchSCCapture /></LaunchModeProvider>} />
-                       <Route path="/launch/sc/capture/:subjectId" element={<LaunchModeProvider><LaunchSCCapture /></LaunchModeProvider>} />
-                       <Route path="/launch/clinical-brief" element={<LaunchModeProvider><LaunchClinicalBrief /></LaunchModeProvider>} />
-                       <Route path="/launch/discharge-bridge" element={<LaunchModeProvider><LaunchDischargeBridge /></LaunchModeProvider>} />
-                       <Route path="/launch/discharge-bridge/handout" element={<LaunchModeProvider><LaunchDischargeBridgeHandout /></LaunchModeProvider>} />
-                       <Route path="/launch/memory/result/:meetingId" element={<LaunchModeProvider><LaunchCaptureResult /></LaunchModeProvider>} />
-                       <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
-                        <Route path="/launch/continuity" element={<LaunchModeProvider><LaunchContinuity /></LaunchModeProvider>} />
-                        <Route path="/launch/continuity-report" element={<LaunchModeProvider><LaunchContinuityReport /></LaunchModeProvider>} />
+                       <Route path="/launch/support" element={<LaunchPrivate><LaunchSupportCircle /></LaunchPrivate>} />
+                       <Route path="/launch/store" element={<LaunchPrivate><LaunchFeatureStore /></LaunchPrivate>} />
+                       <Route path="/launch/profile" element={<LaunchPrivate><LaunchProfile /></LaunchPrivate>} />
+                       <Route path="/launch/settings" element={<LaunchPrivate><LaunchSettings /></LaunchPrivate>} />
+                       <Route path="/launch/settings/edition" element={<LaunchPrivate><LaunchEditionAbout /></LaunchPrivate>} />
+                       <Route path="/launch/goals" element={<LaunchPrivate><LaunchGoals /></LaunchPrivate>} />
+                       <Route path="/launch/analytics" element={<LaunchPrivate><LaunchAnalytics /></LaunchPrivate>} />
+                       <Route path="/launch/whats-new" element={<LaunchPrivate><LaunchWhatsNew /></LaunchPrivate>} />
+                       <Route path="/launch/science" element={<LaunchPrivate><LaunchScience /></LaunchPrivate>} />
+                        <Route path="/launch/help" element={<LaunchPrivate><LaunchHelp /></LaunchPrivate>} />
+                        <Route path="/launch/roadmap" element={<LaunchPrivate><LaunchRoadmap /></LaunchPrivate>} />
+                       <Route path="/launch/calibrate" element={<LaunchPrivate><LaunchCalibrate /></LaunchPrivate>} />
+                       <Route path="/launch/circle/:memberId/growth" element={<LaunchPrivate><LaunchCircleGrowth /></LaunchPrivate>} />
+                       <Route path="/launch/capture" element={<LaunchPrivate><LaunchCapture /></LaunchPrivate>} />
+                       <Route path="/launch/commit" element={<LaunchPrivate><LaunchCommit /></LaunchPrivate>} />
+                       <Route path="/launch/sc/capture/:subjectId/:subjectName" element={<LaunchPrivate><LaunchSCCapture /></LaunchPrivate>} />
+                       <Route path="/launch/sc/capture/:subjectId" element={<LaunchPrivate><LaunchSCCapture /></LaunchPrivate>} />
+                       <Route path="/launch/clinical-brief" element={<LaunchPrivate><LaunchClinicalBrief /></LaunchPrivate>} />
+                       <Route path="/launch/discharge-bridge" element={<LaunchPrivate><LaunchDischargeBridge /></LaunchPrivate>} />
+                       <Route path="/launch/discharge-bridge/handout" element={<LaunchPrivate><LaunchDischargeBridgeHandout /></LaunchPrivate>} />
+                       <Route path="/launch/memory/result/:meetingId" element={<LaunchPrivate><LaunchCaptureResult /></LaunchPrivate>} />
+                       <Route path="/launch/vision-statement" element={<LaunchPrivate><LaunchVisionStatement /></LaunchPrivate>} />
+                        <Route path="/launch/continuity" element={<LaunchPrivate><LaunchContinuity /></LaunchPrivate>} />
+                        <Route path="/launch/continuity-report" element={<LaunchPrivate><LaunchContinuityReport /></LaunchPrivate>} />
 
                        {/* Alias redirects — safety net for legacy/typoed /launch/* paths */}
                        <Route path="/launch/memory-bridge" element={<Navigate to="/launch/memory" replace />} />

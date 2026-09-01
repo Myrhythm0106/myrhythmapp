@@ -50,11 +50,12 @@ export function FirstRunOverlay() {
     setOpen(false);
   };
 
-  if (!open) return null;
-
   return (
-    <AnimatePresence>
+    <>
+      <AnimatePresence>
+        {open && (
       <motion.div
+        key="first-run-overlay"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -132,7 +133,9 @@ export function FirstRunOverlay() {
           </div>
         </motion.div>
       </motion.div>
+        )}
+      </AnimatePresence>
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
-    </AnimatePresence>
+    </>
   );
 }
