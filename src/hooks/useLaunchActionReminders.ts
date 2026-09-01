@@ -23,7 +23,7 @@ type Row = {
     action_text: string | null;
     priority_level: number | null;
     status: string | null;
-    completion_status: string | null;
+    
     archived_at: string | null;
   } | null;
 };
