@@ -29,8 +29,8 @@ Rebuild the pre-recording view of `src/pages/launch/LaunchMemoryBridge.tsx` as a
 
 #### Where your recordings live
 - **Just-finished recording:** the moment you stop and save, the single confirmation screen shows the new capture at the top (title, reference code, keep-for choice) with play / review actions — no hunting.
-- **Review Logs tile** on the hub opens the Past Captures list: every saved recording, newest first, each with its `MB-…` reference code, date, length, keep-for countdown badge, and one-tap play. It also shows the two-tap "Last conversation" shortcut already built.
-- **Quiet recent strip:** directly under the two secondary tiles, the hub shows the 1–2 most recent captures as slim rows (title + reference + play), so what you just did is always visible without opening anything.
+- **My Records tile** on the hub opens the records list: every saved recording, newest first, each with its `MB-…` reference code, date, length, keep-for countdown badge, and one-tap play. It also shows the two-tap "Last conversation" shortcut already built.
+- **Quiet recent strip:** directly under the two secondary tiles, the hub shows the 1–2 most recent records as slim rows (title + reference + play), so what you just did is always visible without opening anything.
 - The recording-allowance egg timer stays visible as a quiet caption under the primary button (per the allowance-ladder memory).
 - Serif display headline (Playfair-style, matching the Emerald Prestige direction already in use) + light body copy, first-person tone.
 
