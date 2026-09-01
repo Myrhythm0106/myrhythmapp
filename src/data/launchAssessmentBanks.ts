@@ -1,6 +1,9 @@
 // Persona-specific MYRHYTHM assessment banks for /launch/assessment.
-// 8 questions, one per letter of M-Y-R-H-Y-T-H-M, each framed around brain health.
+// 8 questions, one per letter of M-Y-R-H-Y-T-H-M, each framed around brain health,
+// plus one compact rhythm-detail step with two rows.
 // Persona comes from localStorage('myrhythm_user_type'), written by /launch/user-type.
+
+import type { PillarId } from '@/launch/framework/cognitiveCapital';
 
 export type PersonaKey = 'brain-injury' | 'caregiver' | 'executive' | 'student';
 
@@ -14,8 +17,8 @@ export type LetterId =
   | 'heal'           // H  — Heal
   | 'multiply';      // M  — Multiply / Meaning
 
-/** Question ids: the 8 MYRHYTHM letters plus the follow-through probe (sits under T). */
-export type QuestionId = LetterId | 'followThrough';
+/** Question ids: the 8 MYRHYTHM letters, the rhythm-detail step, and the follow-through probe (sits under T). */
+export type QuestionId = LetterId | 'rhythmDetail' | 'followThrough';
 
 
 
