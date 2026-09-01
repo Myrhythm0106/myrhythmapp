@@ -288,6 +288,7 @@ export default function LaunchMemoryBridge() {
   // One attempt only — a blocked mic must never retry in a loop.
   const autoStartedRef = useRef(false);
   const recorderCardRef = useRef<HTMLDivElement | null>(null);
+  const recordsRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const wants = searchParams.get('record') === '1' || searchParams.get('quick') === '1';
     if (!wants || autoStartedRef.current) return;
