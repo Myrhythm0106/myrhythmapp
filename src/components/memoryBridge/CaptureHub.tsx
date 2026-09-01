@@ -64,7 +64,7 @@ export function CaptureHub({
   refreshMicStatus,
   outOfAllowance,
   allowance,
-  nextTierKey,
+  nextTierInfo,
   recentRecordings,
   formatDuration,
 }: CaptureHubProps) {
