@@ -183,9 +183,9 @@ export function CaptureHub({
               <p className="text-sm font-medium text-[hsl(var(--launch-ink))]">
                 I’ve used my {allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.
               </p>
-              {nextTierKey && (
+              {nextTierInfo && (
                 <p className="mt-1 text-xs text-[hsl(var(--launch-ink)/0.70)]">
-                  {allowance.limits[nextTierKey].label} gives me {allowance.limits[nextTierKey].perRecordingMinutes} per recording and {allowance.limits[nextTierKey].monthlyMinutes} a month.
+                  {nextTierInfo.label} gives me {nextTierInfo.perRecordingMinutes} minutes per recording and {nextTierInfo.monthlyMinutes} minutes a month.
                 </p>
               )}
             </div>
