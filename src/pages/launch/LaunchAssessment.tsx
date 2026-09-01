@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { ArrowRight, ArrowLeft, Check, Plus, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+import { RhythmDetailStep } from '@/components/launch/assessment/RhythmDetailStep';
+import { useAuth } from '@/hooks/useAuth';
+import { deriveProductivityWindow } from '@/launch/assessment/productivityWindow';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -76,6 +80,7 @@ function loadProgress(): StoredProgress | null {
 
 export default function LaunchAssessment() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const initial = useMemo(() => loadProgress(), []);
   const [persona, setPersona] = useState<PersonaKey | null>(initial?.persona ?? null);
   const [currentQuestion, setCurrentQuestion] = useState<number>(initial?.currentQuestion ?? 0);
@@ -252,6 +257,9 @@ export default function LaunchAssessment() {
   const current: AssessmentAnswer = answers[question.id] ?? { primary: '', alsoFits: [] };
   const isNoneFits = current.primary === NONE_FITS_VALUE;
   const noneNote = freeform[question.id] ?? '';
+  const rhythmDetailValues = question.kind === 'rhythm-detail'
+    ? { focusLength: current.primary, energyDrain: current.alsoFits[0] ?? '' }
+    : { focusLength: '', energyDrain: '' };
 
   const setPrimary = (value: string) => {
     setAnswers((prev) => {
@@ -296,7 +304,21 @@ export default function LaunchAssessment() {
     });
   };
 
-  const canContinue = !!current.primary;
+  const canContinue = question.kind === 'rhythm-detail'
+    ? Boolean(rhythmDetailValues.focusLength && rhythmDetailValues.energyDrain)
+    : !!current.primary;
+
+  const setRhythmDetail = (rowId: string, value: string) => {
+    setAnswers((prev) => {
+      const existing = prev.rhythmDetail ?? { primary: '', alsoFits: [] };
+      return {
+        ...prev,
+        rhythmDetail: rowId === 'focusLength'
+          ? { primary: value, alsoFits: existing.alsoFits }
+          : { primary: existing.primary, alsoFits: [value] },
+      };
+    });
+  };
 
   const handleNext = () => {
     if (!isLast) {
@@ -334,6 +356,11 @@ export default function LaunchAssessment() {
         heal: primaryOf('heal'),
         multiply: primaryOf('multiply'),
         rhythmPreference: primaryOf('rhythm'),
+        productivityWindow: deriveProductivityWindow({
+          rhythm: primaryOf('rhythm'),
+          focusLength: rhythmDetailValues.focusLength,
+          energyDrain: rhythmDetailValues.energyDrain,
+        }),
         keyStruggles: combined('transform'),
         goals: combined('yourVictories'),
         hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
