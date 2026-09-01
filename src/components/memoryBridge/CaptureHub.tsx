@@ -41,7 +41,7 @@ interface CaptureHubProps {
   isStarting: boolean;
   isUploading: boolean;
   isExtracting: boolean;
-  micPermission: 'prompt' | 'granted' | 'denied' | null;
+  micPermission: 'prompt' | 'granted' | 'denied' | 'unknown' | null;
   micBlockReason: 'frame' | 'insecure' | 'unsupported' | null;
   refreshMicStatus: () => void;
   outOfAllowance: boolean;
