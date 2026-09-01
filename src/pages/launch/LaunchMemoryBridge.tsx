@@ -841,336 +841,231 @@ export default function LaunchMemoryBridge() {
         </AlertDialog>
 
         {/* Recording Interface */}
-        <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">
+        {state === 'idle' ? (
+          <CaptureHub
+            onStartCapture={handleStartRecording}
+            onOpenMyRecords={() => recordsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            onUploadClick={() => uploadInputRef.current?.click()}
+            onOpenRecording={(recording) => handleViewActions(recording)}
+            isStarting={isStarting}
+            isUploading={isUploading}
+            isExtracting={isExtracting}
+            micPermission={micPermission}
+            micBlockReason={micBlockReason}
+            refreshMicStatus={refreshMicStatus}
+            outOfAllowance={outOfAllowance}
+            allowance={allowance}
+            nextTierInfo={
+              nextTierKey
+                ? {
+                    label: RECORDING_LIMITS[nextTierKey].label,
+                    perRecordingMinutes: RECORDING_LIMITS[nextTierKey].perRecordingMinutes,
+                    monthlyMinutes: RECORDING_LIMITS[nextTierKey].monthlyMinutes,
+                  }
+                : null
+            }
+            recentRecordings={recordings.slice(0, 2)}
+            formatDuration={formatDuration}
+          />
+        ) : (
+          <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">
 
-          {/* Subtle topographic decoration */}
-          <div className="absolute top-4 right-4 w-24 h-24 opacity-10 text-launch-gold">
-            <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-              <circle cx="80" cy="20" r="6" fill="currentColor" />
-              <circle cx="60" cy="40" r="4" fill="currentColor" />
-              <path d="M80,20 Q70,30 60,40" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          </div>
-          <div className="absolute bottom-4 left-4 w-20 h-20 opacity-10 text-launch-gold">
-            <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-              <circle cx="20" cy="80" r="5" fill="currentColor" />
-              <circle cx="40" cy="60" r="3" fill="currentColor" />
-              <path d="M20,80 Q30,70 40,60" stroke="currentColor" strokeWidth="1.5" />
-            </svg>
-          </div>
+            {/* Subtle topographic decoration */}
+            <div className="absolute top-4 right-4 w-24 h-24 opacity-10 text-launch-gold">
+              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                <circle cx="80" cy="20" r="6" fill="currentColor" />
+                <circle cx="60" cy="40" r="4" fill="currentColor" />
+                <path d="M80,20 Q70,30 60,40" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </div>
+            <div className="absolute bottom-4 left-4 w-20 h-20 opacity-10 text-launch-gold">
+              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                <circle cx="20" cy="80" r="5" fill="currentColor" />
+                <circle cx="40" cy="60" r="3" fill="currentColor" />
+                <path d="M20,80 Q30,70 40,60" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </div>
 
-          <div className="relative z-10" ref={recorderCardRef}>
-            {state === 'idle' && (
-              <>
-                {/* Microphone button */}
-                <div className="relative w-28 h-28 mx-auto mb-4">
-                  {/* Animated outer ring */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-launch-ember via-launch-gold to-launch-moss rounded-full animate-spin opacity-60 blur-sm" style={{ animationDuration: '8s' }} />
-                  {/* Pulsing glow */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-launch-ember to-launch-ember/80 rounded-full animate-pulse opacity-40" />
-                  {/* Inner */}
-                  <button
-                    onClick={handleStartRecording}
-                    disabled={isStarting}
-                    aria-label="Start recording"
-                    className="absolute inset-2 bg-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95 disabled:cursor-wait"
-                  >
-                    <div className="bg-gradient-to-br from-launch-ember to-launch-ember/80 w-16 h-16 rounded-full flex items-center justify-center shadow-lg shadow-launch-ember/30">
-                      {isStarting ? (
-                        <Loader2 className="h-8 w-8 text-white animate-spin" />
+            <div className="relative z-10" ref={recorderCardRef}>
+              {(state === 'recording' || state === 'paused') && (
+                <>
+                  <div className={cn(
+                    "relative w-28 h-28 mx-auto mb-4"
+                  )}>
+                    {/* Recording pulse effect */}
+                    {state === 'recording' && (
+                      <>
+                        <div className="absolute inset-0 bg-launch-ember rounded-full animate-ping opacity-30" />
+                        <div className="absolute inset-0 bg-launch-ember rounded-full animate-pulse opacity-50" />
+                      </>
+                    )}
+                    <div className={cn(
+                      "absolute inset-0 rounded-full flex items-center justify-center shadow-2xl transition-all",
+                      state === 'recording' ? "bg-gradient-to-br from-launch-ember to-launch-ember/80" : "bg-gradient-to-br from-launch-gold to-launch-gold/80"
+                    )}>
+                      {state === 'recording' ? (
+                        <div className="w-10 h-10 bg-white rounded-lg shadow-inner" />
                       ) : (
-                        <Mic className="h-8 w-8 text-white" />
+                        <Pause className="h-12 w-12 text-white" />
                       )}
                     </div>
-                  </button>
-                </div>
-                <p className="text-lg font-semibold text-launch-ink mb-1">
-                  {isStarting ? 'Starting the microphone…' : 'Tap to Record'}
-                </p>
-                <p className="text-sm text-launch-ink/70">We'll listen and find the action items</p>
-
-                {/* Microphone status — never let a tap disappear into silence */}
-                {micBlockReason === 'frame' && (
-                  <div className="mt-4 mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
-                    <p className="text-sm font-semibold text-launch-ink">
-                      Your browser is blocking the microphone inside this preview frame.
-                    </p>
-                    <p className="mt-1 text-xs text-launch-ink/70">
-                      Open the app in its own browser tab and recording will work normally.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => window.open(window.location.href, '_blank', 'noopener')}
-                      className="mt-3 inline-flex min-h-[48px] items-center justify-center rounded-xl bg-launch-ember px-4 text-sm font-semibold text-white"
-                    >
-                      Open in a new tab
-                    </button>
                   </div>
-                )}
-                {micBlockReason === 'insecure' && (
-                  <p className="mt-4 mx-auto max-w-sm text-sm text-launch-ember">
-                    Recording needs a secure (https) address. Open the app over https and try again.
-                  </p>
-                )}
-                {micBlockReason === 'unsupported' && (
-                  <p className="mt-4 mx-auto max-w-sm text-sm text-launch-ember">
-                    This browser can't record audio. Please use Chrome on a laptop, or Safari on iPhone.
-                  </p>
-                )}
-                {!micBlockReason && micPermission === 'denied' && (
-                  <div className="mt-4 mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
-                    <p className="text-sm font-semibold text-launch-ink">Microphone access is blocked.</p>
-                    <p className="mt-1 text-xs text-launch-ink/70">
-                      In Chrome, click the icon at the left of the address bar, set Microphone to
-                      Allow, then reload this page.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => void refreshMicStatus()}
-                      className="mt-3 text-sm font-medium text-launch-ink underline underline-offset-4"
-                    >
-                      Check again
-                    </button>
-                  </div>
-                )}
-                {!micBlockReason && micPermission === 'prompt' && (
-                  <p className="mt-3 text-xs text-launch-ink/60">
-                    Your browser will ask permission for the microphone the first time you tap record.
-                  </p>
-                )}
-                {!micBlockReason && micPermission === 'granted' && (
-                  <p className="mt-3 text-xs text-launch-moss">Microphone ready.</p>
-                )}
-
-                {outOfAllowance ? (
-                  <div className="mt-3 mx-auto max-w-sm rounded-xl border border-launch-gold/40 bg-launch-gold/10 p-3">
-                    <p className="text-sm font-medium text-launch-ink">
-                      You've used your {allowance.period === 'week' ? 'weekly' : 'monthly'} recording time,
-                      so a new recording can't start yet.
-                    </p>
-                    {nextTierKey && (
-                      <p className="mt-1 text-xs text-launch-ink/70">
-                        {RECORDING_LIMITS[nextTierKey].label} gives you{' '}
-                        {formatMinutes(RECORDING_LIMITS[nextTierKey].perRecordingMinutes)} per recording and{' '}
-                        {formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <p className="mt-2 text-xs text-launch-ink/60">
-                    You can record up to {formatMinutes(allowance.limits.perRecordingMinutes)} in one go —{' '}
-                    {formatMinutes(allowance.remainingMinutes)} left this {allowance.period}.
-                  </p>
-                )}
-
-
-                {/* Already have a recording? Upload it and get the same next steps. */}
-                <div className="mt-5">
-                  <input
-                    ref={uploadInputRef}
-                    type="file"
-                    accept="audio/*,video/*,.m4a,.mp3,.wav,.webm,.mp4,.mov"
-                    className="hidden"
-                    onChange={(e) => handleUploadSelected(e.target.files?.[0])}
-                  />
-                  <button
-                    type="button"
-                    disabled={isUploading || isExtracting}
-                    onClick={() => uploadInputRef.current?.click()}
-                    className="inline-flex items-center justify-center gap-2 min-h-[56px] w-full rounded-xl border border-launch-gold/40 bg-white/60 px-4 text-sm font-medium text-launch-ink hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Uploading and finding next steps…
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4" />
-                        Upload a recording instead
-                      </>
-                    )}
-                  </button>
-                  <p className="mt-2 text-xs text-launch-ink/60">
-                    Audio or video from your phone, a voice memo or a call recording.
-                  </p>
-                </div>
-
-                <RecordingEggTimer className="mt-5 text-left" />
-
-              </>
-            )}
-
-            {(state === 'recording' || state === 'paused') && (
-              <>
-                <div className={cn(
-                  "relative w-28 h-28 mx-auto mb-4"
-                )}>
-                  {/* Recording pulse effect */}
-                  {state === 'recording' && (
-                    <>
-                      <div className="absolute inset-0 bg-launch-ember rounded-full animate-ping opacity-30" />
-                      <div className="absolute inset-0 bg-launch-ember rounded-full animate-pulse opacity-50" />
-                    </>
-                  )}
-                  <div className={cn(
-                    "absolute inset-0 rounded-full flex items-center justify-center shadow-2xl transition-all",
-                    state === 'recording' ? "bg-gradient-to-br from-launch-ember to-launch-ember/80" : "bg-gradient-to-br from-launch-gold to-launch-gold/80"
+                  <p className="text-3xl font-bold text-launch-ink mb-1 font-display">{formatDuration(duration)}</p>
+                  <Badge className={cn(
+                    "mb-2",
+                    state === 'recording'
+                      ? "bg-launch-ember/10 text-launch-ember border-launch-ember/30"
+                      : "bg-launch-gold/10 text-launch-gold border-launch-gold/30"
                   )}>
+                    {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
+                  </Badge>
+
+                  <div className="mb-2 flex justify-center">
+                    <span
+                      className={cn(
+                        'rounded-full px-3 py-1 text-xs font-medium',
+                        remainingSessionSeconds <= 60
+                          ? 'bg-launch-ember/10 text-launch-ember'
+                          : remainingSessionSeconds <= 300
+                          ? 'bg-launch-gold/15 text-launch-gold'
+                          : 'bg-launch-ink/5 text-launch-ink/60'
+                      )}
+                      aria-live="polite"
+                    >
+                      {formatClock(remainingSessionSeconds)} remaining (this recording)
+                    </span>
+                  </div>
+
+                  <MicLevelMeter state={micLevel} paused={state === 'paused'} className="mb-3" />
+
+                  <p className={cn(
+                    "text-xs mb-4",
+                    recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
+                  )} role="status" aria-live="polite">
+                    {recordedBytes > 0
+                      ? `Audio captured: ${formatBytes(recordedBytes)}`
+                      : 'No audio captured yet — check your microphone is on'}
+                  </p>
+
+
+
+                  <div className="flex items-center justify-center gap-3">
                     {state === 'recording' ? (
-                      <div className="w-10 h-10 bg-white rounded-lg shadow-inner" />
+                      <LaunchButton onClick={handlePauseRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+                        <Pause className="h-5 w-5" />
+                        Pause
+                      </LaunchButton>
                     ) : (
-                      <Pause className="h-12 w-12 text-white" />
+                      <LaunchButton onClick={handleResumeRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+                        <Play className="h-5 w-5" />
+                        Continue
+                      </LaunchButton>
                     )}
+                    <LaunchButton onClick={handleStopRecording} variant="outline" className="border-launch-ember/30 text-launch-ember hover:bg-launch-ember/5">
+                      <Square className="h-5 w-5" />
+                      Stop
+                    </LaunchButton>
                   </div>
-                </div>
-                <p className="text-3xl font-bold text-launch-ink mb-1 font-display">{formatDuration(duration)}</p>
-                <Badge className={cn(
-                  "mb-2",
-                  state === 'recording'
-                    ? "bg-launch-ember/10 text-launch-ember border-launch-ember/30"
-                    : "bg-launch-gold/10 text-launch-gold border-launch-gold/30"
-                )}>
-                  {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
-                </Badge>
+                </>
+              )}
 
-                <div className="mb-2 flex justify-center">
-                  <span
-                    className={cn(
-                      'rounded-full px-3 py-1 text-xs font-medium',
-                      remainingSessionSeconds <= 60
-                        ? 'bg-launch-ember/10 text-launch-ember'
-                        : remainingSessionSeconds <= 300
-                        ? 'bg-launch-gold/15 text-launch-gold'
-                        : 'bg-launch-ink/5 text-launch-ink/60'
+              {state === 'reviewing' && (
+                <>
+                  <div className="w-28 h-28 mx-auto mb-4 bg-launch-moss/10 rounded-full flex items-center justify-center border border-launch-moss/20">
+                    <Play className="h-12 w-12 text-launch-moss ml-1" />
+                  </div>
+                  <p className="text-lg font-semibold text-launch-ink mb-2">Recording Complete!</p>
+                  <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
+
+                  <input
+                    type="text"
+                    value={recordingTitle}
+                    onChange={(e) => setRecordingTitle(e.target.value)}
+                    placeholder="Name this recording..."
+                    className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
+                  />
+
+                  <div className="flex items-center justify-center gap-3 mb-6">
+                    <button
+                      onClick={() => setNotifySupport(!notifySupport)}
+                      className={cn(
+                        "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
+                        notifySupport
+                          ? "bg-launch-moss/10 text-launch-moss border border-launch-moss/30"
+                          : "bg-white text-launch-ink/70 border border-launch-gold/30"
+                      )}
+                    >
+                      <Users className="h-4 w-4" />
+                      Notify Support Circle
+                    </button>
+                  </div>
+
+                  <div className="max-w-xs mx-auto mb-4 text-left">
+                    <p className="text-xs font-medium text-launch-ink/60 mb-1.5 text-center">
+                      Loop someone in on the actions from this recording
+                    </p>
+                    <div className="flex justify-center">
+                      <LoopInPicker
+                        circleMemberIds={loopCircleIds}
+                        adhocLoopIns={loopAdhoc}
+                        onChange={(next) => {
+                          setLoopCircleIds(next.circleMemberIds);
+                          setLoopAdhoc(next.adhocLoopIns);
+                        }}
+                        triggerLabel="Loop someone in"
+                      />
+                    </div>
+                  </div>
+
+                  <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-launch-ember hover:bg-launch-ember/90 text-white" disabled={isProcessing || isExtracting}>
+                    {isProcessing || isExtracting ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        {isExtracting ? 'Extracting Actions...' : 'Saving...'}
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5" />
+                        Save & Extract Actions
+                      </>
                     )}
-                    aria-live="polite"
-                  >
-                    {formatClock(remainingSessionSeconds)} remaining (this recording)
-                  </span>
-                </div>
-
-                <MicLevelMeter state={micLevel} paused={state === 'paused'} className="mb-3" />
-
-                <p className={cn(
-                  "text-xs mb-4",
-                  recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
-                )} role="status" aria-live="polite">
-                  {recordedBytes > 0
-                    ? `Audio captured: ${formatBytes(recordedBytes)}`
-                    : 'No audio captured yet — check your microphone is on'}
-                </p>
-
-
-
-                <div className="flex items-center justify-center gap-3">
-                  {state === 'recording' ? (
-                    <LaunchButton onClick={handlePauseRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
-                      <Pause className="h-5 w-5" />
-                      Pause
-                    </LaunchButton>
-                  ) : (
-                    <LaunchButton onClick={handleResumeRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
-                      <Play className="h-5 w-5" />
-                      Continue
-                    </LaunchButton>
-                  )}
-                  <LaunchButton onClick={handleStopRecording} variant="outline" className="border-launch-ember/30 text-launch-ember hover:bg-launch-ember/5">
-                    <Square className="h-5 w-5" />
-                    Stop
                   </LaunchButton>
-                </div>
-              </>
-            )}
 
-            {state === 'reviewing' && (
-              <>
-                <div className="w-28 h-28 mx-auto mb-4 bg-launch-moss/10 rounded-full flex items-center justify-center border border-launch-moss/20">
-                  <Play className="h-12 w-12 text-launch-moss ml-1" />
-                </div>
-                <p className="text-lg font-semibold text-launch-ink mb-2">Recording Complete!</p>
-                <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
-
-                <input
-                  type="text"
-                  value={recordingTitle}
-                  onChange={(e) => setRecordingTitle(e.target.value)}
-                  placeholder="Name this recording..."
-                  className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
-                />
-
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <button
-                    onClick={() => setNotifySupport(!notifySupport)}
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
-                      notifySupport
-                        ? "bg-launch-moss/10 text-launch-moss border border-launch-moss/30"
-                        : "bg-white text-launch-ink/70 border border-launch-gold/30"
-                    )}
-                  >
-                    <Users className="h-4 w-4" />
-                    Notify Support Circle
-                  </button>
-                </div>
-
-                <div className="max-w-xs mx-auto mb-4 text-left">
-                  <p className="text-xs font-medium text-launch-ink/60 mb-1.5 text-center">
-                    Loop someone in on the actions from this recording
-                  </p>
-                  <div className="flex justify-center">
-                    <LoopInPicker
-                      circleMemberIds={loopCircleIds}
-                      adhocLoopIns={loopAdhoc}
-                      onChange={(next) => {
-                        setLoopCircleIds(next.circleMemberIds);
-                        setLoopAdhoc(next.adhocLoopIns);
-                      }}
-                      triggerLabel="Loop someone in"
-                    />
-                  </div>
-                </div>
-
-                <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-launch-ember hover:bg-launch-ember/90 text-white" disabled={isProcessing || isExtracting}>
-                  {isProcessing || isExtracting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      {isExtracting ? 'Extracting Actions...' : 'Saving...'}
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-5 w-5" />
-                      Save & Extract Actions
-                    </>
+                  {(isProcessing || isExtracting) && (
+                    <p className="mt-3 text-sm text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
+                      This can take a minute on a phone. Your recording is safe — you can leave this
+                      screen and come back, it'll be waiting in your captures.
+                    </p>
                   )}
-                </LaunchButton>
 
-                {(isProcessing || isExtracting) && (
-                  <p className="mt-3 text-sm text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
-                    This can take a minute on a phone. Your recording is safe — you can leave this
-                    screen and come back, it'll be waiting in your captures.
-                  </p>
-                )}
+                  {!(isProcessing || isExtracting) && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        audioBlobRef.current = null;
+                        setRestoredDuration(null);
+                        await clearPendingRecording();
+                        setState('idle');
+                      }}
+                      className="mt-4 text-sm font-medium text-launch-ink/60 underline underline-offset-4 hover:text-launch-ink"
+                    >
+                      Discard and record something new
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          </LaunchCard>
+        )}
 
-                {!(isProcessing || isExtracting) && (
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      audioBlobRef.current = null;
-                      setRestoredDuration(null);
-                      await clearPendingRecording();
-                      setState('idle');
-                    }}
-                    className="mt-4 text-sm font-medium text-launch-ink/60 underline underline-offset-4 hover:text-launch-ink"
-                  >
-                    Discard and record something new
-                  </button>
-                )}
-              </>
-
-            )}
-          </div>
-        </LaunchCard>
+        {/* Hidden upload input */}
+        <input
+          ref={uploadInputRef}
+          type="file"
+          accept="audio/*,video/*,.m4a,.mp3,.wav,.webm,.mp4,.mov"
+          className="hidden"
+          onChange={(e) => handleUploadSelected(e.target.files?.[0])}
+        />
 
 
         {/* Recent Recordings */}
