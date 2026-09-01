@@ -51,7 +51,7 @@ export function useLaunchActionReminders(rangeStart: Date, rangeEnd: Date, enabl
     const { data, error } = await supabase
       .from('action_reminders')
       .select(
-        'id, action_id, due_at, offset_days, sent_at, extracted_actions!inner(action_text, priority_level, status, completion_status, archived_at)'
+        'id, action_id, due_at, offset_days, sent_at, extracted_actions!inner(action_text, priority_level, status, archived_at)'
       )
       .eq('user_id', user.id)
       .gte('due_at', fromIso)
