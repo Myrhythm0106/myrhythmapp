@@ -133,7 +133,9 @@ export function FirstRunOverlay() {
           </div>
         </motion.div>
       </motion.div>
+        )}
+      </AnimatePresence>
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
-    </AnimatePresence>
+    </>
   );
 }
