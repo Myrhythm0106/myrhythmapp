@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mic, ArrowRight, History, PenLine, Upload, ChevronDown, Play, Clock, Loader2, X } from 'lucide-react';
+import { ArrowRight, History, PenLine, Upload, ChevronDown, Play, Clock, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -9,7 +9,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
-import type { UseRecordingAllowanceReturn } from '@/hooks/useRecordingAllowance';
 
 interface VoiceRecording {
   id: string;
@@ -21,6 +20,17 @@ interface VoiceRecording {
   transcription?: string;
   access_level: string;
   created_at: string;
+}
+
+interface AllowanceInfo {
+  tier: string;
+  limits: {
+    label: string;
+    perRecordingMinutes: number;
+    monthlyMinutes: number;
+  };
+  period: 'week' | 'month';
+  remainingMinutes: number;
 }
 
 interface CaptureHubProps {
@@ -35,7 +45,7 @@ interface CaptureHubProps {
   micBlockReason: 'frame' | 'insecure' | 'unsupported' | null;
   refreshMicStatus: () => void;
   outOfAllowance: boolean;
-  allowance: UseRecordingAllowanceReturn;
+  allowance: AllowanceInfo;
   nextTierKey?: string | null;
   recentRecordings: VoiceRecording[];
   formatDuration: (seconds: number) => string;
