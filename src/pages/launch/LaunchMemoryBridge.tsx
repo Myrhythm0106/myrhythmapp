@@ -1052,6 +1052,20 @@ export default function LaunchMemoryBridge() {
           onChange={(e) => handleUploadSelected(e.target.files?.[0])}
         />
 
+        <DocumentImportCard
+          onExtracted={(res: DocumentImportResult) => {
+            setLastExtractionResult({
+              meetingId: res.meetingId,
+              recordingId: '',
+              actionsCount: res.actionsCount,
+              title: res.title,
+              sourceFilePath: res.filePath,
+              sourceFileName: res.fileName,
+            });
+            fetchRecordings();
+            setShowPostExtractionDialog(true);
+          }}
+        />
 
         {/* My Records */}
         <div ref={recordsRef} className="flex items-center justify-between mb-4">
