@@ -1,6 +1,6 @@
 import { ExtractedAction } from '@/types/memoryBridge';
 import { supabase } from '@/integrations/supabase/client';
-import type { BlockType, PriorityLevels } from '@/launch/scheduling/defaults';
+import { BRAIN_HEALTHY_DEFAULTS, DEFAULT_PRIORITY_LEVELS, type BlockType, type PriorityLevels } from '@/launch/scheduling/defaults';
 
 export interface SmartScheduleSuggestion {
   date: string;
