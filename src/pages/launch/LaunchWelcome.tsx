@@ -12,6 +12,8 @@ import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentR
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
 import type { LetterId } from '@/data/launchAssessmentBanks';
+import { COGNITIVE_PILLARS, type PillarId } from '@/launch/framework/cognitiveCapital';
+import type { ProductivityWindow } from '@/launch/assessment/productivityWindow';
 
 
 // Emerald Prestige palette — page-scoped
@@ -26,6 +28,8 @@ const MANROPE: React.CSSProperties = { fontFamily: "'Manrope', sans-serif" };
 interface BHSnapshot {
   total: number;
   letters: Record<string, number>;
+  pillars: Record<PillarId, number>;
+  productivityWindow: ProductivityWindow | null;
 }
 
 const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
@@ -70,7 +74,12 @@ export default function LaunchWelcome() {
         const data = JSON.parse(saved);
         const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
         if (score && typeof score.total === 'number') {
-          setBhs({ total: score.total, letters: score.letters || {} });
+          setBhs({
+            total: score.total,
+            letters: score.letters || {},
+            pillars: score.pillars || { biological: 0, psychological: 0, social: 0, spiritual: 0 },
+            productivityWindow: data?.assessmentResults?.productivityWindow ?? null,
+          });
         }
       } catch { /* noop */ }
     }
