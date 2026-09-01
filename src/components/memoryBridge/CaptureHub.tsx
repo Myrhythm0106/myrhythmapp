@@ -115,7 +115,7 @@ export function CaptureHub({
 
   return (
     <>
-      <div className="relative w-full max-w-lg mx-auto mb-20">
+      <div className="relative w-full max-w-lg mx-auto mb-24">
         {/* Ambient glows */}
         <div className="absolute -top-20 -left-20 w-56 h-56 bg-launch-teal/10 rounded-full blur-3xl motion-safe:animate-pulse" />
         <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-launch-gold/10 rounded-full blur-3xl" />
