@@ -121,11 +121,11 @@ export function CaptureHub({
         <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-launch-gold/10 rounded-full blur-3xl" />
 
         {/* Main hub card */}
-        <div className="relative overflow-hidden rounded-[36px] border border-launch-gold/20 bg-launch-ivory/80 backdrop-blur-2xl shadow-2xl shadow-launch-ink/5 p-8 md:p-10 text-center">
+        <div className="relative overflow-hidden rounded-[36px] border border-launch-gold/20 bg-launch-ivory/80 backdrop-blur-2xl shadow-2xl shadow-[hsl(var(--launch-ink)/0.05)] p-8 md:p-10 text-center">
           {/* Brand mark */}
           <div className="flex justify-center mb-6">
             <div className="relative w-14 h-14 rounded-full border-2 border-[hsl(var(--launch-gold))] flex items-center justify-center">
-              <div className="w-7 h-7 rounded-full bg-launch-ink shadow-lg shadow-launch-ink/20" />
+              <div className="w-7 h-7 rounded-full bg-launch-ink shadow-lg shadow-[hsl(var(--launch-ink)/0.20)]" />
             </div>
           </div>
 
@@ -153,7 +153,7 @@ export function CaptureHub({
               className={cn(
                 'relative w-full h-[72px] rounded-2xl flex items-center justify-center transition-all',
                 'bg-launch-ink text-white text-xl font-medium tracking-wide',
-                'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-launch-ink/15',
+                'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-[hsl(var(--launch-ink)/0.15)]',
                 'active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed'
               )}
             >
