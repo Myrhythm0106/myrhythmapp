@@ -59,7 +59,7 @@ export default function LaunchSignIn() {
       }
 
       // Success - navigate to home
-      navigate('/launch/home');
+      navigate(redirectTo);
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {
