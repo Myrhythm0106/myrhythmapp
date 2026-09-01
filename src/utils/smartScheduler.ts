@@ -69,7 +69,7 @@ export class SmartScheduler {
           bestWindowStart: prefs.best_window_start || this.defaultPreferences.bestWindowStart,
           bestWindowEnd: prefs.best_window_end || this.defaultPreferences.bestWindowEnd,
           focusBlockMinutes: prefs.focus_block_minutes || this.defaultPreferences.focusBlockMinutes,
-          priorityLevelsByType: (prefs.priority_levels_by_type as Record<BlockType, PriorityLevels>) || this.defaultPreferences.priorityLevelsByType,
+          priorityLevelsByType: (prefs.priority_levels_by_type as unknown as Record<BlockType, PriorityLevels>) || this.defaultPreferences.priorityLevelsByType,
         };
       }
 
