@@ -3219,6 +3219,9 @@ export type Database = {
           auto_accept_scheduling: boolean | null
           auto_finish_enabled: boolean
           auto_insert_breaks: boolean
+          best_window_enabled: boolean
+          best_window_end: string
+          best_window_start: string
           brain_healthy_enabled: boolean
           break_length_minutes: number
           break_style: string
@@ -3228,7 +3231,9 @@ export type Database = {
           created_at: string
           daily_meeting_cap: number
           energy_level: number | null
+          focus_block_minutes: number
           id: string
+          learned_adjustments: Json
           longer_break_length_minutes: number
           longer_break_trigger_minutes: number
           min_meeting_gap_minutes: number
@@ -3236,6 +3241,7 @@ export type Database = {
           notes: string | null
           pomodoro_preset: string
           preference_type: string
+          priority_levels_by_type: Json
           protected_windows: Json
           quiet_finish_minutes: number
           reminder_buffer_minutes: number
@@ -3249,6 +3255,9 @@ export type Database = {
           auto_accept_scheduling?: boolean | null
           auto_finish_enabled?: boolean
           auto_insert_breaks?: boolean
+          best_window_enabled?: boolean
+          best_window_end?: string
+          best_window_start?: string
           brain_healthy_enabled?: boolean
           break_length_minutes?: number
           break_style?: string
@@ -3258,7 +3267,9 @@ export type Database = {
           created_at?: string
           daily_meeting_cap?: number
           energy_level?: number | null
+          focus_block_minutes?: number
           id?: string
+          learned_adjustments?: Json
           longer_break_length_minutes?: number
           longer_break_trigger_minutes?: number
           min_meeting_gap_minutes?: number
@@ -3266,6 +3277,7 @@ export type Database = {
           notes?: string | null
           pomodoro_preset?: string
           preference_type: string
+          priority_levels_by_type?: Json
           protected_windows?: Json
           quiet_finish_minutes?: number
           reminder_buffer_minutes?: number
@@ -3279,6 +3291,9 @@ export type Database = {
           auto_accept_scheduling?: boolean | null
           auto_finish_enabled?: boolean
           auto_insert_breaks?: boolean
+          best_window_enabled?: boolean
+          best_window_end?: string
+          best_window_start?: string
           brain_healthy_enabled?: boolean
           break_length_minutes?: number
           break_style?: string
@@ -3288,7 +3303,9 @@ export type Database = {
           created_at?: string
           daily_meeting_cap?: number
           energy_level?: number | null
+          focus_block_minutes?: number
           id?: string
+          learned_adjustments?: Json
           longer_break_length_minutes?: number
           longer_break_trigger_minutes?: number
           min_meeting_gap_minutes?: number
@@ -3296,6 +3313,7 @@ export type Database = {
           notes?: string | null
           pomodoro_preset?: string
           preference_type?: string
+          priority_levels_by_type?: Json
           protected_windows?: Json
           quiet_finish_minutes?: number
           reminder_buffer_minutes?: number

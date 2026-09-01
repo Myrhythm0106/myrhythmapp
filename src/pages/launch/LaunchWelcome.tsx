@@ -12,6 +12,8 @@ import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentR
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
 import type { LetterId } from '@/data/launchAssessmentBanks';
+import { COGNITIVE_PILLARS, type PillarId } from '@/launch/framework/cognitiveCapital';
+import type { ProductivityWindow } from '@/launch/assessment/productivityWindow';
 
 
 // Emerald Prestige palette — page-scoped
@@ -26,6 +28,8 @@ const MANROPE: React.CSSProperties = { fontFamily: "'Manrope', sans-serif" };
 interface BHSnapshot {
   total: number;
   letters: Record<string, number>;
+  pillars: Record<PillarId, number>;
+  productivityWindow: ProductivityWindow | null;
 }
 
 const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
@@ -70,7 +74,12 @@ export default function LaunchWelcome() {
         const data = JSON.parse(saved);
         const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
         if (score && typeof score.total === 'number') {
-          setBhs({ total: score.total, letters: score.letters || {} });
+          setBhs({
+            total: score.total,
+            letters: score.letters || {},
+            pillars: score.pillars || { biological: 0, psychological: 0, social: 0, spiritual: 0 },
+            productivityWindow: data?.assessmentResults?.productivityWindow ?? null,
+          });
         }
       } catch { /* noop */ }
     }
@@ -318,10 +327,60 @@ export default function LaunchWelcome() {
                 </button>
               </div>
             </div>
-          )}
+           )}
 
-          {/* Main body — magazine two-column */}
-          <div className="grid grid-cols-1 md:grid-cols-12">
+           {bhs && (
+             <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[#064e3b]/5">
+               <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#064e3b]/5">
+                 <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-4" style={{ color: GOLD }}>
+                   My four-part picture
+                 </p>
+                 <div className="space-y-4">
+                   {COGNITIVE_PILLARS.map((pillar) => {
+                     const value = bhs.pillars[pillar.id] ?? 0;
+                     return (
+                       <div key={pillar.id}>
+                         <div className="flex justify-between gap-3 text-xs font-semibold mb-1" style={{ color: INK }}>
+                           <span>{pillar.shortLabel}</span><span>{Math.round((value / 3) * 100)}%</span>
+                         </div>
+                         <div className="h-2 bg-[#064e3b]/10 overflow-hidden">
+                           <div className="h-full" style={{ width: `${(value / 3) * 100}%`, backgroundColor: GOLD }} />
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+                 <p className="text-xs mt-5 leading-relaxed" style={{ color: `${INK}99` }}>
+                   This is a practical starting point for my day-to-day choices — not a diagnosis or a prediction.
+                 </p>
+               </div>
+               <div className="p-8 md:p-10" style={{ backgroundColor: `${CREAM}4d` }}>
+                 <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-4" style={{ color: GOLD }}>
+                   My best window
+                 </p>
+                 {bhs.productivityWindow ? (
+                   <>
+                     <p className="text-3xl font-bold" style={{ ...SORA, color: INK }}>
+                       {bhs.productivityWindow.productiveStart}–{bhs.productivityWindow.productiveEnd}
+                     </p>
+                     <p className="text-sm mt-2 leading-relaxed" style={{ color: `${INK}99` }}>
+                       {bhs.productivityWindow.summary}
+                     </p>
+                     <p className="text-xs mt-5 font-semibold" style={{ color: MOSS }}>
+                       {bhs.productivityWindow.protectHours}
+                     </p>
+                   </>
+                 ) : (
+                   <p className="text-sm leading-relaxed" style={{ color: `${INK}99` }}>
+                     My calendar will learn this gently as I use MyRhythm. I can change it any time.
+                   </p>
+                 )}
+               </div>
+             </div>
+           )}
+
+           {/* Main body — magazine two-column */}
+           <div className="grid grid-cols-1 md:grid-cols-12">
             {/* Left: message + CTA */}
             <div className="md:col-span-7 p-8 md:p-12 border-b md:border-b-0 md:border-r border-[#064e3b]/5">
               <motion.h1

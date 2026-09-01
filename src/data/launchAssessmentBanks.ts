@@ -30,6 +30,13 @@ export interface AssessmentOption {
   score: 0 | 1 | 2 | 3;
 }
 
+/** One row of a rhythm-detail step. Not scored — feeds the productivity window. */
+export interface RhythmDetailRow {
+  id: 'focusLength' | 'energyDrain';
+  label: string;
+  options: { value: string; label: string }[];
+}
+
 export interface AssessmentQuestion {
   id: QuestionId;
   letter: 'M' | 'Y' | 'R' | 'H' | 'T';
@@ -44,8 +51,34 @@ export interface AssessmentQuestion {
   multiSelect?: boolean;
   /** A rhythm-detail question is rendered as two rows on one screen, not scored. */
   kind?: 'default' | 'rhythm-detail';
+  /** Only for kind === 'rhythm-detail'. */
+  rows?: RhythmDetailRow[];
   options: AssessmentOption[];
 }
+
+/** Shared rows for the rhythm-detail step — same wording works for every persona. */
+export const RHYTHM_DETAIL_ROWS: RhythmDetailRow[] = [
+  {
+    id: 'focusLength',
+    label: 'How long can I usually focus in one go?',
+    options: [
+      { value: '20', label: 'About 20 minutes' },
+      { value: '45', label: 'About 45 minutes' },
+      { value: '90', label: 'An hour and a half or more' },
+      { value: 'varies', label: 'It really varies' },
+    ],
+  },
+  {
+    id: 'energyDrain',
+    label: 'What drains me fastest?',
+    options: [
+      { value: 'long-meetings', label: 'Long meetings' },
+      { value: 'back-to-back', label: 'Back-to-back commitments' },
+      { value: 'noise-crowds', label: 'Noise and crowds' },
+      { value: 'decisions', label: 'Making lots of decisions' },
+    ],
+  },
+];
 
 export interface AssessmentBank {
   persona: PersonaKey;
@@ -121,6 +154,7 @@ const brainInjury: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -245,6 +279,7 @@ const caregiver: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -369,6 +404,7 @@ const executive: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -493,6 +529,7 @@ const student: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 

@@ -1,5 +1,6 @@
 import { ExtractedAction } from '@/types/memoryBridge';
 import { supabase } from '@/integrations/supabase/client';
+import type { BlockType, PriorityLevels } from '@/launch/scheduling/defaults';
 
 export interface SmartScheduleSuggestion {
   date: string;
@@ -18,6 +19,11 @@ export interface UserSchedulePreference {
   preferredMeetingTimes: string[];
   energyPeaks: 'morning' | 'afternoon' | 'evening';
   doNotDisturb: string[];
+  bestWindowEnabled: boolean;
+  bestWindowStart: string;
+  bestWindowEnd: string;
+  focusBlockMinutes: number;
+  priorityLevelsByType: Record<BlockType, PriorityLevels>;
 }
 
 // Smart scheduling engine with empowering growth mindset
@@ -27,7 +33,19 @@ export class SmartScheduler {
     leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
     preferredMeetingTimes: ['10:00', '11:00', '14:00', '15:00'],
     energyPeaks: 'morning',
-    doNotDisturb: ['20:00', '21:00', '22:00', '07:00', '08:00']
+    doNotDisturb: ['20:00', '21:00', '22:00', '07:00', '08:00'],
+    bestWindowEnabled: true,
+    bestWindowStart: '09:00',
+    bestWindowEnd: '11:30',
+    focusBlockMinutes: 45,
+    priorityLevelsByType: {
+      focus: { window: 'decides', people: 'counts', deadline: 'counts' },
+      meetings: { window: 'counts', people: 'decides', deadline: 'counts' },
+      admin: { window: 'counts', people: 'off', deadline: 'decides' },
+      rest: { window: 'decides', people: 'off', deadline: 'off' },
+      personal: { window: 'counts', people: 'off', deadline: 'counts' },
+      custom: { window: 'counts', people: 'counts', deadline: 'counts' },
+    }
   };
 
   async getUserPreferences(userId: string): Promise<UserSchedulePreference> {
@@ -46,7 +64,12 @@ export class SmartScheduler {
           leastProductiveHours: (prefs.time_slots as any)?.unproductive || this.defaultPreferences.leastProductiveHours,
           preferredMeetingTimes: (prefs.time_slots as any)?.meetings || this.defaultPreferences.preferredMeetingTimes,
           energyPeaks: (prefs.time_slots as any)?.energy_peak || this.defaultPreferences.energyPeaks,
-          doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb
+          doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb,
+          bestWindowEnabled: prefs.best_window_enabled ?? this.defaultPreferences.bestWindowEnabled,
+          bestWindowStart: prefs.best_window_start || this.defaultPreferences.bestWindowStart,
+          bestWindowEnd: prefs.best_window_end || this.defaultPreferences.bestWindowEnd,
+          focusBlockMinutes: prefs.focus_block_minutes || this.defaultPreferences.focusBlockMinutes,
+          priorityLevelsByType: (prefs.priority_levels_by_type as unknown as Record<BlockType, PriorityLevels>) || this.defaultPreferences.priorityLevelsByType,
         };
       }
 
@@ -126,7 +149,12 @@ export class SmartScheduler {
       leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
       preferredMeetingTimes: mostProductiveHours.slice(1, 4),
       energyPeaks,
-      doNotDisturb
+      doNotDisturb,
+      bestWindowEnabled: this.defaultPreferences.bestWindowEnabled,
+      bestWindowStart: this.defaultPreferences.bestWindowStart,
+      bestWindowEnd: this.defaultPreferences.bestWindowEnd,
+      focusBlockMinutes: this.defaultPreferences.focusBlockMinutes,
+      priorityLevelsByType: this.defaultPreferences.priorityLevelsByType,
     };
   }
 
@@ -224,7 +252,9 @@ export class SmartScheduler {
             confidence,
             reason: this.generateEmpoweringReason(action, time, preferences, dayOffset, watcherNames),
             energyMatch: this.getEnergyMatch(time, preferences),
-            conflictLevel
+            conflictLevel,
+            assessmentAligned: preferences.bestWindowEnabled && this.timeIsInWindow(time, preferences.bestWindowStart, preferences.bestWindowEnd),
+            duration: preferences.focusBlockMinutes
           });
         }
       }
@@ -237,18 +267,19 @@ export class SmartScheduler {
   }
 
   private getOptimalTimeSlots(action: ExtractedAction, preferences: UserSchedulePreference): string[] {
-    // High priority actions get prime time slots
-    if (action.priority_level >= 4) {
-      return preferences.mostProductiveHours.slice(0, 3);
-    }
+    const type = this.getActionType(action);
+    const levels = preferences.priorityLevelsByType[type];
+    const windowSlots = this.getWindowSlots(preferences);
+    const peakSlots = preferences.mostProductiveHours;
+    const meetingSlots = preferences.preferredMeetingTimes;
 
-    // Meeting-related actions get meeting-friendly times
-    if (this.isMeetingRelated(action)) {
-      return preferences.preferredMeetingTimes.slice(0, 2);
+    if (preferences.bestWindowEnabled && levels?.window === 'decides') {
+      return windowSlots.length ? windowSlots.slice(0, 3) : peakSlots.slice(0, 3);
     }
-
-    // Personal actions can be more flexible
-    return [...preferences.mostProductiveHours.slice(0, 2), ...preferences.preferredMeetingTimes.slice(0, 1)];
+    if (this.isMeetingRelated(action) || type === 'meetings') {
+      return [...(levels?.window === 'counts' ? windowSlots.slice(0, 1) : []), ...meetingSlots.slice(0, 2)];
+    }
+    return [...(preferences.bestWindowEnabled ? windowSlots.slice(0, 1) : []), ...peakSlots.slice(0, 2), ...meetingSlots.slice(0, 1)];
   }
 
   private checkConflicts(date: string, time: string, existingEvents: any[]): 'none' | 'low' | 'high' {
@@ -272,6 +303,13 @@ export class SmartScheduler {
 
     // Priority boost
     confidence += (action.priority_level / 5) * 0.3;
+
+    const aligned = preferences.bestWindowEnabled && this.timeIsInWindow(time, preferences.bestWindowStart, preferences.bestWindowEnd);
+    const type = this.getActionType(action);
+    const windowWeight = preferences.priorityLevelsByType[type]?.window;
+    if (aligned && windowWeight === 'decides') confidence += 0.25;
+    else if (aligned && windowWeight === 'counts') confidence += 0.12;
+    else if (!aligned && windowWeight === 'decides') confidence -= 0.08;
 
     // Time preference boost
     if (preferences.mostProductiveHours.includes(time)) {
@@ -358,6 +396,31 @@ export class SmartScheduler {
     const text = action.action_text.toLowerCase();
     return text.includes('meet') || text.includes('call') || text.includes('discuss') || 
            text.includes('visit') || text.includes('appointment');
+  }
+
+  private getWindowSlots(preferences: UserSchedulePreference): string[] {
+    if (!preferences.bestWindowEnabled) return [];
+    const start = this.timeToMinutes(preferences.bestWindowStart);
+    const end = this.timeToMinutes(preferences.bestWindowEnd);
+    const step = Math.max(30, preferences.focusBlockMinutes);
+    const slots: string[] = [];
+    for (let minute = start; minute < end; minute += step) {
+      slots.push(`${String(Math.floor(minute / 60)).padStart(2, '0')}:${String(minute % 60).padStart(2, '0')}`);
+    }
+    return slots;
+  }
+
+  private timeIsInWindow(time: string, start: string, end: string): boolean {
+    const value = this.timeToMinutes(time);
+    return value >= this.timeToMinutes(start) && value < this.timeToMinutes(end);
+  }
+
+  private getActionType(action: ExtractedAction): BlockType {
+    if (this.isMeetingRelated(action)) return 'meetings';
+    const text = action.action_text.toLowerCase();
+    if (text.includes('rest') || text.includes('break') || text.includes('sleep')) return 'rest';
+    if (text.includes('email') || text.includes('admin')) return 'admin';
+    return 'focus';
   }
 
   private timeToMinutes(time: string): number {
