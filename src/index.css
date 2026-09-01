@@ -620,6 +620,7 @@ html, body {
   --launch-cream-light: 45 50% 96%; /* #faf6ea — lighter page background for non-welcome launch pages */
   --launch-ivory: 45 60% 98%;     /* #fdfcf7 — elevated card surfaces */
   --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
+  --launch-teal:  173 52% 48%;   /* #3bb89f — calm signal accent */
 
   color: hsl(var(--launch-ink));
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
@@ -655,16 +656,19 @@ html, body {
 .launch-theme .bg-launch-moss        { background-color: hsl(var(--launch-moss)); }
 .launch-theme .bg-launch-gold        { background-color: hsl(var(--launch-gold)); }
 .launch-theme .bg-launch-ember       { background-color: hsl(var(--launch-ember)); }
+.launch-theme .bg-launch-teal        { background-color: hsl(var(--launch-teal)); }
 .launch-theme .text-launch-cream      { color: hsl(var(--launch-cream)); }
 .launch-theme .text-launch-ink        { color: hsl(var(--launch-ink)); }
 .launch-theme .text-launch-moss     { color: hsl(var(--launch-moss)); }
 .launch-theme .text-launch-gold     { color: hsl(var(--launch-gold)); }
 .launch-theme .text-launch-ember    { color: hsl(var(--launch-ember)); }
+.launch-theme .text-launch-teal     { color: hsl(var(--launch-teal)); }
 .launch-theme .border-launch-ink     { border-color: hsl(var(--launch-ink) / 0.10); }
 .launch-theme .border-launch-moss    { border-color: hsl(var(--launch-moss)); }
 .launch-theme .border-launch-gold    { border-color: hsl(var(--launch-gold)); }
 .launch-theme .border-launch-gold\/30 { border-color: hsl(var(--launch-gold) / 0.30); }
 .launch-theme .border-launch-ember   { border-color: hsl(var(--launch-ember)); }
+.launch-theme .border-launch-teal    { border-color: hsl(var(--launch-teal)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
 
 /* Day-open welcome overlay — ink ground with a single teal signal */

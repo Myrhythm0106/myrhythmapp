@@ -23,6 +23,7 @@ const config: Config = {
         'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
         'display': ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        'playfair': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
         'archivo': ['Archivo Black', 'Impact', 'system-ui', 'sans-serif'],
         'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
         'instrument': ['Instrument Serif', 'Georgia', 'Times New Roman', 'serif'],
@@ -369,6 +370,16 @@ const config: Config = {
             transform: "translateY(-20px)"
           }
         },
+        "breathe": {
+          "0%, 100%": { 
+            transform: "scale(1)",
+            opacity: "0.45"
+          },
+          "50%": { 
+            transform: "scale(1.08)",
+            opacity: "0.75"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -381,6 +392,7 @@ const config: Config = {
         "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
         "fade-in-up": "fade-in-up 0.6s ease-out",
         "parallax-float": "parallax-float 3s ease-in-out infinite",
+        "breathe": "breathe 3s ease-in-out infinite",
       },
     },
   },
