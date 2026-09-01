@@ -115,25 +115,25 @@ export function CaptureHub({
 
   return (
     <>
-      <div className="relative w-full max-w-lg mx-auto">
+      <div className="relative w-full max-w-lg mx-auto mb-20">
         {/* Ambient glows */}
         <div className="absolute -top-20 -left-20 w-56 h-56 bg-launch-teal/10 rounded-full blur-3xl motion-safe:animate-pulse" />
         <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-launch-gold/10 rounded-full blur-3xl" />
 
         {/* Main hub card */}
-        <div className="relative overflow-hidden rounded-[36px] border border-launch-gold/20 bg-launch-ivory/80 backdrop-blur-2xl shadow-2xl shadow-[hsl(var(--launch-ink)/0.05)] p-8 md:p-10 text-center">
+        <div className="relative overflow-hidden rounded-[32px] border border-launch-gold/20 bg-launch-ivory/80 backdrop-blur-2xl shadow-2xl shadow-[hsl(var(--launch-ink)/0.05)] p-6 md:p-8 text-center">
           {/* Brand mark */}
-          <div className="flex justify-center mb-6">
-            <div className="relative w-14 h-14 rounded-full border-2 border-[hsl(var(--launch-gold))] flex items-center justify-center">
-              <div className="w-7 h-7 rounded-full bg-launch-ink shadow-lg shadow-[hsl(var(--launch-ink)/0.20)]" />
+          <div className="flex justify-center mb-4">
+            <div className="relative w-12 h-12 rounded-full border-2 border-[hsl(var(--launch-gold))] flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-launch-ink shadow-lg shadow-[hsl(var(--launch-ink)/0.20)]" />
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-launch-ink leading-tight font-playfair">
+          <h1 className="text-3xl md:text-4xl font-semibold mb-2 text-launch-ink leading-tight font-playfair">
             Memory Bridge
           </h1>
 
-          <p className="text-lg text-launch-ink/70 font-light max-w-xs mx-auto mb-10 leading-relaxed">
+          <p className="text-base text-launch-ink/70 font-light max-w-xs mx-auto mb-6 leading-relaxed">
             Preserve my thoughts in perfect rhythm. Simple, clear, and kept for me.
           </p>
 
