@@ -257,9 +257,10 @@ export default function LaunchAssessment() {
   const current: AssessmentAnswer = answers[question.id] ?? { primary: '', alsoFits: [] };
   const isNoneFits = current.primary === NONE_FITS_VALUE;
   const noneNote = freeform[question.id] ?? '';
+  const savedRhythmDetail = answers.rhythmDetail ?? { primary: '', alsoFits: [] };
   const rhythmDetailValues = question.kind === 'rhythm-detail'
     ? { focusLength: current.primary, energyDrain: current.alsoFits[0] ?? '' }
-    : { focusLength: '', energyDrain: '' };
+    : { focusLength: savedRhythmDetail.primary, energyDrain: savedRhythmDetail.alsoFits[0] ?? '' };
 
   const setPrimary = (value: string) => {
     setAnswers((prev) => {
@@ -358,8 +359,8 @@ export default function LaunchAssessment() {
         rhythmPreference: primaryOf('rhythm'),
         productivityWindow: deriveProductivityWindow({
           rhythm: primaryOf('rhythm'),
-          focusLength: rhythmDetailValues.focusLength,
-          energyDrain: rhythmDetailValues.energyDrain,
+          focusLength: savedRhythmDetail.primary,
+          energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
         }),
         keyStruggles: combined('transform'),
         goals: combined('yourVictories'),
@@ -377,9 +378,45 @@ export default function LaunchAssessment() {
           lastViewedWhatsNew: null,
           purchasedFeatures: [],
         })
-      );
-      localStorage.removeItem(PROGRESS_KEY);
-    } catch (err) {
+       );
+       localStorage.removeItem(PROGRESS_KEY);
+
+       if (user?.id) {
+         const window = deriveProductivityWindow({
+           rhythm: primaryOf('rhythm'),
+           focusLength: savedRhythmDetail.primary,
+           energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
+         });
+         void supabase
+           .from('user_schedule_preferences')
+           .select('id')
+           .eq('user_id', user.id)
+           .eq('preference_type', 'brain_healthy')
+           .maybeSingle()
+           .then(async ({ data, error }) => {
+             if (error) throw error;
+             const payload = {
+               user_id: user.id,
+               preference_type: 'brain_healthy',
+               best_window_enabled: true,
+               best_window_start: window.productiveStart,
+               best_window_end: window.productiveEnd,
+               focus_block_minutes: window.focusBlockMinutes,
+               time_slots: {
+                 productive: [window.productiveStart, window.productiveEnd],
+                 energy_peak: window.peak,
+                 best_window_summary: window.summary,
+               },
+               notes: 'My best window, shaped by my MYRHYTHM snapshot',
+             };
+             const result = data?.id
+               ? await supabase.from('user_schedule_preferences').update(payload).eq('id', data.id)
+               : await supabase.from('user_schedule_preferences').insert(payload);
+             if (result.error) throw result.error;
+           })
+           .catch((error) => console.warn('[assessment] schedule preference save failed:', error));
+       }
+     } catch (err) {
       console.error('[assessment] could not build results', err);
       toast.error("We couldn't finish your snapshot", {
         description: 'Your answers are still saved. Tap Complete again, or go Back one step and retry.',
