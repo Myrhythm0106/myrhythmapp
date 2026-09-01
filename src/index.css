@@ -620,6 +620,7 @@ html, body {
   --launch-cream-light: 45 50% 96%; /* #faf6ea — lighter page background for non-welcome launch pages */
   --launch-ivory: 45 60% 98%;     /* #fdfcf7 — elevated card surfaces */
   --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
+  --launch-teal:  173 52% 48%;   /* #3bb89f — calm signal accent */
 
   color: hsl(var(--launch-ink));
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
