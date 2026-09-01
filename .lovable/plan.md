@@ -26,6 +26,11 @@ Rebuild the pre-recording view of `src/pages/launch/LaunchMemoryBridge.tsx` as a
 - One dominant **Start Capture** button (emerald, 72px, ≥56px touch rule) wrapped in a soft teal breathing glow (slow scale/opacity keyframes, `prefers-reduced-motion` respected).
 - Ivory glass card (`bg-white/60 backdrop-blur`), 40px radius, thin gold border, ambient teal + gold blurred glows behind.
 - Exactly **3 visible choices** (Start Capture, Review Logs, Quick Note) — everything else moves behind the "Why it matters" disclosure and the existing Past Captures list.
+
+#### Where your recordings live
+- **Just-finished recording:** the moment you stop and save, the single confirmation screen shows the new capture at the top (title, reference code, keep-for choice) with play / review actions — no hunting.
+- **Review Logs tile** on the hub opens the Past Captures list: every saved recording, newest first, each with its `MB-…` reference code, date, length, keep-for countdown badge, and one-tap play. It also shows the two-tap "Last conversation" shortcut already built.
+- **Quiet recent strip:** directly under the two secondary tiles, the hub shows the 1–2 most recent captures as slim rows (title + reference + play), so what you just did is always visible without opening anything.
 - The recording-allowance egg timer stays visible as a quiet caption under the primary button (per the allowance-ladder memory).
 - Serif display headline (Playfair-style, matching the Emerald Prestige direction already in use) + light body copy, first-person tone.
 
