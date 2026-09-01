@@ -117,8 +117,8 @@ export function CaptureHub({
     <>
       <div className="relative w-full max-w-lg mx-auto">
         {/* Ambient glows */}
-        <div className="absolute -top-20 -left-20 w-56 h-56 bg-[hsl(var(--clarity-teal-400))]/10 rounded-full blur-3xl motion-safe:animate-pulse" />
-        <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-[hsl(var(--launch-gold))]/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -left-20 w-56 h-56 bg-launch-teal/10 rounded-full blur-3xl motion-safe:animate-pulse" />
+        <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-launch-gold/10 rounded-full blur-3xl" />
 
         {/* Main hub card */}
         <div className="relative overflow-hidden rounded-[36px] border border-[hsl(var(--launch-gold)/0.20)] bg-[hsl(var(--launch-ivory))]/80 backdrop-blur-2xl shadow-2xl shadow-[hsl(var(--launch-ink)/0.05)] p-8 md:p-10 text-center">
