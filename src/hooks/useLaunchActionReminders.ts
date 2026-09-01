@@ -73,7 +73,7 @@ export function useLaunchActionReminders(rangeStart: Date, rangeEnd: Date, enabl
           if (!a) return false;
           if (a.archived_at) return false;
           if (a.status && HIDDEN_STATUSES.has(a.status.toLowerCase())) return false;
-          if (a.completion_status && HIDDEN_STATUSES.has(a.completion_status.toLowerCase())) return false;
+          
           return true;
         })
         .map(r => ({
