@@ -121,11 +121,11 @@ export function CaptureHub({
         <div className="absolute -bottom-20 -right-20 w-56 h-56 bg-launch-gold/10 rounded-full blur-3xl" />
 
         {/* Main hub card */}
-        <div className="relative overflow-hidden rounded-[36px] border border-[hsl(var(--launch-gold)/0.20)] bg-[hsl(var(--launch-ivory))]/80 backdrop-blur-2xl shadow-2xl shadow-[hsl(var(--launch-ink)/0.05)] p-8 md:p-10 text-center">
+        <div className="relative overflow-hidden rounded-[36px] border border-launch-gold/20 bg-launch-ivory/80 backdrop-blur-2xl shadow-2xl shadow-launch-ink/5 p-8 md:p-10 text-center">
           {/* Brand mark */}
           <div className="flex justify-center mb-6">
             <div className="relative w-14 h-14 rounded-full border-2 border-[hsl(var(--launch-gold))] flex items-center justify-center">
-              <div className="w-7 h-7 rounded-full bg-[hsl(var(--launch-ink))] shadow-lg shadow-[hsl(var(--launch-ink)/0.20)]" />
+              <div className="w-7 h-7 rounded-full bg-launch-ink shadow-lg shadow-launch-ink/20" />
             </div>
           </div>
 
@@ -133,7 +133,7 @@ export function CaptureHub({
             Memory Bridge
           </h1>
 
-          <p className="text-lg text-[hsl(var(--launch-ink)/0.70)] font-light max-w-xs mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-launch-ink/70 font-light max-w-xs mx-auto mb-10 leading-relaxed">
             Preserve my thoughts in perfect rhythm. Simple, clear, and kept for me.
           </p>
 
@@ -141,7 +141,7 @@ export function CaptureHub({
           <div className="relative mb-6">
             <div
               className={cn(
-                'absolute inset-0 rounded-2xl bg-[hsl(var(--clarity-teal-400))] blur-xl opacity-40 motion-safe:animate-breathe',
+                'absolute inset-0 rounded-2xl bg-launch-teal blur-xl opacity-40 motion-safe:animate-breathe',
                 primaryDisabled && 'opacity-0'
               )}
               aria-hidden="true"
@@ -152,8 +152,8 @@ export function CaptureHub({
               aria-label="Start capture"
               className={cn(
                 'relative w-full h-[72px] rounded-2xl flex items-center justify-center transition-all',
-                'bg-[hsl(var(--launch-ink))] text-white text-xl font-medium tracking-wide',
-                'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-[hsl(var(--launch-ink)/0.15)]',
+                'bg-launch-ink text-white text-xl font-medium tracking-wide',
+                'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-launch-ink/15',
                 'active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed'
               )}
             >
@@ -176,20 +176,20 @@ export function CaptureHub({
 
           {/* Allowance caption */}
           {outOfAllowance ? (
-            <div className="mx-auto max-w-sm rounded-xl border border-[hsl(var(--launch-gold)/0.40)] bg-[hsl(var(--launch-gold)/0.10)] p-3 mb-6">
-              <p className="text-sm font-medium text-[hsl(var(--launch-ink))]">
+            <div className="mx-auto max-w-sm rounded-xl border border-launch-gold/40 bg-launch-gold/10 p-3 mb-6">
+              <p className="text-sm font-medium text-launch-ink">
                 I’ve used my {allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.
               </p>
               {nextTierInfo && (
-                <p className="mt-1 text-xs text-[hsl(var(--launch-ink)/0.70)]">
+                <p className="mt-1 text-xs text-launch-ink/70">
                   {nextTierInfo.label} gives me {nextTierInfo.perRecordingMinutes} minutes per recording and {nextTierInfo.monthlyMinutes} minutes a month.
                 </p>
               )}
             </div>
           ) : (
-            <p className="mb-6 text-xs text-[hsl(var(--launch-ink)/0.60)]">
+            <p className="mb-6 text-xs text-launch-ink/60">
               I can record up to {allowance.limits.perRecordingMinutes} minutes in one go —{' '}
-              <span className="font-medium text-[hsl(var(--launch-moss))]">{allowance.remainingMinutes} minutes</span> left this {allowance.period}.
+              <span className="font-medium text-launch-moss">{allowance.remainingMinutes} minutes</span> left this {allowance.period}.
             </p>
           )}
 
@@ -197,16 +197,16 @@ export function CaptureHub({
           <div className="grid grid-cols-2 gap-4 mb-6">
             <button
               onClick={onOpenMyRecords}
-              className="group h-16 rounded-2xl border border-[hsl(var(--launch-gold)/0.30)] bg-[hsl(var(--launch-cream))] text-[hsl(var(--launch-ink))] font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
+              className="group h-16 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
             >
-              <History className="h-4 w-4 text-[hsl(var(--launch-gold))] group-hover:scale-110 transition-transform" />
+              <History className="h-4 w-4 text-launch-gold group-hover:scale-110 transition-transform" />
               My Records
             </button>
             <button
               onClick={() => setNoteOpen(true)}
-              className="group h-16 rounded-2xl border border-[hsl(var(--launch-gold)/0.30)] bg-[hsl(var(--launch-cream))] text-[hsl(var(--launch-ink))] font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
+              className="group h-16 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
             >
-              <PenLine className="h-4 w-4 text-[hsl(var(--launch-gold))] group-hover:scale-110 transition-transform" />
+              <PenLine className="h-4 w-4 text-launch-gold group-hover:scale-110 transition-transform" />
               Quick Note
             </button>
           </div>
@@ -216,7 +216,7 @@ export function CaptureHub({
             type="button"
             disabled={isUploading || isExtracting}
             onClick={onUploadClick}
-            className="inline-flex w-full items-center justify-center gap-2 h-12 rounded-2xl border border-[hsl(var(--launch-gold)/0.25)] bg-white/60 px-4 text-sm font-medium text-[hsl(var(--launch-ink)/0.80)] hover:bg-[hsl(var(--launch-gold)/0.10)] transition-colors disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 h-12 rounded-2xl border border-launch-gold/25 bg-white/60 px-4 text-sm font-medium text-launch-ink/80 hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
           >
             {isUploading || isExtracting ? (
               <>
@@ -230,14 +230,14 @@ export function CaptureHub({
               </>
             )}
           </button>
-          <p className="mt-2 text-xs text-[hsl(var(--launch-ink)/0.50)]">
+          <p className="mt-2 text-xs text-launch-ink/50">
             Audio or video from my phone, a voice memo or a call recording.
           </p>
 
           {/* Quiet recent strip */}
           {recentRecordings.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-[hsl(var(--launch-gold)/0.12)]">
-              <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[hsl(var(--launch-gold))] mb-3 text-left">
+            <div className="mt-8 pt-6 border-t border-launch-gold/12">
+              <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-launch-gold mb-3 text-left">
                 Recently captured
               </p>
               <div className="space-y-2">
@@ -245,11 +245,11 @@ export function CaptureHub({
                   <button
                     key={recording.id}
                     onClick={() => onOpenRecording(recording)}
-                    className="w-full flex items-center justify-between rounded-xl bg-white/60 border border-[hsl(var(--launch-gold)/0.15)] px-3 py-3 text-left hover:bg-white transition-colors"
+                    className="w-full flex items-center justify-between rounded-xl bg-white/60 border border-launch-gold/15 px-3 py-3 text-left hover:bg-white transition-colors"
                   >
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-[hsl(var(--launch-ink))] truncate">{recording.title}</p>
-                      <p className="text-xs text-[hsl(var(--launch-ink)/0.60)] flex items-center gap-1">
+                      <p className="text-sm font-medium text-launch-ink truncate">{recording.title}</p>
+                      <p className="text-xs text-launch-ink/60 flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {formatRecordingDate(recording.created_at)}
                         {recording.duration_seconds && (
@@ -257,7 +257,7 @@ export function CaptureHub({
                         )}
                       </p>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-[hsl(var(--launch-ink))] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-launch-ink flex items-center justify-center shrink-0">
                       <Play className="h-3.5 w-3.5 text-white ml-0.5" />
                     </div>
                   </button>
@@ -267,28 +267,28 @@ export function CaptureHub({
           )}
 
           {/* Progressive disclosure: Why it matters + facts */}
-          <div className="mt-8 pt-6 border-t border-[hsl(var(--launch-gold)/0.10)]">
+          <div className="mt-8 pt-6 border-t border-launch-gold/10">
             <Collapsible>
-              <CollapsibleTrigger className="inline-flex items-center text-[hsl(var(--clarity-teal-600))] hover:text-[hsl(var(--clarity-teal-700))] font-medium transition-colors text-sm uppercase tracking-widest">
+              <CollapsibleTrigger className="inline-flex items-center text-launch-teal hover:text-launch-teal/80 font-medium transition-colors text-sm uppercase tracking-widest">
                 <span>Why it matters</span>
                 <ChevronDown className="ml-2 h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-4 text-left">
-                <div className="rounded-2xl bg-[hsl(var(--launch-cream))] border border-[hsl(var(--launch-gold)/0.15)] p-4 space-y-3 text-sm text-[hsl(var(--launch-ink)/0.80)] leading-relaxed">
+                <div className="rounded-2xl bg-launch-cream border border-launch-gold/15 p-4 space-y-3 text-sm text-launch-ink/80 leading-relaxed">
                   <p>
                     The conversations that matter most often arrive when energy is lowest — at the bedside, after a diagnosis, during a difficult call. Memory Bridge gives me a calm, dependable system to record, transcribe, and revisit those moments.
                   </p>
-                  <ul className="space-y-2 text-[hsl(var(--launch-ink)/0.70)]">
+                  <ul className="space-y-2 text-launch-ink/70">
                     <li className="flex gap-2">
-                      <span className="text-[hsl(var(--launch-gold))]">•</span>
+                      <span className="text-launch-gold">•</span>
                       <span>Working memory can drop by up to 30% under stress or fatigue — having a reliable record protects the plan I agreed on.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[hsl(var(--launch-gold))]">•</span>
+                      <span className="text-launch-gold">•</span>
                       <span>Writing down commitments makes follow-through far more likely — the bridge turns talk into scheduled action.</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="text-[hsl(var(--launch-gold))]">•</span>
+                      <span className="text-launch-gold">•</span>
                       <span>It is useful for everyone: appointments, meetings, family plans, creative ideas, or any conversation I may need to trust later.</span>
                     </li>
                   </ul>
@@ -300,11 +300,11 @@ export function CaptureHub({
           {/* Mic status — never let a tap disappear into silence */}
           <div className="mt-6 space-y-3">
             {micBlockReason === 'frame' && (
-              <div className="mx-auto max-w-sm rounded-xl border border-[hsl(var(--launch-ember)/0.30)] bg-[hsl(var(--launch-ember)/0.05)] p-4 text-left">
-                <p className="text-sm font-semibold text-[hsl(var(--launch-ink))]">
+              <div className="mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
+                <p className="text-sm font-semibold text-launch-ink">
                   Your browser is blocking the microphone inside this preview frame.
                 </p>
-                <p className="mt-1 text-xs text-[hsl(var(--launch-ink)/0.70)]">
+                <p className="mt-1 text-xs text-launch-ink/70">
                   Open the app in its own browser tab and recording will work normally.
                 </p>
                 <button
@@ -317,37 +317,37 @@ export function CaptureHub({
               </div>
             )}
             {micBlockReason === 'insecure' && (
-              <p className="mx-auto max-w-sm text-sm text-[hsl(var(--launch-ember))]">
+              <p className="mx-auto max-w-sm text-sm text-launch-ember">
                 Recording needs a secure (https) address. Open the app over https and try again.
               </p>
             )}
             {micBlockReason === 'unsupported' && (
-              <p className="mx-auto max-w-sm text-sm text-[hsl(var(--launch-ember))]">
+              <p className="mx-auto max-w-sm text-sm text-launch-ember">
                 This browser can't record audio. Please use Chrome on a laptop, or Safari on iPhone.
               </p>
             )}
             {!micBlockReason && micPermission === 'denied' && (
-              <div className="mx-auto max-w-sm rounded-xl border border-[hsl(var(--launch-ember)/0.30)] bg-[hsl(var(--launch-ember)/0.05)] p-4 text-left">
-                <p className="text-sm font-semibold text-[hsl(var(--launch-ink))]">Microphone access is blocked.</p>
-                <p className="mt-1 text-xs text-[hsl(var(--launch-ink)/0.70)]">
+              <div className="mx-auto max-w-sm rounded-xl border border-launch-ember/30 bg-launch-ember/5 p-4 text-left">
+                <p className="text-sm font-semibold text-launch-ink">Microphone access is blocked.</p>
+                <p className="mt-1 text-xs text-launch-ink/70">
                   In Chrome, click the icon at the left of the address bar, set Microphone to Allow, then reload this page.
                 </p>
                 <button
                   type="button"
                   onClick={() => void refreshMicStatus()}
-                  className="mt-3 text-sm font-medium text-[hsl(var(--launch-ink))] underline underline-offset-4"
+                  className="mt-3 text-sm font-medium text-launch-ink underline underline-offset-4"
                 >
                   Check again
                 </button>
               </div>
             )}
             {!micBlockReason && micPermission === 'prompt' && (
-              <p className="text-xs text-[hsl(var(--launch-ink)/0.60)]">
+              <p className="text-xs text-launch-ink/60">
                 Your browser will ask permission for the microphone the first time you tap record.
               </p>
             )}
             {!micBlockReason && micPermission === 'granted' && (
-              <p className="text-xs text-[hsl(var(--launch-moss))]">Microphone ready.</p>
+              <p className="text-xs text-launch-moss">Microphone ready.</p>
             )}
           </div>
 
@@ -361,9 +361,9 @@ export function CaptureHub({
 
       {/* Quick Note dialog */}
       <Dialog open={noteOpen} onOpenChange={setNoteOpen}>
-        <DialogContent className="sm:max-w-md bg-[hsl(var(--launch-ivory))] border-[hsl(var(--launch-gold)/0.20)]">
+        <DialogContent className="sm:max-w-md bg-[hsl(var(--launch-ivory))] border-launch-gold/20">
           <DialogHeader>
-            <DialogTitle className="text-[hsl(var(--launch-ink))] font-display">Quick Note</DialogTitle>
+            <DialogTitle className="text-launch-ink font-display">Quick Note</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <input
@@ -371,27 +371,27 @@ export function CaptureHub({
               value={noteTitle}
               onChange={(e) => setNoteTitle(e.target.value)}
               placeholder="What is this about?"
-              className="w-full px-4 py-3 rounded-xl border border-[hsl(var(--launch-gold)/0.30)] bg-white text-[hsl(var(--launch-ink))] placeholder:text-[hsl(var(--launch-ink)/0.40)] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--launch-gold)/0.40)]"
+              className="w-full px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--launch-gold)/0.40)]"
             />
             <textarea
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               placeholder="Jot it down before I forget…"
               rows={5}
-              className="w-full px-4 py-3 rounded-xl border border-[hsl(var(--launch-gold)/0.30)] bg-white text-[hsl(var(--launch-ink))] placeholder:text-[hsl(var(--launch-ink)/0.40)] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--launch-gold)/0.40)] resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--launch-gold)/0.40)] resize-none"
             />
             <div className="flex gap-3 justify-end">
               <Button
                 variant="outline"
                 onClick={() => setNoteOpen(false)}
-                className="rounded-xl border-[hsl(var(--launch-gold)/0.30)] text-[hsl(var(--launch-ink))] hover:bg-[hsl(var(--launch-gold)/0.10)]"
+                className="rounded-xl border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10"
               >
                 Cancel
               </Button>
               <Button
                 onClick={saveQuickNote}
                 disabled={savingNote || !noteContent.trim()}
-                className="rounded-xl bg-[hsl(var(--launch-ink))] text-white hover:bg-[hsl(var(--launch-ink)/0.92)]"
+                className="rounded-xl bg-launch-ink text-white hover:bg-[hsl(var(--launch-ink)/0.92)]"
               >
                 {savingNote ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 Save Note
