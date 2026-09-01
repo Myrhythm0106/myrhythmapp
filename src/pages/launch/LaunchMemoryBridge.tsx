@@ -1068,10 +1068,15 @@ export default function LaunchMemoryBridge() {
         />
 
 
-        {/* Recent Recordings */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-launch-ink">Recent Recordings</h2>
-          <button className="text-sm text-launch-ember font-medium hover:text-launch-ember/80 transition-colors">View all</button>
+        {/* My Records */}
+        <div ref={recordsRef} className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold text-launch-ink">My Records</h2>
+          <button
+            onClick={() => recordsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            className="text-sm text-launch-ember font-medium hover:text-launch-ember/80 transition-colors"
+          >
+            View all
+          </button>
         </div>
 
         <div className="space-y-3 mb-24">
