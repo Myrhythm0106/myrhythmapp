@@ -79,6 +79,7 @@ const brainInjury: AssessmentBank = {
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive confidence & self-talk',
       title: 'How do you feel about your brain right now?',
       subtitle: 'Honest is best — no wrong answer.',
@@ -91,6 +92,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      pillar: 'psychological',
       brainHealthLens: 'Honest baseline of current state',
       title: 'Where are you in your recovery?',
       options: [
@@ -102,6 +104,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'rhythm', letter: 'R', word: 'Rhythm',
+      pillar: 'biological',
       brainHealthLens: 'Energy / cognitive peak window',
       title: 'When does your brain feel clearest?',
       subtitle: "We'll suggest important things in that window.",
@@ -113,7 +116,17 @@ const brainInjury: AssessmentBank = {
       ],
     },
     {
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      brainHealthLens: 'Focus length & energy drains',
+      title: 'A little more about my rhythm',
+      subtitle: 'Two quick details so the calendar can protect my best window.',
+      kind: 'rhythm-detail',
+      options: [],
+    },
+
+    {
       id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      pillar: 'social',
       brainHealthLens: 'Social scaffolding',
       title: "Who's in your corner?",
       options: [
@@ -125,6 +138,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      pillar: 'spiritual',
       brainHealthLens: 'Reward & momentum',
       title: 'What would a good week look like?',
       subtitle: 'Pick anything that fits.',
@@ -138,6 +152,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'transform', letter: 'T', word: 'Transform',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive load to reduce',
       title: "What's hardest right now?",
       subtitle: 'Pick anything that fits.',
@@ -151,6 +166,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'heal', letter: 'H', word: 'Heal',
+      pillar: 'biological',
       brainHealthLens: 'Restorative habits',
       title: 'What helps your brain reset?',
       options: [
@@ -162,6 +178,7 @@ const brainInjury: AssessmentBank = {
     },
     {
       id: 'multiply', letter: 'M', word: 'Meaning',
+      pillar: 'spiritual',
       brainHealthLens: 'Purpose & long-term motivation',
       title: 'What would "feeling like yourself" unlock?',
       options: [
@@ -187,6 +204,7 @@ const caregiver: AssessmentBank = {
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive confidence & self-talk',
       title: 'How is your own headspace right now?',
       options: [
@@ -198,6 +216,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      pillar: 'psychological',
       brainHealthLens: 'Honest baseline of current state',
       title: 'How intense is the caring load this season?',
       options: [
@@ -209,6 +228,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'rhythm', letter: 'R', word: 'Rhythm',
+      pillar: 'biological',
       brainHealthLens: 'Your own peak window',
       title: 'When do you have your own bandwidth?',
       subtitle: "We'll protect that window for you.",
@@ -220,7 +240,17 @@ const caregiver: AssessmentBank = {
       ],
     },
     {
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      brainHealthLens: 'Focus length & energy drains',
+      title: 'A little more about my rhythm',
+      subtitle: 'Two quick details so the calendar can protect my best window.',
+      kind: 'rhythm-detail',
+      options: [],
+    },
+
+    {
       id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      pillar: 'social',
       brainHealthLens: 'Social scaffolding',
       title: 'Are other people helping?',
       options: [
@@ -232,6 +262,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      pillar: 'spiritual',
       brainHealthLens: 'Reward & momentum',
       title: 'What would help most this week?',
       subtitle: 'Pick anything that fits.',
@@ -245,6 +276,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'transform', letter: 'T', word: 'Transform',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive load to reduce',
       title: 'What drains you most?',
       subtitle: 'Pick anything that fits.',
@@ -258,6 +290,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'heal', letter: 'H', word: 'Heal',
+      pillar: 'biological',
       brainHealthLens: 'Restorative habits',
       title: 'What restores you?',
       options: [
@@ -269,6 +302,7 @@ const caregiver: AssessmentBank = {
     },
     {
       id: 'multiply', letter: 'M', word: 'Meaning',
+      pillar: 'spiritual',
       brainHealthLens: 'Purpose & long-term motivation',
       title: 'What keeps you going as a carer?',
       options: [
@@ -294,6 +328,7 @@ const executive: AssessmentBank = {
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive confidence & self-talk',
       title: 'How is your cognitive sharpness lately?',
       options: [
@@ -305,6 +340,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      pillar: 'psychological',
       brainHealthLens: 'Honest baseline of current state',
       title: 'How loaded is your week right now?',
       options: [
@@ -316,6 +352,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'rhythm', letter: 'R', word: 'Rhythm',
+      pillar: 'biological',
       brainHealthLens: 'Deep-work window',
       title: 'When is your deep-work window?',
       subtitle: "We'll defend that block on your calendar.",
@@ -327,7 +364,17 @@ const executive: AssessmentBank = {
       ],
     },
     {
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      brainHealthLens: 'Focus length & energy drains',
+      title: 'A little more about my rhythm',
+      subtitle: 'Two quick details so the calendar can protect my best window.',
+      kind: 'rhythm-detail',
+      options: [],
+    },
+
+    {
       id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      pillar: 'social',
       brainHealthLens: 'Social scaffolding',
       title: 'Who do you sync with?',
       options: [
@@ -339,6 +386,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      pillar: 'spiritual',
       brainHealthLens: 'Reward & momentum',
       title: 'What would a winning week deliver?',
       subtitle: 'Pick anything that fits.',
@@ -352,6 +400,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'transform', letter: 'T', word: 'Transform',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive load to reduce',
       title: 'What erodes your focus?',
       subtitle: 'Pick anything that fits.',
@@ -365,6 +414,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'heal', letter: 'H', word: 'Heal',
+      pillar: 'biological',
       brainHealthLens: 'Restorative habits',
       title: 'What actually recharges you?',
       options: [
@@ -376,6 +426,7 @@ const executive: AssessmentBank = {
     },
     {
       id: 'multiply', letter: 'M', word: 'Meaning',
+      pillar: 'spiritual',
       brainHealthLens: 'Purpose & long-term motivation',
       title: 'What is this season of work really for?',
       options: [
@@ -401,6 +452,7 @@ const student: AssessmentBank = {
   questions: [
     {
       id: 'mindset', letter: 'M', word: 'Mindset',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive confidence & self-talk',
       title: 'How confident do you feel about learning right now?',
       options: [
@@ -412,6 +464,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      pillar: 'psychological',
       brainHealthLens: 'Honest baseline of current state',
       title: 'Where are you in the term?',
       options: [
@@ -423,6 +476,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'rhythm', letter: 'R', word: 'Rhythm',
+      pillar: 'biological',
       brainHealthLens: 'When learning sticks best',
       title: 'When do you study best?',
       subtitle: "We'll suggest study blocks in that window.",
@@ -434,7 +488,17 @@ const student: AssessmentBank = {
       ],
     },
     {
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      brainHealthLens: 'Focus length & energy drains',
+      title: 'A little more about my rhythm',
+      subtitle: 'Two quick details so the calendar can protect my best window.',
+      kind: 'rhythm-detail',
+      options: [],
+    },
+
+    {
       id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      pillar: 'social',
       brainHealthLens: 'Accountability scaffolding',
       title: 'Who keeps you accountable?',
       options: [
@@ -446,6 +510,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      pillar: 'spiritual',
       brainHealthLens: 'Reward & momentum',
       title: "What's the goal this term?",
       subtitle: 'Pick anything that fits.',
@@ -459,6 +524,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'transform', letter: 'T', word: 'Transform',
+      pillar: 'psychological',
       brainHealthLens: 'Cognitive load to reduce',
       title: "What's getting in the way?",
       subtitle: 'Pick anything that fits.',
@@ -472,6 +538,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'heal', letter: 'H', word: 'Heal',
+      pillar: 'biological',
       brainHealthLens: 'Restorative habits',
       title: 'What actually recharges your brain?',
       options: [
@@ -483,6 +550,7 @@ const student: AssessmentBank = {
     },
     {
       id: 'multiply', letter: 'M', word: 'Meaning',
+      pillar: 'spiritual',
       brainHealthLens: 'Purpose & long-term motivation',
       title: 'Why does this study matter to you?',
       options: [
@@ -502,7 +570,8 @@ const student: AssessmentBank = {
 /* ------------------------------------------------------------------ */
 const FOLLOW_THROUGH: Record<PersonaKey, AssessmentQuestion> = {
   'brain-injury': {
-    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    id: 'followThrough', letter: 'T', word: 'Transform',
+      pillar: 'psychological', slot: 'transform',
     brainHealthLens: 'Follow-through — plan to done',
     title: 'When you plan something, what usually happens?',
     subtitle: 'This is the honest one. Most people lose things here.',
@@ -514,7 +583,8 @@ const FOLLOW_THROUGH: Record<PersonaKey, AssessmentQuestion> = {
     ],
   },
   caregiver: {
-    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    id: 'followThrough', letter: 'T', word: 'Transform',
+      pillar: 'psychological', slot: 'transform',
     brainHealthLens: 'Follow-through — plan to done',
     title: 'When you plan something for yourself, what usually happens?',
     subtitle: 'Not for them — for you.',
@@ -526,7 +596,8 @@ const FOLLOW_THROUGH: Record<PersonaKey, AssessmentQuestion> = {
     ],
   },
   executive: {
-    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    id: 'followThrough', letter: 'T', word: 'Transform',
+      pillar: 'psychological', slot: 'transform',
     brainHealthLens: 'Follow-through — commitment to done',
     title: 'What happens to the commitments you make in meetings?',
     options: [
@@ -537,7 +608,8 @@ const FOLLOW_THROUGH: Record<PersonaKey, AssessmentQuestion> = {
     ],
   },
   student: {
-    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    id: 'followThrough', letter: 'T', word: 'Transform',
+      pillar: 'psychological', slot: 'transform',
     brainHealthLens: 'Follow-through — intention to done',
     title: 'What happens to the study plan you set for yourself?',
     options: [
@@ -601,8 +673,10 @@ export interface BrainHealthScore {
   total: number;
   /** Raw per-letter score, 0-3 each. */
   letters: LetterScores;
+  /** Per-pillar average, 0-3 each. */
+  pillars: Record<PillarId, number>;
   /** Snapshot version — bump when question banks or scoring change. */
-  version: 2;
+  version: 3;
 }
 
 /** Accept legacy string/string[] answers and normalise to {primary, alsoFits}. */
@@ -643,5 +717,23 @@ export function computeBrainHealthScore(
     raw += score;
   }
   const total = Math.round((raw / (bank.questions.length * 3)) * 100);
-  return { total, letters, version: 2 };
+
+  const pillars = {
+    biological: 0,
+    psychological: 0,
+    social: 0,
+    spiritual: 0,
+  } as Record<PillarId, number>;
+  const counts = { biological: 0, psychological: 0, social: 0, spiritual: 0 } as Record<PillarId, number>;
+  for (const q of bank.questions) {
+    if (q.kind === 'rhythm-detail') continue;
+    const score = letters[q.id] ?? 0;
+    pillars[q.pillar] += score;
+    counts[q.pillar] += 1;
+  }
+  for (const p of Object.keys(pillars) as PillarId[]) {
+    pillars[p] = counts[p] ? Math.round((pillars[p] / counts[p]) * 10) / 10 : 0;
+  }
+
+  return { total, letters, pillars, version: 3 };
 }
