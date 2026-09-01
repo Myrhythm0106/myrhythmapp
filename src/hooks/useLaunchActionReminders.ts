@@ -23,7 +23,7 @@ type Row = {
     action_text: string | null;
     priority_level: number | null;
     status: string | null;
-    completion_status: string | null;
+    
     archived_at: string | null;
   } | null;
 };
@@ -51,7 +51,7 @@ export function useLaunchActionReminders(rangeStart: Date, rangeEnd: Date, enabl
     const { data, error } = await supabase
       .from('action_reminders')
       .select(
-        'id, action_id, due_at, offset_days, sent_at, extracted_actions!inner(action_text, priority_level, status, completion_status, archived_at)'
+        'id, action_id, due_at, offset_days, sent_at, extracted_actions!inner(action_text, priority_level, status, archived_at)'
       )
       .eq('user_id', user.id)
       .gte('due_at', fromIso)
@@ -73,7 +73,7 @@ export function useLaunchActionReminders(rangeStart: Date, rangeEnd: Date, enabl
           if (!a) return false;
           if (a.archived_at) return false;
           if (a.status && HIDDEN_STATUSES.has(a.status.toLowerCase())) return false;
-          if (a.completion_status && HIDDEN_STATUSES.has(a.completion_status.toLowerCase())) return false;
+          
           return true;
         })
         .map(r => ({

@@ -40,7 +40,7 @@ export function useDisplayName(fallback: string = 'friend'): string {
         })
           .from('profiles')
           .select('name')
-          .eq('user_id', user.id)
+          .eq('id', user.id)
           .maybeSingle();
         const fromProfile = firstWord(data?.name ?? null);
         if (fromProfile && !cancelled) {
