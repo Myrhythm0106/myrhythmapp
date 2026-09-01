@@ -163,9 +163,16 @@ import PrototypeReview from "./pages/prototype/PrototypeReview";
 import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
 import PrototypeReminders from "./pages/prototype/PrototypeReminders";
 import PrototypeDone from "./pages/prototype/PrototypeDone";
-
+import { LaunchGuard } from "./components/launch/LaunchGuard";
 
 const queryClient = new QueryClient();
+
+// Signed-in-only /launch surfaces
+const LaunchPrivate = ({ children }: { children: React.ReactNode }) => (
+  <LaunchModeProvider>
+    <LaunchGuard>{children}</LaunchGuard>
+  </LaunchModeProvider>
+);
 
 // Network status component
 function NetworkStatusMonitor() {
