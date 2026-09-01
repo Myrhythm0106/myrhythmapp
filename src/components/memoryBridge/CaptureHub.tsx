@@ -349,6 +349,11 @@ export function CaptureHub({
             {!micBlockReason && micPermission === 'granted' && (
               <p className="text-xs text-launch-moss">Microphone ready.</p>
             )}
+            {!micBlockReason && micPermission === 'unknown' && (
+              <p className="text-xs text-launch-ink/60">
+                Your browser will ask permission for the microphone the first time you tap record.
+              </p>
+            )}
           </div>
 
           {/* Egg timer — compact */}
