@@ -16,7 +16,7 @@ export default function LaunchCapture() {
       capabilityKey="capture"
       eyebrow="Capability 01 · Capture"
       title="A reliable record of the conversations that matter."
-      lede="Capture turns spoken moments — clinical visits, family check-ins, fleeting ideas — into a private, searchable record you can return to with confidence."
+      lede="Capture turns spoken moments — clinical visits, family check-ins, fleeting ideas — into a private, searchable record I can return to with confidence."
       heroIcon={Brain}
       tone="emerald"
       metaPills={[
@@ -26,7 +26,8 @@ export default function LaunchCapture() {
       ]}
       whyParagraphs={[
         'Memory rarely fails on schedule. The conversations that matter most often arrive when energy is lowest — at the bedside, after a diagnosis, during a difficult call.',
-        'Capture gives you a calm, dependable system to record, transcribe, and revisit those moments — so nothing important is left to recall under pressure.',
+        'Capture gives me a calm, dependable system to record, transcribe, and revisit those moments — so nothing important is left to recall under pressure.',
+        'It is just as useful for everyday life: meetings, family plans, creative ideas, or any conversation I may need to trust later.',
       ]}
       capabilities={[
         {
@@ -42,7 +43,7 @@ export default function LaunchCapture() {
         {
           icon: Bell,
           label: 'Memory prompts',
-          description: 'Gentle, well-timed reminders linked to your rhythm.',
+          description: 'Gentle, well-timed reminders linked to my rhythm.',
         },
         {
           icon: Lock,
@@ -69,24 +70,25 @@ export default function LaunchCapture() {
         {
           step: '02',
           title: 'Refine',
-          description: 'Review summaries; promote actions to your calendar.',
+          description: 'Review summaries; promote actions to my calendar.',
         },
         {
           step: '03',
           title: 'Return',
-          description: 'Revisit decisions and details whenever you need them.',
+          description: 'Revisit decisions and details whenever I need them.',
         },
       ]}
       kpis={[
         { label: 'Time to first capture', value: '< 60s', caption: 'From install to recording' },
-        { label: 'Retention', value: '30 days', caption: 'Configurable per account' },
-        { label: 'Tier', value: 'Plus +', caption: 'Included with Plus and above' },
+        { label: 'Retention', value: 'Configurable', caption: 'From 30 days to permanent' },
       ]}
       related={[
         { label: 'Memory Bridge', caption: 'Where captures become structure', to: '/launch/memory' },
         { label: 'Settings · retention', caption: 'Adjust how long recordings stay', to: '/launch/settings' },
         { label: 'Clinical Brief', caption: 'Pre-discharge summary', to: '/launch/clinical-brief' },
       ]}
+      primaryCta={{ label: 'Open Memory Bridge', to: '/launch/memory' }}
+      secondaryCta={{ label: 'Return to overview', to: '/launch' }}
     />
   );
 }
