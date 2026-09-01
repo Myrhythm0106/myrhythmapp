@@ -705,9 +705,15 @@ export function computeBrainHealthScore(
 ): BrainHealthScore {
   const letters = {} as LetterScores;
   let raw = 0;
+  let scoredCount = 0;
   for (const q of bank.questions) {
     const ans = normalizeAnswer(answers[q.id]);
     let score = 0;
+    if (q.kind === 'rhythm-detail') {
+      letters[q.id] = 0;
+      continue;
+    }
+    scoredCount++;
     if (ans) {
       const primaryOpt = q.options.find((o) => o.value === ans.primary);
       score = primaryOpt?.score ?? 0;
@@ -716,7 +722,7 @@ export function computeBrainHealthScore(
     letters[q.id] = Math.round(score * 10) / 10;
     raw += score;
   }
-  const total = Math.round((raw / (bank.questions.length * 3)) * 100);
+  const total = scoredCount > 0 ? Math.round((raw / (scoredCount * 3)) * 100) : 0;
 
   const pillars = {
     biological: 0,
