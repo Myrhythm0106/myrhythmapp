@@ -12,6 +12,17 @@ export type BlockType = 'focus' | 'meetings' | 'admin' | 'rest' | 'personal' | '
 export type BlockColor = 'moss' | 'gold' | 'ember' | 'ink' | 'slate';
 export type RepeatRule = 'none' | 'daily' | 'weekdays' | 'weekly' | 'custom';
 
+export type PriorityLevel = 'decides' | 'counts' | 'off';
+
+export interface PriorityLevels {
+  /** How much my best cognitive window matters for this event type. */
+  window: PriorityLevel;
+  /** How much other people's availability matters for this event type. */
+  people: PriorityLevel;
+  /** How much a fixed deadline or due date matters for this event type. */
+  deadline: PriorityLevel;
+}
+
 export type PomodoroPreset =
   | 'classic_pomodoro'
   | 'long_focus'
@@ -74,6 +85,12 @@ export interface ProtectedWindow {
   active: boolean;
 }
 
+export interface LearnedAdjustment {
+  window?: PriorityLevel;
+  source: string;
+  at: string;
+}
+
 export interface BrainHealthyPrefs {
   brain_healthy_enabled: boolean;
   min_meeting_gap_minutes: number;
@@ -90,7 +107,30 @@ export interface BrainHealthyPrefs {
   time_blocking_enabled: boolean;
   time_block_template: 'blank' | 'classic_focus' | 'meeting_heavy' | 'recovery_friendly' | 'desktime_52_17';
   pomodoro_preset: PomodoroPreset;
+
+  // Rhythm-aware scheduling (stored in time_slots JSON; no schema migration needed)
+  /** One big switch: should the app suggest times that suit my rhythm? */
+  best_window_enabled: boolean;
+  /** Derived from the assessment. HH:mm */
+  best_window_start: string;
+  /** Derived from the assessment. HH:mm */
+  best_window_end: string;
+  /** Best focus block length in minutes, derived from the assessment. */
+  focus_block_minutes: number;
+  /** Per-event-type priority levels. Pre-filled so most users never touch them. */
+  priority_levels_by_type: Record<BlockType, PriorityLevels>;
+  /** Quietly learned overrides, surfaced once with an undo. */
+  learned_adjustments: Record<string, LearnedAdjustment>;
 }
+
+export const DEFAULT_PRIORITY_LEVELS: Record<BlockType, PriorityLevels> = {
+  focus: { window: 'decides', people: 'counts', deadline: 'counts' },
+  meetings: { window: 'counts', people: 'decides', deadline: 'counts' },
+  admin: { window: 'counts', people: 'off', deadline: 'decides' },
+  rest: { window: 'decides', people: 'off', deadline: 'off' },
+  personal: { window: 'counts', people: 'off', deadline: 'counts' },
+  custom: { window: 'counts', people: 'counts', deadline: 'counts' },
+};
 
 export const BRAIN_HEALTHY_DEFAULTS: BrainHealthyPrefs = {
   brain_healthy_enabled: true,
@@ -112,6 +152,13 @@ export const BRAIN_HEALTHY_DEFAULTS: BrainHealthyPrefs = {
   time_blocking_enabled: false,
   time_block_template: 'blank',
   pomodoro_preset: 'classic_pomodoro',
+
+  best_window_enabled: true,
+  best_window_start: '09:00',
+  best_window_end: '11:30',
+  focus_block_minutes: 45,
+  priority_levels_by_type: DEFAULT_PRIORITY_LEVELS,
+  learned_adjustments: {},
 };
 
 export interface NumRange { min: number; max: number; step: number; unit: string }
