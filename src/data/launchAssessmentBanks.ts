@@ -36,10 +36,14 @@ export interface AssessmentQuestion {
   word: string;
   /** Which MYRHYTHM letter slot this question belongs to (defaults to its own id). */
   slot?: LetterId;
+  /** Which Cognitive Capital pillar this question belongs to. */
+  pillar: PillarId;
   brainHealthLens: string;
   title: string;
   subtitle?: string;
   multiSelect?: boolean;
+  /** A rhythm-detail question is rendered as two rows on one screen, not scored. */
+  kind?: 'default' | 'rhythm-detail';
   options: AssessmentOption[];
 }
 
