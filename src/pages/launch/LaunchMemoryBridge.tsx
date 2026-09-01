@@ -809,21 +809,6 @@ export default function LaunchMemoryBridge() {
           </LaunchCard>
         )}
 
-        <DocumentImportCard
-          onExtracted={(res: DocumentImportResult) => {
-            setLastExtractionResult({
-              meetingId: res.meetingId,
-              recordingId: '',
-              actionsCount: res.actionsCount,
-              title: res.title,
-              sourceFilePath: res.filePath,
-              sourceFileName: res.fileName,
-            });
-            fetchRecordings();
-            setShowPostExtractionDialog(true);
-          }}
-        />
-
         {/* Gentle safety-net pause before a long quiet stretch is auto-saved. */}
         <AlertDialog open={quietPromptOpen}>
           <AlertDialogContent>
