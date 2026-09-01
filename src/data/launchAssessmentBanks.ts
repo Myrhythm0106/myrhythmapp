@@ -154,6 +154,7 @@ const brainInjury: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -278,6 +279,7 @@ const caregiver: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -402,6 +404,7 @@ const executive: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
@@ -526,6 +529,7 @@ const student: AssessmentBank = {
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
       kind: 'rhythm-detail',
+      rows: RHYTHM_DETAIL_ROWS,
       options: [],
     },
 
