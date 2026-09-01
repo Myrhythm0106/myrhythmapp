@@ -46,7 +46,7 @@ interface CaptureHubProps {
   refreshMicStatus: () => void;
   outOfAllowance: boolean;
   allowance: AllowanceInfo;
-  nextTierKey?: string | null;
+  nextTierInfo?: { label: string; perRecordingMinutes: number; monthlyMinutes: number } | null;
   recentRecordings: VoiceRecording[];
   formatDuration: (seconds: number) => string;
 }
