@@ -138,7 +138,7 @@ export function CaptureHub({
           </p>
 
           {/* Primary action with teal breathing glow */}
-          <div className="relative mb-6">
+          <div className="relative mb-4">
             <div
               className={cn(
                 'absolute inset-0 rounded-2xl bg-launch-teal blur-xl opacity-40 motion-safe:animate-breathe',
@@ -151,8 +151,8 @@ export function CaptureHub({
               disabled={primaryDisabled}
               aria-label="Start capture"
               className={cn(
-                'relative w-full h-[72px] rounded-2xl flex items-center justify-center transition-all',
-                'bg-launch-ink text-white text-xl font-medium tracking-wide',
+                'relative w-full h-16 rounded-2xl flex items-center justify-center transition-all',
+                'bg-launch-ink text-white text-lg font-medium tracking-wide',
                 'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-[hsl(var(--launch-ink)/0.15)]',
                 'active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed'
               )}
@@ -166,7 +166,7 @@ export function CaptureHub({
               ) : (
                 <>
                   Start Capture
-                  <div className="absolute right-6 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <div className="absolute right-5 w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
                     <ArrowRight className="h-4 w-4 text-white" />
                   </div>
                 </>
@@ -176,7 +176,7 @@ export function CaptureHub({
 
           {/* Allowance caption */}
           {outOfAllowance ? (
-            <div className="mx-auto max-w-sm rounded-xl border border-launch-gold/40 bg-launch-gold/10 p-3 mb-6">
+            <div className="mx-auto max-w-sm rounded-xl border border-launch-gold/40 bg-launch-gold/10 p-3 mb-4">
               <p className="text-sm font-medium text-launch-ink">
                 I’ve used my {allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.
               </p>
@@ -187,24 +187,24 @@ export function CaptureHub({
               )}
             </div>
           ) : (
-            <p className="mb-6 text-xs text-launch-ink/60">
+            <p className="mb-4 text-xs text-launch-ink/60">
               I can record up to {allowance.limits.perRecordingMinutes} minutes in one go —{' '}
               <span className="font-medium text-launch-moss">{allowance.remainingMinutes} minutes</span> left this {allowance.period}.
             </p>
           )}
 
           {/* Secondary actions (max 3 total: My Records, Quick Note, Upload) */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             <button
               onClick={onOpenMyRecords}
-              className="group h-16 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
+              className="group h-14 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
             >
               <History className="h-4 w-4 text-launch-gold group-hover:scale-110 transition-transform" />
               My Records
             </button>
             <button
               onClick={() => setNoteOpen(true)}
-              className="group h-16 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
+              className="group h-14 rounded-2xl border border-launch-gold/30 bg-launch-cream text-launch-ink font-medium hover:border-[hsl(var(--launch-gold))] transition-colors flex items-center justify-center gap-2"
             >
               <PenLine className="h-4 w-4 text-launch-gold group-hover:scale-110 transition-transform" />
               Quick Note
@@ -216,7 +216,7 @@ export function CaptureHub({
             type="button"
             disabled={isUploading || isExtracting}
             onClick={onUploadClick}
-            className="inline-flex w-full items-center justify-center gap-2 h-12 rounded-2xl border border-launch-gold/25 bg-white/60 px-4 text-sm font-medium text-launch-ink/80 hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 h-11 rounded-2xl border border-launch-gold/25 bg-white/60 px-4 text-sm font-medium text-launch-ink/80 hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
           >
             {isUploading || isExtracting ? (
               <>
