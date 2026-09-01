@@ -129,10 +129,7 @@ export function CaptureHub({
             </div>
           </div>
 
-          <h1
-            className="text-4xl md:text-5xl font-semibold mb-4 text-[hsl(var(--launch-ink))] leading-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-launch-ink leading-tight font-playfair">
             Memory Bridge
           </h1>
 
