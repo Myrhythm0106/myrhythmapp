@@ -23,6 +23,7 @@ const config: Config = {
         'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
         'display': ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        'playfair': ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
         'archivo': ['Archivo Black', 'Impact', 'system-ui', 'sans-serif'],
         'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
         'instrument': ['Instrument Serif', 'Georgia', 'Times New Roman', 'serif'],
