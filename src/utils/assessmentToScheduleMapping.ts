@@ -1,4 +1,5 @@
 import { UserSchedulePreference } from './smartScheduler';
+import { BRAIN_HEALTHY_DEFAULTS } from '@/launch/scheduling/defaults';
 
 export interface AssessmentAnswers {
   'primary-challenge': string;
@@ -62,7 +63,12 @@ export function mapAssessmentToPreferences(answers: AssessmentAnswers): UserSche
     leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
     preferredMeetingTimes: mostProductiveHours.slice(1, 4),
     energyPeaks,
-    doNotDisturb: ['12:00', '13:00', '17:00', '18:00'] // Standard meal times
+    doNotDisturb: ['12:00', '13:00', '17:00', '18:00'], // Standard meal times
+    bestWindowEnabled: BRAIN_HEALTHY_DEFAULTS.best_window_enabled,
+    bestWindowStart: BRAIN_HEALTHY_DEFAULTS.best_window_start,
+    bestWindowEnd: BRAIN_HEALTHY_DEFAULTS.best_window_end,
+    focusBlockMinutes: BRAIN_HEALTHY_DEFAULTS.focus_block_minutes,
+    priorityLevelsByType: BRAIN_HEALTHY_DEFAULTS.priority_levels_by_type,
   };
 }
 

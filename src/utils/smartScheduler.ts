@@ -64,7 +64,12 @@ export class SmartScheduler {
           leastProductiveHours: (prefs.time_slots as any)?.unproductive || this.defaultPreferences.leastProductiveHours,
           preferredMeetingTimes: (prefs.time_slots as any)?.meetings || this.defaultPreferences.preferredMeetingTimes,
           energyPeaks: (prefs.time_slots as any)?.energy_peak || this.defaultPreferences.energyPeaks,
-          doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb
+          doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb,
+          bestWindowEnabled: prefs.best_window_enabled ?? this.defaultPreferences.bestWindowEnabled,
+          bestWindowStart: prefs.best_window_start || this.defaultPreferences.bestWindowStart,
+          bestWindowEnd: prefs.best_window_end || this.defaultPreferences.bestWindowEnd,
+          focusBlockMinutes: prefs.focus_block_minutes || this.defaultPreferences.focusBlockMinutes,
+          priorityLevelsByType: (prefs.priority_levels_by_type as Record<BlockType, PriorityLevels>) || this.defaultPreferences.priorityLevelsByType,
         };
       }
 
@@ -144,7 +149,12 @@ export class SmartScheduler {
       leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
       preferredMeetingTimes: mostProductiveHours.slice(1, 4),
       energyPeaks,
-      doNotDisturb
+      doNotDisturb,
+      bestWindowEnabled: this.defaultPreferences.bestWindowEnabled,
+      bestWindowStart: this.defaultPreferences.bestWindowStart,
+      bestWindowEnd: this.defaultPreferences.bestWindowEnd,
+      focusBlockMinutes: this.defaultPreferences.focusBlockMinutes,
+      priorityLevelsByType: this.defaultPreferences.priorityLevelsByType,
     };
   }
 
