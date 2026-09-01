@@ -39,6 +39,7 @@ import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
 import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
+import { CaptureHub } from '@/components/memoryBridge/CaptureHub';
 
 import { setRecordingLive } from '@/launch/capture/recordingSignal';
 import { useCapturePreferences } from '@/hooks/useCapturePreferences';
