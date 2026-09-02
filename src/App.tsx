@@ -458,7 +458,9 @@ function App() {
                         <AuthenticatedBottomNav />
                       </NavProvider>
                     </BrowserRouter>
+                    </DayOpenWelcomeProvider>
                   </TooltipProvider>
+
                 </SetupProgressProvider>
               </DailyActionsProvider>
             </PomodoroProvider>
