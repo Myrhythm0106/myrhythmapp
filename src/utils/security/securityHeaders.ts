@@ -16,7 +16,9 @@ export class SecurityHeaders {
   private static readonly defaultCSP: CSPConfig = {
     'default-src': ["'self'"],
     'script-src': ["'self'", 'https://cdn.jsdelivr.net'],
-    'style-src': ["'self'", 'https://fonts.googleapis.com'],
+    // 'unsafe-inline' is required: framer-motion and Radix set inline styles for
+    // animation/positioning; without it those styles are silently dropped.
+    'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
     'img-src': ["'self'", 'data:', 'https:', 'blob:'],
     'connect-src': ["'self'", 'https://*.supabase.co', 'wss://*.supabase.co'],
     'font-src': ["'self'", 'https://fonts.gstatic.com'],
