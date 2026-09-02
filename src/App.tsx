@@ -150,6 +150,8 @@ import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 import { LaunchLayout } from "./components/launch/LaunchLayout";
 import { OnboardingProgressBar } from "./components/launch/OnboardingProgressBar";
+import { DayOpenWelcomeProvider } from "./launch/daily/DayOpenWelcomeContext";
+
 
 
 // Brain Injury Journey Routes
