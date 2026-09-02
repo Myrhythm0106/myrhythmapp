@@ -52,14 +52,16 @@ export function LaunchLayout({
   const { isCaregiver } = usePersona();
   const { user } = useAuth();
   const appReady = useAppReady();
+  const { isOpen: dayOpenWelcomeIsOpen } = useDayOpenWelcomeOpen();
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   // Dial appears once onboarding is done and the user has landed on Home,
   // then stays available everywhere inside the app.
-  const showDial = appReady && !ONBOARDING_PATHS.has(location.pathname);
+  const showDial = appReady && !ONBOARDING_PATHS.has(location.pathname) && !dayOpenWelcomeIsOpen;
 
   const isWelcomePage = location.pathname === '/launch/welcome';
+
 
   return (
     <SubjectProvider>
