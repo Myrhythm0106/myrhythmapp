@@ -206,9 +206,11 @@ function App() {
                   <TooltipProvider>
                     <Toaster />
                     <NetworkStatusMonitor />
+                    <DayOpenWelcomeProvider>
                     <BrowserRouter>
                       <SmartReminderToast />
                       <NavProvider>
+
                         <SetupProgressBar />
                         <OnboardingProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
