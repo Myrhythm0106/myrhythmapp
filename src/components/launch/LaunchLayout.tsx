@@ -72,7 +72,7 @@ export function LaunchLayout({
 
         {/* Top Header Bar */}
         {showHeader && (
-          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
+          <header className="sticky top-0 z-[75] bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
 
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 shrink-0">
