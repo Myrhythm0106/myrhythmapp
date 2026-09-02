@@ -112,6 +112,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
   const statement = useMemo(() => getDailyStatement(), []);
   const today = useMemo(() => new Date(), []);
   const { events } = useLaunchCalendarEvents(today, today);
+  const { setIsOpen } = useDayOpenWelcomeOpen();
 
   useEffect(() => {
     try {
@@ -122,10 +123,16 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
     setVision(loadVision());
   }, [key]);
 
+  useEffect(() => {
+    setIsOpen(open);
+    return () => setIsOpen(false);
+  }, [open, setIsOpen]);
+
   const dismiss = () => {
     try { localStorage.setItem(key, new Date().toISOString()); } catch {}
     setOpen(false);
   };
+
 
   const pending = useMemo(
     () => (events ?? [])
