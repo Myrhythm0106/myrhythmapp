@@ -16,7 +16,7 @@ import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppReady } from '@/hooks/useAppReady';
-import { useDayOpenWelcomeOpen } from '@/launch/daily/DayOpenWelcomeContext';
+
 
 
 
@@ -52,13 +52,13 @@ export function LaunchLayout({
   const { isCaregiver } = usePersona();
   const { user } = useAuth();
   const appReady = useAppReady();
-  const { isOpen: dayOpenWelcomeIsOpen } = useDayOpenWelcomeOpen();
+  const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   // Dial appears once onboarding is done and the user has landed on Home,
   // then stays available everywhere inside the app.
-  const showDial = appReady && !ONBOARDING_PATHS.has(location.pathname) && !dayOpenWelcomeIsOpen;
+  const showDial = appReady && !isOnboardingPath;
 
   const isWelcomePage = location.pathname === '/launch/welcome';
 
@@ -72,7 +72,7 @@ export function LaunchLayout({
 
         {/* Top Header Bar */}
         {showHeader && (
-          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
+          <header className="sticky top-0 z-[75] bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
 
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 shrink-0">
@@ -129,7 +129,7 @@ export function LaunchLayout({
         {showFooter && <GrowthFooter />}
 
         {/* Persistent capture — one tap from anywhere */}
-        {!dayOpenWelcomeIsOpen && <CaptureDock />}
+        {!isOnboardingPath && <CaptureDock />}
 
         {/* Bottom Navigation (Mobile) */}
         {showNav && <LaunchNav />}

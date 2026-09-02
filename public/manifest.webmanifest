@@ -30,9 +30,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Capture",
-      "short_name": "Capture",
-      "description": "Record or note something now",
+      "name": "Start recording",
+      "short_name": "Record",
+      "description": "Start a recording now",
       "url": "/launch/memory?record=1"
     },
     {

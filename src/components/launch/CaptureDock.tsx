@@ -31,8 +31,8 @@ export function CaptureDock() {
     return (
       <div
         className={cn(
-          'fixed right-4 bottom-24 md:bottom-8 z-40',
-          'min-h-16 rounded-full shadow-xl bg-launch-ember px-2 py-2',
+          'fixed right-4 bottom-24 md:bottom-8 z-[80]',
+           'min-h-16 rounded-full shadow-xl bg-launch-ember px-2 py-2',
           'flex items-center gap-1 transition-all'
         )}
         style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
@@ -69,9 +69,9 @@ export function CaptureDock() {
         onClick={() => setOpen(true)}
         aria-label="Capture something"
         className={cn(
-          'fixed right-4 bottom-24 md:bottom-8 z-40',
-          'h-16 w-16 rounded-full shadow-xl',
-          'bg-brand-orange-500 hover:bg-brand-orange-600 active:scale-95',
+           'fixed right-4 bottom-24 md:bottom-8 z-[80]',
+           'h-16 w-16 rounded-full shadow-xl',
+           'bg-brand-orange-500 hover:bg-brand-orange-600 active:scale-95',
           'flex items-center justify-center transition-all',
           'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-orange-300'
         )}
