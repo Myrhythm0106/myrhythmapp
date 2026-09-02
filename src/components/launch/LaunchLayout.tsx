@@ -129,10 +129,11 @@ export function LaunchLayout({
         {showFooter && <GrowthFooter />}
 
         {/* Persistent capture — one tap from anywhere */}
-        <CaptureDock />
+        {!dayOpenWelcomeIsOpen && <CaptureDock />}
 
         {/* Bottom Navigation (Mobile) */}
         {showNav && <LaunchNav />}
+
       </div>
     </SubjectProvider>
   );
