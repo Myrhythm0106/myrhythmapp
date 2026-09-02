@@ -16,6 +16,8 @@ import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppReady } from '@/hooks/useAppReady';
+import { useDayOpenWelcomeOpen } from '@/launch/daily/DayOpenWelcomeContext';
+
 
 
 // Onboarding steps — the dial stays hidden until the user reaches Home.
