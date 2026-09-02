@@ -5,6 +5,8 @@ import { getDailyStatement } from '@/data/iChooseStatements';
 import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
 import { cn } from '@/lib/utils';
 import watercolourBrain from '@/assets/watercolour-brain.png';
+import { useDayOpenWelcomeOpen } from './DayOpenWelcomeContext';
+
 
 const VISION_KEY = 'myrhythm.visionStatement.v1';
 
