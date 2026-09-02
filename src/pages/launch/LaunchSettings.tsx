@@ -41,6 +41,7 @@ import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettin
 import { ResearchConsentCard } from '@/components/launch/ResearchConsentCard';
 import { DeviceRemindersCard } from '@/components/launch/DeviceRemindersCard';
 import { KeepForCard } from '@/components/launch/KeepForCard';
+import { TapToRecordCard } from '@/components/launch/TapToRecordCard';
 
 
 export default function LaunchSettings() {
@@ -220,6 +221,9 @@ export default function LaunchSettings() {
 
         {/* Brain-Healthy Scheduling — editable defaults with ranges */}
         <DeviceRemindersCard />
+
+        {/* Fast access — optional phone shortcut setup */}
+        <TapToRecordCard />
 
         {/* Capture safety — help that follows me across devices */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
