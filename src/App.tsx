@@ -166,6 +166,7 @@ import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
 import PrototypeReminders from "./pages/prototype/PrototypeReminders";
 import PrototypeDone from "./pages/prototype/PrototypeDone";
 import { LaunchGuard } from "./components/launch/LaunchGuard";
+import { AssessmentFirstGate } from "./components/launch/AssessmentFirstGate";
 
 const queryClient = new QueryClient();
 
@@ -194,7 +195,6 @@ function AuthenticatedBottomNav() {
 }
 
 function App() {
-  console.log('🎯 App.tsx: App component rendering');
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -396,7 +396,7 @@ function App() {
                         <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
                         <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
 
-                       <Route path="/launch/home" element={<LaunchPrivate><LaunchDashboard /></LaunchPrivate>} />
+                       <Route path="/launch/home" element={<LaunchPrivate><AssessmentFirstGate><LaunchDashboard /></AssessmentFirstGate></LaunchPrivate>} />
                        <Route path="/launch/calendar" element={<LaunchPrivate><LaunchCalendar /></LaunchPrivate>} />
                        <Route path="/launch/memory" element={<LaunchPrivate><LaunchMemoryBridge /></LaunchPrivate>} />
                        <Route path="/launch/games" element={<LaunchPrivate><LaunchBrainGames /></LaunchPrivate>} />

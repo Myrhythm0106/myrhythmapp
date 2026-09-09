@@ -16,6 +16,7 @@ import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfo
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
+import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -91,6 +92,11 @@ export default function LaunchAssessment() {
   const [processing, setProcessing] = useState(false);
   const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const pendingNav = useRef<string>('/launch/welcome');
+  // Sent here straight after signing in, before Home.
+  const isFirstRun = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).get('first') === '1';
+  }, []);
 
 
   useEffect(() => {
@@ -190,6 +196,15 @@ export default function LaunchAssessment() {
             </p>
           </div>
 
+          {isFirstRun && (
+            <div className="mb-6 rounded-2xl bg-launch-ivory border border-launch-gold/30 p-4 text-center">
+              <p className="text-sm text-launch-ink/80">
+                Eight questions, about three minutes — it's how I learn when you're at
+                your best, so I can put the important things in the right hours.
+              </p>
+            </div>
+          )}
+
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">
               {bank.preQuestion.title}
@@ -242,6 +257,19 @@ export default function LaunchAssessment() {
               Continue
               <ArrowRight className="h-5 w-5" />
             </LaunchButton>
+
+            {isFirstRun && (
+              <button
+                type="button"
+                onClick={() => {
+                  deferAssessment();
+                  navigate('/launch/home', { replace: true });
+                }}
+                className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
+              >
+                Not now — take me to my day
+              </button>
+            )}
           </div>
         </div>
       </LaunchLayout>
