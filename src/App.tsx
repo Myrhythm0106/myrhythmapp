@@ -194,7 +194,6 @@ function AuthenticatedBottomNav() {
 }
 
 function App() {
-  console.log('🎯 App.tsx: App component rendering');
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
