@@ -1,7 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import { useDemoOrLive } from '@/contexts/DemoModeContext';
+import { useDemoOrLive, useIsDevDemo } from '@/contexts/DemoModeContext';
+import { useFirstSession } from '@/launch/onboarding/useFirstSession';
+import { FirstSessionCard } from './FirstSessionCard';
+import { RhythmLine } from './RhythmLine';
 import { IChooseHeart } from './IChooseHeart';
 import { ReEntryCard } from './ReEntryCard';
 import { NextActionStrip } from './NextActionStrip';
