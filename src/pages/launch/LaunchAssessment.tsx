@@ -17,6 +17,7 @@ import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentP
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
+import { useDisplayName } from '@/launch/profile/useDisplayName';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -92,11 +93,14 @@ export default function LaunchAssessment() {
   const [processing, setProcessing] = useState(false);
   const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const pendingNav = useRef<string>('/launch/welcome');
+  const displayName = useDisplayName();
   // Sent here straight after signing in, before Home.
   const isFirstRun = useMemo(() => {
     if (typeof window === 'undefined') return false;
     return new URLSearchParams(window.location.search).get('first') === '1';
   }, []);
+  // First-timers get a warm welcome before any question appears.
+  const [showWelcome, setShowWelcome] = useState<boolean>(isFirstRun);
 
 
   useEffect(() => {
@@ -167,6 +171,56 @@ export default function LaunchAssessment() {
 
 
 
+  /* ------------------- Welcome phase (first-timers) ------------------- */
+  if (showWelcome) {
+    return (
+      <LaunchLayout>
+        <div className="max-w-md mx-auto w-full px-4 md:px-8 py-10 pb-24">
+          <h1 className="text-3xl font-bold text-launch-ink font-display mb-3 text-center">
+            Welcome, {displayName}
+          </h1>
+          <p className="text-launch-ink/70 text-center mb-8">
+            Before anything else, eight quick questions — here's what to expect.
+          </p>
+
+          <ol className="space-y-3 mb-8">
+            {[
+              'Eight questions, about three minutes — no right or wrong answers.',
+              'You can change any answer before moving on.',
+              "At the end you'll get your personal MYRHYTHM report — and I'll learn your best hours, so the important things land in the right part of your day.",
+            ].map((line, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4"
+              >
+                <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">
+                  {i + 1}
+                </span>
+                <p className="text-launch-ink/80 text-sm pt-1.5">{line}</p>
+              </li>
+            ))}
+          </ol>
+
+          <LaunchButton onClick={() => setShowWelcome(false)} className="w-full">
+            I'm ready
+            <ArrowRight className="h-5 w-5" />
+          </LaunchButton>
+
+          <button
+            type="button"
+            onClick={() => {
+              deferAssessment();
+              navigate('/launch/home', { replace: true });
+            }}
+            className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
+          >
+            Not now — take me to my day
+          </button>
+        </div>
+      </LaunchLayout>
+    );
+  }
+
   /* ------------------- Recency phase ------------------- */
   if (phase === 'recency') {
     return (
@@ -195,15 +249,6 @@ export default function LaunchAssessment() {
               Before we begin
             </p>
           </div>
-
-          {isFirstRun && (
-            <div className="mb-6 rounded-2xl bg-launch-ivory border border-launch-gold/30 p-4 text-center">
-              <p className="text-sm text-launch-ink/80">
-                Eight questions, about three minutes — it's how I learn when you're at
-                your best, so I can put the important things in the right hours.
-              </p>
-            </div>
-          )}
 
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">
