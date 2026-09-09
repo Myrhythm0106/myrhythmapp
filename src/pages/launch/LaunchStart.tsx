@@ -61,7 +61,7 @@ export default function LaunchStart() {
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium tracking-widest prestige-gold">{STEPS[0].n}</span>
-              <Mic className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
+                <Mic className="h-5 w-5 prestige-teal" aria-hidden="true" />
             </div>
             <div>
               <h2 className="font-instrument text-3xl leading-tight prestige-ivory">{STEPS[0].title}</h2>
@@ -83,7 +83,7 @@ export default function LaunchStart() {
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium tracking-widest prestige-gold">{STEPS[1].n}</span>
-                <ListChecks className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
+                <ListChecks className="h-5 w-5 prestige-teal" aria-hidden="true" />
               </div>
               <div>
                 <h2 className="font-instrument text-2xl leading-tight prestige-ivory md:text-3xl">
@@ -102,7 +102,7 @@ export default function LaunchStart() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium tracking-widest prestige-gold">{s.n}</span>
-                    <s.Icon className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
+                    <s.Icon className="h-5 w-5 prestige-teal" aria-hidden="true" />
                   </div>
                   <h2 className="font-instrument text-2xl leading-tight prestige-ivory">{s.title}</h2>
                 </motion.div>
@@ -123,7 +123,7 @@ export default function LaunchStart() {
             </button>
             <button
               onClick={() => navigate('/launch/home')}
-              className="border-b border-transparent pb-1 text-base font-medium prestige-ivory-55 transition-colors hover:border-[#c9a84c] hover:text-[#c9a84c]"
+              className="prestige-home-link border-b border-transparent pb-1 text-base font-medium prestige-ivory-55 transition-colors"
             >
               Open MyRhythm Home
             </button>

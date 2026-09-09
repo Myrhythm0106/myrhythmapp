@@ -24,10 +24,10 @@ export function LaunchButton({
   type = 'button'
 }: LaunchButtonProps) {
   const variants = {
-    primary: 'bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 text-white hover:from-brand-emerald-600 hover:to-brand-teal-600 shadow-md hover:shadow-lg',
-    secondary: 'bg-white text-brand-emerald-700 border-2 border-brand-emerald-200 hover:bg-brand-emerald-50 hover:border-brand-emerald-300',
-    ghost: 'bg-transparent text-brand-emerald-700 hover:bg-brand-emerald-50',
-    outline: 'bg-transparent text-gray-700 border-2 border-gray-200 hover:bg-gray-50',
+    primary: 'bg-launch-ember text-launch-ivory hover:bg-launch-ink shadow-md hover:shadow-lg',
+    secondary: 'bg-launch-ivory text-launch-moss border-2 border-launch-teal/40 hover:bg-launch-teal/10 hover:border-launch-teal',
+    ghost: 'bg-transparent text-launch-moss hover:bg-launch-teal/10',
+    outline: 'bg-transparent text-launch-ink border-2 border-launch-gold/40 hover:bg-launch-gold/10',
   };
 
   const sizes = {

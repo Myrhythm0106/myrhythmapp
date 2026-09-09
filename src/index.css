@@ -671,12 +671,12 @@ html, body {
 .launch-theme .border-launch-teal    { border-color: hsl(var(--launch-teal)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
 
-/* Day-open welcome overlay — ink ground with a single teal signal */
+/* Day-open welcome overlay — emerald ground with a calm teal signal */
 .day-open {
-  --day-open-ink: 197 46% 6%;
-  --day-open-panel: 194 40% 12%;
-  --day-open-line: 187 45% 22%;
-  --day-open-signal: 177 61% 53%;
+  --day-open-ink: 158 84% 13%;
+  --day-open-panel: 158 80% 20%;
+  --day-open-line: 163 48% 30%;
+  --day-open-signal: 173 52% 48%;
   background-color: hsl(var(--day-open-ink));
   color: hsl(45 40% 97%);
 }
@@ -745,19 +745,38 @@ html, body {
   text-decoration-color: hsl(var(--launch-ember));
 }
 
-/* Retire mismatched brand utilities inside the launch scope so
-   every legacy `brand-teal` / `brain-health-*` surface picks up
-   the Emerald palette without touching each file individually. */
+/* Bring legacy launch utilities into the five-colour palette. Teal is
+   intentionally distinct from emerald: it marks guidance and active states. */
 .launch-theme .bg-brand-teal-600,
 .launch-theme .bg-brand-teal-700,
-.launch-theme .bg-brand-teal-500 { background-color: hsl(var(--launch-ink)) !important; }
+.launch-theme .bg-brand-teal-500 { background-color: hsl(var(--launch-teal)) !important; }
 .launch-theme .text-brand-teal-600,
 .launch-theme .text-brand-teal-700,
 .launch-theme .text-brand-teal-500,
-.launch-theme .text-brand-teal-800 { color: hsl(var(--launch-ink)) !important; }
+.launch-theme .text-brand-teal-800 { color: hsl(var(--launch-teal)) !important; }
 .launch-theme .border-brand-teal-600,
 .launch-theme .border-brand-teal-500,
-.launch-theme .border-brand-teal-200 { border-color: hsl(var(--launch-ink) / 0.15) !important; }
+.launch-theme .border-brand-teal-200 { border-color: hsl(var(--launch-teal) / 0.35) !important; }
+
+.launch-theme .bg-clarity-teal-50,
+.launch-theme .bg-clarity-teal-100 { background-color: hsl(var(--launch-teal) / 0.12) !important; }
+.launch-theme .bg-clarity-teal-500,
+.launch-theme .bg-clarity-teal-600 { background-color: hsl(var(--launch-teal)) !important; }
+.launch-theme .text-clarity-teal-500,
+.launch-theme .text-clarity-teal-600,
+.launch-theme .text-clarity-teal-700 { color: hsl(var(--launch-moss)) !important; }
+.launch-theme .border-clarity-teal-100,
+.launch-theme .border-clarity-teal-200 { border-color: hsl(var(--launch-teal) / 0.30) !important; }
+
+.launch-theme .bg-brand-emerald-50,
+.launch-theme .bg-brand-emerald-100 { background-color: hsl(var(--launch-moss) / 0.10) !important; }
+.launch-theme .bg-brand-emerald-500,
+.launch-theme .bg-brand-emerald-600,
+.launch-theme .bg-brand-emerald-700 { background-color: hsl(var(--launch-moss)) !important; }
+.launch-theme .text-brand-emerald-500,
+.launch-theme .text-brand-emerald-600,
+.launch-theme .text-brand-emerald-700,
+.launch-theme .text-brand-emerald-800 { color: hsl(var(--launch-moss)) !important; }
 
 .launch-theme .bg-brain-health-50,
 .launch-theme .bg-brain-health-100 { background-color: hsl(var(--launch-cream-light)) !important; }
@@ -809,6 +828,8 @@ html, body {
   --prestige-mid: #0d7a5f;
   --prestige-gold: #c9a84c;
   --prestige-ivory: #f5f0e0;
+  --prestige-ember: #c65a2e;
+  --prestige-teal: #3bb89f;
   background-color: var(--prestige-ink);
   color: var(--prestige-ivory);
   font-family: 'Work Sans', Inter, system-ui, sans-serif;
@@ -824,7 +845,7 @@ html, body {
 }
 .prestige-halo {
   background: radial-gradient(55% 45% at 18% 0%, rgba(13, 122, 95, 0.32), transparent 72%),
-              radial-gradient(45% 40% at 95% 100%, rgba(201, 168, 76, 0.14), transparent 70%);
+              radial-gradient(45% 40% at 95% 100%, rgba(59, 184, 159, 0.16), transparent 70%);
 }
 
 .prestige-tile {
@@ -835,18 +856,20 @@ html, body {
 .prestige-tile:hover { border-color: rgba(201, 168, 76, 0.5); background-color: rgba(13, 122, 95, 0.24); }
 
 .prestige-gold      { color: var(--prestige-gold); }
+.prestige-teal      { color: var(--prestige-teal); }
 .prestige-ivory     { color: var(--prestige-ivory); }
 .prestige-ivory-75  { color: rgba(245, 240, 224, 0.75); }
 .prestige-ivory-55  { color: rgba(245, 240, 224, 0.55); }
 .prestige-ivory-40  { color: rgba(245, 240, 224, 0.42); }
 .prestige-rule      { background-color: rgba(201, 168, 76, 0.35); }
+.prestige-home-link:hover { color: var(--prestige-gold); border-color: currentColor; }
 
 .prestige-cta {
-  background-color: var(--prestige-ivory);
-  color: var(--prestige-ink);
+  background-color: var(--prestige-ember);
+  color: var(--prestige-ivory);
   transition: background-color 300ms ease, transform 150ms ease;
 }
-.prestige-cta:hover  { background-color: var(--prestige-gold); }
+.prestige-cta:hover  { background-color: var(--prestige-gold); color: var(--prestige-ink); }
 .prestige-cta:active { transform: scale(0.99); }
 
 @media (prefers-reduced-motion: reduce) {
