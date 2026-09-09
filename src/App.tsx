@@ -166,6 +166,7 @@ import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
 import PrototypeReminders from "./pages/prototype/PrototypeReminders";
 import PrototypeDone from "./pages/prototype/PrototypeDone";
 import { LaunchGuard } from "./components/launch/LaunchGuard";
+import { AssessmentFirstGate } from "./components/launch/AssessmentFirstGate";
 
 const queryClient = new QueryClient();
 
