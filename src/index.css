@@ -862,6 +862,7 @@ html, body {
 .prestige-ivory-55  { color: rgba(245, 240, 224, 0.55); }
 .prestige-ivory-40  { color: rgba(245, 240, 224, 0.42); }
 .prestige-rule      { background-color: rgba(201, 168, 76, 0.35); }
+.prestige-home-link:hover { color: var(--prestige-gold); border-color: currentColor; }
 
 .prestige-cta {
   background-color: var(--prestige-ember);

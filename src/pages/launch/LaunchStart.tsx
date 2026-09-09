@@ -123,7 +123,7 @@ export default function LaunchStart() {
             </button>
             <button
               onClick={() => navigate('/launch/home')}
-              className="border-b border-transparent pb-1 text-base font-medium prestige-ivory-55 transition-colors hover:border-current hover:prestige-gold"
+              className="prestige-home-link border-b border-transparent pb-1 text-base font-medium prestige-ivory-55 transition-colors"
             >
               Open MyRhythm Home
             </button>
