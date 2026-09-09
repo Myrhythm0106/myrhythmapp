@@ -38,6 +38,8 @@ export function QuietHome() {
   const { persona, isCaregiver } = usePersona();
   const { subject, supportedName } = useSubject();
   const { isPause } = useStage();
+  const firstSession = useFirstSession();
+  const showDemoContent = useIsDevDemo();
 
   if (isPause) return <QuietHomePause />;
 
@@ -47,6 +49,9 @@ export function QuietHome() {
   const realName = useDisplayName(fixtures.name);
   const greetName = isCaregiver && subject === 'supporting' ? supportedName : realName;
   const greeting = copy.greeting[timeBucket()];
+
+  // Day one: one clear next move instead of a dozen empty panels.
+  const settlingIn = !firstSession.loading && firstSession.isNewAccount;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -78,57 +83,70 @@ export function QuietHome() {
         </span>
       </motion.div>
 
+      {/* What I learned about your best hours — said out loud */}
+      <RhythmLine />
 
-      {/* Next action — the one thing that matters right now */}
+      {/* The guided first session */}
+      <FirstSessionCard state={firstSession} />
+
       {/* If a conversation is happening right now, offer to capture it — once */}
       <ArriveAndArmCard />
 
-      <NextActionStrip />
-      <CompletionStatsStrip />
+      {/* Next action — the one thing that matters right now */}
+      {!settlingIn && (
+        <>
+          <NextActionStrip />
+          <CompletionStatsStrip />
+        </>
+      )}
 
       {/* MYRHYTHM Brain Health Assessment — take or retake */}
       <HomeAssessmentCard />
 
-      {/* Weekly planning nudge (only on the user's planning day) */}
-      <LaunchWeeklyPlanningCard />
+      {!settlingIn && (
+        <>
+          {/* Weekly planning nudge (only on the user's planning day) */}
+          <LaunchWeeklyPlanningCard />
 
-      {/* #IChoose centerpiece */}
-      <IChooseHeart />
+          {/* #IChoose centerpiece */}
+          <IChooseHeart />
 
-      {/* Re-entry */}
-      <ReEntryCard />
+          {/* Re-entry */}
+          <ReEntryCard />
 
-      {/* Scaffolds */}
-      <Scaffolds />
+          {/* Scaffolds */}
+          <Scaffolds />
 
-      {/* Composer */}
-      <Composer />
+          {/* Composer */}
+          <Composer />
+        </>
+      )}
 
-      {/* Today's wins */}
-      <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="h-4 w-4 text-launch-ember" />
-          <h3 className="font-semibold text-launch-ink">{copy.winsTitle}</h3>
+      {/* Today's wins — sample content only ever shows in demo preview */}
+      {showDemoContent && fixtures.wins.length > 0 && (
+        <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="h-4 w-4 text-launch-ember" />
+            <h3 className="font-semibold text-launch-ink">{copy.winsTitle}</h3>
+          </div>
+          <ul className="space-y-2">
+            {fixtures.wins.map((w) => (
+              <li key={w.id} className="flex items-center justify-between text-sm">
+                <span className="text-launch-ink/80">{w.text}</span>
+                <span className="text-xs text-launch-ink/50">{w.time}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="space-y-2">
-          {fixtures.wins.map((w) => (
-            <li key={w.id} className="flex items-center justify-between text-sm">
-              <span className="text-launch-ink/80">{w.text}</span>
-              <span className="text-xs text-launch-ink/50">{w.time}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
+      )}
 
       {/* Cognitive Load (Plus+) */}
-      <CognitiveLoadMeter />
+      {!settlingIn && <CognitiveLoadMeter />}
 
       {/* Footer signature */}
       <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">
         Today is mine. #IChoose
       </p>
-
 
       {/* Dev-only tier switcher */}
       <TierSwitcherPill />
