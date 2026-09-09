@@ -16,6 +16,7 @@ import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfo
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
+import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -256,6 +257,19 @@ export default function LaunchAssessment() {
               Continue
               <ArrowRight className="h-5 w-5" />
             </LaunchButton>
+
+            {isFirstRun && (
+              <button
+                type="button"
+                onClick={() => {
+                  deferAssessment();
+                  navigate('/launch/home', { replace: true });
+                }}
+                className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
+              >
+                Not now — take me to my day
+              </button>
+            )}
           </div>
         </div>
       </LaunchLayout>
