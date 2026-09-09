@@ -22,10 +22,28 @@ const ONBOARDING_STEPS: StepLocatorItem[] = [
   { label: 'Home',       path: '/launch/home' },
 ];
 
+/**
+ * One-line "what you're doing now, and what's next" per step, so the user
+ * never feels lost. Keyed by path.
+ */
+const STEP_DESCRIPTIONS: Record<string, string> = {
+  '/launch/register':
+    "Create your account — your information stays private and only you can see it. Next: a little about you.",
+  '/launch/user-type':
+    "Tell me who's using MyRhythm so everything feels made for you. Next: eight quick questions.",
+  '/launch/assessment':
+    "Eight questions about your days — it's how I learn when you're at your best. Next: your personal report.",
+  '/launch/welcome':
+    'Your MYRHYTHM report — read it, keep it, come back to it any time. Next: choose your membership.',
+  '/launch/payment':
+    "Choose how you'd like to join. Next: your new Home.",
+};
+
 export function OnboardingProgressBar() {
   const { pathname } = useLocation();
   const currentIndex = ONBOARDING_STEPS.findIndex(s => s.path === pathname);
   if (currentIndex === -1) return null;
+  const description = STEP_DESCRIPTIONS[pathname];
 
   return (
     <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-brain-health-100">
@@ -35,6 +53,11 @@ export function OnboardingProgressBar() {
           currentIndex={currentIndex}
           ariaLabel="Onboarding progress"
         />
+        {description && (
+          <p className="text-xs sm:text-sm text-brain-health-700/80 text-center mt-1 pb-1">
+            {description}
+          </p>
+        )}
       </div>
     </div>
   );
