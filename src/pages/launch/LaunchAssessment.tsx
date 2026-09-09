@@ -93,11 +93,14 @@ export default function LaunchAssessment() {
   const [processing, setProcessing] = useState(false);
   const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const pendingNav = useRef<string>('/launch/welcome');
+  const displayName = useDisplayName();
   // Sent here straight after signing in, before Home.
   const isFirstRun = useMemo(() => {
     if (typeof window === 'undefined') return false;
     return new URLSearchParams(window.location.search).get('first') === '1';
   }, []);
+  // First-timers get a warm welcome before any question appears.
+  const [showWelcome, setShowWelcome] = useState<boolean>(isFirstRun);
 
 
   useEffect(() => {
