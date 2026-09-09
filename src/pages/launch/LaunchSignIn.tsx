@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { resolveNextDestination } from '@/launch/onboarding/nextDestination';
 
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email'),
