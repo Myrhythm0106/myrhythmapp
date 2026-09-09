@@ -92,6 +92,16 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        launch: {
+          ink: "hsl(var(--launch-ink))",
+          moss: "hsl(var(--launch-moss))",
+          gold: "hsl(var(--launch-gold))",
+          cream: "hsl(var(--launch-cream))",
+          "cream-light": "hsl(var(--launch-cream-light))",
+          ivory: "hsl(var(--launch-ivory))",
+          ember: "hsl(var(--launch-ember))",
+          teal: "hsl(var(--launch-teal))",
+        },
         // Neural Luxury: Purple-Indigo-Blue gradient (65-75% saturation)
         "neural-purple": {
           50: "hsl(var(--neural-purple-50))",
