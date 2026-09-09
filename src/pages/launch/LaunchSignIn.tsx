@@ -58,8 +58,11 @@ export default function LaunchSignIn() {
         return;
       }
 
-      // Success - navigate to home
-      navigate(redirectTo);
+      // Success — brain health questions first, or pick up where they stopped.
+      const destination = await resolveNextDestination(
+        (location.state as { from?: string } | null)?.from ?? null
+      );
+      navigate(destination, { replace: true });
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {
