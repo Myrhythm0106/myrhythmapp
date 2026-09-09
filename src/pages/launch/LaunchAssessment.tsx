@@ -250,15 +250,6 @@ export default function LaunchAssessment() {
             </p>
           </div>
 
-          {isFirstRun && (
-            <div className="mb-6 rounded-2xl bg-launch-ivory border border-launch-gold/30 p-4 text-center">
-              <p className="text-sm text-launch-ink/80">
-                Eight questions, about three minutes — it's how I learn when you're at
-                your best, so I can put the important things in the right hours.
-              </p>
-            </div>
-          )}
-
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">
               {bank.preQuestion.title}
