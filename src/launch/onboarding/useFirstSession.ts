@@ -29,16 +29,13 @@ const EMPTY: FirstSessionState = {
 
 async function countRows(
   table: 'voice_recordings' | 'extracted_actions' | 'calendar_events',
-  userId: string,
-  extra?: (q: never) => never
+  userId: string
 ): Promise<number> {
   try {
-    let query = supabase
+    const { count } = await supabase
       .from(table)
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId);
-    if (extra) query = (extra as unknown as (q: typeof query) => typeof query)(query);
-    const { count } = await query;
     return count ?? 0;
   } catch {
     return 0;
