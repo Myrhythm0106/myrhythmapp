@@ -171,6 +171,56 @@ export default function LaunchAssessment() {
 
 
 
+  /* ------------------- Welcome phase (first-timers) ------------------- */
+  if (showWelcome) {
+    return (
+      <LaunchLayout>
+        <div className="max-w-md mx-auto w-full px-4 md:px-8 py-10 pb-24">
+          <h1 className="text-3xl font-bold text-launch-ink font-display mb-3 text-center">
+            Welcome, {displayName}
+          </h1>
+          <p className="text-launch-ink/70 text-center mb-8">
+            Before anything else, eight quick questions — here's what to expect.
+          </p>
+
+          <ol className="space-y-3 mb-8">
+            {[
+              'Eight questions, about three minutes — no right or wrong answers.',
+              'You can change any answer before moving on.',
+              "At the end you'll get your personal MYRHYTHM report — and I'll learn your best hours, so the important things land in the right part of your day.",
+            ].map((line, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4"
+              >
+                <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">
+                  {i + 1}
+                </span>
+                <p className="text-launch-ink/80 text-sm pt-1.5">{line}</p>
+              </li>
+            ))}
+          </ol>
+
+          <LaunchButton onClick={() => setShowWelcome(false)} className="w-full">
+            I'm ready
+            <ArrowRight className="h-5 w-5" />
+          </LaunchButton>
+
+          <button
+            type="button"
+            onClick={() => {
+              deferAssessment();
+              navigate('/launch/home', { replace: true });
+            }}
+            className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
+          >
+            Not now — take me to my day
+          </button>
+        </div>
+      </LaunchLayout>
+    );
+  }
+
   /* ------------------- Recency phase ------------------- */
   if (phase === 'recency') {
     return (
