@@ -17,6 +17,7 @@ import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentP
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
+import { useDisplayName } from '@/launch/profile/useDisplayName';
 import {
   getAssessmentBank,
   resolveHasSupport,
