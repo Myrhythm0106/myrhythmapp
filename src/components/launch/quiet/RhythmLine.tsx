@@ -10,7 +10,10 @@ function readWindow(): ProductivityWindow | null {
     if (!raw) return null;
     const data = JSON.parse(raw);
     const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
-    const w = score?.productivityWindow ?? data?.productivityWindow;
+    const w =
+      data?.assessmentResults?.productivityWindow ??
+      score?.productivityWindow ??
+      data?.productivityWindow;
     return w && typeof w.productiveStart === 'string' ? (w as ProductivityWindow) : null;
   } catch {
     return null;
