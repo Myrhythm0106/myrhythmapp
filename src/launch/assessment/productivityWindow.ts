@@ -230,3 +230,20 @@ export function outsideWindowNote(
     window.productiveEnd
   )}). That's completely fine — I'll keep the block shorter and leave ${gap} minutes to recover afterwards.`;
 }
+
+/** Read the window saved at the end of the assessment. Returns null when absent. */
+export function readStoredProductivityWindow(): ProductivityWindow | null {
+  try {
+    const raw = localStorage.getItem('myrhythm_launch_mode');
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+    const w =
+      data?.assessmentResults?.productivityWindow ??
+      score?.productivityWindow ??
+      data?.productivityWindow;
+    return w && typeof w.productiveStart === 'string' ? (w as ProductivityWindow) : null;
+  } catch {
+    return null;
+  }
+}
