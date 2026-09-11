@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClipboardList, RotateCcw } from 'lucide-react';
+import { ClipboardList, RotateCcw, LineChart } from 'lucide-react';
 import { listAssessmentRuns, type StoredAssessmentRun } from '@/launch/assessment/assessmentHistory';
 
 const PROGRESS_KEY = 'myrhythm_assessment_progress';
