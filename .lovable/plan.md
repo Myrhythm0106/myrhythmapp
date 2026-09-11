@@ -1,70 +1,115 @@
-# What to do next: the moat, the sellable strategy, and the roadmap
+# From 11 September 2026: the #IChoose-led strategy, and the honest verdict
 
-## 1. My candid answer: what actually is the moat
+## 1. Candid answer first: can this work with no funds?
 
-You're right — but with one sharpening: **none of the three pieces is a moat alone**. Granola/Plaud/Otter can all do capture. Tiimo can do neuroinclusive planning. Anyone can bolt on sharing. The moat is the **closed loop no competitor joins up**:
+**Yes — but not by selling the app.** The app is not ready to sell to strangers (real-device long capture unproven, Google/Outlook keys missing, no independent accessibility or security review, payments in test mode). Trying to sell subscriptions from today would burn your best asset: your credibility.
+
+What *is* ready to sell from today is **you and the #IChoose 365 journal**. The journal is a finished, low-cost, no-permission-needed product. It carries the exact same philosophy as the app — daily choice, small steps, own your rhythm — and it gives you something to teach, speak about, and be interviewed on *while* the app finishes.
+
+So the sequence that makes money from 11/09 without funds is:
 
 ```
-Conversation → verified next steps → dates → calendar/reminders → Support Circle accountability → traceable diary
+#IChoose journal + your story  →  audience & email list  →  paid talks/workshops
+   →  founding members for MyRhythm  →  rehab-centre pilots
 ```
 
-So in priority order, the defensible stack is:
+**Why this works:** you monetise attention before you monetise software. Every talk, post and interview builds the founding-member list the app needs anyway.
 
-1. **Memory Bridge as the wedge** (capture → reviewed actions → calendar) — demonstrable in 10 seconds, this is the external hero.
-2. **Support Circle permissions** — this is the part that is genuinely hard to copy, because it requires rethinking the product around *two people*, not one user. This is your real moat.
-3. **Source-to-action traceability** (reference codes, diary, retention you control) — the trust layer.
-4. **Document upload → extracted actions with source lines** — keep this; it's the Bridge Pathway's killer input (discharge letters, care plans) and nobody in the meeting-tools space does it for life-after-appointment.
-5. **The 4C loop** — keep it as the *internal experience and language*, not the opening pitch. "4C" means nothing to a stranger; "never lose what was agreed after the appointment" does.
+**Why it might not work — the honest risks:**
+- Content without a call to action builds applause, not income. Every single piece must end in one ask.
+- Spreading across five platforms with no budget = nothing lands. Pick two.
+- If you keep improving the app instead of speaking, nothing happens. Cap app work at fixed hours per week.
+- Brain-health credibility is fragile: one clinical-sounding claim undoes the trust. Confidence, identity, follow-through — never outcomes.
 
-What is **not** a moat (stop investing differentiation energy here): recording quality, transcription, summaries, brain-health scoring as a headline, generic reminders.
+## 2. The strategy in one page
 
-## 2. The sellable strategy (neat version)
+- **The one promise:** "Nothing gets lost after the appointment — and no one walks alone."
+- **The one audience:** people in the first 90 days after a neuro rehab episode, and the family member quietly holding it together.
+- **The one free asset:** #IChoose — one statement a day, publicly, every day.
+- **The three revenue lines, in the order they switch on:**
+  1. **Now (Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health. Cash from day one, zero setup cost.
+  2. **Oct–Dec:** MyRhythm Founding Member seats (£10/mo for life, 500 seats) sold only to the warm list you built.
+  3. **2027:** rehab-centre cohort licences, evidenced by founding-member stories.
+- **The moat you're protecting the whole time:** conversation → verified next steps → dates → reminders → Support Circle → traceable diary. Memory Bridge is the visible hero; the 4Cs are the inside experience; Support Circle is the hard-to-copy part.
 
-**One promise, one customer, one moment.**
+## 3. The #IChoose 365 engine (your daily operating rhythm from 11/09)
 
-- **Promise (external):** "The app that keeps your plan going after the appointment ends." Memory Bridge leads; the 4Cs are what users discover inside.
-- **First customer (narrow):** people in the first 90 days after a neuro rehab episode — and the family member who is quietly managing them. Not clinicians as buyers yet; clinicians as *endorsers* who hand out the Bridge Kit.
-- **Buying moment:** discharge planning, or the first "we've lost track of what they said" weekend at home.
-- **Business model:** Founding Member £10/mo for life (500 seats) → Regular £15/mo. Rehab centres later buy cohort licences (v0.3+); the consumer Proof of Concept is the evidence that sells B2B.
-- **Distribution without budget:** personal founders group → discharge-bridge partnerships with 2–3 rehab units → clinician handout (the kit already exists) → word of mouth from Support Circle members who experience the app as guests and convert for themselves.
+The journal is not marketing decoration — it is the content calendar. Each day's statement is a talking point, a post, and a teaching moment.
 
-**Positioning rule to hold:** never compete with Granola/Plaud on "better meeting notes." Always compete on "nothing gets lost after the appointment, and no one walks alone."
+**Daily (20 minutes, non-negotiable):**
+1. Post the day's #IChoose statement — one platform primary (LinkedIn), one secondary (Instagram or a short video).
+2. Add 3–4 lines: the statement, one real moment from your own recovery or from someone you've supported, one question back to the reader.
+3. One direct message to one person who commented. This is where the list is built.
 
-## 3. Roadmap (SMART, anchored to the 90-day window: Day 1 = 1 Aug 2026, Day 90 = 29 Oct 2026)
+**Weekly:**
+- One longer piece: a 600-word post or a 5-minute video expanding one statement into a teachable idea.
+- One outreach block: 5 approaches to support groups, podcasts, employers or rehab units offering a free talk.
+- One founder block: capped hours on the app — proof work only, no new features.
 
-### Now → mid-September 2026: Proof, not features
-1. **Real-device test day** — 2–4 hr captures on a real iPhone and Android; log failures; fix only what breaks capture. (This is the single highest-risk unknown.)
-2. **Two-account Support Circle permission test** — prove a supporter sees exactly what they were granted, nothing more.
-3. **Action-accuracy sample** — run 20 real conversations, score extraction accuracy; publish the number internally; fix the top extraction failure.
-4. **Get Google + Outlook OAuth credentials installed** so calendar connect actually completes.
-5. Recruit **8–12 founding testers** (survivors + their key supporter, paired).
+**Monthly themes** (gives interviewers and hosts a hook):
+- Sept — **Beginning again**: what discharge really feels like.
+- Oct — **The messy middle**: why follow-through fails and what fixes it.
+- Nov — **No one walks alone**: the family member nobody asks about.
+- Dec — **The year I chose**: the 365 arc, reflection, and the founding-member invitation.
 
-### Mid-Sept → early Oct 2026: Founders cohort (v0.1)
-6. Run a 4-week briefed cohort. Weekly 20-min calls. Measure only three things: captures per user per week, actions completed with dates, repeat use at week 4.
-7. Collect 5 traceable before/after stories ("the appointment where X would have been lost"). These are the entire sales deck.
-8. Ship only fixes that unblock the closed loop; park everything else.
+## 4. Your talking / interview points (drawn from the journal)
 
-### Oct 2026: Public paid launch (Day 90)
-9. Switch Stripe live. Open Founding Member seats publicly with the three proof numbers above on the landing page.
-10. Approach 3 rehab centres with the Bridge Kit + cohort evidence; offer a free 60-day continuity pilot in exchange for feedback and a named quote.
+Five reusable stories, each mapped to a statement — use these on every podcast, panel and workshop:
+1. *"#IChoose to honour my own pace"* — the discharge cliff: the day the appointments stopped.
+2. *"#IChoose one clear next step"* — why plans on paper fail and owned dated steps don't.
+3. *"#IChoose to receive support"* — the family member becoming the memory for two people.
+4. *"#IChoose progress over perfection"* — the ideal-brain assumption in every productivity tool.
+5. *"#IChoose to be my own steady person"* — identity after a health event; the thing scores don't measure.
 
-### Nov 2026 – mid-2027 (v0.2)
-11. Discharge Summary → Life-Ready Plan loop (nurse co-sign), Bring-a-Witness co-listen.
-12. Rehab-centre pilot → first paid cohort licence. Target: 1–2 paying B2B accounts by Q2 2027.
+Every appearance closes with the same one line: the journal, and the invitation to join the founding list.
 
-### What to deliberately NOT do in this window
-No new feature surfaces. No hardware. No "meeting intelligence" features. No competing on transcription minutes or language counts.
+## 5. The 90-day calendar from 11 September 2026
 
-## 4. The five next moves, ranked
+**Weeks 1–2 (11–24 Sept) — Turn on the engine, earn the first pound**
+- Day 1: publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
+- Set one landing destination for everything: journal + join the founding list.
+- List the journal for sale (direct + print-on-demand). Price it, don't discount it.
+- Book 3 free talks (support group, employer, occupational health). Free talk = paid workshop pipeline.
+- App work: real-device 2–4hr capture test on iPhone and Android. Install Google/Outlook keys.
 
-1. Book the real-device recording test this week — everything else is moot if long capture fails in pockets.
-2. Install the Google/Outlook OAuth keys.
-3. Run the paired-account Support Circle permission test.
-4. Recruit the first 8–12 paired testers.
-5. Rewrite the landing hero around Memory Bridge + the one promise (already approved in the positioning decision doc; just not executed).
+**Weeks 3–6 (25 Sept – 22 Oct) — Audience to cohort**
+- Daily posts continue. Target: first 200 email subscribers.
+- Deliver the 3 talks; convert at least 1 into a paid workshop.
+- Pitch 10 podcasts using the five talking points above.
+- Recruit 8–12 paired founding testers (survivor + their supporter) from the list.
+- App work: two-account Support Circle permission test; 20-conversation action-accuracy check.
 
-## Technical notes
+**Weeks 7–12 (23 Oct – 4 Dec) — Founding members and proof**
+- Run the 4-week tester cohort. Measure only: captures per week, actions completed with dates, still using at week 4.
+- Collect 5 named before/after stories. These are the entire sales deck.
+- Switch Stripe live only once the device test passes. Open Founding Member seats to the list, not to strangers.
+- Approach 3 rehab centres with the Bridge Kit plus cohort evidence; offer a 60-day free continuity pilot for feedback and a named quote.
 
-- No code changes required by this plan beyond: (a) executing the approved Memory-Bridge-led landing copy update, (b) fixing anything the device/permission tests expose.
-- Evidence docs already exist: `strategic-documents/MyRhythm-Competitive-Differentiation-Assessment.md`, `docs/readiness-statement.md`, `docs/scenarios-and-pain-points.md` — the sales story should quote these, not invent new claims.
-- Non-medical-claims rule applies throughout: confidence, identity, follow-through — never clinical outcomes.
+**December — The year I chose**
+- 365 arc closes; run a launch moment tied to the journal's completion. Founding seats and a paid workshop as the two offers.
+
+## 6. Money from 11/09 with zero budget
+
+| Source | Starts | Cost to you | Realistic first 90 days |
+| --- | --- | --- | --- |
+| Journal sales | Day 1 | Print-on-demand, £0 upfront | Slow, steady, builds credibility |
+| Paid talk / workshop | Week 3+ | Your time | The fastest real cash |
+| Founding Member seats | Week 8+ | £0 | Only after device proof |
+| Rehab pilot | 2027 | £0 (free pilot first) | Evidence, not revenue, this year |
+
+Everything is time, not money. The only rule: **one ask per piece of content**, always pointing at the journal or the founding list.
+
+## 7. What NOT to do
+
+- Don't sell the app to people you can't personally support yet.
+- Don't build new features in this window. Proof only.
+- Don't post on five platforms. Two.
+- Don't make any claim about recovery, outcomes or treatment. Confidence, identity, follow-through.
+- Don't run paid ads — the site doesn't convert organically yet, so ads would just spend money you don't have.
+
+## Technical / delivery notes
+
+- Deliverable: a maintainable `docs/ichoose-365-gtm-plan.md` holding this plan (weekly checklist format so you can tick and update it), plus a `docs/ichoose-talking-points.md` with the five interview stories written out in full, quotable form.
+- Existing docs to quote rather than duplicate: `docs/readiness-statement.md` (blockers), `docs/scenarios-and-pain-points.md` (customer language), `strategic-documents/MyRhythm-Competitive-Differentiation-Assessment.md` (positioning).
+- The 30 statements in `src/data/iChooseStatements.ts` are the app-side pool; the plan will note where the journal's 365 and the app's daily statement should stay aligned.
+- No app feature changes proposed in this plan.
