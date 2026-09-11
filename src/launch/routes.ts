@@ -11,7 +11,7 @@
 import {
   Home, Mic, CheckSquare, Activity, Sparkles,
   Calendar, Brain, Users, Gamepad2, Target, Flag,
-  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy, ClipboardList,
+  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy, ClipboardList, BookOpen,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -45,6 +45,7 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   // Middle ring — key features
   { path: '/launch/calendar',        label: 'Calendar',       icon: Calendar, ring: 'middle', group: 'key-features', description: 'Day view & smart schedule' },
   { path: '/launch/memory',          label: 'Memory Bridge',  icon: Brain,    ring: 'middle', group: 'key-features', description: 'Record → next steps → share' },
+  { path: '/launch/diary',           label: 'My Diary',       icon: BookOpen, ring: 'middle', group: 'key-features', description: 'Everything I have captured, in date order' },
   { path: '/launch/assessment',      label: 'MYRHYTHM Assessment', icon: ClipboardList, ring: 'middle', group: 'key-features', description: 'My 8-letter brain health snapshot' },
   { path: '/launch/support',         label: 'Support Circle', icon: Users,    ring: 'middle', group: 'key-features', description: 'No one walks alone' },
   { path: '/launch/games',           label: 'Brain Games',    icon: Gamepad2, ring: 'middle', group: 'key-features', description: 'Gentle cognitive practice' },
@@ -82,8 +83,16 @@ export const FOUNDING_CORE_PATHS = [
   '/launch/home',
   '/launch/capture',
   '/launch/commit',
+  '/launch/calibrate',
+  '/launch/celebrate',
   '/launch/calendar',
+  '/launch/memory',
+  '/launch/diary',
+  '/launch/assessment',
   '/launch/support',
+  '/launch/profile',
+  '/launch/settings',
+  '/launch/help',
 ] as const;
 
 export const FOUNDING_CORE_ROUTES: LaunchRoute[] = LAUNCH_ROUTES.filter(r =>

@@ -3,6 +3,8 @@ import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus,
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
+import { useBusyTimes } from '@/launch/calendar/useBusyTimes';
+import { toDateOnly } from '@/utils/dateOnly';
 import {
   outsideWindowNote,
   readStoredProductivityWindow,
@@ -86,6 +88,8 @@ export function LaunchAddEventModal({
   const [time, setTime] = useState('09:00');
   const bestWindow = useMemo(() => readStoredProductivityWindow(), []);
   const bestWindowNote = useMemo(() => outsideWindowNote(time, bestWindow), [time, bestWindow]);
+  const { clashAt } = useBusyTimes(toDateOnly(selectedDate) ?? '');
+  const clashTitle = clashAt(time);
   const [type, setType] = useState('routine');
 
   // Invitees
@@ -266,6 +270,12 @@ export function LaunchAddEventModal({
                   </button>
                 )}
               </div>
+            )}
+            {clashTitle && (
+              <p className="mt-2 text-xs text-launch-ink/70">
+                Heads up — my calendar already shows “{clashTitle}” around then. I can still book it
+                if that works for you.
+              </p>
             )}
           </div>
 

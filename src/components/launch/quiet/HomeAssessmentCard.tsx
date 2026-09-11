@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClipboardList, RotateCcw } from 'lucide-react';
+import { ClipboardList, RotateCcw, LineChart } from 'lucide-react';
 import { listAssessmentRuns, type StoredAssessmentRun } from '@/launch/assessment/assessmentHistory';
 
 const PROGRESS_KEY = 'myrhythm_assessment_progress';
@@ -79,6 +79,17 @@ export function HomeAssessmentCard() {
           </>
         )}
       </button>
+
+      {hasRun && (
+        <button
+          type="button"
+          onClick={() => navigate('/launch/assessment/history')}
+          className="ml-2 inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full border border-launch-gold/40 text-launch-ink text-sm font-semibold hover:bg-launch-cream transition-colors"
+        >
+          <LineChart className="h-4 w-4" />
+          See how I'm tracking
+        </button>
+      )}
     </div>
   );
 }

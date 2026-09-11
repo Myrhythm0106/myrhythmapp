@@ -8,6 +8,8 @@ export interface StoredAssessmentRun {
   total: number;
   scores: BrainHealthScore | null;
   results: Record<string, unknown>;
+  /** The raw answers given on this run, keyed by question id. */
+  answers: Record<string, unknown>;
 }
 
 /**
@@ -55,7 +57,7 @@ export async function listAssessmentRuns(limit = 10): Promise<StoredAssessmentRu
 
   const { data, error } = await supabase
     .from('assessment_results')
-    .select('id, created_at, completed_at, scores, raw_assessment_data')
+    .select('id, created_at, completed_at, scores, raw_assessment_data, responses')
     .eq('user_id', userId)
     .eq('completion_status', 'completed')
     .order('created_at', { ascending: false })
@@ -72,6 +74,7 @@ export async function listAssessmentRuns(limit = 10): Promise<StoredAssessmentRu
       total: typeof scores?.total === 'number' ? scores.total : 0,
       scores,
       results: (row.raw_assessment_data ?? {}) as Record<string, unknown>,
+      answers: (row.responses ?? {}) as Record<string, unknown>,
     };
   });
 }

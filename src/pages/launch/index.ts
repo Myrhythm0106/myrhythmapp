@@ -9,6 +9,8 @@ export { default as LaunchWelcome } from './LaunchWelcome';
 export { default as LaunchDashboard } from './LaunchDashboard';
 export { default as LaunchCalendar } from './LaunchCalendar';
 export { default as LaunchMemoryBridge } from './LaunchMemoryBridge';
+export { default as LaunchDiary } from './LaunchDiary';
+export { default as LaunchBrainHealth } from './LaunchBrainHealth';
 export { default as LaunchBrainGames } from './LaunchBrainGames';
 export { default as LaunchGratitude } from './LaunchGratitude';
 export { default as LaunchSupportCircle } from './LaunchSupportCircle';
