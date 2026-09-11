@@ -85,12 +85,14 @@ export default function LaunchSettings() {
     isSyncing,
     connectGoogle,
     connectOutlook,
+    subscribeIcs,
     syncCalendar,
     disconnectCalendar,
   } = useCalendarIntegration();
 
   const googleConnected = integrations.some(i => i.provider === 'google');
   const outlookConnected = integrations.some(i => i.provider === 'outlook');
+  const [feedUrl, setFeedUrl] = useState('');
 
   return (
     <LaunchLayout showHeader={true}>
