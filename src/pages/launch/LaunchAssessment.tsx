@@ -460,11 +460,16 @@ export default function LaunchAssessment() {
        localStorage.removeItem(PROGRESS_KEY);
 
        if (user?.id) {
-         const window = deriveProductivityWindow({
-           rhythm: primaryOf('rhythm'),
-           focusLength: savedRhythmDetail.primary,
-           energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-         });
+         const window = deriveProductivityWindow(
+           {
+             rhythm: primaryOf('rhythm'),
+             focusLength: savedRhythmDetail.primary,
+             energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
+             heal: primaryOf('heal'),
+             transform: combined('transform'),
+           },
+           brainHealthScore
+         );
           void (async () => {
             try {
               const { data, error } = await supabase
