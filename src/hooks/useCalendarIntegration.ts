@@ -220,6 +220,7 @@ export function useCalendarIntegration() {
     isSyncing,
     connectGoogle,
     connectOutlook,
+    subscribeIcs,
     syncCalendar,
     pushUpcoming,
     disconnectCalendar,
