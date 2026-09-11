@@ -80,6 +80,8 @@ export function LaunchAddEventModal({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [time, setTime] = useState('09:00');
+  const bestWindow = useMemo(() => readStoredProductivityWindow(), []);
+  const bestWindowNote = useMemo(() => outsideWindowNote(time, bestWindow), [time, bestWindow]);
   const [type, setType] = useState('routine');
 
   // Invitees
