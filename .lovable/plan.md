@@ -66,6 +66,16 @@ controls all of it.
 - Add one short "How this shapes my days" block under the existing window summary,
   listing the same reasons. No layout restructure.
 
+**Override (`LaunchAddEventModal` and any time-suggestion surface)**
+- The window is advisory only — never disable or block a time outside it.
+- Add a small helper in `productivityWindow.ts`: `outsideWindowNote(time, window)` returning
+  a single soft sentence, or `null` when the time sits inside the window.
+- In the Add Event modal, show that sentence inline under the time field when the chosen
+  time falls outside the window, alongside a one-tap "Move to my best window" shortcut that
+  the user can ignore. Saving is never gated.
+- Where the window shortens a suggested block, the user can still lengthen it manually; the
+  manual value wins and is saved as entered.
+
 **Consumers of the window** (scheduling suggestions, Add Event, Commit) keep reading
 `productiveStart`/`productiveEnd`/`focusBlockMinutes`, so they get the corrected values
 with no changes. Buffer and daily-cap use is additive and can be applied where suggestions
@@ -73,4 +83,5 @@ are generated.
 
 **Verification:** typecheck, then complete the assessment twice in the browser — once with
 low-energy answers and once with strong answers — and confirm the window, block length and
-Home line differ appropriately.
+Home line differ appropriately. Also add an event outside the best window and confirm it
+saves first time with only the soft note showing.
