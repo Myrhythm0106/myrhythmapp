@@ -141,8 +141,10 @@ export function useCalendarIntegration() {
         : integrations;
 
       for (const integration of targetIntegrations) {
-        const functionName = integration.provider === 'google' 
-          ? 'calendar-google-sync' 
+        const functionName = integration.provider === 'google'
+          ? 'calendar-google-sync'
+          : integration.provider === 'ics'
+          ? 'calendar-ics-sync'
           : 'calendar-outlook-sync';
 
         const { error } = await supabase.functions.invoke(functionName, {
