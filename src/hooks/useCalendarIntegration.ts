@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 export interface CalendarIntegration {
   id: string;
-  provider: 'google' | 'outlook';
+  provider: 'google' | 'outlook' | 'ics';
   account_email: string;
   account_name: string | null;
   is_active: boolean;
@@ -91,6 +91,41 @@ export function useCalendarIntegration() {
       toast.error('Failed to connect Outlook Calendar');
     }
   }, []);
+
+  /**
+   * Subscribe to any calendar that publishes a link — Apple/iCloud, Fastmail,
+   * most work calendars. Read-only: it brings busy times in so MyRhythm stops
+   * offering a slot that is already taken.
+   */
+  const subscribeIcs = useCallback(async (feedUrl: string) => {
+    setIsSyncing(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error('Please log in to add a calendar');
+        return false;
+      }
+      const { data, error } = await supabase.functions.invoke('calendar-ics-sync', {
+        body: { feedUrl },
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (error) throw error;
+      const imported = (data as { imported?: number } | null)?.imported ?? 0;
+      toast.success(
+        imported > 0
+          ? `Calendar added — ${imported} event${imported === 1 ? '' : 's'} brought in`
+          : 'Calendar added. Nothing coming up in it just yet.'
+      );
+      await fetchIntegrations();
+      return true;
+    } catch (err) {
+      console.error('Error subscribing to calendar feed:', err);
+      toast.error("I couldn't read that calendar link. Check it and try again.");
+      return false;
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [fetchIntegrations]);
 
   const syncCalendar = useCallback(async (integrationId?: string) => {
     setIsSyncing(true);
