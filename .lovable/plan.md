@@ -19,6 +19,10 @@ This change connects the two, without adding a single new question or screen.
 - **The reasons are said out loud.** The line on Home changes from "you told me mornings"
   to also name *why* — e.g. "shorter blocks for now, because afternoons drain you."
 - **Report shows the link.** My results page states plainly which answers shaped my window.
+- **I always get the final say.** When a suggested time doesn't work — my client is only
+  free at 4pm — I just pick the time I need. A quiet note appears ("this sits outside your
+  best hours — I'll keep the block shorter and add a rest gap after"), and it saves without
+  argument. No blocking, no warning pop-up, no repeated nagging.
 
 Nothing new to configure. The existing on/off switch for best-window scheduling still
 controls all of it.
