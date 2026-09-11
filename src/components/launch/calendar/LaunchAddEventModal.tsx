@@ -3,6 +3,10 @@ import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus,
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
+import {
+  outsideWindowNote,
+  readStoredProductivityWindow,
+} from '@/launch/assessment/productivityWindow';
 
 export type ReminderLevel = 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
 export type RecurrencePattern = 'none' | 'daily' | 'weekdays' | 'weekly' | 'fortnightly' | 'monthly' | 'yearly';
