@@ -83,8 +83,16 @@ export const FOUNDING_CORE_PATHS = [
   '/launch/home',
   '/launch/capture',
   '/launch/commit',
+  '/launch/calibrate',
+  '/launch/celebrate',
   '/launch/calendar',
+  '/launch/memory',
+  '/launch/diary',
+  '/launch/assessment',
   '/launch/support',
+  '/launch/profile',
+  '/launch/settings',
+  '/launch/help',
 ] as const;
 
 export const FOUNDING_CORE_ROUTES: LaunchRoute[] = LAUNCH_ROUTES.filter(r =>
