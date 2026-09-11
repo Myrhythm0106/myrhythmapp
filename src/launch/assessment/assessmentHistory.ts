@@ -8,6 +8,8 @@ export interface StoredAssessmentRun {
   total: number;
   scores: BrainHealthScore | null;
   results: Record<string, unknown>;
+  /** The raw answers given on this run, keyed by question id. */
+  answers: Record<string, unknown>;
 }
 
 /**
