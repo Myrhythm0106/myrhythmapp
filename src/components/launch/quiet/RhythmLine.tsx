@@ -46,7 +46,8 @@ export function RhythmLine() {
       : `${win.peak}s are your strongest`;
 
   return (
-    <div className="flex items-start gap-2 rounded-2xl bg-launch-cream-light border border-launch-gold/30 px-4 py-3">
+    <div className="rounded-2xl bg-launch-cream-light border border-launch-gold/30 px-4 py-3">
+      <div className="flex items-start gap-2">
       <Sunrise className="h-4 w-4 mt-0.5 shrink-0 text-launch-ember" />
       <p className="text-sm text-launch-ink/80">
         You told me {when} — I'll keep{' '}
