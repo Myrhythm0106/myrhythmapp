@@ -404,6 +404,43 @@ export default function LaunchSettings() {
               {outlookConnected && <CheckCircle2 className="h-5 w-5 text-green-500" />}
             </button>
           </div>
+
+          {/* Any other calendar — Apple, Fastmail, most work calendars */}
+          <div className="mt-4 pt-4 border-t border-launch-gold/20">
+            <p className="text-sm font-medium text-gray-900">Apple or any other calendar</p>
+            <p className="text-xs text-gray-500 mb-2">
+              Paste the calendar's share link. In Apple Calendar: right-click the calendar, Share
+              Calendar, tick Public Calendar, then copy the link. This brings your busy times in so I
+              never suggest a slot you've already given away.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                inputMode="url"
+                value={feedUrl}
+                onChange={(e) => setFeedUrl(e.target.value)}
+                placeholder="https://… or webcal://…"
+                aria-label="Calendar share link"
+                className="flex-1 min-h-[48px] px-3 rounded-xl border border-gray-200 text-sm"
+              />
+              <button
+                type="button"
+                disabled={isSyncing || feedUrl.trim().length < 8}
+                onClick={async () => {
+                  const ok = await subscribeIcs(feedUrl.trim());
+                  if (ok) setFeedUrl('');
+                }}
+                className="min-h-[48px] px-4 rounded-xl bg-launch-ink text-launch-cream text-sm font-semibold disabled:opacity-50"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+
+          <p className="text-xs text-gray-500 mt-4">
+            Google and Outlook need their connection keys added before those two buttons can finish.
+            The Apple / other-calendar link above works today.
+          </p>
         </LaunchCard>
 
         {/* Storage Management */}
