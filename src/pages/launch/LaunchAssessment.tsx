@@ -430,11 +430,16 @@ export default function LaunchAssessment() {
         heal: primaryOf('heal'),
         multiply: primaryOf('multiply'),
         rhythmPreference: primaryOf('rhythm'),
-        productivityWindow: deriveProductivityWindow({
-          rhythm: primaryOf('rhythm'),
-          focusLength: savedRhythmDetail.primary,
-          energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-        }),
+        productivityWindow: deriveProductivityWindow(
+          {
+            rhythm: primaryOf('rhythm'),
+            focusLength: savedRhythmDetail.primary,
+            energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
+            heal: primaryOf('heal'),
+            transform: combined('transform'),
+          },
+          brainHealthScore
+        ),
         keyStruggles: combined('transform'),
         goals: combined('yourVictories'),
         hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
