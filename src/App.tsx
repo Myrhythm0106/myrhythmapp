@@ -121,6 +121,8 @@ import {
   LaunchDashboard,
   LaunchCalendar,
   LaunchMemoryBridge,
+  LaunchDiary,
+  LaunchBrainHealth,
   LaunchBrainGames,
   LaunchGratitude,
   LaunchSupportCircle,
