@@ -267,6 +267,12 @@ export function LaunchAddEventModal({
                 )}
               </div>
             )}
+            {clashTitle && (
+              <p className="mt-2 text-xs text-launch-ink/70">
+                Heads up — my calendar already shows “{clashTitle}” around then. I can still book it
+                if that works for you.
+              </p>
+            )}
           </div>
 
           <div>
