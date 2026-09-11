@@ -55,6 +55,19 @@ export function RhythmLine() {
         </span>{' '}
         for whatever matters most, in blocks of about {win.focusBlockMinutes} minutes.
       </p>
+      </div>
+      {win.reasons?.length ? (
+        <ul className="mt-2 space-y-1 pl-6">
+          {win.reasons.slice(0, 2).map((reason) => (
+            <li key={reason} className="text-xs text-launch-ink/60 leading-relaxed">
+              {reason}
+            </li>
+          ))}
+          <li className="text-xs text-launch-ink/50 leading-relaxed">
+            These are suggestions only — I can always pick a time that suits the people I'm meeting.
+          </li>
+        </ul>
+      ) : null}
     </div>
   );
 }
