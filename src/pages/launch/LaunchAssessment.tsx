@@ -430,11 +430,16 @@ export default function LaunchAssessment() {
         heal: primaryOf('heal'),
         multiply: primaryOf('multiply'),
         rhythmPreference: primaryOf('rhythm'),
-        productivityWindow: deriveProductivityWindow({
-          rhythm: primaryOf('rhythm'),
-          focusLength: savedRhythmDetail.primary,
-          energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-        }),
+        productivityWindow: deriveProductivityWindow(
+          {
+            rhythm: primaryOf('rhythm'),
+            focusLength: savedRhythmDetail.primary,
+            energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
+            heal: primaryOf('heal'),
+            transform: combined('transform'),
+          },
+          brainHealthScore
+        ),
         keyStruggles: combined('transform'),
         goals: combined('yourVictories'),
         hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
@@ -455,11 +460,16 @@ export default function LaunchAssessment() {
        localStorage.removeItem(PROGRESS_KEY);
 
        if (user?.id) {
-         const window = deriveProductivityWindow({
-           rhythm: primaryOf('rhythm'),
-           focusLength: savedRhythmDetail.primary,
-           energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-         });
+         const window = deriveProductivityWindow(
+           {
+             rhythm: primaryOf('rhythm'),
+             focusLength: savedRhythmDetail.primary,
+             energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
+             heal: primaryOf('heal'),
+             transform: combined('transform'),
+           },
+           brainHealthScore
+         );
           void (async () => {
             try {
               const { data, error } = await supabase
@@ -476,11 +486,15 @@ export default function LaunchAssessment() {
                 best_window_start: window.productiveStart,
                 best_window_end: window.productiveEnd,
                 focus_block_minutes: window.focusBlockMinutes,
-                time_slots: {
-                  productive: [window.productiveStart, window.productiveEnd],
-                  energy_peak: window.peak,
-                  best_window_summary: window.summary,
-                },
+                 time_slots: {
+                   productive: [window.productiveStart, window.productiveEnd],
+                   energy_peak: window.peak,
+                   best_window_summary: window.summary,
+                   buffer_minutes: window.bufferMinutes,
+                   max_demanding_per_day: window.maxDemandingPerDay,
+                   window_minutes: window.windowMinutes,
+                   reasons: window.reasons,
+                 },
                 notes: 'My best window, shaped by my MYRHYTHM snapshot',
               };
               const result = data?.id

@@ -3,6 +3,10 @@ import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus,
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
+import {
+  outsideWindowNote,
+  readStoredProductivityWindow,
+} from '@/launch/assessment/productivityWindow';
 
 export type ReminderLevel = 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
 export type RecurrencePattern = 'none' | 'daily' | 'weekdays' | 'weekly' | 'fortnightly' | 'monthly' | 'yearly';
@@ -80,6 +84,8 @@ export function LaunchAddEventModal({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [time, setTime] = useState('09:00');
+  const bestWindow = useMemo(() => readStoredProductivityWindow(), []);
+  const bestWindowNote = useMemo(() => outsideWindowNote(time, bestWindow), [time, bestWindow]);
   const [type, setType] = useState('routine');
 
   // Invitees
@@ -247,6 +253,20 @@ export function LaunchAddEventModal({
               onChange={(e) => setTime(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent text-base"
             />
+            {bestWindowNote && (
+              <div className="mt-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5">
+                <p className="text-xs text-amber-900 leading-relaxed">{bestWindowNote}</p>
+                {bestWindow && (
+                  <button
+                    type="button"
+                    onClick={() => setTime(bestWindow.productiveStart)}
+                    className="mt-2 text-xs font-semibold text-amber-900 underline underline-offset-2 min-h-[44px] sm:min-h-0"
+                  >
+                    Move to my best window instead
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <div>

@@ -369,6 +369,24 @@ export default function LaunchWelcome() {
                      <p className="text-xs mt-5 font-semibold" style={{ color: MOSS }}>
                        {bhs.productivityWindow.protectHours}
                      </p>
+                     {bhs.productivityWindow.reasons?.length ? (
+                       <div className="mt-5 pt-4 border-t" style={{ borderColor: `${INK}14` }}>
+                         <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: GOLD }}>
+                           How this shapes my days
+                         </p>
+                         <ul className="space-y-1.5">
+                           {bhs.productivityWindow.reasons.map((reason: string) => (
+                             <li key={reason} className="text-xs leading-relaxed" style={{ color: `${INK}99` }}>
+                               {reason}
+                             </li>
+                           ))}
+                         </ul>
+                         <p className="text-xs mt-3 leading-relaxed" style={{ color: `${INK}80` }}>
+                           These are suggestions, never rules. If someone I'm meeting is only free
+                           outside these hours, I pick that time and MyRhythm works around it.
+                         </p>
+                       </div>
+                     ) : null}
                    </>
                  ) : (
                    <p className="text-sm leading-relaxed" style={{ color: `${INK}99` }}>
