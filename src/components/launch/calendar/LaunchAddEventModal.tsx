@@ -86,6 +86,8 @@ export function LaunchAddEventModal({
   const [time, setTime] = useState('09:00');
   const bestWindow = useMemo(() => readStoredProductivityWindow(), []);
   const bestWindowNote = useMemo(() => outsideWindowNote(time, bestWindow), [time, bestWindow]);
+  const { clashAt } = useBusyTimes(toLocalISODate(selectedDate));
+  const clashTitle = clashAt(time);
   const [type, setType] = useState('routine');
 
   // Invitees
