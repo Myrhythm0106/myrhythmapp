@@ -84,7 +84,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 - Recruit 8–12 paired founding testers (survivor + their supporter) from the list.
 - App work: two-account Support Circle permission test; 20-conversation action-accuracy check.
 
-**Weeks 7–12 (23 Oct – 4 Dec) — Founding members and proof**
+**Weeks 7–12 (26 Oct – 7 Dec) — Founding members and proof**
 - Run the 4-week tester cohort. Measure only: captures per week, actions completed with dates, still using at week 4.
 - Collect 5 named before/after stories. These are the entire sales deck.
 - Switch Stripe live only once the device test passes. Open Founding Member seats to the list, not to strangers.
