@@ -46,8 +46,9 @@ The journal is not marketing decoration — it is the content calendar. Each day
 
 **Weekly:**
 - One longer piece: a 600-word post or a 5-minute video expanding one statement into a teachable idea.
-- One outreach block: 5 approaches to support groups, podcasts, employers or rehab units offering a free talk.
+- One outreach block: 5 approaches to support groups, podcasts, employers, rehab units **and FIT Collective** offering a free talk.
 - One founder block: capped hours on the app — proof work only, no new features.
+- **One FIT Collective touchpoint:** a short value-first message, workshop offer, or member Q&A — this is your only paid channel in the first 90 days.
 
 **Monthly themes** (gives interviewers and hosts a hook):
 - Sept — **Beginning again**: what discharge really feels like.
