@@ -99,6 +99,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 | --- | --- | --- | --- |
 | Journal sales | Day 1 | Print-on-demand, £0 upfront | Slow, steady, builds credibility |
 | Paid talk / workshop | Week 3+ | Your time | The fastest real cash |
+| **FIT Collective workshop / talk** | **Week 1–2** | **Your time** | **Your only paid-channel target; treat as the proof that communities will pay** |
 | Founding Member seats | Week 8+ | £0 | Only after device proof |
 | Rehab pilot | 2027 | £0 (free pilot first) | Evidence, not revenue, this year |
 
