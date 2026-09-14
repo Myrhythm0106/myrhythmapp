@@ -1,4 +1,4 @@
-# From 11 September 2026: the #IChoose-led strategy, and the honest verdict
+# From 14 September 2026: the #IChoose-led strategy, and the honest verdict
 
 ## 1. Candid answer first: can this work with no funds?
 
