@@ -30,8 +30,8 @@ So the sequence that makes money from 11/09 without funds is:
 - **The one audience:** people in the first 90 days after a neuro rehab episode, and the family member quietly holding it together.
 - **The one free asset:** #IChoose — one statement a day, publicly, every day.
 - **The three revenue lines, in the order they switch on:**
-  1. **Now (Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health. Cash from day one, zero setup cost.
-  2. **Oct–Dec:** MyRhythm Founding Member seats (£10/mo for life, 500 seats) sold only to the warm list you built.
+  1. **Now (Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health, **and FIT Collective**. Cash from day one, zero setup cost.
+  2. **Oct–Dec:** MyRhythm Founding Member seats (£10/mo for life, 500 seats) sold to the warm list + FIT Collective members who want the digital companion to the journal.
   3. **2027:** rehab-centre cohort licences, evidenced by founding-member stories.
 - **The moat you're protecting the whole time:** conversation → verified next steps → dates → reminders → Support Circle → traceable diary. Memory Bridge is the visible hero; the 4Cs are the inside experience; Support Circle is the hard-to-copy part.
 
@@ -46,8 +46,9 @@ The journal is not marketing decoration — it is the content calendar. Each day
 
 **Weekly:**
 - One longer piece: a 600-word post or a 5-minute video expanding one statement into a teachable idea.
-- One outreach block: 5 approaches to support groups, podcasts, employers or rehab units offering a free talk.
+- One outreach block: 5 approaches to support groups, podcasts, employers, rehab units **and FIT Collective** offering a free talk.
 - One founder block: capped hours on the app — proof work only, no new features.
+- **One FIT Collective touchpoint:** a short value-first message, workshop offer, or member Q&A — this is your only paid channel in the first 90 days.
 
 **Monthly themes** (gives interviewers and hosts a hook):
 - Sept — **Beginning again**: what discharge really feels like.
@@ -72,6 +73,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 - Day 1: publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
 - Set one landing destination for everything: journal + join the founding list.
 - List the journal for sale (direct + print-on-demand). Price it, don't discount it.
+- **Approach FIT Collective with one specific offer: a free 20-minute talk/workshop on "choosing your pace after a health event" + a paid follow-up workshop for members who want the deeper method.**
 - Book 3 free talks (support group, employer, occupational health). Free talk = paid workshop pipeline.
 - App work: real-device 2–4hr capture test on iPhone and Android. Install Google/Outlook keys.
 
@@ -97,6 +99,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 | --- | --- | --- | --- |
 | Journal sales | Day 1 | Print-on-demand, £0 upfront | Slow, steady, builds credibility |
 | Paid talk / workshop | Week 3+ | Your time | The fastest real cash |
+| **FIT Collective workshop / talk** | **Week 1–2** | **Your time** | **Your only paid-channel target; treat as the proof that communities will pay** |
 | Founding Member seats | Week 8+ | £0 | Only after device proof |
 | Rehab pilot | 2027 | £0 (free pilot first) | Evidence, not revenue, this year |
 
