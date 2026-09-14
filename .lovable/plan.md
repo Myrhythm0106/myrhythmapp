@@ -73,6 +73,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 - Day 1: publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
 - Set one landing destination for everything: journal + join the founding list.
 - List the journal for sale (direct + print-on-demand). Price it, don't discount it.
+- **Approach FIT Collective with one specific offer: a free 20-minute talk/workshop on "choosing your pace after a health event" + a paid follow-up workshop for members who want the deeper method.**
 - Book 3 free talks (support group, employer, occupational health). Free talk = paid workshop pipeline.
 - App work: real-device 2–4hr capture test on iPhone and Android. Install Google/Outlook keys.
 
