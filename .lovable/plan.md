@@ -1,4 +1,4 @@
-# From 11 September 2026: the #IChoose-led strategy, and the honest verdict
+# From 14 September 2026: the #IChoose-led strategy, and the honest verdict
 
 ## 1. Candid answer first: can this work with no funds?
 
@@ -30,7 +30,7 @@ So the sequence that makes money from 11/09 without funds is:
 - **The one audience:** people in the first 90 days after a neuro rehab episode, and the family member quietly holding it together.
 - **The one free asset:** #IChoose — one statement a day, publicly, every day.
 - **The three revenue lines, in the order they switch on:**
-  1. **Now (Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health, **and FIT Collective**. Cash from day one, zero setup cost.
+  1. **Now (14 Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health, **and FIT Collective**. Cash from day one, zero setup cost.
   2. **Oct–Dec:** MyRhythm Founding Member seats (£10/mo for life, 500 seats) sold to the warm list + FIT Collective members who want the digital companion to the journal.
   3. **2027:** rehab-centre cohort licences, evidenced by founding-member stories.
 - **The moat you're protecting the whole time:** conversation → verified next steps → dates → reminders → Support Circle → traceable diary. Memory Bridge is the visible hero; the 4Cs are the inside experience; Support Circle is the hard-to-copy part.
@@ -51,7 +51,7 @@ The journal is not marketing decoration — it is the content calendar. Each day
 - **One FIT Collective touchpoint:** a short value-first message, workshop offer, or member Q&A — this is your only paid channel in the first 90 days.
 
 **Monthly themes** (gives interviewers and hosts a hook):
-- Sept — **Beginning again**: what discharge really feels like.
+- Sept (from 14th) — **Beginning again**: what discharge really feels like; the first 10 days are about proving the engine, not perfection.
 - Oct — **The messy middle**: why follow-through fails and what fixes it.
 - Nov — **No one walks alone**: the family member nobody asks about.
 - Dec — **The year I chose**: the 365 arc, reflection, and the founding-member invitation.
@@ -69,28 +69,28 @@ Every appearance closes with the same one line: the journal, and the invitation 
 
 ## 5. The 90-day calendar from 11 September 2026
 
-**Weeks 1–2 (11–24 Sept) — Turn on the engine, earn the first pound**
-- Day 1: publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
+**Weeks 1–2 (14–27 Sept) — Turn on the engine, earn the first pound**
+- Day 1 (today): publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
 - Set one landing destination for everything: journal + join the founding list.
 - List the journal for sale (direct + print-on-demand). Price it, don't discount it.
 - **Approach FIT Collective with one specific offer: a free 20-minute talk/workshop on "choosing your pace after a health event" + a paid follow-up workshop for members who want the deeper method.**
 - Book 3 free talks (support group, employer, occupational health). Free talk = paid workshop pipeline.
 - App work: real-device 2–4hr capture test on iPhone and Android. Install Google/Outlook keys.
 
-**Weeks 3–6 (25 Sept – 22 Oct) — Audience to cohort**
+**Weeks 3–6 (28 Sept – 25 Oct) — Audience to cohort**
 - Daily posts continue. Target: first 200 email subscribers.
 - Deliver the 3 talks; convert at least 1 into a paid workshop.
 - Pitch 10 podcasts using the five talking points above.
 - Recruit 8–12 paired founding testers (survivor + their supporter) from the list.
 - App work: two-account Support Circle permission test; 20-conversation action-accuracy check.
 
-**Weeks 7–12 (23 Oct – 4 Dec) — Founding members and proof**
+**Weeks 7–12 (26 Oct – 7 Dec) — Founding members and proof**
 - Run the 4-week tester cohort. Measure only: captures per week, actions completed with dates, still using at week 4.
 - Collect 5 named before/after stories. These are the entire sales deck.
 - Switch Stripe live only once the device test passes. Open Founding Member seats to the list, not to strangers.
 - Approach 3 rehab centres with the Bridge Kit plus cohort evidence; offer a 60-day free continuity pilot for feedback and a named quote.
 
-**December — The year I chose**
+**December (8 Dec onwards) — The year I chose**
 - 365 arc closes; run a launch moment tied to the journal's completion. Founding seats and a paid workshop as the two offers.
 
 ## 6. Money from 11/09 with zero budget
