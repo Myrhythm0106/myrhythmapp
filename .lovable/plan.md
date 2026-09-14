@@ -15,11 +15,14 @@ So the sequence that makes money from 11/09 without funds is:
 
 **Why this works:** you monetise attention before you monetise software. Every talk, post and interview builds the founding-member list the app needs anyway.
 
-**Why it might not work — the honest risks:**
-- Content without a call to action builds applause, not income. Every single piece must end in one ask.
-- Spreading across five platforms with no budget = nothing lands. Pick two.
-- If you keep improving the app instead of speaking, nothing happens. Cap app work at fixed hours per week.
-- Brain-health credibility is fragile: one clinical-sounding claim undoes the trust. Confidence, identity, follow-through — never outcomes.
+**Why it might not work — the honest risks (each addressed in section 7):**
+1. Content without a call to action builds applause, not income.
+2. Spreading across five platforms with no budget = nothing lands.
+3. App tinkering eats the speaking time; nothing gets said.
+4. One clinical-sounding claim undoes fragile brain-health trust.
+5. Selling the app before it's proven breaks credibility with the exact testers you need.
+6. One-person operation: illness or a bad week stops the whole engine.
+7. Journal sales alone rarely pay a salary — expecting them to is a motivation trap.
 
 ## 2. The strategy in one page
 
