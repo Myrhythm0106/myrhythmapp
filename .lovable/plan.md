@@ -69,8 +69,8 @@ Every appearance closes with the same one line: the journal, and the invitation 
 
 ## 5. The 90-day calendar from 11 September 2026
 
-**Weeks 1–2 (11–24 Sept) — Turn on the engine, earn the first pound**
-- Day 1: publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
+**Weeks 1–2 (14–27 Sept) — Turn on the engine, earn the first pound**
+- Day 1 (today): publish the #IChoose statement and your "why I'm building this" post. Open a simple email list sign-up.
 - Set one landing destination for everything: journal + join the founding list.
 - List the journal for sale (direct + print-on-demand). Price it, don't discount it.
 - **Approach FIT Collective with one specific offer: a free 20-minute talk/workshop on "choosing your pace after a health event" + a paid follow-up workshop for members who want the deeper method.**
