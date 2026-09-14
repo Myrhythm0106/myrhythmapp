@@ -51,7 +51,7 @@ The journal is not marketing decoration — it is the content calendar. Each day
 - **One FIT Collective touchpoint:** a short value-first message, workshop offer, or member Q&A — this is your only paid channel in the first 90 days.
 
 **Monthly themes** (gives interviewers and hosts a hook):
-- Sept — **Beginning again**: what discharge really feels like.
+- Sept (from 14th) — **Beginning again**: what discharge really feels like; the first 10 days are about proving the engine, not perfection.
 - Oct — **The messy middle**: why follow-through fails and what fixes it.
 - Nov — **No one walks alone**: the family member nobody asks about.
 - Dec — **The year I chose**: the 365 arc, reflection, and the founding-member invitation.
