@@ -77,7 +77,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 - Book 3 free talks (support group, employer, occupational health). Free talk = paid workshop pipeline.
 - App work: real-device 2–4hr capture test on iPhone and Android. Install Google/Outlook keys.
 
-**Weeks 3–6 (25 Sept – 22 Oct) — Audience to cohort**
+**Weeks 3–6 (28 Sept – 25 Oct) — Audience to cohort**
 - Daily posts continue. Target: first 200 email subscribers.
 - Deliver the 3 talks; convert at least 1 into a paid workshop.
 - Pitch 10 podcasts using the five talking points above.
