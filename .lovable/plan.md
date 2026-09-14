@@ -90,7 +90,7 @@ Every appearance closes with the same one line: the journal, and the invitation 
 - Switch Stripe live only once the device test passes. Open Founding Member seats to the list, not to strangers.
 - Approach 3 rehab centres with the Bridge Kit plus cohort evidence; offer a 60-day free continuity pilot for feedback and a named quote.
 
-**December — The year I chose**
+**December (8 Dec onwards) — The year I chose**
 - 365 arc closes; run a launch moment tied to the journal's completion. Founding seats and a paid workshop as the two offers.
 
 ## 6. Money from 11/09 with zero budget
