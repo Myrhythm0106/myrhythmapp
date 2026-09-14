@@ -15,11 +15,14 @@ So the sequence that makes money from 11/09 without funds is:
 
 **Why this works:** you monetise attention before you monetise software. Every talk, post and interview builds the founding-member list the app needs anyway.
 
-**Why it might not work — the honest risks:**
-- Content without a call to action builds applause, not income. Every single piece must end in one ask.
-- Spreading across five platforms with no budget = nothing lands. Pick two.
-- If you keep improving the app instead of speaking, nothing happens. Cap app work at fixed hours per week.
-- Brain-health credibility is fragile: one clinical-sounding claim undoes the trust. Confidence, identity, follow-through — never outcomes.
+**Why it might not work — the honest risks (each addressed in section 7):**
+1. Content without a call to action builds applause, not income.
+2. Spreading across five platforms with no budget = nothing lands.
+3. App tinkering eats the speaking time; nothing gets said.
+4. One clinical-sounding claim undoes fragile brain-health trust.
+5. Selling the app before it's proven breaks credibility with the exact testers you need.
+6. One-person operation: illness or a bad week stops the whole engine.
+7. Journal sales alone rarely pay a salary — expecting them to is a motivation trap.
 
 ## 2. The strategy in one page
 
@@ -99,7 +102,17 @@ Every appearance closes with the same one line: the journal, and the invitation 
 
 Everything is time, not money. The only rule: **one ask per piece of content**, always pointing at the journal or the founding list.
 
-## 7. What NOT to do
+## 7. The risks, addressed — each with a working control
+
+1. **Applause without income.** Control: the One Ask Rule — every post, talk and email ends with exactly one of two asks ("get the journal" or "join the founding list"). Weekly scorecard: email subscribers added and pounds earned. If a week produced neither, the content was entertainment, not marketing — tighten the next week.
+2. **Spread too thin.** Control: two platforms only (LinkedIn primary, one secondary). Twenty-minute daily cap. Anything not LinkedIn or the email list is paused until December.
+3. **App work eats speaking time.** Control: app hours are capped at two fixed blocks per week and restricted to the proof items (device capture test, OAuth keys, permission test). New features are written down and parked, not built.
+4. **A clinical-sounding claim.** Control: the claims vocabulary is fixed — confidence, identity, follow-through, quality of life. Before anything is posted or said, run one check: "am I promising a health outcome?" If yes, rewrite. Use the wording already locked in the claims policy doc.
+5. **Selling the app too early.** Control: a hard gate — Founding Member seats open to the list only after the real-device capture test passes. Until then the app is "founding testers welcome", never "buy this".
+6. **Single-person fragility.** Control: batch-create a week of #IChoose posts every Sunday; if a day is missed, the batch covers it. Keep the five interview stories written down so any talk can be delivered from notes, not memory.
+7. **Journal-income expectations.** Control: the 90-day income target comes from paid workshops first, founding seats second, journal sales third. The journal's real job is credibility and list-building; treat its revenue as a bonus, and the plan survives a slow seller.
+
+## 8. What NOT to do
 
 - Don't sell the app to people you can't personally support yet.
 - Don't build new features in this window. Proof only.
