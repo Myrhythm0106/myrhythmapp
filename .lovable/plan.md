@@ -64,9 +64,22 @@ Founding Member seats do not open until every box is ticked.
 - No new platforms beyond LinkedIn plus one.
 - No clinical language anywhere — all copy is checked against `docs/claims-policy.md`.
 
+## Delivery as shareable Google Docs
+
+You want these shareable, so after the markdown files are written, each of the four documents is also created as a **Google Doc in your Google account** (via the connected Google Docs access), with share links returned to you in chat:
+
+| Document | Google Doc |
+| --- | --- |
+| Dated action tracker | "MyRhythm — 90-Day Action Plan (from 14 Sept 2026)" |
+| Outreach scripts | "MyRhythm — Outreach Scripts" |
+| First 14 posts | "#IChoose — First 14 Posts (14–27 Sept)" |
+| App proof checklist | "MyRhythm — Proof Checklist (gate before selling)" |
+
+The markdown files stay in the repo as the source of truth; the Google Docs are the shareable copies. If a Google connection is not yet linked, the build step will open the connect card so you can sign in once — no API keys needed.
+
 ## Technical notes
 
-- All four files are markdown under `docs/`, editable by hand and safe to keep in the repo.
+- Four markdown files under `docs/` as source of truth; Google Docs created from them with headings and checkboxes preserved.
 - `docs/ichoose-talking-points.md` stays as-is and is referenced, not duplicated.
 - `docs/readiness-statement.md` stays as the honest status document; the new checklist is its actionable twin.
 - The 30 statements in `src/data/iChooseStatements.ts` are the app-side pool; the first 14 posts will note where the journal's 365 and the app's daily statement should line up.
