@@ -30,7 +30,7 @@ So the sequence that makes money from 11/09 without funds is:
 - **The one audience:** people in the first 90 days after a neuro rehab episode, and the family member quietly holding it together.
 - **The one free asset:** #IChoose — one statement a day, publicly, every day.
 - **The three revenue lines, in the order they switch on:**
-  1. **Now (Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health, **and FIT Collective**. Cash from day one, zero setup cost.
+  1. **Now (14 Sept–Oct):** journal sales + paid talks/workshops to support groups, employers, occupational health, **and FIT Collective**. Cash from day one, zero setup cost.
   2. **Oct–Dec:** MyRhythm Founding Member seats (£10/mo for life, 500 seats) sold to the warm list + FIT Collective members who want the digital companion to the journal.
   3. **2027:** rehab-centre cohort licences, evidenced by founding-member stories.
 - **The moat you're protecting the whole time:** conversation → verified next steps → dates → reminders → Support Circle → traceable diary. Memory Bridge is the visible hero; the 4Cs are the inside experience; Support Circle is the hard-to-copy part.
