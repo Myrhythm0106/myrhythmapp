@@ -1399,7 +1399,9 @@ export function ActionsTableView({
                                 )}
                               </DropdownMenuContent>
                             </DropdownMenu>
+                            </div>
                           </TableCell>
+
                         </TableRow>
                       )}
                     </Draggable>
