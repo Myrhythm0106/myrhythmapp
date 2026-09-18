@@ -22,8 +22,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
 import { useAuth } from '@/hooks/useAuth';
-import preciousMomentsImg from '@/assets/precious-moments-black-couple.jpg';
-import organizedActionImg from '@/assets/organized-action-black-woman.jpg';
+import preciousMomentsImg from '@/assets/precious-moments-black-couple.png';
+import organizedActionImg from '@/assets/organized-action-black-woman.png';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
 
