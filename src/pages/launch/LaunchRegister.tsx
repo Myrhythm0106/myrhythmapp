@@ -236,7 +236,7 @@ export default function LaunchRegister() {
                 {/* Continue anyway button */}
                 <Button
                   onClick={handleContinue}
-                  className="w-full bg-launch-ink hover:bg-launch-ink/90 text-launch-cream py-6"
+                  className="w-full bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white py-6"
                 >
                   Continue to Setup
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -349,7 +349,7 @@ export default function LaunchRegister() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-launch-ink hover:bg-launch-ink/90 text-launch-cream py-6"
+                  className="w-full bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white py-6"
                   disabled={isLoading}
                 >
                   {isLoading ? (

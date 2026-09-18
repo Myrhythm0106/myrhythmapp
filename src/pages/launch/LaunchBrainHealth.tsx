@@ -105,7 +105,7 @@ export default function LaunchBrainHealth() {
             <button
               type="button"
               onClick={() => navigate('/launch/assessment')}
-              className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-ink text-launch-cream text-sm font-semibold hover:bg-launch-moss transition-colors"
+              className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-teal text-white text-sm font-semibold hover:bg-[hsl(var(--launch-teal)/0.88)] transition-colors"
             >
               Take my assessment
             </button>
@@ -243,7 +243,7 @@ export default function LaunchBrainHealth() {
             <button
               type="button"
               onClick={() => navigate('/launch/assessment')}
-              className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-ink text-launch-cream text-sm font-semibold hover:bg-launch-moss transition-colors"
+              className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-teal text-white text-sm font-semibold hover:bg-[hsl(var(--launch-teal)/0.88)] transition-colors"
             >
               <RotateCcw className="h-4 w-4" />
               Take it again

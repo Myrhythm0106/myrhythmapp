@@ -65,7 +65,7 @@ export function HomeAssessmentCard() {
       <button
         type="button"
         onClick={handleStart}
-        className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-ink text-launch-cream text-sm font-semibold hover:bg-launch-moss transition-colors"
+        className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-teal text-white text-sm font-semibold hover:bg-[hsl(var(--launch-teal)/0.88)] transition-colors"
       >
         {hasRun ? (
           <>

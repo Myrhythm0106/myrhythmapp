@@ -260,7 +260,7 @@ export function CapabilityPage(props: CapabilityPageProps) {
               </Button>
               <Button
                 onClick={() => navigate(primaryCta.to)}
-                className="rounded-xl bg-launch-ink hover:bg-launch-ink/90 text-white shadow-none"
+                className="rounded-xl bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white shadow-none"
               >
                 {primaryCta.label}
                 <ArrowRight className="h-4 w-4 ml-2" strokeWidth={1.75} />
