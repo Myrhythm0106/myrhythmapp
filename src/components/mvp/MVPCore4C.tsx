@@ -138,10 +138,14 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
       <div
         className={`relative md:col-span-7 ${copyFirst ? 'md:order-2' : 'md:order-1'}`}
       >
-        <div className={`absolute -top-5 z-20 ${copyFirst ? '-right-3 md:-right-7' : '-left-3 md:-left-7'}`}>
+        <div className={`absolute top-4 z-20 md:-top-5 ${copyFirst ? 'left-4 md:-left-7' : 'right-4 md:-right-7'}`}>
           <span className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-launch-cream-light ${markerColour} font-worksans text-sm font-bold text-primary-foreground shadow-lg`}>
             {chapter.number}
           </span>
+          <span
+            className={`absolute top-1/2 hidden h-px w-10 -translate-y-1/2 bg-launch-gold md:block ${copyFirst ? 'right-full' : 'left-full'}`}
+            aria-hidden="true"
+          />
         </div>
         <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] bg-launch-cream shadow-[0_30px_70px_-42px_hsl(var(--launch-ink-deep)/0.55)] md:aspect-[5/4]">
           <motion.img
@@ -151,11 +155,6 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
             whileHover={reduceMotion ? undefined : { scale: 1.025 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-launch-ink-deep/45 to-transparent" aria-hidden="true" />
-          <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-primary-foreground">
-            <span className="font-worksans text-xs font-semibold uppercase tracking-normal">{chapter.promise}</span>
-            <span className={`h-2.5 w-2.5 rounded-full ${markerColour}`} aria-hidden="true" />
-          </div>
         </div>
       </div>
 
@@ -163,6 +162,9 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
         <p className="mb-5 flex items-center gap-3 font-worksans text-xs font-bold uppercase tracking-normal text-launch-moss">
           <span className={`h-px w-9 ${markerColour}`} aria-hidden="true" />
           {chapter.marker}
+        </p>
+        <p className="mb-4 font-worksans text-sm font-semibold text-launch-teal">
+          {chapter.promise}
         </p>
         <h2 className="font-instrument text-4xl leading-[1.05] text-launch-ink-deep md:text-5xl">
           {chapter.title}
@@ -317,15 +319,6 @@ export function MVPCore4C() {
         </section>
 
         <section className="relative overflow-hidden" aria-labelledby="continuity-heading">
-          <div className="absolute bottom-0 left-1/2 top-0 hidden w-px -translate-x-1/2 bg-launch-gold/30 md:block" aria-hidden="true" />
-          <motion.div
-            className="absolute left-1/2 top-0 hidden h-full w-[3px] origin-top -translate-x-1/2 bg-launch-teal md:block"
-            initial={reduceMotion ? undefined : { scaleY: 0 }}
-            whileInView={reduceMotion ? undefined : { scaleY: 1 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
-            aria-hidden="true"
-          />
           <div className="relative mx-auto max-w-7xl px-5 md:px-8">
             <header className="mx-auto max-w-3xl pb-8 pt-24 text-center md:pb-12 md:pt-32">
               <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">One connected journey</p>
