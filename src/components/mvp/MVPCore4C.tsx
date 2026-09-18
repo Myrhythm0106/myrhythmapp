@@ -138,7 +138,7 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
       <div
         className={`relative md:col-span-7 ${copyFirst ? 'md:order-2' : 'md:order-1'}`}
       >
-        <div className={`absolute -top-5 z-20 ${copyFirst ? '-left-3 md:-left-7' : '-right-3 md:-right-7'}`}>
+        <div className={`absolute top-4 z-20 md:-top-5 ${copyFirst ? 'left-4 md:-left-7' : 'right-4 md:-right-7'}`}>
           <span className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-launch-cream-light ${markerColour} font-worksans text-sm font-bold text-primary-foreground shadow-lg`}>
             {chapter.number}
           </span>
