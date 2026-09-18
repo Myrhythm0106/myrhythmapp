@@ -331,7 +331,7 @@ function App() {
                     />
                     
                      {/* Warm Onboarding Flow */}
-                     <Route path="/start" element={<LaunchStart />} />
+                     <Route path="/start" element={<LaunchLanding />} />
                      <Route path="/launch/start" element={<LaunchStart />} />
 
                      <Route path="/mvp/memory-first-welcome" element={<MemoryFirstWelcomePage />} />

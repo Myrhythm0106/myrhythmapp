@@ -1,732 +1,443 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import {
+  ArrowDown,
+  ArrowRight,
+  Brain,
+  CalendarCheck,
+  Check,
+  ChevronDown,
+  Clock3,
+  FileText,
+  HelpCircle,
+  Link2,
+  LockKeyhole,
+  Mic2,
+  User,
+  Users,
+} from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail, Users, ChevronDown, ChevronUp } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { EditionBadge } from '@/components/launch/EditionBadge';
-import { FoundingTrustStrip } from '@/components/launch/FoundingTrustStrip';
-import { DayInTheLifeStrip } from '@/components/launch/DayInTheLifeStrip';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { PainPointImageCard } from './PainPointImageCard';
+import { MVPOnboardingModal } from './MVPOnboardingModal';
+import { useAuth } from '@/hooks/useAuth';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
 import organizedActionImg from '@/assets/organized-action.jpg';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
-import { MVPOnboardingModal } from './MVPOnboardingModal';
-import { FeatureExplorationModal } from './FeatureExplorationModal';
-import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
-import { useAuth } from '@/hooks/useAuth';
-import { TestAccountButton } from '@/components/auth/TestAccountButton';
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+
+type Chapter = {
+  number: string;
+  marker: string;
+  title: string;
+  promise: string;
+  description: string;
+  image: string;
+  alt: string;
+  detailTitle: string;
+  details: string[];
+  align: 'left' | 'right';
+  accent: 'ember' | 'teal' | 'gold';
+};
+
+const chapters: Chapter[] = [
+  {
+    number: '01',
+    marker: 'THE MOMENT',
+    title: 'The conversation stays with me.',
+    promise: 'Conversation or report',
+    description:
+      'Memory Bridge keeps the source, creates a clear write-up and brings the important decisions into view—without asking me to remember everything at once.',
+    image: emotionalLandscapeImg,
+    alt: 'A person reviewing notes outdoors after an important conversation',
+    detailTitle: 'What I can expect',
+    details: [
+      'I can record a conversation or upload a report.',
+      'I review the write-up before anything reaches my diary.',
+      'I choose whether to keep the audio, the write-up, the actions, or all three.',
+    ],
+    align: 'left',
+    accent: 'ember',
+  },
+  {
+    number: '02',
+    marker: 'THE DECISION',
+    title: 'The meaning becomes a next step.',
+    promise: 'Verify my next steps',
+    description:
+      'Names, decisions and actions are organised into a professional summary. I stay in control: I can edit the wording, owner, priority and dates before I accept it.',
+    image: organizedActionImg,
+    alt: 'A professional reviewing clear next steps at her desk',
+    detailTitle: 'Why verification matters',
+    details: [
+      'Each action keeps a simple reference back to its source.',
+      'Priority, start date and finish date remain changeable.',
+      'Nothing is treated as agreed until I have reviewed it.',
+    ],
+    align: 'right',
+    accent: 'teal',
+  },
+  {
+    number: '03',
+    marker: 'THE TIME',
+    title: 'The plan enters my real life.',
+    promise: 'Place it into my schedule',
+    description:
+      'A next step becomes useful when it has a place in the day. MyRhythm helps me choose a realistic time, add the right level of reminder and send it to my calendar.',
+    image: preciousMomentsImg,
+    alt: 'Two people sharing a calm moment at home with time protected for what matters',
+    detailTitle: 'Designed for real schedules',
+    details: [
+      'Suggestions can reflect my energy and brain-health rhythm.',
+      'I can always choose a different time when life or another person requires it.',
+      'Google Calendar, Outlook, Apple Calendar and standard calendar files are supported.',
+    ],
+    align: 'left',
+    accent: 'gold',
+  },
+  {
+    number: '04',
+    marker: 'THE PERSON',
+    title: 'The right person can stay connected.',
+    promise: 'Loop in someone I trust—if I choose',
+    description:
+      'A family member, friend or professional can receive only the action or update I choose to share. Support remains permission-based, practical and personal.',
+    image: strengthTogetherImg,
+    alt: 'A small group of trusted people connecting in warm evening light',
+    detailTitle: 'My choice stays central',
+    details: [
+      'I choose who is invited and what they can see.',
+      'A supporter can encourage follow-through without receiving my whole account.',
+      'My diary keeps the action connected to the original source.',
+    ],
+    align: 'right',
+    accent: 'teal',
+  },
+];
+
+function StoryChapter({ chapter }: { chapter: Chapter }) {
+  const [open, setOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const copyFirst = chapter.align === 'left';
+  const markerColour =
+    chapter.accent === 'ember'
+      ? 'bg-launch-ember'
+      : chapter.accent === 'gold'
+        ? 'bg-launch-gold'
+        : 'bg-launch-teal';
+
+  return (
+    <motion.article
+      initial={reduceMotion ? undefined : { opacity: 0, y: 36 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative grid items-center gap-10 py-14 md:grid-cols-12 md:gap-12 md:py-24"
+    >
+      <div
+        className={`relative md:col-span-7 ${copyFirst ? 'md:order-2' : 'md:order-1'}`}
+      >
+        <div className={`absolute -top-5 z-20 ${copyFirst ? '-right-3 md:-right-7' : '-left-3 md:-left-7'}`}>
+          <span className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-launch-cream-light ${markerColour} font-worksans text-sm font-bold text-primary-foreground shadow-lg`}>
+            {chapter.number}
+          </span>
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] bg-launch-cream shadow-[0_30px_70px_-42px_hsl(var(--launch-ink-deep)/0.55)] md:aspect-[5/4]">
+          <motion.img
+            src={chapter.image}
+            alt={chapter.alt}
+            className="h-full w-full object-cover"
+            whileHover={reduceMotion ? undefined : { scale: 1.025 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-launch-ink-deep/45 to-transparent" aria-hidden="true" />
+          <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-primary-foreground">
+            <span className="font-worksans text-xs font-semibold uppercase tracking-normal">{chapter.promise}</span>
+            <span className={`h-2.5 w-2.5 rounded-full ${markerColour}`} aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+
+      <div className={`md:col-span-5 ${copyFirst ? 'md:order-1' : 'md:order-2'}`}>
+        <p className="mb-5 flex items-center gap-3 font-worksans text-xs font-bold uppercase tracking-normal text-launch-moss">
+          <span className={`h-px w-9 ${markerColour}`} aria-hidden="true" />
+          {chapter.marker}
+        </p>
+        <h2 className="font-instrument text-4xl leading-[1.05] text-launch-ink-deep md:text-5xl">
+          {chapter.title}
+        </h2>
+        <p className="mt-6 max-w-xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
+          {chapter.description}
+        </p>
+
+        <Collapsible open={open} onOpenChange={setOpen} className="mt-7 border-t border-launch-gold/30 pt-3">
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              className="min-h-14 w-full justify-between rounded-md px-0 text-left text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep"
+            >
+              <span>{chapter.detailTitle}</span>
+              <ChevronDown className={`h-5 w-5 text-launch-teal transition-transform ${open ? 'rotate-180' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <ul className="space-y-3 pb-4 pt-2">
+              {chapter.details.map((detail) => (
+                <li key={detail} className="flex gap-3 font-worksans text-sm leading-6 text-launch-ink-deep/75">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-launch-teal" aria-hidden="true" />
+                  <span>{detail}</span>
+                </li>
+              ))}
+            </ul>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
+    </motion.article>
+  );
+}
+
 export function MVPCore4C() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, signOut } = useAuth();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
-  const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
-  const [openCard, setOpenCard] = useState<null | 'capture' | 'commit' | 'calibrate' | 'celebrate'>(null);
-  const [isAnswersOpen, setIsAnswersOpen] = useState(false);
-  const { user } = useAuth();
-  
-  const [heroEmail, setHeroEmail] = useState('');
+  const reduceMotion = useReducedMotion();
 
-
-
-
-  const handleHeroEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = heroEmail.trim();
-    if (trimmed && trimmed.includes('@')) {
-      localStorage.setItem('myrhythm_prefill_email', trimmed);
-    }
-    navigate('/launch/register');
-  };
-  
-  // Check if we should auto-open the modal on mount
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (location.pathname === '/mvp/assessment' || params.get('open') === 'onboarding') {
       setIsOnboardingOpen(true);
     }
   }, [location]);
-  
-  const handleGetStarted = () => {
-    navigate("/launch/register");
-  };
 
-  const { signOut } = useAuth();
-  
   const handleAuthAction = async () => {
     if (user) {
       await signOut();
       navigate('/launch');
-    } else {
-      navigate('/launch/signin');
+      return;
     }
+    navigate('/launch/signin');
+  };
+
+  const handleFoundingAction = () => {
+    navigate(user ? '/subscribe' : '/launch/register');
   };
 
   return (
-    <div className="public-page min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
-      {/* Navigation Header */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-brain-health-200/50 sticky top-0 z-50">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <Brain className="h-8 w-8 text-memory-emerald-600" />
-              <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => navigate('/help/getting-started')}
-                variant="ghost"
-                size="sm"
-                className="text-brain-health-600 hover:text-brain-health-800 hover:bg-brain-health-50"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </Button>
-              <Button
-                onClick={handleAuthAction}
-                variant="outline"
-                size="sm"
-                className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
-              >
-                <User className="h-4 w-4 mr-2" />
-                {user ? 'Sign Out' : 'Log In'}
-              </Button>
-            </div>
+    <div className="launch-theme public-page min-h-screen bg-launch-cream-light text-launch-ink-deep">
+      <nav className="sticky top-0 z-50 border-b border-launch-gold/30 bg-launch-cream-light/90 backdrop-blur-xl" aria-label="Main navigation">
+        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:px-8">
+          <Button
+            variant="ghost"
+            onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })}
+            className="flex min-h-14 items-center gap-3 rounded-md px-0 text-left hover:bg-transparent"
+            aria-label="MyRhythm, return to top"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-launch-gold/30 bg-launch-ivory">
+              <Brain className="h-5 w-5 text-launch-teal" aria-hidden="true" />
+            </span>
+            <span>
+              <span className="block font-instrument text-2xl leading-none text-launch-ink-deep">MyRhythm</span>
+              <span className="mt-1 block font-worksans text-[9px] font-semibold uppercase tracking-normal text-launch-moss">Memory-First Design™</span>
+            </span>
+          </Button>
+          <div className="flex items-center gap-1 md:gap-2">
+            <Button
+              onClick={() => navigate('/help/getting-started')}
+              variant="ghost"
+              size="icon"
+              className="text-launch-moss hover:bg-launch-cream hover:text-launch-ink-deep"
+              aria-label="Help"
+              title="Help"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleAuthAction}
+              variant="ghost"
+              className="min-h-14 px-3 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
+            >
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">{user ? 'Sign out' : 'Log in'}</span>
+            </Button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
-        <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
-        <div className="relative max-w-6xl mx-auto px-6 py-20">
-          <div className="text-center space-y-6">
-            <div className="space-y-4 mb-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black">
-                <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                  EMPOWER YOUR BRAIN.
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-clarity-teal-600 via-sunrise-amber-500 to-memory-emerald-600 bg-clip-text text-transparent">
-                  RECLAIM YOUR POWER.
-                </span>
-              </h1>
-              <p className="text-xl md:text-2xl text-brain-health-700 font-semibold max-w-4xl mx-auto">
-                Transform cognitive challenges into unstoppable strength.
+      <main>
+        <section className="relative min-h-[calc(100svh-72px)] overflow-hidden border-b border-launch-gold/30">
+          <div className="absolute inset-0">
+            <img
+              src="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
+              alt="A woman pausing thoughtfully beside her notes and laptop"
+              className="h-full w-full object-cover object-[68%_center] md:object-[72%_center]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-launch-cream-light via-launch-cream-light/95 to-launch-cream-light/50 md:via-launch-cream-light/85 md:to-launch-cream-light/10" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-t from-launch-cream-light via-transparent to-transparent" aria-hidden="true" />
+          </div>
+
+          <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl items-center px-5 pb-32 pt-14 md:px-8 md:pb-36 md:pt-20">
+            <motion.div
+              initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="max-w-3xl"
+            >
+              <EditionBadge variant="chip" />
+              <p className="mt-8 font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">
+                From what was said to what happens next
               </p>
-            </div>
-            
-            <div className="flex flex-col items-center space-y-6 mt-8">
-              <div className="text-center space-y-2">
-                <h2 className="text-3xl md:text-4xl font-bold text-brain-health-800">
-                  You're Not Broken. You're <span className="bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">Rebuilding</span>.
-                </h2>
-                <p className="font-semibold text-sm text-brain-health-700">
-                  Your Rhythm
-                </p>
-                <p className="text-sm font-semibold text-brain-health-800">
-                  Founding Member — limited to first 1,000
-                </p>
-              </div>
-              <form
-                onSubmit={handleHeroEmailSubmit}
-                className="w-full max-w-md flex flex-col sm:flex-row gap-2"
-              >
-                <div className="relative flex-1">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brain-health-400" />
-                  <Input
-                    type="email"
-                    value={heroEmail}
-                    onChange={(e) => setHeroEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    aria-label="Email to become a founding member"
-                    className="pl-9 h-12 bg-white/90 border-brain-health-200"
-                  />
-                </div>
+              <h1 className="mt-5 font-instrument text-5xl leading-[0.98] text-launch-ink-deep sm:text-6xl md:text-7xl lg:text-[5.75rem]">
+                The app that keeps your plan going after the appointment ends.
+              </h1>
+              <p className="mt-7 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:text-xl">
+                MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
+              </p>
+              <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                 <Button
-                  type="submit"
                   size="lg"
-                  className="h-12 bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white"
+                  onClick={handleFoundingAction}
+                  className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
                 >
                   Become a Founding Member
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <ArrowRight className="h-5 w-5" />
                 </Button>
-              </form>
-              <p className="text-xs text-brain-health-600">
-                Founding spots are limited — join the first 1,000
+                <p className="max-w-xs font-worksans text-sm leading-6 text-launch-ink-deep/70">
+                  £10/month for life · limited to 500 founding places
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 pb-5 text-launch-ink-deep/65" aria-hidden="true">
+            <span className="font-worksans text-[10px] font-bold uppercase tracking-normal">Follow the thread</span>
+            <ArrowDown className="h-5 w-5 animate-bounce motion-reduce:animate-none" />
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden" aria-labelledby="continuity-heading">
+          <div className="absolute bottom-0 left-1/2 top-0 hidden w-px -translate-x-1/2 bg-launch-gold/30 md:block" aria-hidden="true" />
+          <motion.div
+            className="absolute left-1/2 top-0 hidden h-full w-[3px] origin-top -translate-x-1/2 bg-launch-teal md:block"
+            initial={reduceMotion ? undefined : { scaleY: 0 }}
+            whileInView={reduceMotion ? undefined : { scaleY: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+          <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+            <header className="mx-auto max-w-3xl pb-8 pt-24 text-center md:pb-12 md:pt-32">
+              <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">One connected journey</p>
+              <h2 id="continuity-heading" className="mt-5 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-6xl">
+                Nothing important should disappear between remembering and doing.
+              </h2>
+              <p className="mx-auto mt-6 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/70">
+                The 4C loop quietly carries each moment through Capture, Commit, Calibrate and Celebrate—without making my day feel like a system to manage.
               </p>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={() => navigate('/launch/register')}
-              >
-                <Sparkles className="h-5 w-5 mr-2" />
-                Start Your Journey
-              </Button>
-            </div>
+            </header>
+
+            {chapters.map((chapter) => (
+              <StoryChapter key={chapter.number} chapter={chapter} />
+            ))}
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Pain Points with Professional Images */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            <PainPointImageCard 
-              title="Forgetting important conversations?" 
-              imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png" 
-              imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues" 
-              description="Missing precious moments and connections" 
-            />
-            <PainPointImageCard 
-              title="Feeling overwhelmed by simple tasks?" 
-              imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png" 
-              imageAlt="Person with head down on desk showing exhaustion and overwhelm" 
-              description="When everyday activities feel impossible" 
-            />
-            <PainPointImageCard 
-              title="Struggling to stay organized?" 
-              imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png" 
-              imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace" 
-              description="Losing track of what matters most" 
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* How MyRhythm answers it — numbered strip */}
-      <section className="py-16 bg-gradient-to-b from-white to-brain-health-50/30">
-        <div className="container mx-auto max-w-6xl px-6">
-          <Collapsible open={isAnswersOpen} onOpenChange={setIsAnswersOpen}>
-            <div className="text-center mb-6">
-              <CollapsibleTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50"
-                >
-                  {isAnswersOpen ? (
-                    <>Show less <ChevronUp className="h-4 w-4 ml-1" /></>
-                  ) : (
-                    <>See how MyRhythm answers this <ChevronDown className="h-4 w-4 ml-1" /></>
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-            </div>
-
-            <CollapsibleContent>
-              {/* Differentiator block */}
-              <div className="max-w-3xl mx-auto text-center mb-10">
-                <p className="text-xs md:text-sm font-semibold tracking-[0.18em] uppercase text-brain-health-600">
-                  Built for Life Empowerment &mdash; brain injury, memory and cognitive challenges. And Productivity &mdash; useful for anyone carrying a lot.
-                </p>
-                <h2 className="mt-3 text-2xl md:text-3xl font-bold text-brain-health-900 leading-tight">
-                  The gap between clinically ready and life-ready is where people fall.
+        <section className="border-y border-launch-gold/30 bg-launch-cream py-20 md:py-28" aria-labelledby="continuity-sequence-heading">
+          <div className="mx-auto max-w-6xl px-5 md:px-8">
+            <div className="grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+              <div>
+                <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">The continuity sequence</p>
+                <h2 id="continuity-sequence-heading" className="mt-5 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-5xl">
+                  One thread. From source to follow-through.
                 </h2>
-                <p className="mt-3 text-base md:text-lg text-brain-health-700 leading-relaxed">
-                  MyRhythm is shaped for the weeks after the folder closes, and for anyone whose responsibilities outrun their energy.
+                <p className="mt-6 font-worksans text-lg leading-8 text-launch-ink-deep/70">
+                  I can return to the original conversation, see what I agreed, know when it is due and decide who can help. The record stays coherent even when the audio does not.
                 </p>
               </div>
 
-              <div className="text-center mb-12">
-                <h3 className="text-xl md:text-2xl font-bold text-brain-health-900">
-                  Here&apos;s how MyRhythm answers that
-                </h3>
-                <p className="text-brain-health-700 mt-2">Four quiet shifts that change the week.</p>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="relative pl-12 md:pl-16">
+                <div className="absolute bottom-6 left-5 top-6 w-px bg-launch-gold" aria-hidden="true" />
                 {[
-                  { n: '01', icon: null, problem: 'Conversations fade faster than they should.', tagline: 'One conversation you can always find', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
-                  { n: '02', icon: Users, problem: 'The people who care often don\u2019t know how to help.', tagline: 'Family, friends, clinicians \u2014 in the loop, on the day', body: 'Whether you\u2019re recovering, caregiving, or just stretched thin, your Support Circle sees the plan with you. Shared calendar invites mean follow-through stops depending on willpower alone.' },
-                  { n: '03', icon: null, problem: 'Some days, choosing what to do next is the hardest part.', tagline: 'One calm next step defined daily', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
-                  { n: '04', icon: null, problem: 'Goals that matter often never reach today.', tagline: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
+                  { icon: Mic2, label: 'Conversation or report', colour: 'bg-launch-ember' },
+                  { icon: FileText, label: 'Verify my next steps', colour: 'bg-launch-teal' },
+                  { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
+                  { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
+                  { icon: Link2, label: 'Return to the source at any time', colour: 'bg-launch-ink' },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div
-                      key={item.n}
-                      className="relative rounded-2xl border border-brain-health-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-all"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="text-5xl font-black bg-gradient-to-br from-memory-emerald-500 to-clarity-teal-500 bg-clip-text text-transparent leading-none">
-                          {item.n}
-                        </div>
-                        {Icon && (
-                          <div className="w-10 h-10 rounded-full bg-brand-orange-50 flex items-center justify-center">
-                            <Icon className="h-5 w-5 text-brand-orange-500" />
-                          </div>
-                        )}
-                      </div>
-                      <h3 className="text-lg font-bold text-brain-health-900 mb-1">{item.problem}</h3>
-                      <p className="text-base font-semibold italic text-memory-emerald-700 mb-2">{item.tagline}</p>
-                      <p className="text-sm text-brain-health-700 leading-relaxed">{item.body}</p>
+                    <div key={item.label} className="relative mb-3 flex min-h-20 items-center border-b border-launch-gold/30 bg-launch-ivory px-5 py-4 last:mb-0 last:border-b-0">
+                      <span className={`absolute -left-[43px] flex h-10 w-10 items-center justify-center rounded-full ${item.colour} text-primary-foreground shadow-sm`}>
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <span className="font-worksans text-base font-semibold text-launch-ink-deep md:text-lg">{item.label}</span>
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-8 text-center">
-                <a
-                  href="/launch/science"
-                  className="text-sm text-brain-health-600 hover:text-brand-orange-500 underline-offset-4 hover:underline"
-                >
-                  The evidence behind this &rarr;
-                </a>
-              </div>
-
-              {/* Trust strip */}
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-sm text-brain-health-600">
-                <EditionBadge variant="chip" />
-                <span className="hidden sm:inline text-brain-health-300">&middot;</span>
-                <span className="italic">For recovery. For caregivers. For anyone carrying a lot.</span>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-      </section>
-
-      {/* Four Core Solutions Section */}
-      <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
-        <div className="container mx-auto max-w-6xl px-6">
-          <FoundingTrustStrip />
-          <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-brain-health-500 mb-3">The Four Core Solutions</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
-              Built for every busy brain — and strong enough for the hardest days.
-            </h2>
-            <p className="text-brain-health-600 max-w-2xl mx-auto text-sm">
-              Tap a card to see the facts and what you can expect.
-            </p>
+            </div>
           </div>
+        </section>
 
-          {(() => {
-            const solutions = [
-              {
-                id: 'capture' as const,
-                eyebrow: '01 · Capture',
-                title: 'Your Memory Bridge',
-                hook: 'Never lose the conversation that mattered.',
-                audience: 'For meetings, doctor visits, school pickups, family plans — anyone who can\'t hold every detail in their head.',
-                bullets: ['Records any chat', 'Pulls out names, decisions and next steps', 'Searchable months later'],
-                factsEveryday: [
-                  'People forget ~50% of new information within an hour, and ~70% within 24 hours (Ebbinghaus).',
-                  'Knowledge workers lose ~2 hrs/day to interruptions and context-switching.',
-                ],
-                factsClinical: [
-                  '~40–80% of medical information is forgotten immediately after a consultation; nearly half of what is remembered is remembered incorrectly.',
-                ],
-                expectations: [
-                  'A rolling recorder you can start in one tap',
-                  'A plain-English summary per recording',
-                  'A follow-up list you can act on',
-                ],
-                icon: Brain,
-                gradient: 'from-memory-emerald-500 to-brain-health-500',
-                cardBg: 'from-white to-memory-emerald-50/50',
-                border: 'border-memory-emerald-200/50',
-                chipBg: 'bg-memory-emerald-50 border-memory-emerald-100 text-memory-emerald-800',
-                cta: 'Explore Memory Bridge',
-                onCta: () => navigate('/launch/capture'),
-              },
-              {
-                id: 'commit' as const,
-                eyebrow: '02 · Commit',
-                title: 'Your MyRhythm Calendar',
-                hook: 'A day that fits the brain you have today.',
-                audience: 'For anyone whose calendar keeps winning against them — new parents, shift workers, founders, students, carers.',
-                bullets: ['Energy-aware planning', 'Gentle nudges, not guilt', 'One thread from vision → today'],
-                factsEveryday: [
-                  'Cognitive performance can swing 20–30% across the day based on chronotype and sleep.',
-                  'Task-switching can cost up to 40% of productive time (APA).',
-                ],
-                factsClinical: [
-                  'Cognitive fatigue peaks in the first 6 months after brain injury; ~1 in 3 survivors are readmitted within 90 days of discharge.',
-                ],
-                expectations: [
-                  'Your goals broken into low-effort actions',
-                  'Scheduling that works with your energy, not against it',
-                  'One quiet view of the week ahead',
-                ],
-                icon: Calendar,
-                gradient: 'from-brain-health-500 to-clarity-teal-500',
-                cardBg: 'from-white to-brain-health-50/50',
-                border: 'border-brain-health-200/50',
-                chipBg: 'bg-brain-health-50 border-brain-health-100 text-brain-health-700',
-                cta: 'Explore Calendar',
-                onCta: () => navigate('/launch/commit'),
-              },
-              {
-                id: 'calibrate' as const,
-                eyebrow: '03 · Calibrate',
-                title: 'Mood & Energy Check-ins',
-                hook: 'A 20-second check-in. A clearer week.',
-                audience: 'For anyone who wants to feel their week instead of just survive it.',
-                bullets: ['Mood + energy in one tap', 'Quiet pattern insight', 'No scoring, no streaks to fail'],
-                factsEveryday: [
-                  'Brief daily self-monitoring is linked with 2–3× better follow-through on personal goals.',
-                  'Naming a feeling (“affect labeling”) measurably reduces stress reactivity (Lieberman, UCLA).',
-                ],
-                factsClinical: [
-                  'Up to 1 in 2 stroke survivors experience depression in the first year; early self-monitoring supports earlier support-seeking.',
-                ],
-                expectations: [
-                  'A weekly Lens view of your rhythm',
-                  'Gentle flags when patterns shift',
-                  'Never a score you can “fail”',
-                ],
-                icon: Activity,
-                gradient: 'from-clarity-teal-500 to-sunrise-amber-500',
-                cardBg: 'from-white to-clarity-teal-50/50',
-                border: 'border-clarity-teal-200/50',
-                chipBg: 'bg-clarity-teal-50 border-clarity-teal-100 text-clarity-teal-800',
-                cta: 'Explore Calibrate',
-                onCta: () => navigate('/launch/calibrate'),
-              },
-              {
-                id: 'celebrate' as const,
-                eyebrow: '04 · Celebrate',
-                title: 'Support Community',
-                hook: 'No one walks alone.',
-                audience: 'For anyone who does better with a small, honest circle — friends, family, colleagues, or a care team.',
-                bullets: ['Share wins', 'Ask the circle', 'Encouragement, not advice'],
-                factsEveryday: [
-                  'Strong social connection is associated with a ~50% lower risk of early mortality (Holt-Lunstad meta-analysis).',
-                  'Loneliness roughly doubles the risk of depression.',
-                ],
-                factsClinical: [
-                  'Engaged support circles are linked to lower caregiver burnout and better 12-month recovery outcomes.',
-                ],
-                expectations: [
-                  'A private circle of 1–5 people',
-                  'One-tap wins you can share',
-                  'Templates for the messages that are hardest to write',
-                ],
-                icon: Heart,
-                gradient: 'from-sunrise-amber-500 to-memory-emerald-500',
-                cardBg: 'from-white to-sunrise-amber-50/50',
-                border: 'border-sunrise-amber-200/50',
-                chipBg: 'bg-sunrise-amber-50 border-sunrise-amber-100 text-sunrise-amber-800',
-                cta: 'Explore Community',
-                onCta: () => setActiveFeatureModal('community'),
-              },
-            ];
-
-            return (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-start">
-                {solutions.map((s) => {
-                  const Icon = s.icon;
-                  const isOpen = openCard === s.id;
-                  return (
-                    <Collapsible
-                      key={s.id}
-                      open={isOpen}
-                      onOpenChange={(o) => setOpenCard(o ? s.id : null)}
-                      asChild
-                    >
-                      <Card
-                        className={`group relative overflow-hidden bg-gradient-to-br ${s.cardBg} ${s.border} shadow-md hover:shadow-xl transition-all duration-300 ${isOpen ? 'ring-1 ring-inset ring-brain-health-200 shadow-xl' : ''}`}
-                      >
-                        <CardHeader className="relative z-10 pb-3 text-left">
-                          <div className="flex items-start justify-between mb-3">
-                            <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center shadow-sm`}>
-                              <Icon className="h-5 w-5 text-white" />
-                            </div>
-                            <span className="text-[10px] uppercase tracking-[0.15em] font-medium text-brain-health-500 bg-white/70 border border-brain-health-100 rounded-full px-2 py-1">
-                              For every busy brain
-                            </span>
-                          </div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-brain-health-500 font-medium">
-                            {s.eyebrow}
-                          </p>
-                          <CardTitle className="text-base font-semibold text-brain-health-900 mt-1">
-                            {s.title}
-                          </CardTitle>
-                          <p className="text-sm text-brain-health-700 mt-2 leading-relaxed">
-                            {s.hook}
-                          </p>
-                        </CardHeader>
-
-                        <CardContent className="relative z-10 pt-0 text-left">
-                          <CollapsibleTrigger asChild>
-                            <button
-                              className="group/trigger flex items-center gap-1.5 text-xs text-brain-health-600 hover:text-brain-health-900 mt-1 mb-2 min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brain-health-400 rounded-md"
-                              aria-expanded={isOpen}
-                            >
-                              <span>{isOpen ? 'Hide details' : 'See how it works'}</span>
-                              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                            </button>
-                          </CollapsibleTrigger>
-
-                          <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-                            <div className="space-y-4 pt-2 pb-3 border-t border-brain-health-100">
-                              <div>
-                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-1.5 mt-3">Who it's for</p>
-                                <p className="text-xs text-brain-health-700 leading-relaxed">{s.audience}</p>
-                              </div>
-
-                              <div>
-                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">What it does for you</p>
-                                <ul className="space-y-1.5">
-                                  {s.bullets.map((b) => (
-                                    <li key={b} className="flex items-start gap-2 text-xs text-brain-health-800">
-                                      <Sparkles className="h-3 w-3 mt-0.5 text-brain-health-400 flex-shrink-0" />
-                                      <span>{b}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div>
-                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">The facts behind it</p>
-                                <p className="text-[10px] uppercase tracking-wider text-brain-health-400 mb-1">Everyday brains</p>
-                                <div className="flex flex-col gap-1.5 mb-2">
-                                  {s.factsEveryday.map((f, i) => (
-                                    <span key={i} className={`text-[11px] leading-snug rounded-lg border px-2.5 py-1.5 ${s.chipBg}`}>
-                                      {f}
-                                    </span>
-                                  ))}
-                                </div>
-                                <p className="text-[10px] uppercase tracking-wider text-brain-health-400 mb-1">Also helpful if…</p>
-                                <div className="flex flex-col gap-1.5">
-                                  {s.factsClinical.map((f, i) => (
-                                    <span key={i} className="text-[11px] leading-snug rounded-lg border border-brain-health-100 bg-white/70 text-brain-health-700 px-2.5 py-1.5">
-                                      {f}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              <div>
-                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">What you can expect</p>
-                                <ul className="space-y-1.5">
-                                  {s.expectations.map((e) => (
-                                    <li key={e} className="flex items-start gap-2 text-xs text-brain-health-800">
-                                      <span className={`mt-1 h-1.5 w-1.5 rounded-full bg-gradient-to-r ${s.gradient} flex-shrink-0`} />
-                                      <span>{e}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          </CollapsibleContent>
-
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className={`w-full mt-3 border-brain-health-200 text-brain-health-800 hover:bg-gradient-to-r hover:${s.gradient} hover:text-white hover:border-transparent transition-all`}
-                            onClick={s.onCta}
-                          >
-                            {s.cta}
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    </Collapsible>
-                  );
-                })}
-              </div>
-            );
-          })()}
-
-          <p className="text-center text-xs text-brain-health-500 mt-8 max-w-2xl mx-auto italic">
-            Facts sourced from public research (Ebbinghaus; APA on task-switching; Lieberman on affect labeling; Holt-Lunstad on social connection) and clinical literature summarised in our discharge-bridge references. MyRhythm supports cognitive wellness — it does not diagnose or treat any condition.
-          </p>
-
-          {/* Prominent CTA */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex flex-col items-center p-8 bg-gradient-to-br from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 rounded-3xl border border-memory-emerald-200/50">
-              <h3 className="text-2xl md:text-3xl font-bold text-brain-health-900 mb-3">
-                Ready to Transform Your Journey?
-              </h3>
-              <p className="text-brain-health-700 mb-6 max-w-lg">
-                Start your 7-day free trial today. No commitment, cancel anytime.
-              </p>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-10 py-6 text-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                onClick={() => navigate('/launch/register')}
-              >
-                <Sparkles className="h-6 w-6 mr-3" />
-                Start 7-Day Free Trial
-                <ArrowRight className="h-6 w-6 ml-3" />
-              </Button>
-              <p className="text-sm text-brain-health-500 mt-4">
-                ✓ No charge until trial ends &nbsp;•&nbsp; ✓ Cancel anytime
+        <section className="relative overflow-hidden bg-launch-ink-deep py-20 text-primary-foreground md:py-28">
+          <div className="absolute right-0 top-0 h-full w-1/3 bg-launch-teal/10" aria-hidden="true" />
+          <div className="relative mx-auto grid max-w-6xl gap-12 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-gold">Made for real cognitive load</p>
+              <h2 className="mt-5 font-instrument text-4xl leading-tight md:text-5xl">
+                Useful when life is full. Reassuring when memory or energy is harder.
+              </h2>
+              <p className="mt-6 font-worksans text-lg leading-8 text-primary-foreground/75">
+                MyRhythm is designed for people rebuilding confidence after brain injury, navigating memory change, living with ADHD or stress—and for anyone whose responsibilities outrun the space in their head.
               </p>
             </div>
+            <div className="grid gap-px overflow-hidden rounded-md border border-primary-foreground/15 bg-primary-foreground/15 sm:grid-cols-3">
+              {[
+                { icon: Clock3, title: 'Less to hold', text: 'Important details have somewhere reliable to live.' },
+                { icon: LockKeyhole, title: 'My control', text: 'I review, edit, share and retain on my terms.' },
+                { icon: Brain, title: 'My rhythm', text: 'Timing guidance adapts, but never takes away my choice.' },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.title} className="bg-launch-ink-deep p-6">
+                    <Icon className="h-6 w-6 text-launch-teal" aria-hidden="true" />
+                    <h3 className="mt-6 font-worksans text-lg font-bold">{item.title}</h3>
+                    <p className="mt-3 font-worksans text-sm leading-6 text-primary-foreground/70">{item.text}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <DayInTheLifeStrip />
-
-      {/* Feel the Difference Section */}
-      <section className="py-20 bg-gradient-to-br from-white via-brain-health-50/10 to-memory-emerald-50/10">
-        <div className="container mx-auto max-w-6xl px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
-              Feel the Difference
+        <section className="bg-launch-cream-light py-24 text-center md:py-32">
+          <div className="mx-auto max-w-3xl px-5 md:px-8">
+            <EditionBadge variant="inline" />
+            <h2 className="mt-6 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-6xl">
+              I do not need to hold the whole plan in my head.
             </h2>
-            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
-              Experience the transformation when technology truly understands your journey
+            <p className="mx-auto mt-6 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/70">
+              Founding Members help shape a simpler standard for turning important moments into meaningful follow-through.
+            </p>
+            <p className="mt-8 font-worksans text-sm font-semibold text-launch-ink-deep">
+              Founding Edition · £10/month for life · 500 places
             </p>
           </div>
+        </section>
+      </main>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Precious Moments */}
-            <div 
-              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-              onClick={handleGetStarted}
-            >
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${preciousMomentsImg})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-memory-emerald-900/80 via-memory-emerald-600/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
-                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Brain className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                    Never lose precious moments
-                  </h3>
-                  <p className="text-lg opacity-90 leading-relaxed">
-                    Every conversation matters. Every memory is treasured.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Organized Action */}
-            <div 
-              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-              onClick={handleGetStarted}
-            >
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${organizedActionImg})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brain-health-900/80 via-brain-health-600/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
-                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Calendar className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                    Transform overwhelm into clarity
-                  </h3>
-                  <p className="text-lg opacity-90 leading-relaxed">
-                    Feel the calm confidence of being truly organized.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Emotional Landscape */}
-            <div 
-              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-              onClick={handleGetStarted}
-            >
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${emotionalLandscapeImg})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-clarity-teal-900/80 via-clarity-teal-600/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
-                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Activity className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                    Understand your inner rhythm
-                  </h3>
-                  <p className="text-lg opacity-90 leading-relaxed">
-                    Discover patterns. Find peace. Optimize your wellbeing.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Strength Together */}
-            <div 
-              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-              onClick={handleGetStarted}
-            >
-              <div 
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${strengthTogetherImg})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-sunrise-amber-900/80 via-sunrise-amber-600/40 to-transparent" />
-              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
-                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Heart className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                    You're never walking alone
-                  </h3>
-                  <p className="text-lg opacity-90 leading-relaxed">
-                    Find your tribe. Share your journey. Celebrate together.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center mt-16">
-            <p className="text-brain-health-600 font-medium text-lg max-w-3xl mx-auto mb-8">
-              This isn't just another app. It's a companion designed for your unique cognitive journey.
-            </p>
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-10 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-              onClick={handleGetStarted}
-            >
-              <Sparkles className="h-5 w-5 mr-2" />
-              Experience the Difference
-            </Button>
+      <footer className="border-t border-launch-gold/30 bg-launch-cream px-5 py-8 font-worksans text-sm text-launch-ink-deep/65">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <p>MyRhythm supports planning, memory and follow-through. It does not diagnose or treat any condition.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <Button variant="link" onClick={() => navigate('/privacy')} className="min-h-11 px-0 text-launch-ink-deep/65">Privacy</Button>
+            <Button variant="link" onClick={() => navigate('/launch/science')} className="min-h-11 px-0 text-launch-ink-deep/65">Evidence</Button>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* Call to Action */}
-      <section className="bg-gradient-to-r from-brain-health-50/50 to-clarity-teal-50/50 py-20">
-        <div className="container mx-auto max-w-6xl px-6 text-center">
-          <h2 className="text-3xl font-bold text-brain-health-900 mb-4">Ready to Begin Your Journey?</h2>
-          <p className="text-xl text-brain-health-700 mb-8 max-w-2xl mx-auto">
-            Start with our personalized assessment to discover your unique rhythm
-          </p>
-           <Button 
-             size="lg"
-             className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-             onClick={handleGetStarted}
-           >
-             <Sparkles className="h-5 w-5 mr-2" />
-             Register Now
-           </Button>
-         </div>
-       </section>
-
-        {/* Onboarding Modal */}
-        <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
-        
-        {/* Feature Exploration Modal */}
-        <FeatureExplorationModal
-          isOpen={activeFeatureModal !== null}
-          onOpenChange={(open) => !open && setActiveFeatureModal(null)}
-          feature={activeFeatureModal}
-        />
-        
-        {/* Floating Register Button - only show when modal is closed */}
-        {!isOnboardingOpen && <FloatingRegisterButton forceShow={!user} variant="trial" />}
-
-        {/* Developer Test Account - Bottom Left */}
-        {!user && (
-          <div className="fixed bottom-4 left-4 z-40">
-            <TestAccountButton />
-          </div>
-        )}
-      </div>
-    );
-  }
+      <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
+    </div>
+  );
+}
