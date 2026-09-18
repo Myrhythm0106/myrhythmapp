@@ -100,3 +100,7 @@ verify_jwt = false
 
 [functions.rsvp-response]
 verify_jwt = false
+
+[functions.calendar-feed]
+verify_jwt = false
+
