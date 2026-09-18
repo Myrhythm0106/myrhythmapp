@@ -609,18 +609,21 @@ html, body {
 }
 
 /* ============================================================
-   Launch theme — Emerald Prestige + burnt-orange (EMBER) accent
+   Launch theme — Light Linen: warm off-white carries the space,
+   emerald becomes a text/detail colour, teal takes the actions.
    Applied to LaunchLayout root so every /launch/* page inherits.
    ============================================================ */
 .launch-theme {
-  --launch-ink:   158 84% 13%;   /* #064e3b */
-  --launch-moss:  158 80% 26%;   /* #0d7a5f */
-  --launch-gold:   43 55% 54%;   /* #c9a84c */
-  --launch-cream:  44 60% 92%;   /* #f5f0e0 */
-  --launch-cream-light: 45 50% 96%; /* #faf6ea — lighter page background for non-welcome launch pages */
-  --launch-ivory: 45 60% 98%;     /* #fdfcf7 — elevated card surfaces */
-  --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
-  --launch-teal:  173 52% 48%;   /* #3bb89f — calm signal accent */
+  --launch-ink:   162 75% 24%;   /* #0F6B52 — emerald, now for words not slabs */
+  --launch-ink-deep: 160 72% 14%; /* #0a3d2e — reserved for rare deep contrast */
+  --launch-moss:  158 30% 42%;   /* #4b8b74 — mid sage, softens old moss blocks */
+  --launch-gold:   43 55% 54%;   /* #c9a84c — hairlines and small marks */
+  --launch-cream:  40 33% 92%;   /* #F2EDE2 — linen cards and panels */
+  --launch-cream-light: 40 43% 97%; /* #FBF9F4 — warm off-white page background */
+  --launch-ivory: 40 50% 99%;     /* #fefdfa — elevated card surfaces */
+  --launch-ember:  17 63% 48%;   /* #c65a2e — recording / overdue only */
+  --launch-teal:  168 57% 42%;   /* #2FA98F — primary actions */
+
 
   color: hsl(var(--launch-ink));
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
