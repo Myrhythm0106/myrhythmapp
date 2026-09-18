@@ -269,11 +269,11 @@ export function MVPCore4C() {
         <section className="relative min-h-[calc(100svh-72px)] overflow-hidden border-b border-launch-gold/30">
           <div className="absolute inset-0">
             <img
-              src={organizedActionImg}
-              alt="A professional calmly turning an important conversation into clear next steps"
-              className="h-full w-full object-cover object-center md:object-[70%_center]"
+              src="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
+              alt="A woman pausing thoughtfully beside her notes and laptop"
+              className="h-full w-full object-cover object-[68%_center] md:object-[72%_center]"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-launch-cream-light via-launch-cream-light/95 to-launch-cream-light/20 md:via-launch-cream-light/80" aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-r from-launch-cream-light via-launch-cream-light/95 to-launch-cream-light/50 md:via-launch-cream-light/85 md:to-launch-cream-light/10" aria-hidden="true" />
             <div className="absolute inset-0 bg-gradient-to-t from-launch-cream-light via-transparent to-transparent" aria-hidden="true" />
           </div>
 
