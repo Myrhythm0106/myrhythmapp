@@ -677,12 +677,14 @@ html, body {
 .launch-theme .border-launch-teal    { border-color: hsl(var(--launch-teal)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
 
-/* Day-open welcome overlay — emerald ground with a calm teal signal */
+/* Day-open welcome overlay — the one deliberate deep moment, desaturated
+   so it reads calm rather than heavy, with a teal signal. */
 .day-open {
-  --day-open-ink: 158 84% 13%;
-  --day-open-panel: 158 80% 20%;
-  --day-open-line: 163 48% 30%;
-  --day-open-signal: 173 52% 48%;
+  --day-open-ink: 163 42% 16%;
+  --day-open-panel: 163 32% 24%;
+  --day-open-line: 163 30% 32%;
+  --day-open-signal: 168 57% 46%;
+
   background-color: hsl(var(--day-open-ink));
   color: hsl(45 40% 97%);
 }
