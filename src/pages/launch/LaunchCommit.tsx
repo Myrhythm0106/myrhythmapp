@@ -334,7 +334,7 @@ export default function LaunchCommit() {
           <LaunchCard className="border-launch-ember/30 bg-launch-ivory p-8 text-center">
             <p className="text-lg font-semibold text-launch-ink">I could not load my saved conversations.</p>
             <p className="mt-2 text-sm text-launch-ink/70">Nothing has been lost. I can try that again.</p>
-            <Button onClick={() => void loadMeetings()} className="mt-5 min-h-14 bg-launch-ink text-white hover:bg-launch-ink/90">
+            <Button onClick={() => void loadMeetings()} className="mt-5 min-h-14 bg-launch-teal text-white hover:bg-[hsl(var(--launch-teal)/0.88)]">
               <RefreshCw className="mr-2 h-4 w-4" /> Try again
             </Button>
           </LaunchCard>
@@ -345,7 +345,7 @@ export default function LaunchCommit() {
             <p className="mx-auto mt-2 max-w-md text-[15px] leading-7 text-launch-ink/70">
               My saved conversations, actions and diary links will be waiting here when I sign in.
             </p>
-            <Button onClick={() => window.location.assign('/launch/signin')} className="mt-5 min-h-14 bg-launch-ink text-white hover:bg-launch-ink/90">
+            <Button onClick={() => window.location.assign('/launch/signin')} className="mt-5 min-h-14 bg-launch-teal text-white hover:bg-[hsl(var(--launch-teal)/0.88)]">
               <FileText className="mr-2 h-4 w-4" /> Sign in
             </Button>
           </LaunchCard>
@@ -356,7 +356,7 @@ export default function LaunchCommit() {
             <p className="mx-auto mt-2 max-w-md text-[15px] leading-7 text-launch-ink/70">
               Record a conversation in Memory Bridge and I’ll bring the saved brief and next steps here for review.
             </p>
-            <Button onClick={() => window.location.assign('/launch/memory')} className="mt-5 min-h-14 bg-launch-ink text-white hover:bg-launch-ink/90">
+            <Button onClick={() => window.location.assign('/launch/memory')} className="mt-5 min-h-14 bg-launch-teal text-white hover:bg-[hsl(var(--launch-teal)/0.88)]">
               <FileText className="mr-2 h-4 w-4" /> Open Memory Bridge
             </Button>
           </LaunchCard>

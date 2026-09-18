@@ -58,7 +58,7 @@ export function AssessmentRetakeCard() {
           <button
             type="button"
             onClick={handleRetake}
-            className="inline-flex items-center gap-2 min-h-[48px] px-4 rounded-full bg-launch-ink text-launch-cream text-sm font-semibold hover:bg-launch-moss transition-colors"
+            className="inline-flex items-center gap-2 min-h-[48px] px-4 rounded-full bg-launch-teal text-white text-sm font-semibold hover:bg-[hsl(var(--launch-teal)/0.88)] transition-colors"
           >
             <RotateCcw className="h-4 w-4" />
             Retake assessment

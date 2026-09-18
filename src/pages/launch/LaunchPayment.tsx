@@ -301,7 +301,7 @@ export default function LaunchPayment() {
                   <Button
                     onClick={handleRedeemCode}
                     disabled={isRedeeming || !code.trim()}
-                    className="bg-launch-ink hover:bg-launch-ink/90 text-launch-cream sm:min-w-[140px]"
+                    className="bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white sm:min-w-[140px]"
                   >
                     {isRedeeming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Redeem code'}
                   </Button>
@@ -409,7 +409,7 @@ export default function LaunchPayment() {
           <Button
             onClick={handleStartTrial}
             disabled={isLoading}
-            className="w-full md:w-auto bg-launch-ink hover:bg-launch-ink/90 text-launch-cream px-12 py-6 text-lg shadow-lg"
+            className="w-full md:w-auto bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white px-12 py-6 text-lg shadow-lg"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

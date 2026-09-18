@@ -94,6 +94,8 @@ const config: Config = {
         },
         launch: {
           ink: "hsl(var(--launch-ink))",
+          "ink-deep": "hsl(var(--launch-ink-deep))",
+
           moss: "hsl(var(--launch-moss))",
           gold: "hsl(var(--launch-gold))",
           cream: "hsl(var(--launch-cream))",

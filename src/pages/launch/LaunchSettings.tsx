@@ -438,7 +438,7 @@ export default function LaunchSettings() {
                   const ok = await subscribeIcs(feedUrl.trim());
                   if (ok) setFeedUrl('');
                 }}
-                className="min-h-[48px] px-4 rounded-xl bg-launch-ink text-launch-cream text-sm font-semibold disabled:opacity-50"
+                className="min-h-[48px] px-4 rounded-xl bg-launch-teal text-white text-sm font-semibold disabled:opacity-50"
               >
                 Add
               </button>

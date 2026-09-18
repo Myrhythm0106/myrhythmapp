@@ -609,18 +609,21 @@ html, body {
 }
 
 /* ============================================================
-   Launch theme — Emerald Prestige + burnt-orange (EMBER) accent
+   Launch theme — Light Linen: warm off-white carries the space,
+   emerald becomes a text/detail colour, teal takes the actions.
    Applied to LaunchLayout root so every /launch/* page inherits.
    ============================================================ */
 .launch-theme {
-  --launch-ink:   158 84% 13%;   /* #064e3b */
-  --launch-moss:  158 80% 26%;   /* #0d7a5f */
-  --launch-gold:   43 55% 54%;   /* #c9a84c */
-  --launch-cream:  44 60% 92%;   /* #f5f0e0 */
-  --launch-cream-light: 45 50% 96%; /* #faf6ea — lighter page background for non-welcome launch pages */
-  --launch-ivory: 45 60% 98%;     /* #fdfcf7 — elevated card surfaces */
-  --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
-  --launch-teal:  173 52% 48%;   /* #3bb89f — calm signal accent */
+  --launch-ink:   162 75% 24%;   /* #0F6B52 — emerald, now for words not slabs */
+  --launch-ink-deep: 160 72% 14%; /* #0a3d2e — reserved for rare deep contrast */
+  --launch-moss:  158 30% 42%;   /* #4b8b74 — mid sage, softens old moss blocks */
+  --launch-gold:   43 55% 54%;   /* #c9a84c — hairlines and small marks */
+  --launch-cream:  40 33% 92%;   /* #F2EDE2 — linen cards and panels */
+  --launch-cream-light: 40 43% 97%; /* #FBF9F4 — warm off-white page background */
+  --launch-ivory: 40 50% 99%;     /* #fefdfa — elevated card surfaces */
+  --launch-ember:  17 63% 48%;   /* #c65a2e — recording / overdue only */
+  --launch-teal:  168 57% 42%;   /* #2FA98F — primary actions */
+
 
   color: hsl(var(--launch-ink));
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
@@ -653,6 +656,9 @@ html, body {
 .launch-theme .bg-launch-cream-light { background-color: hsl(var(--launch-cream-light)); }
 .launch-theme .bg-launch-ivory       { background-color: hsl(var(--launch-ivory)); }
 .launch-theme .bg-launch-ink         { background-color: hsl(var(--launch-ink)); }
+.launch-theme .bg-launch-ink-deep    { background-color: hsl(var(--launch-ink-deep)); }
+.launch-theme .text-launch-ink-deep  { color: hsl(var(--launch-ink-deep)); }
+
 .launch-theme .bg-launch-moss        { background-color: hsl(var(--launch-moss)); }
 .launch-theme .bg-launch-gold        { background-color: hsl(var(--launch-gold)); }
 .launch-theme .bg-launch-ember       { background-color: hsl(var(--launch-ember)); }
@@ -671,12 +677,14 @@ html, body {
 .launch-theme .border-launch-teal    { border-color: hsl(var(--launch-teal)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
 
-/* Day-open welcome overlay — emerald ground with a calm teal signal */
+/* Day-open welcome overlay — the one deliberate deep moment, desaturated
+   so it reads calm rather than heavy, with a teal signal. */
 .day-open {
-  --day-open-ink: 158 84% 13%;
-  --day-open-panel: 158 80% 20%;
-  --day-open-line: 163 48% 30%;
-  --day-open-signal: 173 52% 48%;
+  --day-open-ink: 163 42% 16%;
+  --day-open-panel: 163 32% 24%;
+  --day-open-line: 163 30% 32%;
+  --day-open-signal: 168 57% 46%;
+
   background-color: hsl(var(--day-open-ink));
   color: hsl(45 40% 97%);
 }
@@ -820,57 +828,65 @@ html, body {
 }
 
 /* ============================================================
-   Prestige entry surface (/start) — Emerald Prestige tokens.
+   Prestige entry surface (/start) — Light Linen.
+   Warm off-white ground, emerald type, teal action, gold hairlines.
    Scoped to .prestige so nothing else in the app is restyled.
    ============================================================ */
 .prestige {
-  --prestige-ink: #064e3b;
-  --prestige-mid: #0d7a5f;
+  --prestige-ink: #0F6B52;
+  --prestige-ink-deep: #0a3d2e;
+  --prestige-mid: #4b8b74;
   --prestige-gold: #c9a84c;
-  --prestige-ivory: #f5f0e0;
+  --prestige-linen: #F2EDE2;
+  --prestige-ivory: #FBF9F4;
   --prestige-ember: #c65a2e;
-  --prestige-teal: #3bb89f;
-  background-color: var(--prestige-ink);
-  color: var(--prestige-ivory);
+  --prestige-teal: #2FA98F;
+  background-color: var(--prestige-ivory);
+  color: var(--prestige-ink-deep);
   font-family: 'Work Sans', Inter, system-ui, sans-serif;
 }
 .prestige .font-instrument { font-family: 'Instrument Serif', Georgia, serif; }
 .prestige .font-worksans   { font-family: 'Work Sans', Inter, system-ui, sans-serif; }
 
-/* Subtle film grain over the emerald ground */
+/* Barely-there paper texture over the linen ground */
 .prestige-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-  opacity: 0.06;
-  mix-blend-mode: overlay;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
 }
 .prestige-halo {
-  background: radial-gradient(55% 45% at 18% 0%, rgba(13, 122, 95, 0.32), transparent 72%),
-              radial-gradient(45% 40% at 95% 100%, rgba(59, 184, 159, 0.16), transparent 70%);
+  background: radial-gradient(55% 45% at 18% 0%, rgba(47, 169, 143, 0.10), transparent 72%),
+              radial-gradient(45% 40% at 95% 100%, rgba(201, 168, 76, 0.10), transparent 70%);
 }
 
 .prestige-tile {
-  background-color: rgba(13, 122, 95, 0.18);
-  border: 1px solid rgba(245, 240, 224, 0.12);
-  transition: border-color 400ms ease, background-color 400ms ease;
+  background-color: var(--prestige-linen);
+  border: 1px solid rgba(201, 168, 76, 0.28);
+  transition: border-color 400ms ease, background-color 400ms ease, box-shadow 400ms ease;
 }
-.prestige-tile:hover { border-color: rgba(201, 168, 76, 0.5); background-color: rgba(13, 122, 95, 0.24); }
+.prestige-tile:hover {
+  border-color: rgba(201, 168, 76, 0.55);
+  background-color: #FFFFFF;
+  box-shadow: 0 8px 24px -16px rgba(10, 61, 46, 0.35);
+}
 
-.prestige-gold      { color: var(--prestige-gold); }
-.prestige-teal      { color: var(--prestige-teal); }
-.prestige-ivory     { color: var(--prestige-ivory); }
-.prestige-ivory-75  { color: rgba(245, 240, 224, 0.75); }
-.prestige-ivory-55  { color: rgba(245, 240, 224, 0.55); }
-.prestige-ivory-40  { color: rgba(245, 240, 224, 0.42); }
-.prestige-rule      { background-color: rgba(201, 168, 76, 0.35); }
-.prestige-home-link:hover { color: var(--prestige-gold); border-color: currentColor; }
+.prestige-gold      { color: #9a7c27; }
+.prestige-teal      { color: #1c7f6b; }
+.prestige-ivory     { color: var(--prestige-ink-deep); }
+.prestige-ivory-75  { color: rgba(10, 61, 46, 0.78); }
+.prestige-ivory-55  { color: rgba(10, 61, 46, 0.62); }
+.prestige-ivory-40  { color: rgba(10, 61, 46, 0.55); }
+.prestige-rule      { background-color: rgba(201, 168, 76, 0.45); }
+.prestige-home-link:hover { color: var(--prestige-ink); border-color: currentColor; }
 
 .prestige-cta {
-  background-color: var(--prestige-ember);
-  color: var(--prestige-ivory);
+  background-color: var(--prestige-teal);
+  color: #FFFFFF;
   transition: background-color 300ms ease, transform 150ms ease;
 }
-.prestige-cta:hover  { background-color: var(--prestige-gold); color: var(--prestige-ink); }
+.prestige-cta:hover  { background-color: var(--prestige-ink); color: #FFFFFF; }
 .prestige-cta:active { transform: scale(0.99); }
+
 
 @media (prefers-reduced-motion: reduce) {
   .prestige * { animation: none !important; transition-duration: 1ms !important; }
