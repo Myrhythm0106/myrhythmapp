@@ -22,8 +22,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
 import { useAuth } from '@/hooks/useAuth';
-import preciousMomentsImg from '@/assets/precious-moments.jpg';
-import organizedActionImg from '@/assets/organized-action.jpg';
+import preciousMomentsImg from '@/assets/precious-moments-black-couple.jpg';
+import organizedActionImg from '@/assets/organized-action-black-woman.jpg';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
 
@@ -68,7 +68,7 @@ const chapters: Chapter[] = [
     description:
       'Names, decisions and actions are organised into a professional summary. I stay in control: I can edit the wording, owner, priority and dates before I accept it.',
     image: organizedActionImg,
-    alt: 'A professional reviewing clear next steps at her desk',
+    alt: 'A Black professional with a natural Afro reviewing clear next steps at her desk',
     detailTitle: 'Why verification matters',
     details: [
       'Each action keeps a simple reference back to its source.',
@@ -86,7 +86,7 @@ const chapters: Chapter[] = [
     description:
       'A next step becomes useful when it has a place in the day. MyRhythm helps me choose a realistic time, add the right level of reminder and send it to my calendar.',
     image: preciousMomentsImg,
-    alt: 'Two people sharing a calm moment at home with time protected for what matters',
+    alt: 'A Black couple sharing a calm moment at home with time protected for what matters',
     detailTitle: 'Designed for real schedules',
     details: [
       'Suggestions can reflect my energy and brain-health rhythm.',
