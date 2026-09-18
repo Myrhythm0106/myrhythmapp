@@ -228,10 +228,10 @@ export function MVPCore4C() {
     <div className="launch-theme public-page min-h-screen bg-launch-cream-light text-launch-ink-deep">
       <nav className="sticky top-0 z-50 border-b border-launch-gold/30 bg-launch-cream-light/90 backdrop-blur-xl" aria-label="Main navigation">
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:px-8">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })}
-            className="flex min-h-14 items-center gap-3 rounded-md text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-launch-ember"
+            className="flex min-h-14 items-center gap-3 rounded-md px-0 text-left hover:bg-transparent"
             aria-label="MyRhythm, return to top"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-launch-gold/30 bg-launch-ivory">
@@ -241,7 +241,7 @@ export function MVPCore4C() {
               <span className="block font-instrument text-2xl leading-none text-launch-ink-deep">MyRhythm</span>
               <span className="mt-1 block font-worksans text-[9px] font-semibold uppercase tracking-normal text-launch-moss">Memory-First Design™</span>
             </span>
-          </button>
+          </Button>
           <div className="flex items-center gap-1 md:gap-2">
             <Button
               onClick={() => navigate('/help/getting-started')}
@@ -431,8 +431,8 @@ export function MVPCore4C() {
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <p>MyRhythm supports planning, memory and follow-through. It does not diagnose or treat any condition.</p>
           <div className="flex flex-wrap items-center gap-4">
-            <button type="button" onClick={() => navigate('/privacy')} className="min-h-11 underline-offset-4 hover:underline">Privacy</button>
-            <button type="button" onClick={() => navigate('/launch/science')} className="min-h-11 underline-offset-4 hover:underline">Evidence</button>
+            <Button variant="link" onClick={() => navigate('/privacy')} className="min-h-11 px-0 text-launch-ink-deep/65">Privacy</Button>
+            <Button variant="link" onClick={() => navigate('/launch/science')} className="min-h-11 px-0 text-launch-ink-deep/65">Evidence</Button>
           </div>
         </div>
       </footer>
