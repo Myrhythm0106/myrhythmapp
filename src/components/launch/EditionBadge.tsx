@@ -15,7 +15,7 @@ export function EditionBadge({ variant = 'chip', tone = 'default', className = '
   if (tone === 'onDark') {
     return (
       <span
-        className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c9a84c]/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c9a84c] ${className}`}
+        className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c9a84c]/60 bg-[#c9a84c]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7d6320] ${className}`}
         aria-label={`${EDITION_NAME} ${EDITION_VERSION}`}
         title={EDITION_NAME}
       >

@@ -241,7 +241,7 @@ export default function LaunchAssessment() {
           <div className="mb-6">
             <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-launch-moss to-launch-gold transition-all duration-500"
+                className="h-full bg-gradient-to-r from-launch-teal to-launch-gold transition-all duration-500"
                 style={{ width: `6%` }}
               />
             </div>
@@ -565,7 +565,7 @@ export default function LaunchAssessment() {
         <div className="mb-4">
           <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-launch-moss to-launch-gold transition-all duration-500"
+              className="h-full bg-gradient-to-r from-launch-teal to-launch-gold transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
