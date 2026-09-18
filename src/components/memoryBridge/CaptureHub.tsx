@@ -125,7 +125,7 @@ export function CaptureHub({
           {/* Brand mark */}
           <div className="flex justify-center mb-4">
             <div className="relative w-12 h-12 rounded-full border-2 border-[hsl(var(--launch-gold))] flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-launch-ink shadow-lg shadow-[hsl(var(--launch-ink)/0.20)]" />
+              <div className="w-6 h-6 rounded-full bg-launch-teal shadow-lg shadow-[hsl(var(--launch-teal)/0.25)]" />
             </div>
           </div>
 
@@ -152,7 +152,7 @@ export function CaptureHub({
               aria-label="Start capture"
               className={cn(
                 'relative w-full h-16 rounded-2xl flex items-center justify-center transition-all',
-                'bg-launch-ink text-white text-lg font-medium tracking-wide',
+                'bg-launch-teal text-white text-lg font-medium tracking-wide',
                 'hover:bg-[hsl(var(--launch-ink)/0.92)] hover:shadow-xl hover:shadow-[hsl(var(--launch-ink)/0.15)]',
                 'active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed'
               )}
@@ -257,7 +257,7 @@ export function CaptureHub({
                         )}
                       </p>
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-launch-ink flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-launch-teal flex items-center justify-center shrink-0">
                       <Play className="h-3.5 w-3.5 text-white ml-0.5" />
                     </div>
                   </button>
@@ -396,7 +396,7 @@ export function CaptureHub({
               <Button
                 onClick={saveQuickNote}
                 disabled={savingNote || !noteContent.trim()}
-                className="rounded-xl bg-launch-ink text-white hover:bg-[hsl(var(--launch-ink)/0.92)]"
+                className="rounded-xl bg-launch-teal text-white hover:bg-[hsl(var(--launch-teal)/0.88)]"
               >
                 {savingNote ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 Save Note

@@ -100,7 +100,7 @@ export default function LaunchDiary() {
               aria-pressed={filter === f.key}
               className={`min-h-[44px] px-4 rounded-full text-sm font-medium border transition-colors ${
                 filter === f.key
-                  ? 'bg-launch-ink text-launch-cream border-launch-ink'
+                  ? 'bg-launch-teal text-white border-launch-teal'
                   : 'bg-launch-ivory text-launch-ink/70 border-launch-gold/30 hover:bg-launch-cream'
               }`}
             >
