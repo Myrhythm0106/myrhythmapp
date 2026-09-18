@@ -656,6 +656,9 @@ html, body {
 .launch-theme .bg-launch-cream-light { background-color: hsl(var(--launch-cream-light)); }
 .launch-theme .bg-launch-ivory       { background-color: hsl(var(--launch-ivory)); }
 .launch-theme .bg-launch-ink         { background-color: hsl(var(--launch-ink)); }
+.launch-theme .bg-launch-ink-deep    { background-color: hsl(var(--launch-ink-deep)); }
+.launch-theme .text-launch-ink-deep  { color: hsl(var(--launch-ink-deep)); }
+
 .launch-theme .bg-launch-moss        { background-color: hsl(var(--launch-moss)); }
 .launch-theme .bg-launch-gold        { background-color: hsl(var(--launch-gold)); }
 .launch-theme .bg-launch-ember       { background-color: hsl(var(--launch-ember)); }
