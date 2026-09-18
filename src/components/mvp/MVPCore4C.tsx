@@ -6,6 +6,7 @@ import {
   Brain,
   CalendarCheck,
   Check,
+  CheckCircle2,
   ChevronDown,
   Clock3,
   FileText,
@@ -48,7 +49,7 @@ const chapters: Chapter[] = [
     title: 'The conversation stays with me.',
     promise: 'Conversation or report',
     description:
-      'Memory Bridge keeps the source, creates a clear write-up and brings the important decisions into view—without asking me to remember everything at once.',
+      'Memory Bridge keeps the source, creates a clear write-up and brings the important decisions and commitments into view—without asking me to remember everything at once.',
     image: emotionalLandscapeImg,
     alt: 'A person reviewing notes outdoors after an important conversation',
     detailTitle: 'What I can expect',
@@ -342,10 +343,10 @@ export function MVPCore4C() {
               <div>
                 <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">The continuity sequence</p>
                 <h2 id="continuity-sequence-heading" className="mt-5 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-5xl">
-                  One thread. From source to follow-through.
+                  One thread. From source, through follow-through, to completion.
                 </h2>
                 <p className="mt-6 font-worksans text-lg leading-8 text-launch-ink-deep/70">
-                  I can return to the original conversation, see what I agreed, know when it is due and decide who can help. The record stays coherent even when the audio does not.
+                  I can return to the original conversation, see what I agreed, know when it is due, decide who can help, and see each step through to done. The record stays coherent even when the audio does not.
                 </p>
               </div>
 
@@ -357,6 +358,7 @@ export function MVPCore4C() {
                   { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
                   { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
                   { icon: Link2, label: 'Return to the source at any time', colour: 'bg-launch-ink' },
+                  { icon: CheckCircle2, label: 'Follow through—and mark it complete', colour: 'bg-launch-gold' },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
