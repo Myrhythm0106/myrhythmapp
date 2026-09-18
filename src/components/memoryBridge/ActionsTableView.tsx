@@ -1363,7 +1363,10 @@ export function ActionsTableView({
                           </TableCell>
 
                           <TableCell className={bodyCell}>
+                            <div className="flex items-center justify-end gap-0.5">
+                            <AddToCalendarMenu item={calendarItemForAction(action)} />
                             <DropdownMenu>
+
                               <DropdownMenuTrigger asChild>
                                 <Button
                                   variant="ghost"
