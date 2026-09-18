@@ -49,7 +49,7 @@ const chapters: Chapter[] = [
     title: 'The conversation stays with me.',
     promise: 'Conversation or report',
     description:
-      'Memory Bridge keeps the source, creates a clear write-up and brings the important decisions and commitments into view—without asking me to remember everything at once.',
+      'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view—without asking me to remember everything at once.',
     image: emotionalLandscapeImg,
     alt: 'A person reviewing notes outdoors after an important conversation',
     detailTitle: 'What I can expect',
@@ -72,7 +72,7 @@ const chapters: Chapter[] = [
     alt: 'A Black professional with a natural Afro reviewing clear next steps at her desk',
     detailTitle: 'Why verification matters',
     details: [
-      'Each action keeps a simple reference back to its source.',
+      'Each action keeps a simple note of which conversation it came from.',
       'Priority, start date and finish date remain changeable.',
       'Nothing is treated as agreed until I have reviewed it.',
     ],
@@ -110,7 +110,7 @@ const chapters: Chapter[] = [
     details: [
       'I choose who is invited and what they can see.',
       'A supporter can encourage follow-through without receiving my whole account.',
-      'My diary keeps the action connected to the original source.',
+      'My diary keeps each action connected to the conversation it came from.',
     ],
     align: 'right',
     accent: 'teal',
@@ -343,7 +343,7 @@ export function MVPCore4C() {
               <div>
                 <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">The continuity sequence</p>
                 <h2 id="continuity-sequence-heading" className="mt-5 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-5xl">
-                  One thread. From source, through follow-through, to completion.
+                  One thread. From the original conversation, through follow-through, to the day it's done.
                 </h2>
                 <p className="mt-6 font-worksans text-lg leading-8 text-launch-ink-deep/70">
                   I can return to the original conversation, see what I agreed, know when it is due, decide who can help, and see each step through to done. The record stays coherent even when the audio does not.
@@ -357,7 +357,7 @@ export function MVPCore4C() {
                   { icon: FileText, label: 'Verify my next steps', colour: 'bg-launch-teal' },
                   { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
                   { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
-                  { icon: Link2, label: 'Return to the source at any time', colour: 'bg-launch-ink' },
+                  { icon: Link2, label: 'Return to the original conversation at any time', colour: 'bg-launch-ink' },
                   { icon: CheckCircle2, label: 'Follow through—and mark it complete', colour: 'bg-launch-gold' },
                 ].map((item) => {
                   const Icon = item.icon;
