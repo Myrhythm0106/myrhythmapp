@@ -15,6 +15,8 @@ import { LaunchYearView } from '@/components/launch/calendar/LaunchYearView';
 import { LaunchAddEventModal } from '@/components/launch/calendar/LaunchAddEventModal';
 import { LaunchRescheduleModal } from '@/components/launch/calendar/LaunchRescheduleModal';
 import { LaunchSyncBar } from '@/components/launch/calendar/LaunchSyncBar';
+import { SendMyWeekBar } from '@/components/launch/calendar/SendMyWeekBar';
+
 import {
   format,
   addDays,
