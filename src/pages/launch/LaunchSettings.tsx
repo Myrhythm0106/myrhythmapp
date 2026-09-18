@@ -42,6 +42,8 @@ import { ResearchConsentCard } from '@/components/launch/ResearchConsentCard';
 import { DeviceRemindersCard } from '@/components/launch/DeviceRemindersCard';
 import { KeepForCard } from '@/components/launch/KeepForCard';
 import { TapToRecordCard } from '@/components/launch/TapToRecordCard';
+import { CalendarFeedCard } from '@/components/launch/CalendarFeedCard';
+
 
 
 export default function LaunchSettings() {
@@ -300,7 +302,13 @@ export default function LaunchSettings() {
         {/* Planning Day Section */}
         <PlanningDayCard />
 
+        {/* My plan in any calendar — no sign-in needed */}
+        <CalendarFeedCard />
+
         {/* Connected Calendars Section */}
+
+
+
 
 
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
