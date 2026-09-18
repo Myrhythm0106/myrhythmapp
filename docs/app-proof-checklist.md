@@ -51,21 +51,31 @@ You need two real accounts: yours and a supporter's (the permanent tester accoun
 **Result:**
 - [ ] PASS / [ ] FAIL — Date completed: ______
 
-## 5. Google and Outlook calendar connection keys (target: Week 9, by 15 Nov)
+## 5. Google and Outlook calendar connection keys (target: Week 9, by 15 Nov) — **no longer a blocker**
+
+Steps now reach Google, Outlook and Apple Calendar without any account linking: every dated step offers Add to my calendar (Google / Outlook / file / email to me), the calendar page sends a whole week at once, and Settings gives a private subscribe link that keeps any calendar current. Test that route instead before founding seats open:
+
+- [ ] Add one step to Google Calendar from the Next Step Summary — Date: ______
+- [ ] Add one step to Outlook the same way — Date: ______
+- [ ] Open the downloaded file on an iPhone and confirm it lands in Apple Calendar — Date: ______
+- [ ] Paste the Settings subscribe link into one calendar and confirm new steps appear — Date: ______
+
+The two-way connected-account route below stays optional and can follow later:
 
 **Google:**
 1. In Google Cloud Console, create (or open) the OAuth app and copy the Client ID and Client Secret.
-2. Add them to the project's secrets (Settings → Secrets in Lovable, as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`).
+2. Add them to the project's secrets as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 3. Test: connect a real Google Calendar from Settings and confirm busy times show up.
 
 **Outlook:**
 1. In the Microsoft Entra app registration, copy the Application (client) ID and secret.
-2. Add them as `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET`.
+2. Add them as `OUTLOOK_CLIENT_ID` and `OUTLOOK_CLIENT_SECRET` (these are the names the app reads).
 3. Test: connect a real Outlook calendar and confirm busy times show up.
 
-**Result:**
+**Result (optional, not a gate):**
 - [ ] Google connected and tested — Date: ______
 - [ ] Outlook connected and tested — Date: ______
+
 
 ---
 

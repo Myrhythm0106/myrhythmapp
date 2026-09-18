@@ -21,6 +21,9 @@ import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
 import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
+import { AddToCalendarMenu } from '@/components/launch/calendar/AddToCalendarMenu';
+import { calendarItemForAction } from '@/launch/calendar/actionToCalendarItem';
+
 import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
 import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
 import { exportActionsPdf } from './exporters/actionsPdf';
@@ -1363,7 +1366,10 @@ export function ActionsTableView({
                           </TableCell>
 
                           <TableCell className={bodyCell}>
+                            <div className="flex items-center justify-end gap-0.5">
+                            <AddToCalendarMenu item={calendarItemForAction(action)} />
                             <DropdownMenu>
+
                               <DropdownMenuTrigger asChild>
                                 <Button
                                   variant="ghost"
@@ -1396,7 +1402,9 @@ export function ActionsTableView({
                                 )}
                               </DropdownMenuContent>
                             </DropdownMenu>
+                            </div>
                           </TableCell>
+
                         </TableRow>
                       )}
                     </Draggable>

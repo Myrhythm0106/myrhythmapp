@@ -15,6 +15,8 @@ import { LaunchYearView } from '@/components/launch/calendar/LaunchYearView';
 import { LaunchAddEventModal } from '@/components/launch/calendar/LaunchAddEventModal';
 import { LaunchRescheduleModal } from '@/components/launch/calendar/LaunchRescheduleModal';
 import { LaunchSyncBar } from '@/components/launch/calendar/LaunchSyncBar';
+import { SendMyWeekBar } from '@/components/launch/calendar/SendMyWeekBar';
+
 import {
   format,
   addDays,
@@ -271,7 +273,10 @@ export default function LaunchCalendar() {
           />
         )}
 
+        <SendMyWeekBar events={events} from={selectedDate} />
+
         <LaunchSyncBar />
+
 
         <LaunchCard className="bg-launch-ivory border-launch-gold/30 min-h-[24rem] p-4 md:p-6">
 
