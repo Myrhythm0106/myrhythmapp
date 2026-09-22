@@ -292,7 +292,7 @@ export function MVPCore4C() {
                 From what was said to what happens next
               </p>
               <h1 className="mt-5 font-instrument text-5xl leading-[0.98] text-launch-ink-deep sm:text-6xl md:text-7xl lg:text-[5.75rem]">
-                The app that keeps your plan going after the appointment ends.
+                The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
               <p className="mt-7 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:text-xl">
                 MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
