@@ -16,8 +16,8 @@ Closing line: **"You stay in control."** over "You're in control." — "stay" pr
 
 In `MVPCore4C.tsx`, insert one line between the `<h1>` and the supporting paragraph in the hero section (around line 296):
 
-- Text: "Captures it. Plans it. Keeps it. And follows it through. You're in control."
-- Style: bold Work Sans, slightly smaller than the supporting paragraph, ink-deep with "You're in control." set in launch-teal for a quiet accent.
+- Text: "Captures it. Plans it. Keeps it. And follows it through. You stay in control."
+- Style: bold Work Sans, slightly smaller than the supporting paragraph, ink-deep with "You stay in control." set in launch-teal for a quiet accent.
 - Compact on mobile so the founding CTA stays within the first viewport.
 - Existing headline, paragraph, CTA and price note are untouched.
 
