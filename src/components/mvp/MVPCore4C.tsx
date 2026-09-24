@@ -280,7 +280,7 @@ export function MVPCore4C() {
             <div className="absolute inset-0 bg-gradient-to-t from-launch-cream-light via-transparent to-transparent" aria-hidden="true" />
           </div>
 
-          <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl items-center px-5 pb-32 pt-14 md:px-8 md:pb-36 md:pt-20">
+          <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl items-center px-5 pb-24 pt-6 md:px-8 md:pb-36 md:pt-20">
             <motion.div
               initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -288,16 +288,20 @@ export function MVPCore4C() {
               className="max-w-3xl"
             >
               <EditionBadge variant="chip" />
-              <p className="mt-8 font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">
+              <p className="mt-5 font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal md:mt-8">
                 From what was said to what happens next
               </p>
-              <h1 className="mt-5 font-instrument text-5xl leading-[0.98] text-launch-ink-deep sm:text-6xl md:text-7xl lg:text-[5.75rem]">
+              <h1 className="mt-4 font-instrument text-[2.6rem] leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.75rem]">
                 The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
-              <p className="mt-7 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:text-xl">
+              <p className="mt-3 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:mt-5 md:text-lg md:leading-8">
+                Captures it. Plans it. Keeps it. And follows it through.{" "}
+                <span className="text-launch-teal">You stay in control.</span>
+              </p>
+              <p className="mt-4 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:mt-7 md:text-xl">
                 MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
               </p>
-              <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center md:mt-9">
                 <Button
                   size="lg"
                   onClick={handleFoundingAction}
