@@ -32,6 +32,16 @@ const ONBOARDING_PATHS = new Set([
   '/launch/welcome',
 ]);
 
+// Full-screen self-contained onboarding screens. They render their own
+// h-[100svh] shell with internal scrolling and their own back button, so
+// the layout must not add header, back row, page padding or bottom nav
+// on top (that caused duplicate back buttons and double scrollbars).
+const SELF_CONTAINED_PATHS = new Set([
+  '/launch/register',
+  '/launch/user-type',
+  '/launch/payment',
+]);
+
 
 
 interface LaunchLayoutProps {
