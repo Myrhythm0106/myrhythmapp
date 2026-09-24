@@ -354,28 +354,47 @@ export default function LaunchAssessment() {
     });
   };
 
-  const toggleAlsoFits = (value: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  /**
+   * First tap = primary, later taps = secondary ("also fits").
+   * Tapping a secondary removes it; tapping the primary deselects it and
+   * promotes the first secondary. "Make primary" swaps explicitly.
+   */
+  const handleOptionTap = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
+      // "None fits" is selected — tapping a real option replaces it as primary.
       if (existing.primary === NONE_FITS_VALUE) {
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
       }
+      // Tapping the primary deselects it; the first secondary is promoted.
+      if (existing.primary === value) {
+        const [nextPrimary, ...rest] = existing.alsoFits;
+        return { ...prev, [question.id]: { primary: nextPrimary ?? '', alsoFits: nextPrimary ? rest : [] } };
+      }
+      // Tapping a secondary removes it.
+      if (existing.alsoFits.includes(value)) {
+        return { ...prev, [question.id]: { ...existing, alsoFits: existing.alsoFits.filter((v) => v !== value) } };
+      }
+      // First tap → primary; later taps → secondary.
       if (!existing.primary) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
+        return { ...prev, [question.id]: { primary: value, alsoFits: existing.alsoFits } };
       }
-      if (value === existing.primary) {
-        const alsoFits = existing.alsoFits.includes(value)
-          ? existing.alsoFits
-          : [...existing.alsoFits, value];
-        return { ...prev, [question.id]: { primary: '', alsoFits } };
-      }
-      const has = existing.alsoFits.includes(value);
-      const alsoFits = has
-        ? existing.alsoFits.filter((v) => v !== value)
-        : [...existing.alsoFits, value];
-      return { ...prev, [question.id]: { ...existing, alsoFits } };
+      return { ...prev, [question.id]: { ...existing, alsoFits: [...existing.alsoFits, value] } };
     });
+  };
+
+  const makePrimary = (value: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAnswers((prev) => {
+      const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
+      if (existing.primary === value) return prev;
+      const alsoFits = existing.alsoFits.filter((v) => v !== value && v !== NONE_FITS_VALUE);
+      if (existing.primary && existing.primary !== NONE_FITS_VALUE) {
+        alsoFits.unshift(existing.primary);
+      }
+      return { ...prev, [question.id]: { primary: value, alsoFits } };
+    });
+    toast("Switched primary — your earlier pick is kept as 'also fits'.", { duration: 2200 });
   };
 
   const canContinue = question.kind === 'rhythm-detail'
@@ -600,7 +619,7 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          Tap the <span className="font-semibold">circle</span> on the one that fits best. Tap <span className="font-semibold">+ Also fits</span> on any others that also feel true. If none fit, use the option at the bottom.
+          Tap the one that fits best <span className="font-semibold">first</span> — that's your primary. Tap any others that also fit. You can change which is primary at any time.
         </p>
 
         {question.kind === 'rhythm-detail' ? (
@@ -615,40 +634,49 @@ export default function LaunchAssessment() {
               const isPrimary = current.primary === option.value;
               const isAlso = current.alsoFits.includes(option.value);
               const dimmed = isNoneFits;
+              const ariaLabel = isPrimary
+                ? `${option.label} — primary answer, tap to remove`
+                : isAlso
+                  ? `${option.label} — also fits, tap to remove`
+                  : `${option.label} — tap to select`;
               return (
                 <div
                   key={option.value}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isPrimary || isAlso}
+                  aria-label={ariaLabel}
+                  onClick={() => handleOptionTap(option.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleOptionTap(option.value);
+                    }
+                  }}
                   className={cn(
-                    'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px]',
+                    'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px] cursor-pointer',
                     dimmed && 'opacity-50',
                     isPrimary
                       ? 'border-launch-ember bg-launch-ember/10 ring-2 ring-launch-ember/20'
                       : isAlso
                         ? 'border-launch-moss/60 bg-launch-moss/10'
-                        : 'border-launch-gold/30 bg-launch-ivory'
+                        : 'border-launch-gold/30 bg-launch-ivory hover:border-launch-moss'
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPrimary(option.value)}
-                      aria-label={isPrimary ? 'Primary answer' : 'Set as primary answer'}
-                      aria-pressed={isPrimary}
-                      className="w-10 h-10 -m-2 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer"
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 flex-shrink-0',
+                        isPrimary
+                          ? 'border-launch-ember bg-launch-ember'
+                          : isAlso
+                            ? 'border-launch-moss bg-launch-moss'
+                            : 'border-launch-ink/20'
+                      )}
                     >
-                      <span
-                        className={cn(
-                          'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
-                          isPrimary
-                            ? 'border-launch-ember bg-launch-ember'
-                            : isAlso
-                              ? 'border-launch-moss bg-launch-moss'
-                              : 'border-launch-ink/20 hover:border-launch-ember'
-                        )}
-                      >
-                        {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
-                      </span>
-                    </button>
+                      {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
+                    </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-semibold text-launch-ink">{option.label}</p>
@@ -667,20 +695,14 @@ export default function LaunchAssessment() {
                         <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                       )}
                     </div>
-                    {!isPrimary && !isNoneFits && (
+                    {isAlso && !isPrimary && !isNoneFits && (
                       <button
                         type="button"
-                        onClick={(e) => toggleAlsoFits(option.value, e)}
-                        className={cn(
-                          'shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border transition-colors min-h-[36px]',
-                          isAlso
-                            ? 'border-launch-moss bg-launch-ivory text-launch-moss'
-                            : 'border-launch-gold/40 bg-launch-ivory text-launch-ink/60 hover:border-launch-moss hover:text-launch-moss'
-                        )}
-                        aria-pressed={isAlso}
+                        onClick={(e) => makePrimary(option.value, e)}
+                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[36px]"
+                        aria-label={`Make ${option.label} the primary answer`}
                       >
-                        <Plus className="h-3.5 w-3.5" />
-                        Also fits
+                        Make primary
                       </button>
                     )}
                   </div>
