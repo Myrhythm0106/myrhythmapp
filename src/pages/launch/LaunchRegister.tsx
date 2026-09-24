@@ -171,7 +171,7 @@ export default function LaunchRegister() {
   // Success state after registration
   if (registrationSuccess) {
     return (
-      <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
+      <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
         {/* Back Button */}
         <div className="flex-shrink-0 p-4">
           <BackButton onClick={() => navigate('/launch')} />
@@ -266,7 +266,7 @@ export default function LaunchRegister() {
   }
 
   return (
-    <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
+    <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
       {/* Back Button */}
       <div className="flex-shrink-0 p-4">
         <BackButton onClick={() => navigate('/launch')} />

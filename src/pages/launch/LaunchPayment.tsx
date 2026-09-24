@@ -145,7 +145,7 @@ export default function LaunchPayment() {
   };
 
   return (
-    <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
+    <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
       <div className="flex-1 overflow-y-auto py-8 px-4">
         <div className="max-w-3xl mx-auto">
           <button
