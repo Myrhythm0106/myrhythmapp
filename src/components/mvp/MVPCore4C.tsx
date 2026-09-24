@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -47,7 +47,7 @@ const chapters: Chapter[] = [
     number: '01',
     marker: 'THE MOMENT',
     title: 'The conversation stays with me.',
-    promise: 'Conversation or report',
+    promise: 'Record a conversation or upload a report',
     description:
       'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view—without asking me to remember everything at once.',
     image: emotionalLandscapeImg,
@@ -206,6 +206,8 @@ export function MVPCore4C() {
   const { user, signOut } = useAuth();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const heroCtaRef = useRef<HTMLDivElement>(null);
+  const [heroCtaVisible, setHeroCtaVisible] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -213,6 +215,17 @@ export function MVPCore4C() {
       setIsOnboardingOpen(true);
     }
   }, [location]);
+
+  useEffect(() => {
+    const target = heroCtaRef.current;
+    if (!target || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroCtaVisible(entry.isIntersecting),
+      { threshold: 0.4 },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   const handleAuthAction = async () => {
     if (user) {
@@ -255,6 +268,12 @@ export function MVPCore4C() {
               title="Help"
             >
               <HelpCircle className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleFoundingAction}
+              className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
+            >
+              Founding Member
             </Button>
             <Button
               onClick={handleAuthAction}
@@ -301,7 +320,7 @@ export function MVPCore4C() {
               <p className="mt-4 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:mt-7 md:text-xl">
                 MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
               </p>
-              <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center md:mt-9">
+              <div ref={heroCtaRef} className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center md:mt-9">
                 <Button
                   size="lg"
                   onClick={handleFoundingAction}
@@ -357,7 +376,7 @@ export function MVPCore4C() {
               <div className="relative pl-12 md:pl-16">
                 <div className="absolute bottom-6 left-5 top-6 w-px bg-launch-gold" aria-hidden="true" />
                 {[
-                  { icon: Mic2, label: 'Conversation or report', colour: 'bg-launch-ember' },
+                  { icon: Mic2, label: 'Record a conversation or upload a report', colour: 'bg-launch-ember' },
                   { icon: FileText, label: 'Verify my next steps', colour: 'bg-launch-teal' },
                   { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
                   { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
@@ -422,11 +441,21 @@ export function MVPCore4C() {
             <p className="mt-8 font-worksans text-sm font-semibold text-launch-ink-deep">
               Founding Edition · £10/month for life · 500 places
             </p>
+            <div className="mt-7 flex justify-center">
+              <Button
+                size="lg"
+                onClick={handleFoundingAction}
+                className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
+              >
+                Become a Founding Member
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-launch-gold/30 bg-launch-cream px-5 py-8 font-worksans text-sm text-launch-ink-deep/65">
+      <footer className="border-t border-launch-gold/30 bg-launch-cream px-5 pb-32 pt-8 font-worksans text-sm text-launch-ink-deep/65 md:pb-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <p>MyRhythm supports planning, memory and follow-through. It does not diagnose or treat any condition.</p>
           <div className="flex flex-wrap items-center gap-4">
@@ -435,6 +464,26 @@ export function MVPCore4C() {
           </div>
         </div>
       </footer>
+
+      <div
+        aria-hidden={heroCtaVisible}
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-launch-gold/30 bg-launch-cream-light/95 px-4 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-18px_40px_-24px_hsl(var(--launch-ink-deep)/0.5)] backdrop-blur-xl transition-all duration-300 motion-reduce:transition-none md:hidden ${
+          heroCtaVisible ? 'pointer-events-none translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+        }`}
+      >
+        <div className="mx-auto flex max-w-3xl items-center gap-4">
+          <p className="hidden font-worksans text-sm font-semibold text-launch-ink-deep min-[420px]:block">
+            £10/month for life · 500 places
+          </p>
+          <Button
+            onClick={handleFoundingAction}
+            className="min-h-14 flex-1 rounded-md bg-launch-teal px-4 font-worksans font-bold text-primary-foreground shadow-[0_14px_30px_-16px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
+          >
+            Become a Founding Member
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
 
       <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
     </div>
