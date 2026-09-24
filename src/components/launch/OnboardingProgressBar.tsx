@@ -48,9 +48,9 @@ const LAYOUT_MOUNTED_PATHS = new Set([
   '/launch/payment',
 ]);
 
-export function OnboardingProgressBar() {
+export function OnboardingProgressBar({ mount = 'global' }: { mount?: 'global' | 'layout' }) {
   const { pathname } = useLocation();
-  if (LAYOUT_MOUNTED_PATHS.has(pathname)) return null;
+  if (mount === 'global' && LAYOUT_MOUNTED_PATHS.has(pathname)) return null;
   const currentIndex = ONBOARDING_STEPS.findIndex(s => s.path === pathname);
   if (currentIndex === -1) return null;
   const description = STEP_DESCRIPTIONS[pathname];

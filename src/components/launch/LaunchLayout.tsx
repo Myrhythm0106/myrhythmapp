@@ -88,7 +88,7 @@ export function LaunchLayout({
         {/* Progress strip — mounted inside the fixed-height column on
             self-contained screens so it never pushes the page past the
             viewport (App.tsx hides its global copy on these routes). */}
-        {isSelfContained && <OnboardingProgressBar />}
+        {isSelfContained && <OnboardingProgressBar mount="layout" />}
 
         {/* Top Header Bar */}
         {showHeader && !isSelfContained && (
