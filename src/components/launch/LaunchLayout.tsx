@@ -8,6 +8,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { CaptureDock } from './CaptureDock';
 import { EditionBadge } from './EditionBadge';
+import { OnboardingProgressBar } from './OnboardingProgressBar';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
 import { HelpCircle } from 'lucide-react';
@@ -32,6 +33,16 @@ const ONBOARDING_PATHS = new Set([
   '/launch/welcome',
 ]);
 
+// Full-screen self-contained onboarding screens. They render their own
+// h-[100svh] shell with internal scrolling and their own back button, so
+// the layout must not add header, back row, page padding or bottom nav
+// on top (that caused duplicate back buttons and double scrollbars).
+const SELF_CONTAINED_PATHS = new Set([
+  '/launch/register',
+  '/launch/user-type',
+  '/launch/payment',
+]);
+
 
 
 interface LaunchLayoutProps {
@@ -53,6 +64,7 @@ export function LaunchLayout({
   const { user } = useAuth();
   const appReady = useAppReady();
   const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
+  const isSelfContained = SELF_CONTAINED_PATHS.has(location.pathname);
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
@@ -66,12 +78,20 @@ export function LaunchLayout({
   return (
     <SubjectProvider>
       <div className={cn(
-        "launch-theme min-h-[100svh] flex flex-col pb-safe px-safe",
+        "launch-theme flex flex-col pb-safe px-safe",
+        isSelfContained
+          ? "h-[100svh] overflow-hidden"
+          : "min-h-[100svh]",
         isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
       )}>
 
+        {/* Progress strip — mounted inside the fixed-height column on
+            self-contained screens so it never pushes the page past the
+            viewport (App.tsx hides its global copy on these routes). */}
+        {isSelfContained && <OnboardingProgressBar mount="layout" />}
+
         {/* Top Header Bar */}
-        {showHeader && (
+        {showHeader && !isSelfContained && (
           <header className="sticky top-0 z-[75] bg-launch-ivory/90 backdrop-blur-md border-b border-launch-gold/30 px-4 py-3 pt-safe">
 
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
@@ -118,12 +138,16 @@ export function LaunchLayout({
         )}
 
         {/* Main Content */}
-        <main className="flex-1 pb-20 md:pb-6">
-          <div className="max-w-7xl mx-auto px-4 py-6">
-            {showBack && <LaunchPageHeader />}
-            {children}
-          </div>
-        </main>
+        {isSelfContained ? (
+          <main className="flex-1 min-h-0">{children}</main>
+        ) : (
+          <main className="flex-1 pb-20 md:pb-6">
+            <div className="max-w-7xl mx-auto px-4 py-6">
+              {showBack && <LaunchPageHeader />}
+              {children}
+            </div>
+          </main>
+        )}
 
         {/* Growth Footer */}
         {showFooter && <GrowthFooter />}
@@ -132,7 +156,7 @@ export function LaunchLayout({
         {!isOnboardingPath && <CaptureDock />}
 
         {/* Bottom Navigation (Mobile) */}
-        {showNav && <LaunchNav />}
+        {showNav && !isSelfContained && <LaunchNav />}
 
       </div>
     </SubjectProvider>

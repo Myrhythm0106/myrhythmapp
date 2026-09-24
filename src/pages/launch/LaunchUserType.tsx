@@ -60,7 +60,7 @@ export default function LaunchUserType() {
 
 
   return (
-    <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
+    <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto py-6 px-4">
