@@ -82,7 +82,7 @@ export function LaunchLayout({
       )}>
 
         {/* Top Header Bar */}
-        {showHeader && (
+        {showHeader && !isSelfContained && (
           <header className="sticky top-0 z-[75] bg-launch-ivory/90 backdrop-blur-md border-b border-launch-gold/30 px-4 py-3 pt-safe">
 
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
