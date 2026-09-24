@@ -8,6 +8,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { CaptureDock } from './CaptureDock';
 import { EditionBadge } from './EditionBadge';
+import { OnboardingProgressBar } from './OnboardingProgressBar';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
 import { HelpCircle } from 'lucide-react';
@@ -77,9 +78,17 @@ export function LaunchLayout({
   return (
     <SubjectProvider>
       <div className={cn(
-        "launch-theme min-h-[100svh] flex flex-col pb-safe px-safe",
+        "launch-theme flex flex-col pb-safe px-safe",
+        isSelfContained
+          ? "h-[100svh] overflow-hidden"
+          : "min-h-[100svh]",
         isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
       )}>
+
+        {/* Progress strip — mounted inside the fixed-height column on
+            self-contained screens so it never pushes the page past the
+            viewport (App.tsx hides its global copy on these routes). */}
+        {isSelfContained && <OnboardingProgressBar />}
 
         {/* Top Header Bar */}
         {showHeader && !isSelfContained && (
@@ -130,7 +139,7 @@ export function LaunchLayout({
 
         {/* Main Content */}
         {isSelfContained ? (
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 min-h-0">{children}</main>
         ) : (
           <main className="flex-1 pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto px-4 py-6">

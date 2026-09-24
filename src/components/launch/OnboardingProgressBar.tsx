@@ -39,8 +39,18 @@ const STEP_DESCRIPTIONS: Record<string, string> = {
     "Choose how you'd like to join. Next: your new Home.",
 };
 
+// Screens where the strip is mounted inside LaunchLayout's fixed-height
+// column instead (the global copy here would add height and cause a
+// second scrollbar on those full-screen pages).
+const LAYOUT_MOUNTED_PATHS = new Set([
+  '/launch/register',
+  '/launch/user-type',
+  '/launch/payment',
+]);
+
 export function OnboardingProgressBar() {
   const { pathname } = useLocation();
+  if (LAYOUT_MOUNTED_PATHS.has(pathname)) return null;
   const currentIndex = ONBOARDING_STEPS.findIndex(s => s.path === pathname);
   if (currentIndex === -1) return null;
   const description = STEP_DESCRIPTIONS[pathname];
