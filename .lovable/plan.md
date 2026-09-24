@@ -90,7 +90,28 @@ Offer no more than three choices:
 
 Also include **Not now**. The chosen review appears in the app’s calendar/reminders and can be changed or cancelled. A review should first ask “What feels different?” before inviting a retake; it must not imply that a score change is a medical outcome.
 
-## 7. Make the membership choice fully transparent
+## 7. Keep the user on track with their chosen focus
+
+Add a gentle **Focus Check** that follows the user’s selected key focus, not a generic app score. At the review rhythm they chose, ask no more than three questions:
+
+1. **Did this action happen?** — Yes / Partly / Not yet
+2. **Did it help with what I wanted to improve?** — Better / About the same / Harder
+3. **What should happen next?** — Keep it / Make it easier / Choose something else
+
+The check must:
+
+- compare progress against the user’s own chosen outcome and “I’ll know I’m done when…” statement;
+- recognise completed follow-through, not only assessment-score movement;
+- show a plain-language “On track / Needs adjusting / Paused by me” status;
+- ask permission before changing an action, reminder, schedule or Compass item;
+- treat “Not yet” as information, never failure;
+- offer one smaller next step when energy or circumstances made the action unrealistic;
+- allow the user to change the focus at any time;
+- preserve the reason for each change so the user can see what they tried and what helped.
+
+Use the existing action completion, reminder, continuity and assessment history signals. Do not create constant notifications or require repeated full assessments. The user chooses the check-in rhythm and can pause it.
+
+## 8. Make the membership choice fully transparent
 
 After the free insight and chosen action, show a clear split:
 
@@ -116,7 +137,7 @@ Show the real terms before the button:
 
 Use **See membership options**, not language implying immediate payment. Keep **Continue with my free snapshot** clearly available.
 
-## 8. SMART operating standard
+## 9. SMART operating standard
 
 Every chosen action created from the report must contain:
 
@@ -148,6 +169,7 @@ The user can change any part before adding it to their day.
 - Confirm a chosen action becomes a valid SMART action and can enter the calendar/reminder flow.
 - Confirm the Compass is reachable in one tap, supports Now / Then & now / My story, and retains earlier versions.
 - Confirm planned review reminders can be scheduled, changed and cancelled.
+- Confirm the Focus Check measures the user’s chosen outcome, reflects action completion, and never changes their plan without permission.
 - Confirm price, trial, billing and cancellation terms appear before membership selection.
 - Confirm the free route never traps or pressures the user.
 - Confirm all wording is non-clinical, reassuring, first-person and understandable without remembering earlier screens.
