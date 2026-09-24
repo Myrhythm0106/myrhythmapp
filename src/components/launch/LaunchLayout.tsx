@@ -63,6 +63,7 @@ export function LaunchLayout({
   const { user } = useAuth();
   const appReady = useAppReady();
   const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
+  const isSelfContained = SELF_CONTAINED_PATHS.has(location.pathname);
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
