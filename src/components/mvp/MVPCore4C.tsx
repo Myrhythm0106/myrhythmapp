@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -206,6 +206,8 @@ export function MVPCore4C() {
   const { user, signOut } = useAuth();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const heroCtaRef = useRef<HTMLDivElement>(null);
+  const [heroCtaVisible, setHeroCtaVisible] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -213,6 +215,17 @@ export function MVPCore4C() {
       setIsOnboardingOpen(true);
     }
   }, [location]);
+
+  useEffect(() => {
+    const target = heroCtaRef.current;
+    if (!target || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroCtaVisible(entry.isIntersecting),
+      { threshold: 0.4 },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   const handleAuthAction = async () => {
     if (user) {
@@ -255,6 +268,12 @@ export function MVPCore4C() {
               title="Help"
             >
               <HelpCircle className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleFoundingAction}
+              className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
+            >
+              Founding Member
             </Button>
             <Button
               onClick={handleAuthAction}
