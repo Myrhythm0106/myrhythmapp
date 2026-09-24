@@ -634,40 +634,49 @@ export default function LaunchAssessment() {
               const isPrimary = current.primary === option.value;
               const isAlso = current.alsoFits.includes(option.value);
               const dimmed = isNoneFits;
+              const ariaLabel = isPrimary
+                ? `${option.label} — primary answer, tap to remove`
+                : isAlso
+                  ? `${option.label} — also fits, tap to remove`
+                  : `${option.label} — tap to select`;
               return (
                 <div
                   key={option.value}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isPrimary || isAlso}
+                  aria-label={ariaLabel}
+                  onClick={() => handleOptionTap(option.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleOptionTap(option.value);
+                    }
+                  }}
                   className={cn(
-                    'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px]',
+                    'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px] cursor-pointer',
                     dimmed && 'opacity-50',
                     isPrimary
                       ? 'border-launch-ember bg-launch-ember/10 ring-2 ring-launch-ember/20'
                       : isAlso
                         ? 'border-launch-moss/60 bg-launch-moss/10'
-                        : 'border-launch-gold/30 bg-launch-ivory'
+                        : 'border-launch-gold/30 bg-launch-ivory hover:border-launch-moss'
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPrimary(option.value)}
-                      aria-label={isPrimary ? 'Primary answer' : 'Set as primary answer'}
-                      aria-pressed={isPrimary}
-                      className="w-10 h-10 -m-2 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer"
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 flex-shrink-0',
+                        isPrimary
+                          ? 'border-launch-ember bg-launch-ember'
+                          : isAlso
+                            ? 'border-launch-moss bg-launch-moss'
+                            : 'border-launch-ink/20'
+                      )}
                     >
-                      <span
-                        className={cn(
-                          'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
-                          isPrimary
-                            ? 'border-launch-ember bg-launch-ember'
-                            : isAlso
-                              ? 'border-launch-moss bg-launch-moss'
-                              : 'border-launch-ink/20 hover:border-launch-ember'
-                        )}
-                      >
-                        {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
-                      </span>
-                    </button>
+                      {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
+                    </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-semibold text-launch-ink">{option.label}</p>
@@ -686,20 +695,14 @@ export default function LaunchAssessment() {
                         <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                       )}
                     </div>
-                    {!isPrimary && !isNoneFits && (
+                    {isAlso && !isPrimary && !isNoneFits && (
                       <button
                         type="button"
-                        onClick={(e) => toggleAlsoFits(option.value, e)}
-                        className={cn(
-                          'shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border transition-colors min-h-[36px]',
-                          isAlso
-                            ? 'border-launch-moss bg-launch-ivory text-launch-moss'
-                            : 'border-launch-gold/40 bg-launch-ivory text-launch-ink/60 hover:border-launch-moss hover:text-launch-moss'
-                        )}
-                        aria-pressed={isAlso}
+                        onClick={(e) => makePrimary(option.value, e)}
+                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[36px]"
+                        aria-label={`Make ${option.label} the primary answer`}
                       >
-                        <Plus className="h-3.5 w-3.5" />
-                        Also fits
+                        Make primary
                       </button>
                     )}
                   </div>
