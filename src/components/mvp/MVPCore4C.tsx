@@ -280,7 +280,7 @@ export function MVPCore4C() {
             <div className="absolute inset-0 bg-gradient-to-t from-launch-cream-light via-transparent to-transparent" aria-hidden="true" />
           </div>
 
-          <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl items-center px-5 pb-24 pt-8 md:px-8 md:pb-36 md:pt-20">
+          <div className="relative mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl items-center px-5 pb-24 pt-6 md:px-8 md:pb-36 md:pt-20">
             <motion.div
               initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
