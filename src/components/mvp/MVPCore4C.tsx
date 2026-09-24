@@ -40,6 +40,7 @@ type Chapter = {
   details: string[];
   align: 'left' | 'right';
   accent: 'ember' | 'teal' | 'gold';
+  signature?: string;
 };
 
 const chapters: Chapter[] = [
@@ -112,6 +113,7 @@ const chapters: Chapter[] = [
       'A supporter can encourage follow-through without receiving my whole account.',
       'My diary keeps each action connected to the conversation it came from.',
     ],
+    signature: 'No one walks alone.',
     align: 'right',
     accent: 'teal',
   },
@@ -173,6 +175,11 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
         <p className="mt-6 max-w-xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
           {chapter.description}
         </p>
+        {chapter.signature && (
+          <p className="mt-6 font-worksans text-lg font-bold text-launch-teal">
+            {chapter.signature}
+          </p>
+        )}
 
         <Collapsible open={open} onOpenChange={setOpen} className="mt-7 border-t border-launch-gold/30 pt-3">
           <CollapsibleTrigger asChild>
@@ -404,7 +411,7 @@ export function MVPCore4C() {
             <div>
               <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-gold">Made for real cognitive load</p>
               <h2 className="mt-5 font-instrument text-4xl leading-tight md:text-5xl">
-                Useful when life is full. Reassuring when memory or energy is harder.
+                Reassuring when memory or energy is harder. Useful when life is full.
               </h2>
               <p className="mt-6 font-worksans text-lg leading-8 text-primary-foreground/75">
                 MyRhythm is designed for people rebuilding confidence after brain injury, navigating memory change, living with ADHD or stress—and for anyone whose responsibilities outrun the space in their head.
