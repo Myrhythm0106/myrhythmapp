@@ -147,7 +147,7 @@ export function LaunchLayout({
         {!isOnboardingPath && <CaptureDock />}
 
         {/* Bottom Navigation (Mobile) */}
-        {showNav && <LaunchNav />}
+        {showNav && !isSelfContained && <LaunchNav />}
 
       </div>
     </SubjectProvider>
