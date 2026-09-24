@@ -619,7 +619,7 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          Tap the <span className="font-semibold">circle</span> on the one that fits best. Tap <span className="font-semibold">+ Also fits</span> on any others that also feel true. If none fit, use the option at the bottom.
+          Tap the one that fits best <span className="font-semibold">first</span> — that's your primary. Tap any others that also fit. You can change which is primary at any time.
         </p>
 
         {question.kind === 'rhythm-detail' ? (
