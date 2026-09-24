@@ -354,28 +354,47 @@ export default function LaunchAssessment() {
     });
   };
 
-  const toggleAlsoFits = (value: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  /**
+   * First tap = primary, later taps = secondary ("also fits").
+   * Tapping a secondary removes it; tapping the primary deselects it and
+   * promotes the first secondary. "Make primary" swaps explicitly.
+   */
+  const handleOptionTap = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
+      // "None fits" is selected — tapping a real option replaces it as primary.
       if (existing.primary === NONE_FITS_VALUE) {
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
       }
+      // Tapping the primary deselects it; the first secondary is promoted.
+      if (existing.primary === value) {
+        const [nextPrimary, ...rest] = existing.alsoFits;
+        return { ...prev, [question.id]: { primary: nextPrimary ?? '', alsoFits: nextPrimary ? rest : [] } };
+      }
+      // Tapping a secondary removes it.
+      if (existing.alsoFits.includes(value)) {
+        return { ...prev, [question.id]: { ...existing, alsoFits: existing.alsoFits.filter((v) => v !== value) } };
+      }
+      // First tap → primary; later taps → secondary.
       if (!existing.primary) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
+        return { ...prev, [question.id]: { primary: value, alsoFits: existing.alsoFits } };
       }
-      if (value === existing.primary) {
-        const alsoFits = existing.alsoFits.includes(value)
-          ? existing.alsoFits
-          : [...existing.alsoFits, value];
-        return { ...prev, [question.id]: { primary: '', alsoFits } };
-      }
-      const has = existing.alsoFits.includes(value);
-      const alsoFits = has
-        ? existing.alsoFits.filter((v) => v !== value)
-        : [...existing.alsoFits, value];
-      return { ...prev, [question.id]: { ...existing, alsoFits } };
+      return { ...prev, [question.id]: { ...existing, alsoFits: [...existing.alsoFits, value] } };
     });
+  };
+
+  const makePrimary = (value: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAnswers((prev) => {
+      const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
+      if (existing.primary === value) return prev;
+      const alsoFits = existing.alsoFits.filter((v) => v !== value && v !== NONE_FITS_VALUE);
+      if (existing.primary && existing.primary !== NONE_FITS_VALUE) {
+        alsoFits.unshift(existing.primary);
+      }
+      return { ...prev, [question.id]: { primary: value, alsoFits } };
+    });
+    toast("Switched primary — your earlier pick is kept as 'also fits'.", { duration: 2200 });
   };
 
   const canContinue = question.kind === 'rhythm-detail'
