@@ -291,7 +291,7 @@ export function MVPCore4C() {
               <p className="mt-5 font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal md:mt-8">
                 From what was said to what happens next
               </p>
-              <h1 className="mt-4 font-instrument text-5xl leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.75rem]">
+              <h1 className="mt-4 font-instrument text-[2.6rem] leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.75rem]">
                 The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
               <p className="mt-3 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:mt-5 md:text-lg md:leading-8">
