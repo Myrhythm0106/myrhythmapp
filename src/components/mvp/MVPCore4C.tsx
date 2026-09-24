@@ -294,6 +294,10 @@ export function MVPCore4C() {
               <h1 className="mt-5 font-instrument text-5xl leading-[0.98] text-launch-ink-deep sm:text-6xl md:text-7xl lg:text-[5.75rem]">
                 The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
+              <p className="mt-5 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:text-lg md:leading-8">
+                Captures it. Plans it. Keeps it. And follows it through.{" "}
+                <span className="text-launch-teal">You stay in control.</span>
+              </p>
               <p className="mt-7 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:text-xl">
                 MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
               </p>
