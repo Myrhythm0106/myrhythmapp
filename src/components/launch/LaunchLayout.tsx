@@ -1,21 +1,18 @@
 import React, { ReactNode } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
 
-import { WhatsNewBadge } from './WhatsNewBadge';
 import { CaptureDock } from './CaptureDock';
 import { EditionBadge } from './EditionBadge';
 import { OnboardingProgressBar } from './OnboardingProgressBar';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
-import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
-import { useAuth } from '@/hooks/useAuth';
 import { useAppReady } from '@/hooks/useAppReady';
 
 
@@ -58,19 +55,17 @@ export function LaunchLayout({
   showFooter = true,
   showHeader = true 
 }: LaunchLayoutProps) {
-  const navigate = useNavigate();
   const location = useLocation();
   const { isCaregiver } = usePersona();
-  const { user } = useAuth();
   const appReady = useAppReady();
   const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
   const isSelfContained = SELF_CONTAINED_PATHS.has(location.pathname);
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
-  // The Wayfinder is on every in-app screen (onboarding has its own steps).
-  void appReady;
-  const showDial = !isOnboardingPath;
+  // First-time setup stays linear. Returning users can still use the dial
+  // while revisiting their assessment.
+  const showDial = !isOnboardingPath || (location.pathname === '/launch/assessment' && appReady);
 
   const isWelcomePage = location.pathname === '/launch/welcome';
 
@@ -113,19 +108,6 @@ export function LaunchLayout({
 
               <div className="flex items-center gap-2 sm:gap-3">
                 {showDial && <LaunchYouAreHereDial />}
-                <WhatsNewBadge />
-
-                {/* Help Button */}
-                <button
-                  onClick={() => navigate('/help/getting-started')}
-                  className="w-9 h-9 rounded-full bg-launch-gold/10 hover:bg-launch-gold/20 flex items-center justify-center transition-colors"
-                  title="How to use MyRhythm"
-                  aria-label="Help and guides"
-                >
-                  <HelpCircle className="h-5 w-5 text-launch-ink/70" />
-                </button>
-
-
                 <AccountDropdown />
               </div>
             </div>
