@@ -234,7 +234,8 @@ function App() {
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
                      {/* Subscription Routes - Now requires authentication */}
-                     <Route path="/subscribe" element={<ProtectedRoute requireAuth={true}><SubscribePage /></ProtectedRoute>} />
+                     {/* Legacy purple-gradient subscribe screen retired — membership lives in the launch flow */}
+                     <Route path="/subscribe" element={<Navigate to="/launch/payment" replace />} />
                      
                      <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
                      <Route path="/payment/success" element={<ProtectedRoute requireAuth={false}><PaymentSuccessPage /></ProtectedRoute>} />
