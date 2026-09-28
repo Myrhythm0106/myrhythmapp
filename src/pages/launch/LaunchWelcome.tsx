@@ -8,6 +8,7 @@ import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentRetakeCard';
+import { LivingCompassReport } from '@/components/launch/assessment/LivingCompassReport';
 
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
@@ -299,35 +300,7 @@ export default function LaunchWelcome() {
             </p>
           </div>
 
-          {/* "One thing to focus on" — locked teaser */}
-          {bhs && lowestLetter && (
-            <div className="px-8 md:px-12 py-6 border-b border-[#064e3b]/5 bg-white">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold px-2 py-1 border" style={{ color: GOLD, borderColor: `${GOLD}55`, ...SORA }}>
-                    Focus this week
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
-                      {lowestLetter.word} — my softest facet right now.
-                    </p>
-                    <p className="text-xs mt-1 italic" style={{ color: `${INK}99` }}>
-                      My personalized 3-step raise-it plan is behind the paywall.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => navigate('/launch/payment')}
-                  className="text-[10px] uppercase tracking-[0.24em] font-bold px-5 py-3 min-h-[44px] whitespace-nowrap transition-colors"
-                  style={{ backgroundColor: GOLD, color: INK, ...SORA }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = INK, e.currentTarget.style.color = CREAM)}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD, e.currentTarget.style.color = INK)}
-                >
-                  {isFoundingMemberActive() ? 'Become a Founding Member' : 'Unlock plan'} →
-                </button>
-              </div>
-            </div>
-           )}
+          {bhs && <LivingCompassReport />}
 
            {bhs && (
              <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[#064e3b]/5">

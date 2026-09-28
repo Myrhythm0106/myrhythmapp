@@ -123,6 +123,7 @@ import {
   LaunchMemoryBridge,
   LaunchDiary,
   LaunchBrainHealth,
+  LaunchCompass,
   LaunchBrainGames,
   LaunchGratitude,
   LaunchSupportCircle,
@@ -403,6 +404,7 @@ function App() {
                        <Route path="/launch/memory" element={<LaunchPrivate><LaunchMemoryBridge /></LaunchPrivate>} />
                       <Route path="/launch/diary" element={<LaunchPrivate><LaunchDiary /></LaunchPrivate>} />
                       <Route path="/launch/assessment/history" element={<LaunchPrivate><LaunchBrainHealth /></LaunchPrivate>} />
+                      <Route path="/launch/compass" element={<LaunchPrivate><LaunchCompass /></LaunchPrivate>} />
                        <Route path="/launch/games" element={<LaunchPrivate><LaunchBrainGames /></LaunchPrivate>} />
                        <Route path="/launch/celebrate" element={<LaunchPrivate><LaunchGratitude /></LaunchPrivate>} />
                        <Route path="/launch/gratitude" element={<Navigate to="/launch/celebrate" replace />} />

@@ -186,8 +186,8 @@ export default function LaunchAssessment() {
           <ol className="space-y-3 mb-8">
             {[
               'Eight questions, about three minutes — no right or wrong answers.',
-              'You can change any answer before moving on.',
-              "At the end you'll get your personal MYRHYTHM report — and I'll learn your best hours, so the important things land in the right part of your day.",
+              "At the end, I'll see my MYRHYTHM snapshot and one complete key insight.",
+              "I'll choose one action to try. The full personalized plan and ongoing follow-through are included with membership.",
             ].map((line, i) => (
               <li
                 key={i}
