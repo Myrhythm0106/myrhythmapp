@@ -224,16 +224,17 @@ export default function LaunchPayment() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
+            className="mb-10 border-b border-launch-gold/30 pb-8"
           >
-            <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mx-auto mb-5 shadow-lg">
-              <Brain className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-launch-ink mb-2 font-display">
-              Start your 7-day free trial
+            <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">
+              Founding Edition · 500 places
+            </p>
+            <h1 className="mt-4 font-instrument text-4xl leading-[1.05] text-launch-ink-deep md:text-6xl">
+              Become a Founding Member.
             </h1>
-            <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
-              Card required to start — you won't be charged for 7 days, and you can cancel anytime from Account.
+            <p className="mt-5 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
+              £10 a month, for as long as I stay a member. My first 7 days are free — a card is needed to start,
+              nothing is charged for 7 days, and I can cancel any time from my account.
             </p>
           </motion.div>
 
@@ -241,38 +242,44 @@ export default function LaunchPayment() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid md:grid-cols-2 gap-4 mb-6"
+            className="grid md:grid-cols-2 gap-4 mb-8"
           >
             {plans.map((plan) => (
-              <Card
+              <button
                 key={plan.id}
-                className={`cursor-pointer transition-all duration-300 ${
-                  selectedPlan === plan.id
-                    ? 'border-2 border-launch-moss shadow-lg bg-launch-ivory'
-                    : 'border-2 border-transparent hover:border-launch-gold/40 bg-launch-ivory'
-                }`}
+                type="button"
                 onClick={() => setSelectedPlan(plan.id)}
+                aria-pressed={selectedPlan === plan.id}
+                className={`min-h-[56px] rounded-2xl border bg-launch-ivory p-7 text-left transition-all duration-300 ${
+                  selectedPlan === plan.id
+                    ? 'border-launch-teal shadow-[0_18px_40px_-26px_hsl(var(--launch-ink-deep)/0.6)] ring-1 ring-launch-teal'
+                    : 'border-launch-gold/40 hover:border-launch-gold'
+                }`}
               >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-launch-ink">{plan.name}</h3>
-                    {plan.popular && (
-                      <Badge variant="outline" className="bg-launch-gold/20 text-launch-ink border-launch-gold/40 hover:bg-launch-gold/30">{plan.savings}</Badge>
-                    )}
-
-
-                  </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-launch-ink">{plan.price}</span>
-                    <span className="text-launch-ink/50">/{plan.interval}</span>
-                  </div>
-                  {plan.id === 'yearly' && (
-                    <p className="text-sm text-launch-moss mt-1">£7/month when billed yearly</p>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-worksans text-sm font-bold uppercase tracking-normal text-launch-ink-deep/70">
+                    {plan.name}
+                  </h3>
+                  {plan.popular && (
+                    <Badge variant="outline" className="border-launch-gold/50 bg-launch-gold/15 font-worksans text-launch-ink-deep">
+                      {plan.savings}
+                    </Badge>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+                <div className="mt-4 flex items-baseline gap-2">
+                  <span className="font-instrument text-5xl text-launch-ink-deep">{plan.price}</span>
+                  <span className="font-worksans text-launch-ink-deep/60">/{plan.interval}</span>
+                </div>
+                {plan.id === 'yearly' && (
+                  <p className="mt-2 font-worksans text-sm text-launch-teal">£7 a month when paid yearly</p>
+                )}
+                {plan.id === 'monthly' && (
+                  <p className="mt-2 font-worksans text-sm text-launch-ink-deep/60">Founding rate, held for life</p>
+                )}
+              </button>
             ))}
           </motion.div>
+
 
           {/* Access code panel */}
           <motion.div
