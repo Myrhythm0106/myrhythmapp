@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  MapPin, X, ChevronDown, Home, Brain, Calendar, BookOpen,
-  Compass, ClipboardList, Users, Settings, type LucideIcon,
+  MapPin, X, Home, Brain, Calendar, BookOpen,
+  Compass, ClipboardList, Users, Settings, HelpCircle, Sparkles, Plus, Minus,
+  type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { findLaunchRoute } from '@/launch/routes';
 
 /**
  * LaunchYouAreHereDial — the "Wayfinder".
- * Always-visible pill: "You are here: [Page]". Opens a calm map with one
- * large "Take me home" button, four landmarks and four secondary places.
- * No search, no jargon. Memory: mem://ux/you-are-here-dial
+ * A quiet circular wayfinder. The compact dial opens a spatial map with four
+ * familiar landmarks, then reveals secondary places only when requested.
  */
 
 interface Place {
@@ -33,6 +33,8 @@ const SECONDARY: Place[] = [
   { path: '/launch/assessment', label: 'Brain Health Assessment', purpose: 'Take or retake', icon: ClipboardList },
   { path: '/launch/support', label: 'Support Circle', purpose: 'The people with me', icon: Users },
   { path: '/launch/settings', label: 'Settings', purpose: 'Preferences and profile', icon: Settings },
+  { path: '/launch/help', label: 'Help', purpose: 'Guidance when I need it', icon: HelpCircle },
+  { path: '/launch/whats-new', label: "What's New", purpose: 'Recent improvements', icon: Sparkles },
 ];
 
 const PLAIN_LABELS: Record<string, string> = {
@@ -59,12 +61,16 @@ export function LaunchYouAreHereDial() {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const current = useCurrentPlace();
   const CurrentIcon = current.icon;
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setShowMore(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -97,18 +103,14 @@ export function LaunchYouAreHereDial() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={`You are here: ${current.label}. Open the map of MyRhythm.`}
-        className="inline-flex items-center gap-2 h-11 pl-1.5 pr-3 rounded-full bg-launch-cream-light border border-launch-gold/50 hover:border-launch-gold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
+        title={`You are here: ${current.label}`}
+        className="group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-launch-gold/60 bg-launch-cream-light shadow-sm transition hover:border-launch-gold hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
       >
-        <span className="h-8 w-8 rounded-full bg-launch-teal text-white flex items-center justify-center shrink-0">
-          <CurrentIcon className="h-4 w-4" aria-hidden="true" />
+        <span className="absolute inset-1 rounded-full border border-dashed border-launch-gold/80" aria-hidden="true" />
+        <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-launch-teal ring-2 ring-launch-cream-light" aria-hidden="true" />
+        <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-launch-ink-deep text-launch-gold transition-transform group-hover:scale-105">
+          <CurrentIcon className="h-[18px] w-[18px]" aria-hidden="true" />
         </span>
-        <span className="flex flex-col items-start leading-none text-left">
-          <span className="text-[10px] uppercase tracking-[0.14em] text-launch-ink/60">You are here</span>
-          <span className="text-sm font-semibold text-launch-ink-deep max-w-[7.5rem] sm:max-w-[10rem] truncate">
-            {current.label}
-          </span>
-        </span>
-        <ChevronDown className="h-4 w-4 text-launch-ink/60" aria-hidden="true" />
       </button>
 
       {open && (
@@ -151,19 +153,35 @@ export function LaunchYouAreHereDial() {
               </button>
             )}
 
-            <h3 className="mt-7 mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-launch-ink/70">Main places</h3>
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {LANDMARKS.map(p => (
-                <PlaceCard key={p.path} place={p} current={p.path === current.path} onGo={go} large />
+            <div className="relative mx-auto mt-7 aspect-square w-full max-w-[27rem] rounded-full border border-launch-gold/40 bg-launch-cream shadow-inner">
+              <div className="absolute inset-[18%] rounded-full border border-dashed border-launch-gold/60" aria-hidden="true" />
+              <div className="absolute left-1/2 top-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-launch-gold/50 bg-launch-ink-deep px-2 text-center shadow-lg">
+                <CurrentIcon className="h-5 w-5 text-launch-gold" aria-hidden="true" />
+                <span className="mt-1 text-[11px] uppercase text-launch-gold">You are here</span>
+                <span className="max-w-20 text-sm font-semibold leading-tight text-launch-cream-light">{current.label}</span>
+              </div>
+              {LANDMARKS.map((place, index) => (
+                <RadialPlace key={place.path} place={place} current={place.path === current.path} position={index} onGo={go} />
               ))}
-            </ul>
+            </div>
 
-            <h3 className="mt-7 mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-launch-ink/70">Also here</h3>
-            <ul className="grid gap-2 sm:grid-cols-2">
-              {SECONDARY.map(p => (
-                <PlaceCard key={p.path} place={p} current={p.path === current.path} onGo={go} />
-              ))}
-            </ul>
+            <button
+              type="button"
+              onClick={() => setShowMore(value => !value)}
+              aria-expanded={showMore}
+              className="mt-6 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl border border-launch-gold/50 text-base font-semibold text-launch-ink-deep hover:bg-launch-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
+            >
+              {showMore ? <Minus className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              {showMore ? 'Show fewer places' : 'More places'}
+            </button>
+
+            {showMore && (
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {SECONDARY.map(p => (
+                  <PlaceCard key={p.path} place={p} current={p.path === current.path} onGo={go} />
+                ))}
+              </ul>
+            )}
 
             <button
               type="button"
@@ -179,9 +197,44 @@ export function LaunchYouAreHereDial() {
   );
 }
 
+const RADIAL_POSITIONS = [
+  'left-1/2 top-2 -translate-x-1/2',
+  'right-2 top-1/2 -translate-y-1/2',
+  'bottom-2 left-1/2 -translate-x-1/2',
+  'left-2 top-1/2 -translate-y-1/2',
+] as const;
+
+function RadialPlace({
+  place, current, position, onGo,
+}: { place: Place; current: boolean; position: number; onGo: (path: string) => void }) {
+  const Icon = place.icon;
+  return (
+    <button
+      type="button"
+      onClick={() => onGo(place.path)}
+      aria-current={current ? 'page' : undefined}
+      aria-label={`${place.label}. ${current ? 'You are here.' : place.purpose}`}
+      className={cn(
+        'absolute z-10 flex min-h-[68px] w-[116px] flex-col items-center justify-center rounded-2xl border px-2 py-2 text-center shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal sm:min-h-[76px] sm:w-[148px]',
+        RADIAL_POSITIONS[position],
+        current
+          ? 'border-launch-teal bg-launch-teal text-launch-cream-light'
+          : 'border-launch-gold/50 bg-white text-launch-ink-deep hover:border-launch-gold'
+      )}
+    >
+      <span className="flex items-center gap-1.5 text-sm font-semibold leading-tight sm:text-base">
+        <Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> {place.label}
+      </span>
+      <span className={cn('mt-1 hidden text-xs leading-tight sm:block', current ? 'text-launch-cream-light/85' : 'text-launch-ink/65')}>
+        {current ? 'You are here' : place.purpose}
+      </span>
+    </button>
+  );
+}
+
 function PlaceCard({
-  place, current, onGo, large,
-}: { place: Place; current: boolean; onGo: (p: string) => void; large?: boolean }) {
+  place, current, onGo,
+}: { place: Place; current: boolean; onGo: (p: string) => void }) {
   const Icon = place.icon;
   return (
     <li>
@@ -191,7 +244,7 @@ function PlaceCard({
         aria-current={current ? 'page' : undefined}
         className={cn(
           'w-full text-left rounded-2xl border flex items-center gap-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal',
-          large ? 'min-h-[76px] p-4' : 'min-h-[56px] px-4 py-3',
+          'min-h-[56px] px-4 py-3',
           current
             ? 'border-launch-teal bg-launch-teal/10'
             : 'border-launch-gold/30 bg-white hover:border-launch-gold/70'
@@ -199,7 +252,7 @@ function PlaceCard({
       >
         <span className={cn(
           'shrink-0 rounded-xl flex items-center justify-center',
-          large ? 'h-11 w-11' : 'h-9 w-9',
+           'h-9 w-9',
           current ? 'bg-launch-teal text-white' : 'bg-launch-cream text-launch-ink-deep'
         )}>
           <Icon className="h-5 w-5" aria-hidden="true" />
