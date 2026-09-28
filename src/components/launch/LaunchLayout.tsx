@@ -68,9 +68,9 @@ export function LaunchLayout({
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
-  // Dial appears once onboarding is done and the user has landed on Home,
-  // then stays available everywhere inside the app.
-  const showDial = appReady && !isOnboardingPath;
+  // The Wayfinder is on every in-app screen (onboarding has its own steps).
+  void appReady;
+  const showDial = !isOnboardingPath;
 
   const isWelcomePage = location.pathname === '/launch/welcome';
 
