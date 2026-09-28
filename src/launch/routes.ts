@@ -11,7 +11,7 @@
 import {
   Home, Mic, CheckSquare, Activity, Sparkles,
   Calendar, Brain, Users, Gamepad2, Target, Flag,
-  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy, ClipboardList, BookOpen,
+  BarChart3, Store, User, Settings, Map, Bell, Microscope, FileText, GitBranch, Info, HelpCircle, LifeBuoy, ClipboardList, BookOpen, Compass,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -47,6 +47,7 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   { path: '/launch/memory',          label: 'Memory Bridge',  icon: Brain,    ring: 'middle', group: 'key-features', description: 'Record → next steps → share' },
   { path: '/launch/diary',           label: 'My Diary',       icon: BookOpen, ring: 'middle', group: 'key-features', description: 'Everything I have captured, in date order' },
   { path: '/launch/assessment',      label: 'MYRHYTHM Assessment', icon: ClipboardList, ring: 'middle', group: 'key-features', description: 'My 8-letter brain health snapshot' },
+  { path: '/launch/compass',         label: 'My Compass',     icon: Compass,  ring: 'middle', group: 'key-features', description: 'My focus, next action and review' },
   { path: '/launch/support',         label: 'Support Circle', icon: Users,    ring: 'middle', group: 'key-features', description: 'No one walks alone' },
   { path: '/launch/games',           label: 'Brain Games',    icon: Gamepad2, ring: 'middle', group: 'key-features', description: 'Gentle cognitive practice' },
   { path: '/launch/vision-statement',label: 'Vision',         icon: Target,   ring: 'middle', group: 'key-features', description: 'My north-star statement' },
@@ -89,6 +90,7 @@ export const FOUNDING_CORE_PATHS = [
   '/launch/memory',
   '/launch/diary',
   '/launch/assessment',
+  '/launch/compass',
   '/launch/support',
   '/launch/profile',
   '/launch/settings',

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { ChevronDown, Loader2, Minus, TrendingDown, TrendingUp, RotateCcw } from 'lucide-react';
+import { ChevronDown, Compass, Loader2, Minus, TrendingDown, TrendingUp, RotateCcw } from 'lucide-react';
 import { listAssessmentRuns, type StoredAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { MYRHYTHM_LETTERS, FRAMEWORK_DISCLAIMER } from '@/launch/framework/myrhythm';
 import { getAssessmentBank, normalizeAnswer, type LetterId } from '@/data/launchAssessmentBanks';
@@ -114,6 +114,9 @@ export default function LaunchBrainHealth() {
 
         {latest && (
           <>
+            <button type="button" onClick={() => navigate('/launch/compass')} className="w-full min-h-[56px] flex items-center justify-center gap-2 rounded-lg bg-launch-teal text-white font-semibold">
+              <Compass className="h-5 w-5" /> Open My Compass
+            </button>
             {/* Today's score */}
             <LaunchCard className="bg-launch-ivory border-launch-gold/30">
               <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.28em] text-launch-ink/55">

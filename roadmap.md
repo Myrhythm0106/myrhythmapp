@@ -4,6 +4,7 @@
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
 
 ## Open
+- Persist My Compass history and focus checks privately across devices (cloud tables were not approved; on-device experience is active).
 - Real-device proof: 2–4 hour capture on iPhone and on Android.
 - Two-account Support Circle permission test.
 - Twenty-conversation action accuracy sample.
