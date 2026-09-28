@@ -244,7 +244,11 @@ export function MVPCore4C() {
   };
 
   const handleFoundingAction = () => {
-    navigate(user ? '/subscribe' : '/launch/register');
+    navigate(user ? '/launch/payment' : '/launch/register?intent=founding');
+  };
+
+  const handleStartHere = () => {
+    navigate(user ? '/launch/home' : '/launch/register');
   };
 
   return (
@@ -276,6 +280,15 @@ export function MVPCore4C() {
             >
               <HelpCircle className="h-5 w-5" />
             </Button>
+            {!user && (
+              <Button
+                onClick={handleStartHere}
+                variant="outline"
+                className="hidden min-h-12 rounded-md border-launch-gold/50 bg-launch-ivory px-4 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream md:inline-flex md:px-5"
+              >
+                Register
+              </Button>
+            )}
             <Button
               onClick={handleFoundingAction}
               className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
@@ -327,17 +340,27 @@ export function MVPCore4C() {
               <p className="mt-4 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:mt-7 md:text-xl">
                 MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
               </p>
-              <div ref={heroCtaRef} className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center md:mt-9">
-                <Button
-                  size="lg"
-                  onClick={handleFoundingAction}
-                  className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
-                >
-                  Become a Founding Member
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-                <p className="max-w-xs font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                  £10/month for life · limited to 500 founding places
+              <div ref={heroCtaRef} className="mt-6 md:mt-9">
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <Button
+                    size="lg"
+                    onClick={handleStartHere}
+                    className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
+                  >
+                    Start here
+                    <ArrowRight className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={handleFoundingAction}
+                    className="min-h-16 rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream"
+                  >
+                    Become a Founding Member
+                  </Button>
+                </div>
+                <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
+                  Start here to create my account. Founding Member is £10/month for life · limited to 500 places.
                 </p>
               </div>
             </motion.div>
@@ -448,14 +471,22 @@ export function MVPCore4C() {
             <p className="mt-8 font-worksans text-sm font-semibold text-launch-ink-deep">
               Founding Edition · £10/month for life · 500 places
             </p>
-            <div className="mt-7 flex justify-center">
+            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
                 size="lg"
+                onClick={handleStartHere}
+                className="min-h-16 w-full rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink sm:w-auto"
+              >
+                Start here
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
                 onClick={handleFoundingAction}
-                className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
+                className="min-h-16 w-full rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream sm:w-auto"
               >
                 Become a Founding Member
-                <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
           </div>
@@ -478,16 +509,20 @@ export function MVPCore4C() {
           heroCtaVisible ? 'pointer-events-none translate-y-full opacity-0' : 'translate-y-0 opacity-100'
         }`}
       >
-        <div className="mx-auto flex max-w-3xl items-center gap-4">
-          <p className="hidden font-worksans text-sm font-semibold text-launch-ink-deep min-[420px]:block">
-            £10/month for life · 500 places
-          </p>
+        <div className="mx-auto flex max-w-3xl items-center gap-3">
           <Button
-            onClick={handleFoundingAction}
+            onClick={handleStartHere}
             className="min-h-14 flex-1 rounded-md bg-launch-teal px-4 font-worksans font-bold text-primary-foreground shadow-[0_14px_30px_-16px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
           >
-            Become a Founding Member
+            Start here
             <ArrowRight className="h-5 w-5" />
+          </Button>
+          <Button
+            onClick={handleFoundingAction}
+            variant="outline"
+            className="min-h-14 flex-1 rounded-md border-launch-gold/60 bg-launch-ivory px-3 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream"
+          >
+            Founding Member
           </Button>
         </div>
       </div>
