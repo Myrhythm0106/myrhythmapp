@@ -15,7 +15,7 @@ const navItems = [
 
 export function LaunchNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-launch-ivory/95 backdrop-blur-md border-t border-launch-gold/20 md:hidden pb-safe">
+    <nav aria-label="Main" className="fixed bottom-0 left-0 right-0 z-50 bg-launch-cream-light/95 backdrop-blur-md border-t border-launch-gold/30 md:hidden pb-safe">
       <div className="flex items-center justify-around px-1 py-2">
         {navItems.map((item) => (
           <NavLink
@@ -23,17 +23,17 @@ export function LaunchNav() {
             to={item.url}
             className={({ isActive }) => cn(
               "flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-all min-w-[56px] min-h-[56px] justify-center relative",
-              isActive ? "text-launch-ink" : "text-launch-ink/40 hover:text-launch-ink/80"
+              isActive ? "text-launch-teal" : "text-launch-ink/60 hover:text-launch-ink"
             )}
           >
             {({ isActive }) => (
               <>
                 <item.icon className="h-5 w-5" strokeWidth={1.75} />
-                <span className={cn("text-[11px]", isActive ? "font-semibold" : "font-medium")}>
+                <span className={cn("text-xs", isActive ? "font-semibold" : "font-medium")}>
                   {item.title}
                 </span>
                 {isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-launch-ember" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-launch-teal" />
                 )}
               </>
             )}
