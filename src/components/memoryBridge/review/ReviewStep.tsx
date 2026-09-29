@@ -881,6 +881,13 @@ export function ReviewStep({
           </div>
         </div>
       </DialogContent>
+      <TranscriptView
+        open={showTranscript}
+        onClose={() => setShowTranscript(false)}
+        meetingId={meetingId}
+        title={meetingTitle}
+        onActionsUpdated={() => setReloadKey(k => k + 1)}
+      />
       <AlertDialog open={Boolean(pendingRemove)} onOpenChange={(open) => !open && setPendingRemove(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
