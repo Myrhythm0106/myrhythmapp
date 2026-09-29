@@ -504,6 +504,7 @@ export default function LaunchAssessment() {
         })
        );
        localStorage.removeItem(PROGRESS_KEY);
+       resetRhythmConsentForRetake();
 
        if (user?.id) {
          const window = deriveProductivityWindow(
