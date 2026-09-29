@@ -4,6 +4,7 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+import { LaunchMembershipCard } from '@/components/launch/LaunchMembershipCard';
 
 import { 
   User, Mail, Bell, Shield, Sparkles, 
@@ -83,21 +84,7 @@ export default function LaunchProfile() {
       </LaunchCard>
 
 
-      {/* Current Plan */}
-      <LaunchCard variant="featured" className="mb-6" onClick={() => navigate('/launch/store')}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-200 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-amber-700" />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">Free Plan</p>
-              <p className="text-sm text-gray-600">Upgrade to unlock more</p>
-            </div>
-          </div>
-          <ChevronRight className="h-5 w-5 text-gray-400" />
-        </div>
-      </LaunchCard>
+      <LaunchMembershipCard />
 
       {/* Menu Items */}
       <div className="space-y-2 mb-6">
