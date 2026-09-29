@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
+import { useActionsView } from '@/lib/memoryBridge/actionsView';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,6 +38,8 @@ export interface ReviewRowState {
   slotIsSuggestion: boolean;
   needsCheck: boolean;
   sourceQuote?: string;
+  /** Seconds into the recording where this was said. */
+  saidAt?: number | null;
 }
 
 interface ReviewStepProps {
@@ -176,6 +180,9 @@ export function ReviewStep({
   const [newText, setNewText] = useState('');
   const [pendingRemove, setPendingRemove] = useState<ReviewRowState | null>(null);
   const { deleteWithUndo } = useUndoableDelete();
+  const [view, setView] = useActionsView();
+  const [showTranscript, setShowTranscript] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [meetingSummaryData, setMeetingSummaryData] = useState<{
     date: string;
     participants: string[];
@@ -241,7 +248,8 @@ export function ReviewStep({
               adhocLoopIns: (a.adhoc_loop_ins || []) as AdhocLoopIn[],
               slotIsSuggestion: !date,
               needsCheck: Boolean(a.requires_review) || Number(a.confidence_score ?? 1) < 0.65,
-              sourceQuote: a.transcript_excerpt || a.due_context || undefined,
+              sourceQuote: a.source_quote || a.transcript_excerpt || a.due_context || undefined,
+              saidAt: a.timestamp_in_recording ?? null,
             } as ReviewRowState;
           }),
         );
@@ -249,7 +257,7 @@ export function ReviewStep({
       setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [isOpen, meetingId]);
+  }, [isOpen, meetingId, reloadKey]);
 
   const included = useMemo(() => rows.filter(r => r.include), [rows]);
 
@@ -522,12 +530,36 @@ export function ReviewStep({
       >
         {/* Header */}
         <div className="shrink-0 border-b border-border px-4 md:px-6 py-4">
-          <h2 className="text-xl md:text-2xl font-semibold text-foreground">
+          <DialogTitle className="text-xl md:text-2xl font-semibold text-foreground">
             Review before it reaches my diary
-          </h2>
+          </DialogTitle>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
             From “{meetingTitle}”. Change anything here — nothing is scheduled until I say so.
           </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <div role="tablist" aria-label="Show my actions as" className="inline-flex rounded-lg border border-border p-1">
+              {(['table', 'list'] as const).map(v => (
+                <button
+                  key={v}
+                  type="button"
+                  role="tab"
+                  aria-selected={view === v}
+                  onClick={() => setView(v)}
+                  className={cn(
+                    'min-h-[44px] min-w-[80px] rounded-md px-4 text-sm font-semibold',
+                    view === v ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {v === 'table' ? 'Table' : 'List'}
+                </button>
+              ))}
+            </div>
+            {meetingId && !sourceFilePath && (
+              <Button variant="outline" className="min-h-[44px]" onClick={() => setShowTranscript(true)}>
+                Read full transcript
+              </Button>
+            )}
+          </div>
           {sourceFilePath && (
             <p className="text-xs text-primary mt-2">
               Your document is held until you confirm, then deleted.
@@ -552,9 +584,10 @@ export function ReviewStep({
                 <ExecutiveSummaryPanel model={executiveSummary} />
               </div>
 
-              {/* ---------- Laptop / large tablet: table ---------- */}
-              <div className="hidden lg:block">
-                <table className="w-full text-left">
+              {/* ---------- Table view ---------- */}
+              {view === 'table' && (
+              <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                <table className="w-full min-w-[960px] text-left">
                   <thead>
                     <tr className="text-xs uppercase tracking-wide text-muted-foreground">
                       <th className="w-10 py-2" />
@@ -669,9 +702,11 @@ export function ReviewStep({
                   </tbody>
                 </table>
               </div>
+              )}
 
-              {/* ---------- Phone / small tablet: stacked cards ---------- */}
-              <div className="lg:hidden space-y-3">
+              {/* ---------- List view ---------- */}
+              {view === 'list' && (
+              <div className="space-y-3">
                 {rows.map(r => {
                   const open = expanded.has(r.id);
                   return (
