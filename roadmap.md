@@ -13,3 +13,10 @@
 - Twenty-conversation action accuracy sample.
 - Optional later: connected Google / Outlook accounts for two-way sync (needs Google Cloud and Microsoft Entra registrations; the app code and the `calendar-push-upcoming` function are already in place).
 - Shareable Google Docs copies of the four action documents (waiting on a Google Docs connection).
+
+## Questions-first entry + calendar consent (29 Sep 2026)
+- [x] Start here / Founding Member always lead through the questions before payment
+- [x] Snapshot "built from your answers" card + calendar permission (Yes / Let me choose / Not now)
+- [x] Regular appointments with frequency, blocked out automatically
+- [x] Rhythm bands on Calendar + Settings switch; a retake asks again
+- [ ] Signed-in check on a real phone (needs user)
