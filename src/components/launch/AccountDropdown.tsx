@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Settings, HelpCircle, LogOut, ChevronDown, Sparkles } from 'lucide-react';
+import { User, HelpCircle, LogOut, ChevronDown, Sparkles, Users, CreditCard } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,11 +61,27 @@ export function AccountDropdown() {
         </DropdownMenuItem>
         
         <DropdownMenuItem 
+          onClick={() => navigate('/launch/profile#membership')}
+          className="gap-2 py-2.5 cursor-pointer"
+        >
+          <CreditCard className="h-4 w-4" />
+          My membership
+        </DropdownMenuItem>
+
+        <DropdownMenuItem 
           onClick={() => navigate('/launch/support')}
           className="gap-2 py-2.5 cursor-pointer"
         >
+          <Users className="h-4 w-4" />
+          Support Circle
+        </DropdownMenuItem>
+
+        <DropdownMenuItem 
+          onClick={() => navigate('/launch/help')}
+          className="gap-2 py-2.5 cursor-pointer"
+        >
           <HelpCircle className="h-4 w-4" />
-          Support
+          Help
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />

@@ -1,9 +1,11 @@
 # Make MyRhythm easy to follow — returning-user fixes
 
 ## Honest answer
+
 Mostly, yes, but not fully. The main path (Home, Record, See my day, the circular dial, Diary, Compass) meets good usability standards. People can still get stuck or misled in a few places, and those spots matter most for someone with memory or energy challenges. Score: about 5.5/10 now, and about 8/10 after the fixes below.
 
 ## What breaks user-friendly standards today
+
 1. **One old link spins forever.** Opening an old "assessment" bookmark while signed in sends the page back to itself in a loop.
 2. **"Capture" doesn't record.** The bottom "Capture" tab opens an explainer page instead of the recorder. The dial and the floating mic both record, so the same word does three different things.
 3. **The "?" icon goes to the wrong place.** It's labelled "Support" and opens Support Circle (your people), not Help.
@@ -13,6 +15,7 @@ Mostly, yes, but not fully. The main path (Home, Record, See my day, the circula
 7. **Waiting screens say nothing.** A spinner with no words shows while the app checks your progress.
 
 ## What changes
+
 1. **One word, one action.** "Record" always opens the recorder, whether you use the bottom tab, the dial or the floating mic. The explainer page moves into Help.
 2. **Honest labels.** The "?" becomes "Help" and opens Help. Support Circle keeps its people icon and plain name.
 3. **"My membership" in the account menu.** It shows your real plan (Free, Founding, Friends & Family or Regular), the renewal date, and one button to manage payment.
@@ -22,10 +25,13 @@ Mostly, yes, but not fully. The main path (Home, Record, See my day, the circula
 7. **One Back rule everywhere.** The top-left Back always returns to where you came from. If there's nowhere to go back to, it takes you Home.
 
 ## How we'll check it
+
 - Phone-size walkthrough of the returning user: sign in, Home, Record, review actions, Calendar, Diary, Retake, Membership, Help, and back to Home. Nothing should need more than 3 taps or leave you stuck.
 - Old-link test: every retired address lands on a real page.
+- Distinguish the most recent version and create a seperate folder to keep all previous pages together but not in the final full flow.
 
 ## Technical details
+
 - `RedirectToStart.tsx`: remove the self-redirect. `/assessment` goes to `/launch/assessment`. `/dashboard`, `/mvp`, `/journey` and `/prototype` go to `/launch/home` for signed-in users and `/start` otherwise.
 - `LaunchDashboard.tsx`: remove the `?quiet=0` legacy branch.
 - `LaunchNav.tsx`: the Capture tab becomes "Record" and goes to `/launch/memory`. `/launch/capture` redirects to `/launch/memory`, and its content moves into a Help section.

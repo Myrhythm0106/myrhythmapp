@@ -24,12 +24,7 @@ export function RedirectToStart() {
     } else {
       // If onboarding is completed, redirect to the intended destination
       // For assessment routes, go to the assessment page
-      if (location.pathname.includes('assessment')) {
-        navigate('/assessment', { replace: true });
-      } else {
-        // Default to dashboard
-        navigate('/dashboard', { replace: true });
-      }
+      navigate(location.pathname.includes('assessment') ? '/launch/assessment' : '/launch/home', { replace: true });
     }
   }, [navigate, location]);
 
@@ -38,7 +33,7 @@ export function RedirectToStart() {
     <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15 flex items-center justify-center">
       <div className="text-center space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brain-health-600 mx-auto"></div>
-        <p className="text-brain-health-700">Preparing your personalized experience...</p>
+        <p className="text-brain-health-700">Taking you to the right page…</p>
       </div>
     </div>
   );

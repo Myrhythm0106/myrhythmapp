@@ -6,7 +6,7 @@ export default function LaunchCaptureResult() {
   return (
     <>
       <div className="max-w-5xl mx-auto px-4 pt-4">
-        <LaunchPageHeader fallbackPath="/launch/capture" />
+        <LaunchPageHeader fallbackPath="/launch/memory" />
       </div>
       <CaptureDeliverableView />
     </>

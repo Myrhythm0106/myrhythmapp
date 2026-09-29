@@ -52,7 +52,7 @@ const DAYS: DaySpec[] = [
     loopStage: 'Capture',
     description: 'A short voice note or a single line of text. Anything that\u2019s in your head right now.',
     cta: 'Capture something',
-    ctaRoute: '/launch/capture',
+    ctaRoute: '/launch/memory',
     icon: Mic,
   },
   {

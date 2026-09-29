@@ -30,7 +30,7 @@ const LANDMARKS: Place[] = [
 
 const SECONDARY: Place[] = [
   { path: '/launch/compass', label: 'My Compass', purpose: 'My focus and next action', icon: Compass },
-  { path: '/launch/assessment', label: 'Brain Health Assessment', purpose: 'Take or retake', icon: ClipboardList },
+  { path: '/launch/assessment?mode=retake', label: 'Brain Health Assessment', purpose: 'Take or retake', icon: ClipboardList },
   { path: '/launch/support', label: 'Support Circle', purpose: 'The people with me', icon: Users },
   { path: '/launch/settings', label: 'Settings', purpose: 'Preferences and profile', icon: Settings },
   { path: '/launch/help', label: 'Help', purpose: 'Guidance when I need it', icon: HelpCircle },

@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { LaunchWaiting } from '@/components/launch/LaunchWaiting';
 import {
   hasCompletedAssessment,
   hasLocalAssessment,
@@ -32,9 +32,7 @@ export function AssessmentFirstGate({ children }: { children: ReactNode }) {
 
   if (status === 'checking') {
     return (
-      <div className="min-h-[60svh] flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-launch-ink/50" />
-      </div>
+      <LaunchWaiting message="Getting your day ready…" />
     );
   }
 

@@ -139,7 +139,6 @@ import {
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCircleGrowth from "./pages/launch/LaunchCircleGrowth";
-import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
 import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
@@ -151,16 +150,8 @@ import { DayOpenWelcomeProvider } from "./launch/daily/DayOpenWelcomeContext";
 
 
 // Brain Injury Journey Routes
-import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
 
 // MVP Prototype (parallel route tree)
-import PrototypeLanding from "./pages/prototype/PrototypeLanding";
-import PrototypeAssessment from "./pages/prototype/PrototypeAssessment";
-import PrototypeCapture from "./pages/prototype/PrototypeCapture";
-import PrototypeReview from "./pages/prototype/PrototypeReview";
-import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
-import PrototypeReminders from "./pages/prototype/PrototypeReminders";
-import PrototypeDone from "./pages/prototype/PrototypeDone";
 import { LaunchGuard } from "./components/launch/LaunchGuard";
 import { AssessmentFirstGate } from "./components/launch/AssessmentFirstGate";
 
@@ -211,18 +202,12 @@ function App() {
                         <OnboardingProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
-     {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
-                     <Route path="/prototype" element={<PrototypeLanding />} />
-                     <Route path="/prototype/assessment" element={<PrototypeAssessment />} />
-                     <Route path="/prototype/capture" element={<PrototypeCapture />} />
-                     <Route path="/prototype/review" element={<PrototypeReview />} />
-                    <Route path="/prototype/schedule" element={<PrototypeSchedule />} />
-                    <Route path="/prototype/reminders" element={<PrototypeReminders />} />
-                    <Route path="/prototype/done" element={<PrototypeDone />} />
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Navigate to="/start" replace />} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/dashboard" element={<Navigate to="/launch/home" replace />} />
+                     <Route path="/prototype/*" element={<Navigate to="/launch/home" replace />} />
+                     <Route path="/journey/*" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
@@ -340,7 +325,7 @@ function App() {
                      
                       {/* Redirect assessment routes to /start for new users - but keep /mvp/assessment directing to MVPCore4C */}
                       <Route path="/mvp/assessment" element={<MVPCore4CPage />} />
-                      <Route path="/assessment" element={<RedirectToStart />} />
+                      <Route path="/assessment" element={<Navigate to="/launch/assessment" replace />} />
                     
                     {/* MVP Routes */}
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
@@ -359,11 +344,6 @@ function App() {
                        <Route path="/congrats" element={<CongratsPage />} />
                        
                        {/* Brain Injury Journey Routes - Golden Path */}
-                       <Route path="/journey/brain-injury/register" element={<JourneyRegister />} />
-                       <Route path="/journey/brain-injury/energy" element={<JourneyEnergyCheck />} />
-                       <Route path="/journey/brain-injury/assessment" element={<JourneyAssessment />} />
-                       <Route path="/journey/brain-injury/support" element={<JourneySupportCircle />} />
-                       <Route path="/journey/brain-injury/ready" element={<JourneyReady />} />
                        
                        {/* Investor Decks */}
                        <Route path="/investor-deck" element={<InvestorDeckPage />} />
@@ -401,7 +381,7 @@ function App() {
                         <Route path="/launch/roadmap" element={<LaunchPrivate><LaunchRoadmap /></LaunchPrivate>} />
                        <Route path="/launch/calibrate" element={<LaunchPrivate><LaunchCalibrate /></LaunchPrivate>} />
                        <Route path="/launch/circle/:memberId/growth" element={<LaunchPrivate><LaunchCircleGrowth /></LaunchPrivate>} />
-                       <Route path="/launch/capture" element={<LaunchPrivate><LaunchCapture /></LaunchPrivate>} />
+                       <Route path="/launch/capture" element={<Navigate to="/launch/memory" replace />} />
                        <Route path="/launch/commit" element={<LaunchPrivate><LaunchCommit /></LaunchPrivate>} />
                        <Route path="/launch/sc/capture/:subjectId/:subjectName" element={<LaunchPrivate><LaunchSCCapture /></LaunchPrivate>} />
                        <Route path="/launch/sc/capture/:subjectId" element={<LaunchPrivate><LaunchSCCapture /></LaunchPrivate>} />
