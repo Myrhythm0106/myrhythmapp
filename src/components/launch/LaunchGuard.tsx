@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2 } from 'lucide-react';
+import { LaunchWaiting } from '@/components/launch/LaunchWaiting';
 
 /**
  * Gate for signed-in-only /launch/* surfaces.
@@ -13,9 +13,7 @@ export function LaunchGuard({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-[60svh] flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-launch-ink/50" />
-      </div>
+      <LaunchWaiting message="Checking you are signed in…" />
     );
   }
 
