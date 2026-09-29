@@ -49,6 +49,7 @@ export default function LaunchPayment() {
   const navigate = useNavigate();
   const location = useLocation();
   const cameFromReport = Boolean((location.state as { fromReport?: boolean } | null)?.fromReport);
+  const [snapshot, setSnapshot] = useState<{ total: number; windowStart?: string; windowEnd?: string } | null>(null);
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState('');
@@ -63,6 +64,25 @@ export default function LaunchPayment() {
     if (remembered === 'monthly' || remembered === 'yearly') setSelectedPlan(remembered);
     setResumePoint('/launch/payment');
   }, []);
+
+  // Carry the snapshot context through when arriving from the report.
+  React.useEffect(() => {
+    if (!cameFromReport) return;
+    try {
+      const saved = localStorage.getItem('myrhythm_launch_mode');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+      if (score && typeof score.total === 'number') {
+        const pw = data?.assessmentResults?.productivityWindow ?? score.productivityWindow ?? null;
+        setSnapshot({
+          total: score.total,
+          windowStart: pw?.productiveStart,
+          windowEnd: pw?.productiveEnd,
+        });
+      }
+    } catch { /* noop */ }
+  }, [cameFromReport]);
 
   React.useEffect(() => {
     localStorage.setItem('myrhythm_selected_plan', selectedPlan);
@@ -160,6 +180,27 @@ export default function LaunchPayment() {
             <ArrowLeft className="h-4 w-4" />
             {cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
           </Button>
+
+          {cameFromReport && snapshot && (
+            <div className="mb-8 rounded-2xl border border-launch-gold/40 bg-launch-ivory px-5 py-5">
+              <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">
+                My snapshot is ready
+              </p>
+              <p className="mt-2 font-instrument text-3xl text-launch-ink-deep">
+                {snapshot.total}/100
+                {snapshot.windowStart && snapshot.windowEnd && (
+                  <span className="font-worksans text-base font-medium text-launch-ink-deep/70">
+                    {' · best window '}
+                    {snapshot.windowStart}–{snapshot.windowEnd}
+                  </span>
+                )}
+              </p>
+              <p className="mt-3 font-worksans text-sm leading-6 text-launch-ink-deep/75">
+                My snapshot stays mine, free. Membership adds the full plan, daily follow-through, and
+                Support Circle — completing what the snapshot started.
+              </p>
+            </div>
+          )}
 
           {needsAuth && (
             <div

@@ -54,6 +54,13 @@ const LETTER_WORDS: Record<LetterId, string> = {
   multiply: 'Multiply',
 };
 
+const MEMBERSHIP_ADDS = [
+  'My full personalized plan — built from these answers',
+  'Daily follow-through — reminders and calendar invites',
+  'Support Circle — the people I choose, kept in the loop',
+  'My full diary and history, kept traceable',
+];
+
 function bandLabel(total: number): string {
   if (total >= 80) return 'Strong footing';
   if (total >= 60) return 'Steady';
@@ -136,6 +143,12 @@ export default function LaunchWelcome() {
   const lowestIdx = letterScores.length ? letterScores.indexOf(Math.min(...letterScores)) : -1;
   const lowestEntry = lowestIdx >= 0 ? LETTER_ORDER[lowestIdx] : null;
   const lowestLetter = lowestEntry ? { ...lowestEntry, word: LETTER_WORDS[lowestEntry.id] } : null;
+  const bestWindow = bhs?.productivityWindow ?? null;
+  const offerLine = lowestLetter
+    ? `Membership turns this snapshot into a plan that strengthens my ${lowestLetter.word.toLowerCase()}${
+        bestWindow ? ` — and holds my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''
+      }.`
+    : 'Membership turns this snapshot into a plan built around my day.';
 
   return (
     <div className="min-h-screen w-full antialiased" style={{ backgroundColor: CREAM, color: INK, ...MANROPE }}>
@@ -389,7 +402,7 @@ export default function LaunchWelcome() {
                 We'll meet you wherever you are in your rhythm.
               </p>
 
-              {/* Founding Member offer */}
+              {/* Founding Member offer — personalised to this snapshot */}
               <div
                 className="mb-6 p-5 border-l-4 max-w-md"
                 style={{ borderColor: GOLD, backgroundColor: `${GOLD}0f` }}
@@ -402,7 +415,7 @@ export default function LaunchWelcome() {
                   /month
                 </p>
                 <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
-                  Lock in founding pricing and unlock my full personalized plan.
+                  {offerLine}
                 </p>
                 {isFoundingMemberActive() && (
                   <p className="text-[11px] mt-2 italic" style={{ color: MOSS }}>
@@ -414,9 +427,24 @@ export default function LaunchWelcome() {
                     /month, forever.
                   </p>
                 )}
+                <div className="mt-3 pt-3 border-t" style={{ borderColor: `${INK}14` }}>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-2" style={{ color: `${INK}99` }}>
+                    What membership adds
+                  </p>
+                  <ul className="space-y-1.5">
+                    {MEMBERSHIP_ADDS.map((add) => (
+                      <li key={add} className="text-xs leading-relaxed flex gap-2" style={{ color: `${INK}99` }}>
+                        <span aria-hidden="true" className="shrink-0" style={{ color: MOSS }}>
+                          ✓
+                        </span>
+                        {add}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-4 max-w-md">
+              <div className="flex flex-col gap-3 max-w-md">
                 <button
                   onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}
                   className="w-full py-5 px-8 font-bold text-xs tracking-[0.3em] uppercase transition-all cursor-pointer shadow-lg min-h-[56px] flex items-center justify-center gap-3"
@@ -427,22 +455,15 @@ export default function LaunchWelcome() {
                   See membership options
                   <span aria-hidden="true">→</span>
                 </button>
-                <div className="flex items-center justify-between gap-4 pt-1">
-                  <button
-                    onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}
-                    className="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b] underline underline-offset-4 decoration-[#c9a84c]/40"
-                    style={{ color: `${INK}99` }}
-                  >
-                    See what's included
-                  </button>
-                  <button
-                    onClick={() => navigate('/launch/signin')}
-                    className="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b]"
-                    style={{ color: `${INK}66` }}
-                  >
-                    Sign in
-                  </button>
-                </div>
+                <button
+                  onClick={continueHome}
+                  className="w-full py-4 px-8 rounded-none border font-bold text-xs tracking-[0.2em] uppercase transition-colors min-h-[56px] flex items-center justify-center"
+                  style={{ borderColor: `${INK}33`, color: INK, backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${GOLD}14`)}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  Not now — continue free to Home
+                </button>
               </div>
 
             </div>
