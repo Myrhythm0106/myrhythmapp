@@ -1,4 +1,4 @@
-# Make the MyRhythm journey feel obvious, safe and joined-up
+# Make the MyRhythm journey feel obvious, yet professional, safe and joined-up.  It needs to have an obvious standard so that there is no pressure or stress in using it.
 
 ## Candid verdict
 
@@ -60,6 +60,7 @@ The **Start here** path currently reaches a registration screen saying “Start 
 The report currently says **Register & Unlock My Plan** even though the person has already registered. Change this to **See membership options**. Keep **Continue with my free snapshot** equally clear.
 
 The membership page’s Back action must adapt:
+
 - from the report: **Back to my report**;
 - directly from `/start`: **Back to MyRhythm**.
 
