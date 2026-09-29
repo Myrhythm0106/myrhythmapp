@@ -130,14 +130,14 @@ export default function LaunchProfile() {
       </div>
 
       {/* Retake Assessment */}
-      <LaunchCard variant="glass" className="mb-6 p-4" onClick={() => navigate('/launch/assessment')}>
+      <LaunchCard variant="glass" className="mb-6 p-4" onClick={() => navigate('/launch/assessment?mode=retake')}>
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
             <RefreshCw className="h-5 w-5 text-purple-600" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-gray-900">Retake Assessment</p>
-            <p className="text-xs text-gray-500">Update your preferences</p>
+            <p className="font-medium text-gray-900">Retake my questions</p>
+            <p className="text-xs text-gray-500">Start fresh or continue where you left off</p>
           </div>
           <ChevronRight className="h-5 w-5 text-gray-400" />
         </div>

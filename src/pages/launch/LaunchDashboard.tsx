@@ -4,12 +4,8 @@ import { DemoModeProvider } from '@/contexts/DemoModeContext';
 import { QuietHome } from '@/components/launch/quiet/QuietHome';
 import { markAppReady } from '@/hooks/useAppReady';
 import { clearResumePoint } from '@/launch/onboarding/resumePoint';
-import LaunchDashboardLegacy from './LaunchDashboardLegacy';
 
 export default function LaunchDashboard() {
-  // Escape hatch: ?quiet=0 instantly reverts to the legacy dashboard.
-  const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const useLegacy = params?.get('quiet') === '0';
 
   // Reaching Home means onboarding is done — unlock the wayfinder dial.
   useEffect(() => {
@@ -17,9 +13,6 @@ export default function LaunchDashboard() {
     clearResumePoint();
   }, []);
 
-  if (useLegacy) {
-    return <LaunchDashboardLegacy />;
-  }
 
 
   return (

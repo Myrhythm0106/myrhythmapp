@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 // on Home tiles or in the You-Are-Here dial.
 const navItems = [
   { title: 'Home', url: '/launch/home', icon: Home },
-  { title: 'Capture', url: '/launch/capture', icon: Mic },
+  { title: 'Record', url: '/launch/memory', icon: Mic },
   { title: 'Commit', url: '/launch/commit', icon: CheckSquare },
   { title: 'Calibrate', url: '/launch/calibrate', icon: Activity },
   { title: 'Celebrate', url: '/launch/celebrate', icon: Sparkles },

@@ -70,13 +70,6 @@ export default function LaunchHelp() {
   return (
     <LaunchLayout showHeader={true}>
       <div className="mb-6">
-        <button 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-600 mb-4"
-        >
-          <ChevronLeft className="h-5 w-5" />
-          Back
-        </button>
         <h1 className="text-2xl font-bold text-gray-900">Help & Support</h1>
         <p className="text-gray-500 text-sm mt-1">We're here to help you succeed</p>
       </div>
