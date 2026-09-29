@@ -24,6 +24,19 @@ import {
 } from 'lucide-react';
 import { useSchedulingPreferences } from '@/hooks/useSchedulingPreferences';
 import { useCapturePreferences, QUIET_FINISH_CHOICES } from '@/hooks/useCapturePreferences';
+import { OutputModeChooser } from '@/components/memoryBridge/OutputModeChooser';
+import { useOutputMode } from '@/lib/memoryBridge/outputMode';
+
+function OutputModeSettingsCard() {
+  const [mode, setMode] = useOutputMode();
+  return (
+    <LaunchCard className="bg-launch-ivory border-launch-gold/30">
+      <h3 className="font-semibold text-launch-ink mb-1">From each recording</h3>
+      <p className="text-sm text-launch-ink/70 mb-4">My usual choice. I can still change it on any recording.</p>
+      <OutputModeChooser value={mode} onChange={setMode} />
+    </LaunchCard>
+  );
+}
 import { usePlanningDay } from '@/hooks/usePlanningScope';
 
 import { useNavigate } from 'react-router-dom';
@@ -228,6 +241,9 @@ export default function LaunchSettings() {
 
         {/* Fast access — optional phone shortcut setup */}
         <TapToRecordCard />
+
+        {/* What I get from each recording — default, changeable per recording */}
+        <OutputModeSettingsCard />
 
         {/* Capture safety — help that follows me across devices */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">

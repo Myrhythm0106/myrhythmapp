@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { ProcessingProgress } from '@/types/processing';
+import { readOutputMode, type OutputMode } from '@/lib/memoryBridge/outputMode';
 
 /** Guards against two parallel runs for the same recording (double tap, remount). */
 const inFlight = new Map<string, Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }>>();
@@ -9,14 +10,15 @@ export async function processSavedRecording(
   recordingId: string,
   userId: string,
   audioDuration: number = 0,
-  onProgressUpdate?: (progress: ProcessingProgress) => void
+  onProgressUpdate?: (progress: ProcessingProgress) => void,
+  outputMode?: OutputMode
 ): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
   const existing = inFlight.get(recordingId);
   if (existing) {
     console.log('processSavedRecording: already running for', recordingId, '— reusing in-flight run');
     return existing;
   }
-  const run = runProcessing(recordingId, userId, audioDuration, onProgressUpdate).finally(() => {
+  const run = runProcessing(recordingId, userId, audioDuration, onProgressUpdate, outputMode).finally(() => {
     inFlight.delete(recordingId);
   });
   inFlight.set(recordingId, run);
@@ -27,7 +29,8 @@ async function runProcessing(
   recordingId: string,
   userId: string,
   audioDuration: number = 0,
-  onProgressUpdate?: (progress: ProcessingProgress) => void
+  onProgressUpdate?: (progress: ProcessingProgress) => void,
+  outputMode?: OutputMode
 ): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
   const startTime = Date.now();
   const estimatedTotalTime = audioDuration > 0 ? Math.ceil(audioDuration * 0.5) : 60; // 50% of audio duration or 60s default
@@ -139,6 +142,7 @@ async function runProcessing(
         filePath: recording.file_path,
         meetingId: meetingRecord.id,
         userId: userId, // Explicitly include userId
+        outputMode: outputMode ?? readOutputMode(),
         meetingData: {
           title: recording.title,
           type: 'informal',

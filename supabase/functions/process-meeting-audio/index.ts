@@ -61,8 +61,10 @@ serve(async (req) => {
       userId: z.string().uuid('Invalid user ID').optional(),
       audio: z.string().optional(),
       meetingData: z.record(z.any()).optional(),
+      outputMode: z.enum(['none', 'transcript', 'actions', 'both']).optional(),
+      reextract: z.boolean().optional(),
     }).refine(
-      (data) => data.filePath || data.audio,
+      (data) => data.filePath || data.audio || data.reextract,
       { message: 'Either filePath or audio must be provided' }
     );
     
@@ -79,7 +81,7 @@ serve(async (req) => {
       });
     }
     
-    const { filePath, meetingId, meetingData, audio, userId } = validation.data;
+    const { filePath, meetingId, meetingData, audio, userId, outputMode, reextract } = validation.data;
     
     console.log('📝 Request data received:', {
       hasFilePath: !!filePath,
@@ -132,7 +134,42 @@ serve(async (req) => {
     try {
     let audioBlob;
     let transcriptText = '';
+    let utterances: any[] | null = null;
+    let quality: string | null = null;
 
+    // What the person asked for from this recording.
+    const { data: modeRow } = await supabase
+      .from('meeting_recordings')
+      .select('output_mode, transcript, transcript_original')
+      .eq('id', meetingId)
+      .maybeSingle();
+    const mode: 'none' | 'transcript' | 'actions' | 'both' =
+      outputMode ?? ((modeRow as any)?.output_mode as any) ?? 'both';
+    await supabase.from('meeting_recordings').update({ output_mode: mode }).eq('id', meetingId);
+
+    const markCompleted = async (extra: Record<string, unknown> = {}) => {
+      await supabase
+        .from('meeting_recordings')
+        .update({
+          processing_status: 'completed',
+          processing_completed_at: new Date().toISOString(),
+          is_active: false,
+          ended_at: new Date().toISOString(),
+          ...extra,
+        })
+        .eq('id', meetingId);
+    };
+
+    if (mode === 'none' && !reextract) {
+      console.log('⏸️ Output mode "none" — saved without transcribing');
+      await markCompleted();
+      return;
+    }
+
+    if (reextract) {
+      transcriptText = (modeRow as any)?.transcript || '';
+      if (!transcriptText) throw new Error('No transcript available to extract from');
+    } else {
 
     // Handle different input types
     if (filePath) {
@@ -223,6 +260,20 @@ serve(async (req) => {
         const uploadData = await uploadResponse.json();
         console.log('✅ Upload successful, URL received:', !!uploadData.upload_url);
         
+        // Names the person is likely to say — boosts accuracy for them.
+        let keyTerms: string[] = [];
+        try {
+          const { data: circle } = await supabase
+            .from('support_circle_members')
+            .select('member_name')
+            .eq('user_id', resolvedUserId)
+            .limit(50);
+          keyTerms = Array.from(new Set((circle || [])
+            .flatMap((m: any) => String(m.member_name || '').split(/\s+/))
+            .map((w: string) => w.replace(/[^\p{L}'-]/gu, ''))
+            .filter((w: string) => w.length > 1))).slice(0, 100);
+        } catch (_) { /* optional */ }
+
         // Request transcription
         console.log('🎯 Requesting transcription...');
         const transcriptionResponse = await fetch('https://api.assemblyai.com/v2/transcript', {
@@ -233,7 +284,13 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             audio_url: uploadData.upload_url,
-            speaker_labels: true
+            speech_model: 'best',
+            speaker_labels: true,
+            language_detection: true,
+            punctuate: true,
+            format_text: true,
+            disfluencies: false,
+            ...(keyTerms.length > 0 ? { word_boost: keyTerms, boost_param: 'high' } : {}),
           })
         });
         
@@ -287,6 +344,21 @@ serve(async (req) => {
           
           if (statusData.status === 'completed') {
             transcriptText = statusData.text;
+            quality = 'high';
+            if (Array.isArray(statusData.utterances) && statusData.utterances.length > 0) {
+              utterances = statusData.utterances.map((u: any) => ({
+                speaker: String(u.speaker ?? 'A'),
+                start: u.start ?? 0,
+                end: u.end ?? 0,
+                text: u.text ?? '',
+                unclear: Array.from(new Set((u.words || [])
+                  .filter((w: any) => typeof w.confidence === 'number' && w.confidence < 0.6)
+                  .map((w: any) => String(w.text || '').replace(/[^\p{L}\p{N}'-]/gu, ''))
+                  .filter(Boolean))),
+              }));
+              // Speaker-labelled text reads better and helps extraction know who said what.
+              transcriptText = utterances.map((u: any) => `Speaker ${u.speaker}: ${u.text}`).join('\n\n');
+            }
             console.log('✅ Transcription completed successfully!');
             break;
           } else if (statusData.status === 'error') {
@@ -338,12 +410,15 @@ serve(async (req) => {
         
         const transcriptionData = await transcriptionResponse.json();
         transcriptText = transcriptionData.text;
+        quality = 'lower';
         console.log('✅ Whisper transcription completed');
       } catch (whisperError) {
         console.error('❌ OpenAI Whisper processing failed:', whisperError);
         throw new Error(`Whisper processing failed: ${whisperError instanceof Error ? whisperError.message : 'Unknown error'}`);
       }
     }
+
+    } // end fresh transcription
 
     console.log('🎯 Transcription completed:', {
       length: transcriptText.length,
@@ -354,11 +429,34 @@ serve(async (req) => {
     console.log('💾 Updating meeting record with transcript...');
     const { error: updateError } = await supabase
       .from('meeting_recordings')
-      .update({ 
-        transcript: transcriptText,
-        processing_status: 'extracting_actions'
-      })
+      .update(reextract
+        ? { processing_status: 'extracting_actions' }
+        : {
+            transcript: transcriptText,
+            transcript_utterances: utterances,
+            transcription_quality: quality,
+            transcript_original: null,
+            transcript_edited_at: null,
+            processing_status: mode === 'transcript' ? 'completed' : 'extracting_actions',
+          })
       .eq('id', meetingId);
+
+    if (mode === 'transcript' && !reextract) {
+      console.log('📝 Transcript only — skipping action extraction');
+      await markCompleted();
+      return;
+    }
+
+    if (reextract) {
+      // Keep anything already confirmed (scheduled or done); refresh the rest.
+      await supabase
+        .from('extracted_actions')
+        .delete()
+        .eq('meeting_recording_id', meetingId)
+        .is('calendar_event_id', null)
+        .is('completion_date', null)
+        .in('status', ['not_started', 'pending']);
+    }
 
     if (updateError) {
       console.error('❌ Error updating meeting record:', updateError);
@@ -403,6 +501,47 @@ serve(async (req) => {
           ended_at: new Date().toISOString()
         })
         .eq('id', meetingId);
+    }
+
+    // Link each action back to the moment it was said.
+    try {
+      const { data: rowNow } = await supabase
+        .from('meeting_recordings').select('transcript_utterances').eq('id', meetingId).maybeSingle();
+      const utts = ((rowNow as any)?.transcript_utterances || utterances || []) as any[];
+      if (utts.length > 0) {
+        const { data: acts } = await supabase
+          .from('extracted_actions')
+          .select('id, source_quote, transcript_excerpt, action_text')
+          .eq('meeting_recording_id', meetingId)
+          .is('timestamp_in_recording', null);
+        const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+        for (const a of acts || []) {
+          const q = new Set(norm(String(a.source_quote || a.transcript_excerpt || a.action_text || '')));
+          if (q.size === 0) continue;
+          let best = -1, bestScore = 0;
+          utts.forEach((u, i) => {
+            const score = norm(u.text).filter(w => q.has(w)).length;
+            if (score > bestScore) { bestScore = score; best = i; }
+          });
+          if (best >= 0 && bestScore >= 2) {
+            await supabase.from('extracted_actions')
+              .update({ timestamp_in_recording: Math.floor((utts[best].start || 0) / 1000) })
+              .eq('id', a.id);
+          }
+        }
+      }
+    } catch (linkErr) {
+      console.warn('Could not link actions to transcript moments', linkErr);
+    }
+
+    if (mode === 'actions') {
+      // Actions only: the transcript was used to find actions, now it is not kept.
+      await supabase.from('meeting_recordings').update({
+        transcript: null,
+        transcript_utterances: null,
+        transcript_original: null,
+        transcript_deleted_at: new Date().toISOString(),
+      }).eq('id', meetingId);
     }
 
     console.log('🎉 Processing completed successfully');

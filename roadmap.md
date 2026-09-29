@@ -3,7 +3,7 @@
 ## Done
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
 
-## In progress
+## Done (Memory Bridge)
 - Memory Bridge: output choice per recording (transcript + actions / transcript only / actions only / just save), best-accuracy transcript with speakers, timestamps, unclear-word flags, fix-a-word editing with original kept, re-extract, and actions as Table | List.
 
 ## Open
