@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { RhythmSettingsCard } from '@/components/launch/rhythm/RhythmSettingsCard';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -119,6 +120,7 @@ export default function LaunchSettings() {
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24 space-y-4">
 
+        <RhythmSettingsCard />
         {/* About this edition */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
