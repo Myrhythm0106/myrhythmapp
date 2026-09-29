@@ -65,6 +65,25 @@ export default function LaunchPayment() {
     setResumePoint('/launch/payment');
   }, []);
 
+  // Carry the snapshot context through when arriving from the report.
+  React.useEffect(() => {
+    if (!cameFromReport) return;
+    try {
+      const saved = localStorage.getItem('myrhythm_launch_mode');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+      if (score && typeof score.total === 'number') {
+        const pw = data?.assessmentResults?.productivityWindow ?? score.productivityWindow ?? null;
+        setSnapshot({
+          total: score.total,
+          windowStart: pw?.productiveStart,
+          windowEnd: pw?.productiveEnd,
+        });
+      }
+    } catch { /* noop */ }
+  }, [cameFromReport]);
+
   React.useEffect(() => {
     localStorage.setItem('myrhythm_selected_plan', selectedPlan);
   }, [selectedPlan]);
