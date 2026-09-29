@@ -96,6 +96,7 @@ export function LaunchYouAreHereDial() {
 
   return (
     <>
+      <div className="flex shrink-0 flex-col items-center gap-0.5">
       <button
         ref={triggerRef}
         type="button"
@@ -104,7 +105,7 @@ export function LaunchYouAreHereDial() {
         aria-haspopup="dialog"
         aria-label={`You are here: ${current.label}. Open the map of MyRhythm.`}
         title={`You are here: ${current.label}`}
-        className="group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-launch-gold/60 bg-launch-cream-light shadow-sm transition hover:border-launch-gold hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
+        className="group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-launch-gold bg-launch-cream-light shadow-md transition hover:border-launch-gold hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
       >
         <span className="absolute inset-1 rounded-full border border-dashed border-launch-gold/80" aria-hidden="true" />
         <span className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-launch-teal ring-2 ring-launch-cream-light" aria-hidden="true" />
@@ -112,6 +113,8 @@ export function LaunchYouAreHereDial() {
           <CurrentIcon className="h-[18px] w-[18px]" aria-hidden="true" />
         </span>
       </button>
+      <span className="text-[11px] font-semibold leading-none text-launch-ink/70" aria-hidden="true">Where to?</span>
+      </div>
 
       {open && (
         <div

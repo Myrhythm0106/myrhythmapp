@@ -120,6 +120,14 @@ export function LaunchLayout({
           </header>
         )}
 
+        {/* Full-screen setup screens render no header, so the dial gets its
+            own fixed corner position — the wayfinder is available everywhere. */}
+        {isSelfContained && showDial && (
+          <div className="fixed right-4 top-3 z-[75] pt-safe">
+            <LaunchYouAreHereDial />
+          </div>
+        )}
+
         {/* Main Content */}
         {isSelfContained ? (
           <main className="flex-1 min-h-0">{children}</main>
