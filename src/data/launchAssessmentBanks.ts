@@ -18,7 +18,9 @@ export type LetterId =
   | 'multiply';      // M  — Multiply / Meaning
 
 /** Question ids: the 8 MYRHYTHM letters, the rhythm-detail step, and the follow-through probe (sits under T). */
-export type QuestionId = LetterId | 'rhythmDetail' | 'followThrough';
+export type HabitId = 'habitSleep' | 'habitMove' | 'habitFuel' | 'habitProtect' | 'habitCalm';
+
+export type QuestionId = LetterId | 'rhythmDetail' | 'followThrough' | HabitId;
 
 
 
@@ -666,11 +668,86 @@ function withFollowThrough(bank: AssessmentBank): AssessmentBank {
   return { ...bank, questions };
 }
 
+
+/* ------------------------------------------------------------------ */
+/*  Everyday brain-health habits (sit under H — Heal)                  */
+/*  Plain, everyday questions. Each maps to a traceable source in      */
+/*  docs/brain-health-reference-log.md. Never name a practitioner or   */
+/*  programme in-app; never diagnose.                                  */
+/* ------------------------------------------------------------------ */
+export const HABIT_QUESTIONS: AssessmentQuestion[] = [
+  {
+    id: 'habitSleep', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
+    brainHealthLens: 'Rest and recharge', // ref BH-01
+    title: 'How do most nights go for you?',
+    options: [
+      { value: 'under-6', label: 'Short or broken — under 6 hours', score: 0 },
+      { value: 'patchy', label: 'Patchy — some good nights, some not', score: 1 },
+      { value: 'mostly-ok', label: 'Mostly OK, around 7 hours', score: 2 },
+      { value: 'rested', label: 'I usually wake up rested', score: 3 },
+    ],
+  },
+  {
+    id: 'habitMove', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
+    brainHealthLens: 'Movement and circulation', // ref BH-02
+    title: 'How often do you get moving in a normal week?',
+    subtitle: 'Walking counts. So does gardening or dancing in the kitchen.',
+    options: [
+      { value: 'rarely', label: 'Rarely at the moment', score: 0 },
+      { value: 'once-twice', label: 'Once or twice', score: 1 },
+      { value: 'most-days', label: 'Most days, gently', score: 2 },
+      { value: 'daily-active', label: 'Most days, and I get a bit out of breath', score: 3 },
+    ],
+  },
+  {
+    id: 'habitFuel', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
+    brainHealthLens: 'Food, water and fuel', // ref BH-03
+    title: 'What does a typical day of eating and drinking look like?',
+    options: [
+      { value: 'on-the-go', label: 'Grab-and-go, sugary snacks, not much water', score: 0 },
+      { value: 'mixed', label: 'A mix — some good days, some not', score: 1 },
+      { value: 'mostly-fresh', label: 'Mostly fresh food and water', score: 2 },
+      { value: 'intentional', label: 'Colourful meals, plenty of water, little sugar', score: 3 },
+    ],
+  },
+  {
+    id: 'habitProtect', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
+    brainHealthLens: 'Protecting my head and body', // ref BH-04
+    title: 'Which of these sounds most like you right now?',
+    subtitle: 'No judgement — this just helps me plan around your real week.',
+    options: [
+      { value: 'several-risks', label: 'I smoke, drink most days, or skip helmets and seatbelts', score: 0 },
+      { value: 'some', label: 'A few drinks most weeks, or the odd cigarette', score: 1 },
+      { value: 'occasional', label: 'An occasional drink, nothing else', score: 2 },
+      { value: 'careful', label: 'I avoid these and protect my head', score: 3 },
+    ],
+  },
+  {
+    id: 'habitCalm', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'psychological',
+    brainHealthLens: 'Calm mind and curiosity', // ref BH-05
+    title: 'When worries or stress show up, what usually happens?',
+    options: [
+      { value: 'spiral', label: 'Thoughts race and I can’t switch off', score: 0 },
+      { value: 'push-through', label: 'I push through and feel it later', score: 1 },
+      { value: 'some-tools', label: 'I have a couple of ways to calm down', score: 2 },
+      { value: 'steady', label: 'I notice, question the thought, and settle', score: 3 },
+    ],
+  },
+];
+
+/** Insert the everyday habit questions straight after the Heal question. */
+function withHabits(bank: AssessmentBank): AssessmentBank {
+  const questions = [...bank.questions];
+  const idx = questions.findIndex((q) => q.id === 'heal');
+  questions.splice(idx >= 0 ? idx + 1 : questions.length, 0, ...HABIT_QUESTIONS);
+  return { ...bank, questions };
+}
+
 const banks: Record<PersonaKey, AssessmentBank> = {
-  'brain-injury': withFollowThrough(brainInjury),
-  caregiver: withFollowThrough(caregiver),
-  executive: withFollowThrough(executive),
-  student: withFollowThrough(student),
+  'brain-injury': withHabits(withFollowThrough(brainInjury)),
+  caregiver: withHabits(withFollowThrough(caregiver)),
+  executive: withHabits(withFollowThrough(executive)),
+  student: withHabits(withFollowThrough(student)),
 };
 
 
