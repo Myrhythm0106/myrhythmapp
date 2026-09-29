@@ -40,6 +40,9 @@ import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
 import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
 import { CaptureHub } from '@/components/memoryBridge/CaptureHub';
+import { OutputModeChooser } from '@/components/memoryBridge/OutputModeChooser';
+import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
+import { useOutputMode } from '@/lib/memoryBridge/outputMode';
 
 import { setRecordingLive } from '@/launch/capture/recordingSignal';
 import { useCapturePreferences } from '@/hooks/useCapturePreferences';
@@ -85,6 +88,22 @@ export default function LaunchMemoryBridge() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [notifySupport, setNotifySupport] = useState(true);
   const [recordingTitle, setRecordingTitle] = useState('');
+  const [outputMode, setOutputMode] = useOutputMode();
+  const [transcriptFor, setTranscriptFor] = useState<{ meetingId: string; title: string } | null>(null);
+  const openTranscriptForRecording = async (recordingId: string, title: string) => {
+    const { data } = await supabase
+      .from('meeting_recordings')
+      .select('id')
+      .eq('recording_id', recordingId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (!data?.id) {
+      toast.info('No transcript yet for this recording.', { description: 'Tap "Discover Actions" to write it up.' });
+      return;
+    }
+    setTranscriptFor({ meetingId: data.id, title });
+  };
   const audioBlobRef = useRef<Blob | null>(null);
   const [restoredDuration, setRestoredDuration] = useState<number | null>(null);
   const [recoverableCapture, setRecoverableCapture] = useState<Awaited<ReturnType<typeof assembleCaptureSession>>>(null);
@@ -473,8 +492,25 @@ export default function LaunchMemoryBridge() {
       const result = await processSavedRecording(
         saved.id,
         userId,
-        restoredDuration ?? duration
+        restoredDuration ?? duration,
+        undefined,
+        outputMode
       );
+
+      if (result.success && (outputMode === 'none' || outputMode === 'transcript')) {
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
+        if (outputMode === 'transcript' && result.meetingId) {
+          toast.success('Recording saved — my transcript is ready.');
+          setTranscriptFor({ meetingId: result.meetingId, title });
+        } else {
+          toast.success('Recording saved.', { description: 'I can ask for a transcript or actions any time from My Records.' });
+        }
+        fetchRecordings();
+        setState('idle');
+        setRecordingTitle('');
+        return;
+      }
       console.log('handleSave: stage 4 — extraction finished', result);
 
 
@@ -709,7 +745,9 @@ export default function LaunchMemoryBridge() {
     const result = await processSavedRecording(
       recording.id,
       user.id,
-      recording.duration_seconds || 0
+      recording.duration_seconds || 0,
+      undefined,
+      'both'
     );
 
     if (result.success) {
@@ -1002,6 +1040,8 @@ export default function LaunchMemoryBridge() {
                     </div>
                   </div>
 
+                  <OutputModeChooser value={outputMode} onChange={setOutputMode} className="mb-5" />
+
                   <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-launch-ember hover:bg-launch-ember/90 text-white" disabled={isProcessing || isExtracting}>
                     {isProcessing || isExtracting ? (
                       <>
@@ -1011,7 +1051,7 @@ export default function LaunchMemoryBridge() {
                     ) : (
                       <>
                         <Save className="h-5 w-5" />
-                        Save & Extract Actions
+                        {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save & write transcript' : 'Save & Extract Actions'}
                       </>
                     )}
                   </LaunchButton>
@@ -1149,6 +1189,13 @@ export default function LaunchMemoryBridge() {
 
                     {/* Action buttons */}
                     <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => openTranscriptForRecording(recording.id, recording.title)}
+                        className="flex min-h-[44px] items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium border border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 transition-all"
+                      >
+                        Read transcript
+                      </button>
 
 
                       {isProcessed ? (
@@ -1243,6 +1290,14 @@ export default function LaunchMemoryBridge() {
         }
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
+      />
+
+      <TranscriptView
+        open={Boolean(transcriptFor)}
+        onClose={() => setTranscriptFor(null)}
+        meetingId={transcriptFor?.meetingId}
+        title={transcriptFor?.title || ''}
+        onActionsUpdated={() => fetchRecordings()}
       />
 
       <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
