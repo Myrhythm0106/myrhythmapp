@@ -20,7 +20,6 @@ import { useAppReady } from '@/hooks/useAppReady';
 
 // Onboarding steps — the dial stays hidden until the user reaches Home.
 const ONBOARDING_PATHS = new Set([
-  '/launch/welcome',
   '/launch/signin',
   '/launch/signup',
   '/launch/register',
@@ -65,7 +64,9 @@ export function LaunchLayout({
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   // First-time setup stays linear. Returning users can still use the dial
   // while revisiting their assessment.
-  const showDial = !isOnboardingPath || (location.pathname === '/launch/assessment' && appReady);
+  const showDial = !isOnboardingPath || (
+    appReady && ['/launch/assessment', '/launch/user-type', '/launch/welcome'].includes(location.pathname)
+  );
 
   const isWelcomePage = location.pathname === '/launch/welcome';
 

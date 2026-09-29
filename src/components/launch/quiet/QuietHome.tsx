@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CalendarDays, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useDemoOrLive, useIsDevDemo } from '@/contexts/DemoModeContext';
+import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { useFirstSession } from '@/launch/onboarding/useFirstSession';
 import { FirstSessionCard } from './FirstSessionCard';
 import { RhythmLine } from './RhythmLine';
@@ -33,7 +33,6 @@ export function QuietHome() {
   const { subject, supportedName } = useSubject();
   const { isPause } = useStage();
   const firstSession = useFirstSession();
-  const showDemoContent = useIsDevDemo();
 
   if (isPause) return <QuietHomePause />;
 

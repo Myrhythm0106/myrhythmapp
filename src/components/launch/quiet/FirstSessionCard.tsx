@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Mic, ListChecks, CalendarPlus, PartyPopper } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Mic, ListChecks, CalendarPlus, PartyPopper } from 'lucide-react';
 import type { FirstSessionState } from '@/launch/onboarding/useFirstSession';
 
 interface Step {

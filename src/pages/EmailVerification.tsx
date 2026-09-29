@@ -9,6 +9,7 @@ import { CheckCircle, XCircle, Loader2, Heart, Brain, Mail } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { resolveNextDestination } from '@/launch/onboarding/nextDestination';
 
 const EmailVerification = () => {
   const navigate = useNavigate();
@@ -79,8 +80,8 @@ const EmailVerification = () => {
         await supabase.auth.refreshSession();
         
         // Auto-redirect after success
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
+        setTimeout(async () => {
+          navigate(await resolveNextDestination(), { replace: true });
         }, 3000);
       }
     } catch (error) {
@@ -109,9 +110,8 @@ const EmailVerification = () => {
         // Clear any pending verification email from localStorage
         localStorage.removeItem('pendingVerificationEmail');
         
-        // Auto-redirect to onboarding after 3 seconds
-        setTimeout(() => {
-          navigate('/onboarding', { replace: true });
+        setTimeout(async () => {
+          navigate(await resolveNextDestination(), { replace: true });
         }, 3000);
       }
     } catch (error) {
@@ -152,8 +152,8 @@ const EmailVerification = () => {
         // Refresh the auth session
         await supabase.auth.refreshSession();
         
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
+        setTimeout(async () => {
+          navigate(await resolveNextDestination(), { replace: true });
         }, 3000);
       }
     } catch (error) {
@@ -181,8 +181,8 @@ const EmailVerification = () => {
     navigate('/auth');
   };
 
-  const handleGoToOnboarding = () => {
-    navigate('/onboarding');
+  const handleGoToOnboarding = async () => {
+    navigate(await resolveNextDestination());
   };
 
   return (
@@ -285,14 +285,14 @@ const EmailVerification = () => {
                     Welcome to MyRhythm! Your account is now active and ready to use.
                   </p>
                   <p className="text-sm text-gray-600">
-                    You will be redirected to your dashboard in a few seconds...
+                    I’ll take you to your next step in a few seconds.
                   </p>
                 </div>
                 <Button 
-                  onClick={() => navigate('/dashboard')}
+                  onClick={handleGoToOnboarding}
                   className="w-full"
                 >
-                  Continue to Dashboard
+                  Continue
                 </Button>
               </>
             )}
