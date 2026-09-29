@@ -20,3 +20,5 @@
 - [x] Regular appointments with frequency, blocked out automatically
 - [x] Rhythm bands on Calendar + Settings switch; a retake asks again
 - [ ] Signed-in check on a real phone (needs user)
+- [x] Five everyday brain-health habit questions (sleep, movement, fuel, protection, calm) feeding scores + timing; traced in docs/brain-health-reference-log.md
+- [x] Small-phone check: no sideways scrolling on the questions screen

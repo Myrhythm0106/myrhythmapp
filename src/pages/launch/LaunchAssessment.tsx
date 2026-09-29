@@ -207,12 +207,12 @@ export default function LaunchAssessment() {
             Welcome, {displayName}
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            Before anything else, eight quick questions — here's what to expect.
+            Before anything else, a few short questions — here's what to expect.
           </p>
 
           <ol className="space-y-3 mb-8">
             {[
-              'Eight questions, about three minutes — no right or wrong answers.',
+              'A few short questions, about five minutes — no right or wrong answers.',
               "At the end, I'll see my MYRHYTHM snapshot and one complete key insight.",
               "I'll choose one action to try. The full personalized plan and ongoing follow-through are included with membership.",
             ].map((line, i) => (
@@ -474,6 +474,8 @@ export default function LaunchAssessment() {
         transform: combined('transform'),
         followThrough: primaryOf('followThrough'),
         heal: primaryOf('heal'),
+        sleep: primaryOf('habitSleep'),
+        calm: primaryOf('habitCalm'),
         multiply: primaryOf('multiply'),
         rhythmPreference: primaryOf('rhythm'),
         productivityWindow: deriveProductivityWindow(
@@ -482,6 +484,8 @@ export default function LaunchAssessment() {
             focusLength: savedRhythmDetail.primary,
             energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
             heal: primaryOf('heal'),
+            sleep: primaryOf('habitSleep'),
+            calm: primaryOf('habitCalm'),
             transform: combined('transform'),
           },
           brainHealthScore
@@ -513,6 +517,8 @@ export default function LaunchAssessment() {
              focusLength: savedRhythmDetail.primary,
              energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
              heal: primaryOf('heal'),
+             sleep: primaryOf('habitSleep'),
+             calm: primaryOf('habitCalm'),
              transform: combined('transform'),
            },
            brainHealthScore
