@@ -3,6 +3,9 @@
 ## Done
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
 
+## In progress
+- Memory Bridge: output choice per recording (transcript + actions / transcript only / actions only / just save), best-accuracy transcript with speakers, timestamps, unclear-word flags, fix-a-word editing with original kept, re-extract, and actions as Table | List.
+
 ## Open
 - Persist My Compass history and focus checks privately across devices (cloud tables were not approved; on-device experience is active).
 - Real-device proof: 2–4 hour capture on iPhone and on Android.
