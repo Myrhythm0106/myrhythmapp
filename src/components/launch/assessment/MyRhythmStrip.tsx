@@ -28,7 +28,7 @@ export function MyRhythmStrip({ questions, currentIndex, answeredIds, onJump }: 
 
   return (
     <div className="mb-5">
-      <div className="flex items-center justify-between gap-1">
+      <div className="flex items-center justify-between gap-1 px-1">
         {slots.map((slot) => {
           const isCurrent = slot === currentSlot;
           const done = slot.indices.every((i) => answeredIds.has(questions[i].id));
@@ -43,7 +43,7 @@ export function MyRhythmStrip({ questions, currentIndex, answeredIds, onJump }: 
               aria-label={`${slot.letter} — ${slot.word}${done ? ' (answered)' : ''}`}
               aria-current={isCurrent ? 'step' : undefined}
               className={cn(
-                'relative flex-1 h-10 rounded-lg text-sm font-bold uppercase tracking-wide transition-all',
+                'relative min-w-0 flex-1 h-11 rounded-lg text-sm font-bold uppercase tracking-wide transition-all',
                 isCurrent
                   ? 'bg-launch-ember text-launch-cream scale-110 shadow-sm'
                   : done

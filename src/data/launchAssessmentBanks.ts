@@ -151,7 +151,7 @@ const brainInjury: AssessmentBank = {
       ],
     },
     {
-      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological', slot: 'rhythm',
       brainHealthLens: 'Focus length & energy drains',
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
@@ -276,7 +276,7 @@ const caregiver: AssessmentBank = {
       ],
     },
     {
-      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological', slot: 'rhythm',
       brainHealthLens: 'Focus length & energy drains',
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
@@ -401,7 +401,7 @@ const executive: AssessmentBank = {
       ],
     },
     {
-      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological', slot: 'rhythm',
       brainHealthLens: 'Focus length & energy drains',
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',
@@ -526,7 +526,7 @@ const student: AssessmentBank = {
       ],
     },
     {
-      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological',
+      id: 'rhythmDetail', letter: 'R', word: 'Rhythm', pillar: 'biological', slot: 'rhythm',
       brainHealthLens: 'Focus length & energy drains',
       title: 'A little more about my rhythm',
       subtitle: 'Two quick details so the calendar can protect my best window.',

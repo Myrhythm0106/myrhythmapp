@@ -31,7 +31,7 @@ const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/user-type':
     'Choose what best describes me. Next: eight short questions.',
   '/launch/assessment':
-    'Eight questions about my days. Next: my personal snapshot.',
+    'A few short questions about my days. Next: my personal snapshot.',
   '/launch/welcome':
     'My MYRHYTHM snapshot — I can keep it, choose one action, and continue to Home.',
 };
