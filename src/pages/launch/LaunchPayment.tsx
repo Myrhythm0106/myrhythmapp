@@ -181,6 +181,27 @@ export default function LaunchPayment() {
             {cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
           </Button>
 
+          {cameFromReport && snapshot && (
+            <div className="mb-8 rounded-2xl border border-launch-gold/40 bg-launch-ivory px-5 py-5">
+              <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">
+                My snapshot is ready
+              </p>
+              <p className="mt-2 font-instrument text-3xl text-launch-ink-deep">
+                {snapshot.total}/100
+                {snapshot.windowStart && snapshot.windowEnd && (
+                  <span className="font-worksans text-base font-medium text-launch-ink-deep/70">
+                    {' · best window '}
+                    {snapshot.windowStart}–{snapshot.windowEnd}
+                  </span>
+                )}
+              </p>
+              <p className="mt-3 font-worksans text-sm leading-6 text-launch-ink-deep/75">
+                My snapshot stays mine, free. Membership adds the full plan, daily follow-through, and
+                Support Circle — completing what the snapshot started.
+              </p>
+            </div>
+          )}
+
           {needsAuth && (
             <div
               className="mb-6 rounded-2xl border-2 border-launch-gold/50 bg-white px-4 py-4"
