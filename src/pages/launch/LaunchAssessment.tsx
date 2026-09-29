@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { resetRhythmConsentForRetake } from '@/launch/calendar/rhythmConsent';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowRight, ArrowLeft, Check, Plus, HelpCircle } from 'lucide-react';
@@ -503,6 +504,7 @@ export default function LaunchAssessment() {
         })
        );
        localStorage.removeItem(PROGRESS_KEY);
+       resetRhythmConsentForRetake();
 
        if (user?.id) {
          const window = deriveProductivityWindow(

@@ -11,10 +11,12 @@
 
 All landing buttons will follow one path: **Account → About me → Questions → My snapshot**, then Home or membership.
 
+
 | Button                   | Signed out                                                               | Signed in, no snapshot yet                   | Signed in, snapshot done               |
 | ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------- | -------------------------------------- |
 | Start here               | Sign up → About me → Questions → Snapshot → Home                         | Continue to About me / Questions             | Home                                   |
 | Become a Founding Member | Sign up → About me → Questions → Snapshot, with the Founding offer shown | Questions → Snapshot with the Founding offer | Membership page with snapshot greeting |
+
 
 - If someone left the questions halfway, both buttons take them back to where they stopped.
 - The landing text under the buttons will say what comes next: "Start with a few short questions — about 5 minutes. Your snapshot is free."
@@ -27,6 +29,7 @@ All landing buttons will follow one path: **Account → About me → Questions �
 - **Clearly visible on the calendar:** once agreed, these show on the MyRhythm calendar as soft, labelled bands ("My best time to work", "Break"), so they can't be mistaken for appointments. A small "From my answers" tag opens an explanation, and there's a switch to turn them off.
 - **Changing my mind later:** Settings gets a "My rhythm on my calendar" switch. Retaking the questions updates the bands, but only after asking again.
 - The wording stays advisory, never medical: "suggested", "you're in control".
+- Room for regular appointments and scheduled activities should also be asked so they can be blocked out AS WELL AS FREQUENCY so it can be automatically populated for all entries.
 
 ## How to test it
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -243,12 +244,13 @@ export function MVPCore4C() {
     navigate('/launch/signin');
   };
 
-  const handleFoundingAction = () => {
-    navigate(user ? '/launch/payment' : '/launch/register?intent=founding');
+  const handleFoundingAction = async () => {
+    const path = await resolveEntryRoute('founding', user?.id);
+    navigate(path, path === '/launch/payment' ? { state: { fromReport: true } } : undefined);
   };
 
-  const handleStartHere = () => {
-    navigate(user ? '/launch/home' : '/launch/register');
+  const handleStartHere = async () => {
+    navigate(await resolveEntryRoute('start', user?.id));
   };
 
   return (
@@ -360,7 +362,7 @@ export function MVPCore4C() {
                   </Button>
                 </div>
                 <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                  Start here to create my account. Founding Member is £10/month for life · limited to 500 places.
+                  Start with a few short questions — about 5 minutes. Your snapshot is free. Founding Member is £10/month for life · limited to 500 places.
                 </p>
               </div>
             </motion.div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { RhythmDayBands } from '@/components/launch/rhythm/RhythmDayBands';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
@@ -208,6 +209,7 @@ export default function LaunchCalendar() {
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
+        <RhythmDayBands date={selectedDate} />
         {/* Controls */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30 mb-4 p-4">
           <div className="flex items-center justify-between gap-3">
