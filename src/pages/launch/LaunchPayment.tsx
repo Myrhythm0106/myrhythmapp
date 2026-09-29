@@ -27,7 +27,7 @@ const features = [
   'Gratitude journal & mood tracking',
   'Brain games & cognitive exercises',
   'Progress analytics & insights',
-  'Unlimited recordings & storage',
+  'Long recordings, with retention settings I control',
 ];
 
 const testCards = [
