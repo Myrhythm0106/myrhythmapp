@@ -1627,6 +1627,7 @@ export type Database = {
           meeting_context: string | null
           meeting_title: string
           meeting_type: string
+          output_mode: string
           participants: Json
           processing_completed_at: string | null
           processing_error: string | null
@@ -1636,11 +1637,16 @@ export type Database = {
           reference_code: string | null
           relationship_context: Json | null
           source_state: string
+          speaker_names: Json
           started_at: string
           summary_card: Json | null
           transcript: string | null
           transcript_deleted_at: string | null
+          transcript_edited_at: string | null
           transcript_expires_at: string | null
+          transcript_original: string | null
+          transcript_utterances: Json | null
+          transcription_quality: string | null
           updated_at: string
           user_id: string
           watchers: string[] | null
@@ -1657,6 +1663,7 @@ export type Database = {
           meeting_context?: string | null
           meeting_title: string
           meeting_type?: string
+          output_mode?: string
           participants?: Json
           processing_completed_at?: string | null
           processing_error?: string | null
@@ -1666,11 +1673,16 @@ export type Database = {
           reference_code?: string | null
           relationship_context?: Json | null
           source_state?: string
+          speaker_names?: Json
           started_at?: string
           summary_card?: Json | null
           transcript?: string | null
           transcript_deleted_at?: string | null
+          transcript_edited_at?: string | null
           transcript_expires_at?: string | null
+          transcript_original?: string | null
+          transcript_utterances?: Json | null
+          transcription_quality?: string | null
           updated_at?: string
           user_id: string
           watchers?: string[] | null
@@ -1687,6 +1699,7 @@ export type Database = {
           meeting_context?: string | null
           meeting_title?: string
           meeting_type?: string
+          output_mode?: string
           participants?: Json
           processing_completed_at?: string | null
           processing_error?: string | null
@@ -1696,11 +1709,16 @@ export type Database = {
           reference_code?: string | null
           relationship_context?: Json | null
           source_state?: string
+          speaker_names?: Json
           started_at?: string
           summary_card?: Json | null
           transcript?: string | null
           transcript_deleted_at?: string | null
+          transcript_edited_at?: string | null
           transcript_expires_at?: string | null
+          transcript_original?: string | null
+          transcript_utterances?: Json | null
+          transcription_quality?: string | null
           updated_at?: string
           user_id?: string
           watchers?: string[] | null
