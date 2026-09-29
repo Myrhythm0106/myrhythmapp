@@ -633,7 +633,8 @@ export function ReviewStep({
                                 onClick={() => toggleExpanded(r.id)}
                                 className="text-[11px] text-primary hover:underline"
                               >
-                                {expanded.has(r.id) ? 'Hide what I said' : 'What I said'}
+                                {expanded.has(r.id) ? 'Hide where this was said' : 'Where was this said?'}
+                                {typeof r.saidAt === 'number' ? ` · at ${Math.floor(r.saidAt / 60)}:${String(r.saidAt % 60).padStart(2, '0')}` : ''}
                               </button>
                             )}
                           </div>
@@ -810,6 +811,7 @@ export function ReviewStep({
                   );
                 })}
               </div>
+              )}
             </>
           )}
 
