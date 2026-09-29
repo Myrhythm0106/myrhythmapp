@@ -63,61 +63,40 @@ export function FirstSessionCard({ state }: { state: FirstSessionState }) {
       <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.28em] text-launch-ink/55">
         Start here
       </p>
-      <h3 className="font-semibold text-launch-ink mt-1 mb-4">
-        Four small moves and I'll be doing the remembering for you.
+      <h3 className="font-semibold text-launch-ink mt-1">
+        One small step at a time.
       </h3>
+      <p className="mt-1 text-sm text-launch-ink/75">
+        Step {activeIndex + 1} of {STEPS.length}. I can leave and come back without losing my place.
+      </p>
 
-      <ol className="space-y-2">
+      <ol className="mt-4">
         {STEPS.map((step, i) => {
-          const done = state[step.key];
-          const active = i === activeIndex;
-          const Icon = done ? Check : step.icon;
+          if (i !== activeIndex) return null;
+          const Icon = step.icon;
 
           return (
             <li
               key={step.key}
-              className={cn(
-                'rounded-2xl px-4 py-3 border transition-colors',
-                active
-                  ? 'border-launch-gold/50 bg-launch-cream-light'
-                  : 'border-transparent bg-transparent'
-              )}
+              className="rounded-2xl border border-launch-gold/50 bg-launch-cream-light px-4 py-4"
             >
               <div className="flex items-start gap-3">
                 <span
-                  className={cn(
-                    'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-                    done
-                      ? 'bg-launch-moss text-white'
-                      : active
-                      ? 'bg-brand-orange-500 text-white'
-                      : 'bg-launch-ink/10 text-launch-ink/50'
-                  )}
+                  className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-orange-500 text-primary-foreground"
                 >
                   <Icon className="h-4 w-4" />
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p
-                    className={cn(
-                      'text-sm font-semibold',
-                      done ? 'text-launch-ink/50 line-through' : 'text-launch-ink'
-                    )}
+                  <p className="text-base font-semibold text-launch-ink">{step.title}</p>
+                  <p className="mt-1 text-sm text-launch-ink/75">{step.hint}</p>
+                  <button
+                    type="button"
+                    onClick={() => navigate(step.to)}
+                    className="mt-4 inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground sm:w-auto"
                   >
-                    {step.title}
-                  </p>
-                  {active && (
-                    <>
-                      <p className="text-xs text-launch-ink/60 mt-0.5">{step.hint}</p>
-                      <button
-                        type="button"
-                        onClick={() => navigate(step.to)}
-                        className="mt-3 w-full sm:w-auto min-h-[56px] px-6 rounded-2xl bg-brand-orange-500 text-white font-semibold inline-flex items-center justify-center gap-2"
-                      >
-                        {step.cta}
-                      </button>
-                    </>
-                  )}
+                    {step.cta}
+                  </button>
                 </div>
               </div>
             </li>
