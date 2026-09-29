@@ -49,6 +49,7 @@ export default function LaunchPayment() {
   const navigate = useNavigate();
   const location = useLocation();
   const cameFromReport = Boolean((location.state as { fromReport?: boolean } | null)?.fromReport);
+  const [snapshot, setSnapshot] = useState<{ total: number; windowStart?: string; windowEnd?: string } | null>(null);
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState('');
