@@ -100,6 +100,17 @@ export default function LaunchAssessment() {
   }, []);
   // First-timers get a warm welcome before any question appears.
   const [showWelcome, setShowWelcome] = useState<boolean>(isFirstRun);
+  // Retake from Profile/dial: ask before reusing earlier answers.
+  const [askRetake, setAskRetake] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const isRetake = new URLSearchParams(window.location.search).get('mode') === 'retake';
+    return isRetake && !!initial && Object.keys(initial.answers).length > 0;
+  });
+  const startFresh = () => {
+    try { localStorage.removeItem(PROGRESS_KEY); } catch {/* noop */}
+    setAnswers({}); setFreeform({}); setCurrentQuestion(0); setEventRecency(null); setPhase('recency');
+    setAskRetake(false);
+  };
 
 
   useEffect(() => {
@@ -171,6 +182,22 @@ export default function LaunchAssessment() {
 
 
   /* ------------------- Welcome phase (first-timers) ------------------- */
+  if (askRetake) {
+    return (
+      <LaunchLayout>
+        <div className="max-w-xl mx-auto py-10 px-4 space-y-6">
+          <h1 className="text-3xl font-serif text-launch-ink">Retake my questions</h1>
+          <p className="text-lg text-launch-ink/75">I still have my earlier answers saved. How would I like to go on?</p>
+          <div className="space-y-3">
+            <LaunchButton className="w-full min-h-[56px]" onClick={startFresh}>Start fresh</LaunchButton>
+            <LaunchButton variant="secondary" className="w-full min-h-[56px]" onClick={() => setAskRetake(false)}>Continue where I left off</LaunchButton>
+          </div>
+          <p className="text-sm text-launch-ink/60">My earlier results stay safe in my history either way.</p>
+        </div>
+      </LaunchLayout>
+    );
+  }
+
   if (showWelcome) {
     return (
       <LaunchLayout>

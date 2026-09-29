@@ -45,7 +45,8 @@ export function LaunchMembershipCard() {
   };
 
   return (
-    <LaunchCard variant="featured" className="mb-6 p-5" id="membership">
+    <div id="membership" className="scroll-mt-24">
+    <LaunchCard variant="featured" className="mb-6 p-5">
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-xl bg-launch-gold/20 flex items-center justify-center shrink-0">
           <CreditCard className="h-5 w-5 text-launch-ink" />
@@ -85,5 +86,6 @@ export function LaunchMembershipCard() {
         </div>
       )}
     </LaunchCard>
+    </div>
   );
 }
