@@ -54,6 +54,13 @@ const LETTER_WORDS: Record<LetterId, string> = {
   multiply: 'Multiply',
 };
 
+const MEMBERSHIP_ADDS = [
+  'My full personalized plan — built from these answers',
+  'Daily follow-through — reminders and calendar invites',
+  'Support Circle — the people I choose, kept in the loop',
+  'My full diary and history, kept traceable',
+];
+
 function bandLabel(total: number): string {
   if (total >= 80) return 'Strong footing';
   if (total >= 60) return 'Steady';
