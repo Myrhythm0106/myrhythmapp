@@ -4,7 +4,6 @@ import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 
 const userTypes = [
@@ -133,7 +132,6 @@ export default function LaunchUserType() {
           <p className="text-xs text-launch-ink/40">You can change this any time in Settings.</p>
         </div>
       </div>
-      <LaunchQuickActions />
     </div>
   );
 }

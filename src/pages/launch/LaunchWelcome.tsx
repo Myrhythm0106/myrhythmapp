@@ -6,7 +6,6 @@ import { EditionBadge } from '@/components/launch/EditionBadge';
 import { MemoryFirstChip } from '@/components/launch/MemoryFirstChip';
 import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentRetakeCard';
 import { LivingCompassReport } from '@/components/launch/assessment/LivingCompassReport';
 
@@ -419,18 +418,18 @@ export default function LaunchWelcome() {
 
               <div className="flex flex-col gap-4 max-w-md">
                 <button
-                  onClick={() => navigate('/launch/payment')}
+                  onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}
                   className="w-full py-5 px-8 font-bold text-xs tracking-[0.3em] uppercase transition-all cursor-pointer shadow-lg min-h-[56px] flex items-center justify-center gap-3"
                   style={{ backgroundColor: INK, color: CREAM, ...SORA }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = MOSS)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = INK)}
                 >
-                  Register &amp; Unlock My Plan
+                  See membership options
                   <span aria-hidden="true">→</span>
                 </button>
                 <div className="flex items-center justify-between gap-4 pt-1">
                   <button
-                    onClick={() => navigate('/launch/payment')}
+                    onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}
                     className="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b] underline underline-offset-4 decoration-[#c9a84c]/40"
                     style={{ color: `${INK}99` }}
                   >
@@ -510,13 +509,6 @@ export default function LaunchWelcome() {
             <div className="flex items-center gap-4">
               <button
                 onClick={continueHome}
-                className="text-[10px] uppercase tracking-[0.2em] font-bold min-h-[44px] underline underline-offset-4"
-                style={{ color: `${INK}80` }}
-              >
-                Skip for now
-              </button>
-              <button
-                onClick={continueHome}
                 className="min-h-[56px] px-8 font-bold text-xs tracking-[0.3em] uppercase"
                 style={{ backgroundColor: INK, color: CREAM, ...SORA }}
               >
@@ -529,8 +521,6 @@ export default function LaunchWelcome() {
 
 
       <AssessmentRetakeCard />
-
-      <LaunchQuickActions />
 
     </div>
   );

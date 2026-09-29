@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { DemoModeProvider } from '@/contexts/DemoModeContext';
 import { QuietHome } from '@/components/launch/quiet/QuietHome';
-import { FirstRunOverlay } from '@/components/launch/FirstRunOverlay';
 import { markAppReady } from '@/hooks/useAppReady';
 import { clearResumePoint } from '@/launch/onboarding/resumePoint';
 import LaunchDashboardLegacy from './LaunchDashboardLegacy';
@@ -27,7 +26,6 @@ export default function LaunchDashboard() {
     <DemoModeProvider>
       <LaunchLayout>
         <QuietHome />
-        <FirstRunOverlay />
       </LaunchLayout>
     </DemoModeProvider>
   );

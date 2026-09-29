@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Brain, Check, Shield, CreditCard, ArrowRight, ArrowLeft, Loader2, Sparkles, KeyRound, Copy, ChevronDown, FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -47,6 +47,8 @@ const redeemErrorCopy: Record<string, string> = {
 
 export default function LaunchPayment() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const cameFromReport = Boolean((location.state as { fromReport?: boolean } | null)?.fromReport);
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState('');
@@ -148,14 +150,16 @@ export default function LaunchPayment() {
     <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
       <div className="flex-1 overflow-y-auto py-8 px-4">
         <div className="max-w-3xl mx-auto">
-          <button
-            onClick={() => navigate('/launch/welcome')}
-            className="mb-4 flex items-center gap-2 text-sm font-medium text-launch-ink/70 hover:text-launch-ink transition-colors"
-            aria-label="Back to your results"
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => navigate(cameFromReport ? '/launch/welcome' : '/start')}
+            className="mb-4 min-h-[44px] px-0 text-sm font-medium text-launch-ink/75 hover:text-launch-ink"
+            aria-label={cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to your results
-          </button>
+            {cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
+          </Button>
 
           {needsAuth && (
             <div

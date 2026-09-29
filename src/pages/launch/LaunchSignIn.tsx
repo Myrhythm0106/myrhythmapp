@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { resolveNextDestination } from '@/launch/onboarding/nextDestination';
 
 const signInSchema = z.object({
@@ -20,6 +19,7 @@ export default function LaunchSignIn() {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = (location.state as { from?: string } | null)?.from ?? '/launch/home';
+  const returningTo = redirectTo !== '/launch/home' && redirectTo !== '/launch/signin';
   const { signIn, resendVerification } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -108,7 +108,9 @@ export default function LaunchSignIn() {
             Welcome Back
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Sign in to continue your cognitive wellness journey
+            {returningTo
+              ? "Sign in to continue where you were. I'll bring you straight back."
+              : 'Sign in to see what needs your attention today.'}
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
@@ -221,7 +223,7 @@ export default function LaunchSignIn() {
                       const { supabase } = await import('@/integrations/supabase/client');
                       const { error } = await supabase.auth.signInWithOtp({
                         email: email.trim(),
-                        options: { emailRedirectTo: `${window.location.origin}/launch/home` }
+                        options: { emailRedirectTo: `${window.location.origin}${redirectTo}` }
                       });
                       if (error) throw error;
                       toast.success('Magic link sent! Check your email.');
@@ -253,8 +255,6 @@ export default function LaunchSignIn() {
         </div>
       </div>
       
-      {/* Compass FAB */}
-      <LaunchQuickActions />
     </div>
   );
 }
