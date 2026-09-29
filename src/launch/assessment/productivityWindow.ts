@@ -107,6 +107,9 @@ export function deriveProductivityWindow(
     /** Optional raw answers, used for a few targeted, plain-English notes. */
     heal?: string;
     transform?: string[];
+    /** Everyday habit answers (see docs/brain-health-reference-log.md). */
+    sleep?: string;
+    calm?: string;
   },
   score?: BrainHealthScore | null
 ): ProductivityWindow {
@@ -174,6 +177,13 @@ export function deriveProductivityWindow(
 
   if (answers.heal === 'none-yet') {
     reasons.push("You haven't found your reset yet — I'll keep one quiet slot free each day to try one.");
+  }
+  if (answers.sleep === 'under-6' || answers.sleep === 'patchy') {
+    bufferMinutes = Math.max(bufferMinutes, 15);
+    reasons.push('Your nights are uneven, so I leave a little more room between things and keep late evenings clear.');
+  }
+  if (answers.calm === 'spiral') {
+    reasons.push('When your mind races, a short calm-down slot before big moments helps — I will suggest one.');
   }
   const struggles = answers.transform ?? [];
   if (struggles.includes('fatigue')) {

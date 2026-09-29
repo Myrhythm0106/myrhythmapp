@@ -232,7 +232,7 @@ const brainInjury: AssessmentBank = {
 /* ------------------------------------------------------------------ */
 const caregiver: AssessmentBank = {
   persona: 'caregiver',
-  intro: 'Eight questions shaped around your reality as a carer.',
+  intro: 'A few short questions shaped around your reality as a carer.',
   preQuestion: {
     title: 'When did this season of caring begin?',
     subtitle: "This helps us calibrate today's questions to where you actually are — whether that's last month or fifteen years ago.",
@@ -357,7 +357,7 @@ const caregiver: AssessmentBank = {
 /* ------------------------------------------------------------------ */
 const executive: AssessmentBank = {
   persona: 'executive',
-  intro: 'Eight questions to shape your focus and defend your best thinking.',
+  intro: 'A few short questions to shape your focus and defend your best thinking.',
   preQuestion: {
     title: "How long has focus been the thing you're fighting?",
     subtitle: "This helps us calibrate today's questions to your season — a new role, a long grind, or a fresh start.",
@@ -482,7 +482,7 @@ const executive: AssessmentBank = {
 /* ------------------------------------------------------------------ */
 const student: AssessmentBank = {
   persona: 'student',
-  intro: 'Eight questions to pace your term.',
+  intro: 'A few short questions to pace your term.',
   preQuestion: {
     title: 'How long has this study season been running?',
     subtitle: "This helps us calibrate today's questions to where you actually are — first weeks of a course or deep into a long haul.",
