@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
