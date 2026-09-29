@@ -139,7 +139,6 @@ import {
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCircleGrowth from "./pages/launch/LaunchCircleGrowth";
-import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
 import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
@@ -203,7 +202,6 @@ function App() {
                         <OnboardingProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
-     {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Navigate to="/start" replace />} />
                      <Route path="/auth" element={<Auth />} />
