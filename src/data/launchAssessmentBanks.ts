@@ -106,7 +106,7 @@ export function resolveHasSupport(answerValue: string | undefined): boolean {
 /* ------------------------------------------------------------------ */
 const brainInjury: AssessmentBank = {
   persona: 'brain-injury',
-  intro: 'Eight gentle questions, one per letter of MYRHYTHM.',
+  intro: 'A few gentle questions, built around the letters of MYRHYTHM.',
   preQuestion: {
     title: 'When did the experience happen?',
     subtitle: "This helps us calibrate today's questions to where you actually are — whether that's last month or fifteen years ago.",
