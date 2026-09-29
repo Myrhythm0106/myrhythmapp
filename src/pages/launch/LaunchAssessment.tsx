@@ -10,7 +10,6 @@ import { deriveProductivityWindow } from '@/launch/assessment/productivityWindow
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import confetti from 'canvas-confetti';
 import { MyRhythmStrip } from '@/components/launch/assessment/MyRhythmStrip';
 import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
@@ -496,6 +495,7 @@ export default function LaunchAssessment() {
                 .select('id')
                 .eq('user_id', user.id)
                 .eq('preference_type', 'brain_healthy')
+                .limit(1)
                 .maybeSingle();
               if (error) throw error;
               const payload = {
@@ -538,7 +538,6 @@ export default function LaunchAssessment() {
     pendingNav.current = '/launch/welcome';
     setSaveWarning(null);
     setProcessing(true);
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
     saveAssessmentRun({
       persona,

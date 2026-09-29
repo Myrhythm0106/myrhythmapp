@@ -34,6 +34,7 @@ export function useBrainHealthyPrefs() {
         .select('*')
         .eq('user_id', user.id)
         .eq('preference_type', PREF_TYPE)
+        .limit(1)
         .maybeSingle();
       if (cancelled) return;
       if (error) console.warn('load brain-healthy prefs', error);

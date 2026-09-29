@@ -15,7 +15,6 @@ const DEFER_KEY = 'myrhythm_assessment_deferred';
 const ONBOARDING_RESUME_PATHS = new Set([
   '/launch/user-type',
   '/launch/assessment',
-  '/launch/payment',
 ]);
 
 /** A completed run stored locally (works for tester / offline sessions too). */

@@ -34,8 +34,6 @@ const CommandCenter = lazy(() => import("./pages/CommandCenter"));
 import EmailVerification from "./pages/EmailVerification";
 import MVPPaymentPage from "./pages/MVPPaymentPage";
 import GetStartedPage from "./pages/GetStartedPage";
-import { OnboardingPage } from "./pages/OnboardingPage";
-import WebOnboarding from "./pages/WebOnboarding";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { Disclaimer } from "./pages/legal/Disclaimer";
 import TermsOfService from "./pages/TermsOfService";
@@ -48,9 +46,6 @@ import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
 import { SupportMemberDashboardPage } from "./pages/SupportMemberDashboardPage";
 import DemoLanding from "./pages/DemoLanding";
-import QuickAssessment from "./pages/QuickAssessment";
-import BrainInjuryAssessment from "./pages/BrainInjuryAssessment";
-import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessment";
 import MVPDashboardPage from "./pages/MVPDashboardPage";
 import MVPAssessmentPage from "./pages/MVPAssessmentPage";
 import MVPCorePage from "./pages/MVPCorePage";
@@ -84,7 +79,6 @@ import HelpGettingStarted from "./pages/HelpGettingStarted";
 import Welcome from "./pages/Welcome";
 import ExplorerPage from "./pages/ExplorerPage";
 import PathSelectionPage from "./pages/PathSelectionPage";
-import AssessmentResultsPage from "./pages/AssessmentResultsPage";
 import EcosystemPage from "./pages/EcosystemPage";
 import { NextStepsHub } from "./components/nextStepsHub/NextStepsHub";
 import PlanSelectionPage from "./pages/PlanSelectionPage";
@@ -256,13 +250,13 @@ function App() {
                     <Route path="/help/getting-started" element={<ProtectedRoute requireAuth={false}><HelpGettingStarted /></ProtectedRoute>} />
                     
                      {/* Assessment Routes */}
-                     <Route path="/assessment-old" element={<Assessment />} />
-                     <Route path="/quick-assessment" element={<QuickAssessment />} />
-                     <Route path="/comprehensive-assessment" element={<Assessment />} />
-                     <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
-                     <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
-                     <Route path="/onboarding/assessment" element={<ProtectedRoute requireAuth={false}><Assessment /></ProtectedRoute>} />
-                     <Route path="/assessment-results" element={<ProtectedRoute requireAuth={false}><AssessmentResultsPage /></ProtectedRoute>} />
+                     <Route path="/assessment-old" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/quick-assessment" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/comprehensive-assessment" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/brain-injury-assessment" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/cognitive-performance-assessment" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/onboarding/assessment" element={<Navigate to="/launch/assessment" replace />} />
+                     <Route path="/assessment-results" element={<Navigate to="/launch/welcome" replace />} />
                      
                      {/* Path Selection & Explorer Routes */}
                      <Route path="/path-selection" element={<ProtectedRoute requireAuth={false}><PathSelectionPage /></ProtectedRoute>} />
@@ -314,22 +308,8 @@ function App() {
                     <Route path="/profile" element={<Navigate to="/launch/profile" replace />} />
                     <Route path="/settings" element={<Navigate to="/launch/settings" replace />} />
                     <Route path="/testing" element={<Navigate to="/launch/home" replace />} />
-                    <Route
-                      path="/onboarding"
-                      element={
-                        <ProtectedRoute requireAuth={false}>
-                          <OnboardingPage />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/web-onboarding"
-                      element={
-                        <ProtectedRoute requireAuth={false}>
-                          <WebOnboarding />
-                        </ProtectedRoute>
-                      }
-                    />
+                    <Route path="/onboarding" element={<Navigate to="/launch/register" replace />} />
+                    <Route path="/web-onboarding" element={<Navigate to="/launch/register" replace />} />
                     
                      {/* Warm Onboarding Flow */}
                      <Route path="/start" element={<LaunchLanding />} />

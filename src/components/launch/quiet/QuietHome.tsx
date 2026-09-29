@@ -1,16 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
-import { useDemoOrLive, useIsDevDemo } from '@/contexts/DemoModeContext';
+import { CalendarDays, Mic } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { useFirstSession } from '@/launch/onboarding/useFirstSession';
 import { FirstSessionCard } from './FirstSessionCard';
 import { RhythmLine } from './RhythmLine';
-import { IChooseHeart } from './IChooseHeart';
-import { ReEntryCard } from './ReEntryCard';
 import { NextActionStrip } from './NextActionStrip';
-import { Scaffolds } from './Scaffolds';
-import { Composer } from './Composer';
-import { CognitiveLoadMeter } from './CognitiveLoadMeter';
 import { TierSwitcherPill } from './TierSwitcherPill';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
@@ -19,12 +16,8 @@ import { useStage } from '@/launch/stage/useStage';
 import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
-import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
-import { CompletionStatsStrip } from '@/components/launch/CompletionStatsStrip';
-import { HomeAssessmentCard } from './HomeAssessmentCard';
-import { ArriveAndArmCard } from './ArriveAndArmCard';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -34,12 +27,12 @@ function timeBucket(): 'morning' | 'afternoon' | 'evening' {
 }
 
 export function QuietHome() {
+  const navigate = useNavigate();
   const { fixtures } = useDemoOrLive();
   const { persona, isCaregiver } = usePersona();
   const { subject, supportedName } = useSubject();
   const { isPause } = useStage();
   const firstSession = useFirstSession();
-  const showDemoContent = useIsDevDemo();
 
   if (isPause) return <QuietHomePause />;
 
@@ -89,59 +82,35 @@ export function QuietHome() {
       {/* The guided first session */}
       <FirstSessionCard state={firstSession} />
 
-      {/* If a conversation is happening right now, offer to capture it — once */}
-      <ArriveAndArmCard />
-
-      {/* Next action — the one thing that matters right now */}
+      {/* Returning Home: one priority and two familiar places. */}
       {!settlingIn && (
-        <>
+        <section aria-labelledby="home-now-title" className="space-y-4">
+          <h2 id="home-now-title" className="font-display text-2xl text-launch-ink">
+            What needs my attention now
+          </h2>
           <NextActionStrip />
-          <CompletionStatsStrip />
-        </>
-      )}
-
-      {/* MYRHYTHM Brain Health Assessment — take or retake */}
-      <HomeAssessmentCard />
-
-      {!settlingIn && (
-        <>
-          {/* Weekly planning nudge (only on the user's planning day) */}
-          <LaunchWeeklyPlanningCard />
-
-          {/* #IChoose centerpiece */}
-          <IChooseHeart />
-
-          {/* Re-entry */}
-          <ReEntryCard />
-
-          {/* Scaffolds */}
-          <Scaffolds />
-
-          {/* Composer */}
-          <Composer />
-        </>
-      )}
-
-      {/* Today's wins — sample content only ever shows in demo preview */}
-      {showDemoContent && fixtures.wins.length > 0 && (
-        <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-4 w-4 text-launch-ember" />
-            <h3 className="font-semibold text-launch-ink">{copy.winsTitle}</h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-[72px] justify-start border-launch-gold/40 bg-launch-ivory px-5 text-base text-launch-ink"
+              onClick={() => navigate('/launch/memory?record=1')}
+            >
+              <Mic className="h-5 w-5 text-launch-ember" />
+              Record something
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-[72px] justify-start border-launch-gold/40 bg-launch-ivory px-5 text-base text-launch-ink"
+              onClick={() => navigate('/launch/calendar')}
+            >
+              <CalendarDays className="h-5 w-5 text-launch-teal" />
+              See my day
+            </Button>
           </div>
-          <ul className="space-y-2">
-            {fixtures.wins.map((w) => (
-              <li key={w.id} className="flex items-center justify-between text-sm">
-                <span className="text-launch-ink/80">{w.text}</span>
-                <span className="text-xs text-launch-ink/50">{w.time}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </section>
       )}
-
-      {/* Cognitive Load (Plus+) */}
-      {!settlingIn && <CognitiveLoadMeter />}
 
       {/* Footer signature */}
       <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">

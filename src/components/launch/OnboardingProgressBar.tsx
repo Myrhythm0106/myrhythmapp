@@ -9,16 +9,15 @@ import { LaunchStepLocator, type StepLocatorItem } from './LaunchStepLocator';
  * and, if so, renders the shared LaunchStepLocator so the user always
  * knows where they are in the sequence:
  *
- *   register → user-type → assessment → welcome → payment → home
+ *   account → about me → questions → snapshot → home
  *
  * Mount once inside LaunchLayout — no per-page wiring needed.
  */
 const ONBOARDING_STEPS: StepLocatorItem[] = [
-  { label: 'Register',   path: '/launch/register' },
-  { label: 'You',        path: '/launch/user-type' },
-  { label: 'Assessment', path: '/launch/assessment' },
-  { label: 'Results',    path: '/launch/welcome' },
-  { label: 'Membership', path: '/launch/payment' },
+  { label: 'Account',     path: '/launch/register' },
+  { label: 'About me',    path: '/launch/user-type' },
+  { label: 'Questions',   path: '/launch/assessment' },
+  { label: 'My snapshot', path: '/launch/welcome' },
   { label: 'Home',       path: '/launch/home' },
 ];
 
@@ -28,15 +27,13 @@ const ONBOARDING_STEPS: StepLocatorItem[] = [
  */
 const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/register':
-    "Create your account — your information stays private and only you can see it. Next: a little about you.",
+    'Create my account. Next: a little about me.',
   '/launch/user-type':
-    "Tell me who's using MyRhythm so everything feels made for you. Next: eight quick questions.",
+    'Choose what best describes me. Next: eight short questions.',
   '/launch/assessment':
-    "Eight questions about your days — it's how I learn when you're at your best. Next: your personal report.",
+    'Eight questions about my days. Next: my personal snapshot.',
   '/launch/welcome':
-    'Your MYRHYTHM report — read it, keep it, come back to it any time. Next: choose your membership.',
-  '/launch/payment':
-    "Choose how you'd like to join. Next: your new Home.",
+    'My MYRHYTHM snapshot — I can keep it, choose one action, and continue to Home.',
 };
 
 // Screens where the strip is mounted inside LaunchLayout's fixed-height

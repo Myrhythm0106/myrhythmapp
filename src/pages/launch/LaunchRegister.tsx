@@ -77,7 +77,9 @@ export default function LaunchRegister() {
         password,
         options: {
           data: { name },
-          emailRedirectTo: `${window.location.origin}/launch/welcome`,
+          emailRedirectTo: `${window.location.origin}${
+            prefilledUserType ? '/launch/payment' : '/launch/user-type'
+          }`,
         },
       });
 
@@ -281,10 +283,10 @@ export default function LaunchRegister() {
           </div>
 
           <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
-            Create Your Account
+            Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Start your 7-day free trial. No charge until your trial ends.
+            Save my progress and begin my free snapshot. Membership is optional and shown separately.
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
@@ -356,7 +358,7 @@ export default function LaunchRegister() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      Create Account
+                      Create my account
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
@@ -365,14 +367,14 @@ export default function LaunchRegister() {
 
               {/* Trust signals */}
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <div className="flex items-center justify-center gap-4 text-sm text-launch-ink/50">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-center gap-3 text-sm text-launch-ink/75">
                   <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>7-day free trial</span>
+                    <CheckCircle className="h-4 w-4 text-launch-teal" />
+                    <span>Free snapshot included</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Cancel anytime</span>
+                    <CheckCircle className="h-4 w-4 text-launch-teal" />
+                    <span>Nothing is purchased here</span>
                   </div>
                 </div>
               </div>
