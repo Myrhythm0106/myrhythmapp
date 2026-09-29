@@ -143,6 +143,12 @@ export default function LaunchWelcome() {
   const lowestIdx = letterScores.length ? letterScores.indexOf(Math.min(...letterScores)) : -1;
   const lowestEntry = lowestIdx >= 0 ? LETTER_ORDER[lowestIdx] : null;
   const lowestLetter = lowestEntry ? { ...lowestEntry, word: LETTER_WORDS[lowestEntry.id] } : null;
+  const bestWindow = bhs?.productivityWindow ?? null;
+  const offerLine = lowestLetter
+    ? `Membership turns this snapshot into a plan that strengthens my ${lowestLetter.word.toLowerCase()}${
+        bestWindow ? ` — and holds my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''
+      }.`
+    : 'Membership turns this snapshot into a plan built around my day.';
 
   return (
     <div className="min-h-screen w-full antialiased" style={{ backgroundColor: CREAM, color: INK, ...MANROPE }}>
