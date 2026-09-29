@@ -7,6 +7,7 @@ import { MemoryFirstChip } from '@/components/launch/MemoryFirstChip';
 import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentRetakeCard';
+import { RhythmCalendarConsent } from '@/components/launch/rhythm/RhythmCalendarConsent';
 import { LivingCompassReport } from '@/components/launch/assessment/LivingCompassReport';
 
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
@@ -541,6 +542,7 @@ export default function LaunchWelcome() {
       </div>
 
 
+      <RhythmCalendarConsent mainFocus={(() => { try { const r = JSON.parse(localStorage.getItem('myrhythm_launch_mode') || '{}')?.assessmentResults; const g = r?.goals; return Array.isArray(g) ? g[0] ?? null : typeof g === 'string' ? g : null; } catch { return null; } })()} />
       <AssessmentRetakeCard />
 
     </div>
