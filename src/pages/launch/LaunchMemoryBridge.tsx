@@ -117,6 +117,7 @@ export default function LaunchMemoryBridge() {
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
   const [recordingToDelete, setRecordingToDelete] = useState<VoiceRecording | null>(null);
+  const [confirmDiscardCapture, setConfirmDiscardCapture] = useState(false);
   const [deletingRecording, setDeletingRecording] = useState(false);
 
   
@@ -834,10 +835,7 @@ export default function LaunchMemoryBridge() {
                   </LaunchButton>
                   <LaunchButton
                     variant="outline"
-                    onClick={async () => {
-                      await deleteCaptureSession(recoverableCapture.meta.id);
-                      setRecoverableCapture(null);
-                    }}
+                    onClick={() => setConfirmDiscardCapture(true)}
                   >
                     Discard it
                   </LaunchButton>
@@ -1322,6 +1320,31 @@ export default function LaunchMemoryBridge() {
             >
               {deletingRecording ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
               Delete permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={confirmDiscardCapture} onOpenChange={setConfirmDiscardCapture}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard this recording?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This recording has not been saved or shared yet. If you discard it, it will be permanently deleted and cannot be recovered.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep it</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={async () => {
+                if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
+                setRecoverableCapture(null);
+                setConfirmDiscardCapture(false);
+              }}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Discard permanently
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
