@@ -86,6 +86,22 @@ function loadProgress(): StoredProgress | null {
   }
 }
 
+/** Benefit-only helper lines — never scoring or scheduling rules. */
+const QUESTION_HELPS: Record<string, string> = {
+  habitSleep: 'Helps me avoid planning demanding things after a poor night.',
+  habitMove: 'Helps me fit movement into my day at a time that suits me.',
+  habitFuel: 'Helps me plan steady energy through the day.',
+  habitProtect: 'Helps me keep my plans realistic and kind to me.',
+  habitExposure: 'Helps me spot small everyday changes that make days easier.',
+  habitCalm: 'Helps me place calm moments where they matter most.',
+  habitLearnConnect: 'Helps me keep time for people and learning in my week.',
+  habitPurpose: 'Helps me keep what matters most to me in my plan.',
+  planningRhythm: "This is when I'll suggest my most important tasks.",
+  rhythmDetail: 'Sets how long my planned blocks and breaks are.',
+  planningSupport: 'Decides who, if anyone, I can choose to share with.',
+  planningGoal: 'Becomes the first focus in my diary this week.',
+};
+
 export default function LaunchAssessment() {
   const navigate = useNavigate();
   const { user } = useAuth();

@@ -54,7 +54,7 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
-    navigate('/launch/assessment');
+    navigate('/launch/assessment?first=1');
   };
 
 
@@ -123,7 +123,7 @@ export default function LaunchUserType() {
             onClick={() => {
               // Neutral default: the general focus questions, never the recovery lens.
               localStorage.setItem('myrhythm_user_type', 'executive');
-              navigate('/launch/assessment');
+              navigate('/launch/assessment?first=1');
             }}
             className="text-sm text-launch-ink/70 hover:text-launch-ink underline underline-offset-4"
           >
