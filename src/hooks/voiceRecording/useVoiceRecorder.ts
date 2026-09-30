@@ -322,17 +322,18 @@ export function useVoiceRecorder() {
   const deleteRecording = useCallback(async (recordingId: string) => {
     if (!user) return;
 
+    // Remove from the screen immediately so the list never shows a deleted item.
+    setRecordings(prev => prev.filter(r => r.id !== recordingId));
+
     try {
       await deleteVoiceRecording(recordingId, user.id);
-      toast.success('Recording deleted');
-      await fetchRecordings(); // Refresh the list
+      // Background re-fetch to stay in sync; the item is already gone from view.
+      fetchRecordings().catch(() => {});
     } catch (error) {
       console.error('Error deleting recording:', error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('Failed to delete recording');
-      }
+      // Restore the real list so nothing appears deleted by mistake.
+      await fetchRecordings().catch(() => {});
+      throw error instanceof Error ? error : new Error('Failed to delete recording');
     }
   }, [user, fetchRecordings]);
 
