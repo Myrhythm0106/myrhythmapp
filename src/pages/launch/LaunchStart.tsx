@@ -48,7 +48,7 @@ export default function LaunchStart() {
                 MyRhythm
               </h1>
               <p className="font-instrument text-lg leading-snug prestige-ivory-75 md:text-xl">
-                Your Pocket PA — <span className="prestige-gold">it remembers</span>, so you don't have to.
+                Your Pocket PA. <span className="prestige-gold">It remembers</span>, so you don't have to.
               </p>
             </div>
           </div>

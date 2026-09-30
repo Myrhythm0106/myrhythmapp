@@ -336,14 +336,14 @@ export function MVPCore4C() {
                 The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
               <p className="mt-4 font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
-                Your Pocket PA — <span className="text-launch-teal">it remembers</span>, so you don't have to.
+                Your Pocket PA. <span className="text-launch-teal">It remembers</span>, so you don't have to.
               </p>
               <p className="mt-3 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:mt-5 md:text-lg md:leading-8">
-                Captures it. Plans it. Keeps it. And follows it through.{" "}
+                Captures it. Plans it. Keeps it. Follows it through.{" "}
                 <span className="text-launch-teal">You stay in control.</span>
               </p>
               <p className="mt-4 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:mt-7 md:text-xl">
-                MyRhythm turns conversations and reports into clear, traceable next steps—then helps those steps find a realistic place in my day.
+                MyRhythm turns conversations and reports into clear, traceable next steps, then helps those steps find a realistic place in your day.
               </p>
               <div ref={heroCtaRef} className="mt-6 md:mt-9">
                 <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
