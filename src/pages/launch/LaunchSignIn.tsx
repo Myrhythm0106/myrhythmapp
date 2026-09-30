@@ -95,9 +95,9 @@ export default function LaunchSignIn() {
   };
 
   return (
-    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-12">
+    <div className="min-h-screen bg-launch-cream-light flex flex-col">
+      {/* Content Area — page scrolls naturally, no nested scroller */}
+      <div className="flex-1 px-6 py-12">
         <div className="flex flex-col items-center justify-center min-h-full">
           {/* Logo */}
           <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-6 shadow-lg">
