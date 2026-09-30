@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Sparkles, Loader2, X, RefreshCw, HelpCircle, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { LaunchButton } from '@/components/launch/LaunchButton';
@@ -85,14 +86,14 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+  return createPortal(
+    <div role="dialog" aria-modal="true" className="launch-theme fixed inset-0 z-[100] bg-[hsl(var(--launch-ink)/0.45)] flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-launch-ivory w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl border border-launch-gold/40 max-h-[90svh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-brand-emerald-50 to-brand-teal-50">
+        <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-brand-emerald-600" />
-            <h3 className="font-bold text-gray-900">Help me plan {scopeLabel[scope]}</h3>
+            <Sparkles className="h-5 w-5 text-launch-teal" />
+            <h3 className="font-bold text-launch-ink">Help me plan {scopeLabel[scope]}</h3>
           </div>
           <button
             onClick={() => {
@@ -107,7 +108,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] space-y-4">
           {step === 'feeling' && (
             <div className="space-y-3">
               <p className="text-gray-700">How are you feeling about {scopeLabel[scope]}?</p>
@@ -122,8 +123,8 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                     className={cn(
                       'min-h-[56px] rounded-2xl border-2 font-medium capitalize transition-colors',
                       feeling === f
-                        ? 'border-brand-emerald-500 bg-brand-emerald-50 text-brand-emerald-700'
-                        : 'border-gray-200 hover:border-brand-emerald-300 text-gray-700',
+                        ? 'border-launch-teal bg-launch-teal/10 text-launch-teal'
+                        : 'border-gray-200 hover:border-launch-teal/50 text-gray-700',
                     )}
                   >
                     {f}
@@ -134,7 +135,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 type="button"
                 onClick={() => setShowHints((v) => !v)}
                 aria-expanded={showHints}
-                className="min-h-[44px] flex items-center gap-1.5 text-sm text-brand-emerald-700 hover:text-brand-emerald-800 underline-offset-2 hover:underline"
+                className="min-h-[44px] flex items-center gap-1.5 text-sm text-launch-teal hover:text-launch-ink underline-offset-2 hover:underline"
               >
                 <HelpCircle className="h-4 w-4" />
                 {showHints ? 'Hide' : 'What do these mean?'}
@@ -143,10 +144,10 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 />
               </button>
               {showHints && (
-                <div className="rounded-xl bg-brand-emerald-50/60 border border-brand-emerald-100 p-3 text-sm text-gray-700 space-y-1.5">
-                  <p><span className="font-semibold text-gray-900">Low</span> — Tired, foggy, or stretched. Plan stays tiny and kind.</p>
-                  <p><span className="font-semibold text-gray-900">Steady</span> — Okay-ish. A realistic, normal plan.</p>
-                  <p><span className="font-semibold text-gray-900">Strong</span> — Clear and energised. Ready to lean in.</p>
+                <div className="rounded-xl bg-launch-teal/10/60 border border-launch-gold/30 p-3 text-sm text-gray-700 space-y-1.5">
+                  <p><span className="font-semibold text-launch-ink">Low</span> — Tired, foggy, or stretched. Plan stays tiny and kind.</p>
+                  <p><span className="font-semibold text-launch-ink">Steady</span> — Okay-ish. A realistic, normal plan.</p>
+                  <p><span className="font-semibold text-launch-ink">Strong</span> — Clear and energised. Ready to lean in.</p>
                 </div>
               )}
               <button
@@ -168,7 +169,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 onChange={(e) => setAspiration(e.target.value)}
                 placeholder="e.g. I want to feel calmer, or finish that email…"
                 rows={3}
-                className="w-full rounded-xl border border-gray-200 p-3 focus:border-brand-emerald-500 focus:ring-1 focus:ring-brand-emerald-500 outline-none text-base"
+                className="w-full rounded-xl border border-gray-200 p-3 focus:border-launch-teal focus:ring-1 focus:ring-launch-teal outline-none text-base"
               />
               <div className="flex gap-2">
                 <button
@@ -179,7 +180,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 </button>
                 <button
                   onClick={() => setStep('commitments')}
-                  className="flex-1 min-h-[56px] rounded-2xl bg-brand-emerald-500 text-white font-medium hover:bg-brand-emerald-600"
+                  className="flex-1 min-h-[56px] rounded-2xl bg-launch-teal text-white font-medium hover:opacity-90"
                 >
                   Next
                 </button>
@@ -197,7 +198,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 onChange={(e) => setCommitments(e.target.value)}
                 placeholder="e.g. school run, physio Tuesday…"
                 rows={3}
-                className="w-full rounded-xl border border-gray-200 p-3 focus:border-brand-emerald-500 focus:ring-1 focus:ring-brand-emerald-500 outline-none text-base"
+                className="w-full rounded-xl border border-gray-200 p-3 focus:border-launch-teal focus:ring-1 focus:ring-launch-teal outline-none text-base"
               />
               {error && <p className="text-sm text-red-600">{error}</p>}
               <div className="flex gap-2">
@@ -210,7 +211,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 <button
                   onClick={generate}
                   disabled={loading}
-                  className="flex-1 min-h-[56px] rounded-2xl bg-brand-emerald-500 text-white font-medium hover:bg-brand-emerald-600 flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="flex-1 min-h-[56px] rounded-2xl bg-launch-teal text-white font-medium hover:opacity-90 flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                   Draft my plan
@@ -230,7 +231,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                   <input
                     value={draft[k]}
                     onChange={(e) => setDraft({ ...draft, [k]: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 p-3 focus:border-brand-emerald-500 focus:ring-1 focus:ring-brand-emerald-500 outline-none text-base"
+                    className="w-full rounded-xl border border-gray-200 p-3 focus:border-launch-teal focus:ring-1 focus:ring-launch-teal outline-none text-base"
                   />
                 </div>
               ))}
@@ -247,7 +248,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                 </button>
                 <button
                   onClick={accept}
-                  className="flex-1 min-h-[56px] rounded-2xl bg-brand-emerald-500 text-white font-medium hover:bg-brand-emerald-600"
+                  className="flex-1 min-h-[56px] rounded-2xl bg-launch-teal text-white font-medium hover:opacity-90"
                 >
                   Use this plan
                 </button>
@@ -256,6 +257,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
