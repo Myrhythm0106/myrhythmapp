@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ensureSession, touchSession } from '@/utils/ensureSession';
 
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
 import { stopPlayback } from '@/hooks/useAudioPlayer';
@@ -454,7 +454,7 @@ export default function LaunchMemoryBridge() {
     }
 
     setIsExtracting(true);
-    const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+    const title = recordingTitle || `Conversation · ${format(new Date(), 'd MMM, HH:mm')}`;
 
 
     try {
