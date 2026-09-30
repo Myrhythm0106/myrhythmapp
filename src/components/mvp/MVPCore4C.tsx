@@ -335,6 +335,9 @@ export function MVPCore4C() {
               <h1 className="mt-4 font-instrument text-[2.6rem] leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.75rem]">
                 The app that keeps your plans and actions going after your appointment or conversation ends.
               </h1>
+              <p className="mt-4 font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
+                Your Pocket PA — <span className="text-launch-teal">it remembers</span>, so you don't have to.
+              </p>
               <p className="mt-3 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:mt-5 md:text-lg md:leading-8">
                 Captures it. Plans it. Keeps it. And follows it through.{" "}
                 <span className="text-launch-teal">You stay in control.</span>
