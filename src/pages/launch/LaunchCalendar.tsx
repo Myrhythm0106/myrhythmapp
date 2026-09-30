@@ -78,6 +78,8 @@ export default function LaunchCalendar() {
 
   const { dayOfWeek } = usePlanningDay();
   const weekScope = usePlanningScope('week', selectedDate, dayOfWeek);
+  const dayScope = usePlanningScope('day', selectedDate, dayOfWeek);
+  const assistScope = currentView === 'day' ? 'day' : 'week';
 
   // If ?assist=1, scroll the commitment banner into view on mount
   useEffect(() => {
@@ -365,10 +367,10 @@ export default function LaunchCalendar() {
             setSearchParams(next, { replace: true });
           }
         }}
-        scope="week"
-        periodStart={periodStartFor('week', selectedDate, dayOfWeek)}
+        scope={assistScope}
+        periodStart={periodStartFor(assistScope, selectedDate, dayOfWeek)}
         onAccept={(draft) => {
-          weekScope.save({
+          (assistScope === 'day' ? dayScope : weekScope).save({
             core: draft.core,
             key: draft.key,
             stretch: draft.stretch,
