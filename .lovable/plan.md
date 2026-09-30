@@ -39,7 +39,7 @@ Medical BRIGHT MINDS areas such as genetics, immunity, hormone levels and diagno
 ### Part 2 — How my days work best
 Keep a compact, clearly labelled planning section:
 
-- When do I usually feel clearest?
+- At what time of day do thinking and everyday tasks usually feel easiest for me?
 - How long can I comfortably focus at one time?
 - What drains my energy fastest?
 - Who, if anyone, may support me?
