@@ -1325,6 +1325,31 @@ export default function LaunchMemoryBridge() {
         </AlertDialogContent>
       </AlertDialog>
 
+      <AlertDialog open={confirmDiscardCapture} onOpenChange={setConfirmDiscardCapture}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard this recording?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This recording has not been saved or shared yet. If you discard it, it will be permanently deleted and cannot be recovered.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep it</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={async () => {
+                if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
+                setRecoverableCapture(null);
+                setConfirmDiscardCapture(false);
+              }}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Discard permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Actions Viewer */}
       {viewingActions && (
         <ActionsViewer
