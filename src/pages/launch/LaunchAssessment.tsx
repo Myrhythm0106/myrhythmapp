@@ -396,6 +396,9 @@ export default function LaunchAssessment() {
   const handleOptionTap = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
+      if (!question.multiSelect) {
+        return { ...prev, [question.id]: { primary: existing.primary === value ? '' : value, alsoFits: [] } };
+      }
       // "None fits" is selected — tapping a real option replaces it as primary.
       if (existing.primary === NONE_FITS_VALUE) {
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
@@ -647,7 +650,9 @@ export default function LaunchAssessment() {
           {question.subtitle && <p className="text-launch-ink/70">{question.subtitle}</p>}
         </div>
 
-        <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">Choose the answer that fits best today. You can change it later.</p>
+        <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
+          {question.multiSelect ? 'Choose the best fit first, then any others that also fit.' : 'Choose the answer that fits best today.'} You can change it later.
+        </p>
 
         {question.kind === 'rhythm-detail' ? (
           <RhythmDetailStep

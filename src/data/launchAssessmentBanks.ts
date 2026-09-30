@@ -175,7 +175,8 @@ const QUESTIONS: AssessmentQuestion[] = [
     options: [
       { value: 'morning', label: 'Morning', score: 0 },
       { value: 'afternoon', label: 'Afternoon', score: 0 },
-      { value: 'evening', label: 'Evening or it varies', score: 0 },
+      { value: 'evening', label: 'Evening', score: 0 },
+      { value: 'varies', label: 'It varies', score: 0 },
     ],
   },
   {

@@ -34,4 +34,4 @@
 - [x] Version new answers separately and safely restart incompatible in-progress answers
 - [x] Preserve completed older snapshots and readable historical answer fallbacks
 - [x] Remove practitioner and programme names from the app, source comments and internal reference log
-- [ ] Verify the complete journey at 393×822, a smaller Android width and desktop
+- [x] Verify the complete journey at 393×822, a smaller Android width and desktop
