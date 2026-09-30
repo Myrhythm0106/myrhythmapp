@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ensureSession, touchSession } from '@/utils/ensureSession';
 
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { RecordingPlayer } from '@/components/memoryBridge/RecordingPlayer';
 import { stopPlayback } from '@/hooks/useAudioPlayer';
@@ -454,7 +454,7 @@ export default function LaunchMemoryBridge() {
     }
 
     setIsExtracting(true);
-    const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+    const title = recordingTitle || `Conversation · ${format(new Date(), 'd MMM, HH:mm')}`;
 
 
     try {
@@ -997,14 +997,17 @@ export default function LaunchMemoryBridge() {
                   <div className="w-28 h-28 mx-auto mb-4 bg-launch-moss/10 rounded-full flex items-center justify-center border border-launch-moss/20">
                     <Play className="h-12 w-12 text-launch-moss ml-1" />
                   </div>
-                  <p className="text-lg font-semibold text-launch-ink mb-2">Recording Complete!</p>
+                  <p className="text-lg font-semibold text-launch-ink mb-1">Captured. Add details (optional)</p>
+                  <p className="text-sm text-launch-ink/65 mb-3">Everything below is already filled in — change anything, or just save.</p>
                   <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
 
+                  <label htmlFor="mb-title" className="block text-xs font-medium text-launch-ink/60 mb-1.5">Name for this conversation</label>
                   <input
+                    id="mb-title"
                     type="text"
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
-                    placeholder="Name this recording..."
+                    placeholder={`Conversation · ${format(new Date(), 'd MMM, HH:mm')}`}
                     className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
                   />
 
