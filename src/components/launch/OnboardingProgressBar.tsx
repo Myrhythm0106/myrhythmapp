@@ -27,11 +27,11 @@ const ONBOARDING_STEPS: StepLocatorItem[] = [
  */
 const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/register':
-    'Create my account. Next: a little about me.',
+    'Create my account. Next: a little about me, then questions that shape my diary.',
   '/launch/user-type':
-    'Choose what best describes me. Next: eight short questions.',
+    'Choose what best describes me. Next: short questions that shape my diary and reminders.',
   '/launch/assessment':
-    'A few short questions about my days. Next: my personal snapshot.',
+    'My answers shape my diary, reminders and breaks. Next: my free snapshot.',
   '/launch/welcome':
     'My MYRHYTHM snapshot — I can keep it, choose one action, and continue to Home.',
 };

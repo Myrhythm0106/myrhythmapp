@@ -78,7 +78,7 @@ export default function LaunchRegister() {
         options: {
           data: { name },
           emailRedirectTo: `${window.location.origin}${
-            prefilledUserType ? '/launch/payment' : '/launch/user-type'
+            prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type'
           }`,
         },
       });
@@ -127,7 +127,7 @@ export default function LaunchRegister() {
       }
 
       toast.success("You're in — let's get you set up.");
-      navigate(prefilledUserType ? '/launch/payment' : '/launch/user-type', { replace: true });
+      navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type', { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
       toast.error(err?.message || 'Something went wrong', {
@@ -163,7 +163,7 @@ export default function LaunchRegister() {
     }
     if (prefilledUserType) {
       localStorage.setItem('myrhythm_user_type', prefilledUserType);
-      navigate('/launch/payment');
+      navigate('/launch/assessment?first=1');
     } else {
       navigate('/launch/user-type');
     }
