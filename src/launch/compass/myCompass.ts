@@ -82,7 +82,8 @@ export function saveFocusCheck(check: Omit<FocusCheck, 'id' | 'createdAt' | 'sta
 
 function labelFor(bank: AssessmentBank | null, questionId: string, value: string): string {
   const question = bank?.questions.find((item) => item.id === questionId);
-  return question?.options.find((option) => option.value === value)?.label ?? value;
+  return question?.options.find((option) => option.value === value)?.label
+    ?? value.replace(/-/g, ' ').replace(/^./, (letter) => letter.toUpperCase());
 }
 
 export function deriveReport(results: Record<string, unknown>): ReportInsight {
