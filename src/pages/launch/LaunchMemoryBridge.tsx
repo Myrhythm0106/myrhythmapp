@@ -117,6 +117,7 @@ export default function LaunchMemoryBridge() {
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
   const [recordingToDelete, setRecordingToDelete] = useState<VoiceRecording | null>(null);
+  const [confirmDiscardCapture, setConfirmDiscardCapture] = useState(false);
   const [deletingRecording, setDeletingRecording] = useState(false);
 
   
@@ -834,10 +835,7 @@ export default function LaunchMemoryBridge() {
                   </LaunchButton>
                   <LaunchButton
                     variant="outline"
-                    onClick={async () => {
-                      await deleteCaptureSession(recoverableCapture.meta.id);
-                      setRecoverableCapture(null);
-                    }}
+                    onClick={() => setConfirmDiscardCapture(true)}
                   >
                     Discard it
                   </LaunchButton>
