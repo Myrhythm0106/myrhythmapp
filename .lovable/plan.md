@@ -3,16 +3,16 @@
 ## Goal
 Replace the current persona-led assessment with a short, meaningful two-part assessment:
 
-1. **My everyday brain health** — original, plain-language questions grounded only in Dr Daniel Amen’s publicly described brain-health framework.
+1. **My everyday brain health** — original, plain-language questions grounded in the approved public brain-health source material.
 2. **How my days work best** — practical preferences MyRhythm needs to shape the user’s snapshot, calendar and suggestions.
 
 The complete snapshot remains free. Membership is offered only after the user has received and understood it.
 
 ## What I confirmed
-- The current assessment contains persona-specific MYRHYTHM questions plus five shared Amen-based habit questions.
+- The current assessment contains persona-specific MYRHYTHM questions plus five shared brain-health habit questions.
 - The current free snapshot depends on eight MYRHYTHM scores, four broader areas and the user’s preferred working window.
 - Calendar suggestions depend on best time, focus length and energy-drain answers, so those planning questions must remain even when the old persona questions are removed.
-- The existing internal reference log already traces five habit questions to Amen material, but it does not yet cover a complete replacement assessment.
+- The existing internal reference log already traces five habit questions to public source material, but it does not yet cover a complete replacement assessment.
 
 ## New assessment structure
 
@@ -34,7 +34,7 @@ Each question will:
 - avoid medical-history questions, diagnosis, treatment language and promises;
 - allow the user’s first selection to be primary, with optional secondary choices only where genuinely useful.
 
-Medical BRIGHT MINDS areas such as genetics, immunity, hormone levels and diagnosed conditions will not be scored through self-report. The snapshot will plainly state that it is an everyday-habits reflection, not a medical assessment.
+Medical-history areas such as genetics, immunity, hormone levels and diagnosed conditions will not be scored through self-report. The snapshot will plainly state that it is an everyday-habits reflection, not a medical assessment.
 
 ### Part 2 — How my days work best
 Keep a compact, clearly labelled planning section:
@@ -45,7 +45,7 @@ Keep a compact, clearly labelled planning section:
 - Who, if anyone, may support me?
 - What would make this week feel better or more manageable?
 
-These answers remain user-owned preferences. They shape the best-time window, breaks, reminders, calendar suggestions and Support Circle prompts; they are not presented as Amen-derived health scores.
+These answers remain user-owned preferences. They shape the best-time window, breaks, reminders, calendar suggestions and Support Circle prompts; they are not presented as medical or diagnostic scores.
 
 ## Free snapshot
 - Keep the full snapshot available immediately after completion, before payment.
@@ -57,16 +57,16 @@ These answers remain user-owned preferences. They shape the best-time window, br
 
 ## Scoring and saved answers
 - Replace the current mixed score with a new versioned calculation based on the new brain-health questions.
-- Map the results into the existing snapshot areas without pretending the questions form a clinical or proprietary Amen test.
+- Map the results into the existing snapshot areas without presenting the questions as a clinical or proprietary test.
 - Preserve compatibility with previously saved snapshots: old completed results continue to display; starting a new assessment creates the new version.
 - Keep planning fields stable where possible so calendar and productivity suggestions continue working.
 - Ensure low scores never use alarming labels; use language such as “worth supporting,” “building” and “working well for me.”
 
 ## Reference log and traceability
-- Expand the internal reference log so every brain-health question has a unique reference code, its exact app wording, the relevant BRIGHT MINDS area, source title/chapter or official public resource, and a note explaining how MyRhythm uses the answer.
-- Use original MyRhythm wording; do not copy a proprietary Amen questionnaire or scoring system.
+- Expand the internal reference log so every brain-health question has a unique reference code, its exact app wording, the relevant brain-health area, source title/chapter or official public resource, and a note explaining how MyRhythm uses the answer.
+- Use original MyRhythm wording; do not copy a proprietary questionnaire or scoring system.
 - Record exclusions and limitations, including why medical-history factors are not asked or scored.
-- Keep all practitioner and programme names internal to the reference log; none appear in the app.
+- Do not use any practitioner or programme name anywhere: not in the app, snapshot, source comments, code-facing labels or reference log. The internal log identifies material only by neutral source title, topic and direct link.
 
 ## Mobile and cognitive-accessibility standards
 - One question per screen, at least 56px answer targets, no sideways scrolling, and no more than three primary choices where possible.
