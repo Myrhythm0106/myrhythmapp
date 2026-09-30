@@ -22,3 +22,8 @@
 - [ ] Signed-in check on a real phone (needs user)
 - [x] Five everyday brain-health habit questions (sleep, movement, fuel, protection, calm) feeding scores + timing; traced in docs/brain-health-reference-log.md
 - [x] Small-phone check: no sideways scrolling on the questions screen
+
+## Persistent You-Are-Here dial (30 Sep 2026)
+- [x] Mount one dial independently of page headers across established Launch screens
+- [x] Reserve header space so the dial and account control never overlap
+- [ ] Signed-in phone check on My wins, Home, Memory Bridge, Calendar and Diary (externally managed sign-in)

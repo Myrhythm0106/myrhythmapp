@@ -107,8 +107,7 @@ export function LaunchLayout({
                 </div>
               )}
 
-              <div className="flex items-center gap-2 sm:gap-3">
-                {showDial && <LaunchYouAreHereDial />}
+              <div className={cn("flex items-center gap-2 sm:gap-3", showDial && "pr-[4.5rem]")}>
                 <AccountDropdown />
               </div>
             </div>
@@ -120,10 +119,10 @@ export function LaunchLayout({
           </header>
         )}
 
-        {/* Full-screen setup screens render no header, so the dial gets its
-            own fixed corner position — the wayfinder is available everywhere. */}
-        {isSelfContained && showDial && (
-          <div className="fixed right-4 top-3 z-[75] pt-safe">
+        {/* One persistent wayfinder, independent of individual page headers.
+            The reserved header space keeps it clear of the account control. */}
+        {showDial && (
+          <div className="fixed right-[4.75rem] top-3 z-[90] pt-safe sm:right-24 xl:right-[calc((100vw-80rem)/2+6rem)]">
             <LaunchYouAreHereDial />
           </div>
         )}
