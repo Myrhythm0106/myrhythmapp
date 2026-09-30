@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { Mic, X, Plus, Activity, Loader2, History, Square } from 'lucide-react';
+import { Mic, X, Plus, Loader2, History, Square } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useAppReady } from '@/hooks/useAppReady';
@@ -67,7 +67,7 @@ export function CaptureDock() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Capture something"
+        aria-label="Quick start recording"
         className={cn(
            'fixed right-4 bottom-24 md:bottom-8 z-[80]',
            'h-16 w-16 rounded-full shadow-xl',
@@ -98,6 +98,7 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
   const { addEvent } = useLaunchCalendarEvents(today, today);
   const [text, setText] = useState('');
   const [saving, setSaving] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const [last, setLast] = useState<LastConversation | null>(null);
 
   useEffect(() => {
@@ -110,6 +111,7 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
   useEffect(() => {
     if (!open) return;
     setText('');
+    setNoteOpen(false);
     let cancelled = false;
     (async () => {
       const { data } = await supabase
@@ -154,94 +156,55 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Capture"
-        className="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 pb-safe"
+        aria-label="Quick start"
+        className="relative w-full sm:max-w-md bg-launch-linen rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 pb-safe border border-launch-gold/20"
       >
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold text-brain-health-900">Capture</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close capture"
-            className="h-11 w-11 rounded-full bg-brain-health-50 hover:bg-brain-health-100 flex items-center justify-center"
-          >
-            <X className="h-5 w-5 text-brain-health-700" />
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-launch-ink font-display">Quick start</h2>
+          <button type="button" onClick={onClose} aria-label="Close"
+            className="h-12 w-12 rounded-full bg-white border border-launch-gold/20 flex items-center justify-center">
+            <X className="h-5 w-5 text-launch-ink/70" />
           </button>
         </div>
 
-        <label htmlFor="capture-dock-note" className="sr-only">
-          What do you want to remember?
-        </label>
-        <textarea
-          id="capture-dock-note"
-          autoFocus
-          value={text}
-          onChange={e => setText(e.target.value)}
-          rows={3}
-          placeholder="What do you want to remember or do?"
-          className="w-full rounded-2xl border border-brain-health-200 p-3 text-base text-brain-health-900 focus:outline-none focus:ring-2 focus:ring-brand-orange-400 resize-none"
-        />
-
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={!text.trim() || saving}
-          className="mt-3 w-full min-h-[56px] rounded-2xl bg-brand-orange-500 text-white font-semibold text-base disabled:opacity-40 flex items-center justify-center gap-2"
-        >
-          {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
-          Save to today
+        <button type="button"
+          onClick={() => { onClose(); navigate('/launch/memory?record=1&quick=1'); }}
+          className="w-full min-h-[72px] rounded-2xl bg-brand-orange-500 hover:bg-brand-orange-600 text-white font-semibold text-lg flex items-center justify-center gap-3 shadow-md">
+          <Mic className="h-6 w-6" /> Start recording now
         </button>
+        <p className="mt-2 text-center text-sm text-launch-ink/65">Starts straight away. Add a name and details after, if you want.</p>
 
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => { onClose(); navigate('/launch/memory?record=1'); }}
-            className="min-h-[56px] rounded-2xl border border-brain-health-200 bg-white text-brain-health-900 font-medium flex items-center justify-center gap-2"
-          >
-            <Mic className="h-5 w-5 text-brand-orange-600" />
-            Record
+        {!noteOpen ? (
+          <button type="button" onClick={() => setNoteOpen(true)}
+            className="mt-4 w-full min-h-[56px] rounded-2xl border border-launch-gold/30 bg-white text-launch-ink font-medium flex items-center justify-center gap-2">
+            <Plus className="h-5 w-5 text-launch-teal" /> Type a quick note
           </button>
-          <button
-            type="button"
-            onClick={() => { onClose(); navigate('/launch/calibrate'); }}
-            className="min-h-[56px] rounded-2xl border border-brain-health-200 bg-white text-brain-health-900 font-medium flex items-center justify-center gap-2"
-          >
-            <Activity className="h-5 w-5 text-clarity-teal-600" />
-            Check in
-          </button>
-        </div>
+        ) : (
+          <div className="mt-4">
+            <label htmlFor="capture-dock-note" className="sr-only">What do you want to remember?</label>
+            <textarea id="capture-dock-note" autoFocus value={text} onChange={e => setText(e.target.value)} rows={3}
+              placeholder="What do you want to remember or do?"
+              className="w-full rounded-2xl border border-launch-gold/30 bg-white p-3 text-base text-launch-ink focus:outline-none focus:ring-2 focus:ring-launch-teal/40 resize-none" />
+            <button type="button" onClick={handleSave} disabled={!text.trim() || saving}
+              className="mt-2 w-full min-h-[56px] rounded-2xl bg-launch-teal text-white font-semibold disabled:opacity-40 flex items-center justify-center gap-2">
+              {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />} Save to today
+            </button>
+          </div>
+        )}
 
         {last && (
-          <button
-            type="button"
+          <button type="button"
             onClick={() => { onClose(); navigate(`/launch/memory?open=${last.recordingId}`); }}
-            className="mt-3 w-full min-h-[56px] rounded-2xl border border-brain-health-200 bg-white px-4 flex items-center gap-3 text-left"
-          >
-            <History className="h-5 w-5 text-clarity-teal-600 shrink-0" />
+            className="mt-3 w-full min-h-[56px] rounded-2xl border border-launch-gold/30 bg-white px-4 flex items-center gap-3 text-left">
+            <History className="h-5 w-5 text-launch-teal shrink-0" />
             <span className="min-w-0">
-              <span className="block text-sm font-medium text-brain-health-900 truncate">
-                {last.title}
-              </span>
-              <span className="block text-[11px] text-brain-health-500 truncate">
-                {[last.referenceCode, last.startedAt ? format(new Date(last.startedAt), 'd MMM, HH:mm') : null]
-                  .filter(Boolean)
-                  .join(' · ') || 'My last conversation'}
+              <span className="block text-sm font-medium text-launch-ink truncate">My last conversation: {last.title}</span>
+              <span className="block text-xs text-launch-ink/60 truncate">
+                {[last.referenceCode, last.startedAt ? format(new Date(last.startedAt), 'd MMM, HH:mm') : null].filter(Boolean).join(' · ')}
               </span>
             </span>
           </button>
         )}
-
-        <button
-          type="button"
-          onClick={() => { onClose(); navigate('/launch/memory'); }}
-          className="mt-2 w-full text-center text-xs text-brain-health-600 underline min-h-[44px]"
-        >
-          All my conversations
-        </button>
-
-        <p className="mt-3 text-center text-[11px] text-brain-health-500">
-          Nothing to get right. You can change it later.
-        </p>
       </div>
     </div>,
     document.body
