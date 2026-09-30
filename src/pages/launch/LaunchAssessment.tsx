@@ -11,7 +11,6 @@ import { deriveProductivityWindow } from '@/launch/assessment/productivityWindow
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { MyRhythmStrip } from '@/components/launch/assessment/MyRhythmStrip';
 import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
@@ -24,6 +23,7 @@ import {
   computeBrainHealthScore,
   normalizeAnswer,
   PERSONA_LABEL,
+  ASSESSMENT_SCHEMA_VERSION,
   type AssessmentAnswer,
   type PersonaKey,
 } from '@/data/launchAssessmentBanks';
@@ -53,6 +53,7 @@ type StoredProgress = {
   freeform?: FreeformMap;
   eventRecency?: RecencyValue | null;
   phase?: 'recency' | 'questions';
+  schemaVersion?: number;
 };
 
 function loadProgress(): StoredProgress | null {
@@ -61,6 +62,10 @@ function loadProgress(): StoredProgress | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
+    if (parsed.schemaVersion !== ASSESSMENT_SCHEMA_VERSION) {
+      localStorage.removeItem(PROGRESS_KEY);
+      return null;
+    }
     const answersIn = parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : {};
     const answers: AnswerMap = {};
     for (const k of Object.keys(answersIn)) {
@@ -73,7 +78,8 @@ function loadProgress(): StoredProgress | null {
       answers,
       freeform: parsed.freeform && typeof parsed.freeform === 'object' ? parsed.freeform : {},
       eventRecency: parsed.eventRecency ?? null,
-      phase: parsed.phase === 'questions' ? 'questions' : 'recency',
+      phase: 'questions',
+      schemaVersion: parsed.schemaVersion,
     };
   } catch {
     return null;
@@ -89,7 +95,7 @@ export default function LaunchAssessment() {
   const [answers, setAnswers] = useState<AnswerMap>(initial?.answers ?? {});
   const [freeform, setFreeform] = useState<FreeformMap>(initial?.freeform ?? {});
   const [eventRecency, setEventRecency] = useState<RecencyValue | null>(initial?.eventRecency ?? null);
-  const [phase, setPhase] = useState<'recency' | 'questions'>(initial?.phase ?? 'recency');
+  const [phase, setPhase] = useState<'recency' | 'questions'>('questions');
   const [processing, setProcessing] = useState(false);
   const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const pendingNav = useRef<string>('/launch/welcome');
@@ -109,7 +115,7 @@ export default function LaunchAssessment() {
   });
   const startFresh = () => {
     try { localStorage.removeItem(PROGRESS_KEY); } catch {/* noop */}
-    setAnswers({}); setFreeform({}); setCurrentQuestion(0); setEventRecency(null); setPhase('recency');
+    setAnswers({}); setFreeform({}); setCurrentQuestion(0); setEventRecency(null); setPhase('questions');
     setAskRetake(false);
   };
 
@@ -135,7 +141,7 @@ export default function LaunchAssessment() {
       setFreeform({});
       setCurrentQuestion(0);
       setEventRecency(null);
-      setPhase('recency');
+      setPhase('questions');
     }
     setPersona((prev) => (prev === bank.persona ? prev : bank.persona));
   }, [navigate, initial]);
@@ -154,6 +160,7 @@ export default function LaunchAssessment() {
           freeform,
           eventRecency,
           phase,
+          schemaVersion: ASSESSMENT_SCHEMA_VERSION,
           updatedAt: Date.now(),
         })
       );
@@ -462,37 +469,38 @@ export default function LaunchAssessment() {
       const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
       results = {
         userType: persona,
+        schemaVersion: ASSESSMENT_SCHEMA_VERSION,
         answers,
         freeformNotes: freeform,
         eventRecency,
         noneFitsCount,
-        mindset: primaryOf('mindset'),
-        yesReality: primaryOf('yesReality'),
-        rhythm: primaryOf('rhythm'),
-        harnessSupport: primaryOf('harnessSupport'),
-        yourVictories: combined('yourVictories'),
-        transform: combined('transform'),
-        followThrough: primaryOf('followThrough'),
-        heal: primaryOf('heal'),
+        mindset: primaryOf('habitExposure'),
+        yesReality: primaryOf('habitProtect'),
+        rhythm: primaryOf('planningRhythm'),
+        harnessSupport: primaryOf('planningSupport'),
+        yourVictories: combined('planningGoal'),
+        transform: [savedRhythmDetail.alsoFits[0] ?? ''],
+        followThrough: '',
+        heal: primaryOf('habitSleep'),
         sleep: primaryOf('habitSleep'),
         calm: primaryOf('habitCalm'),
-        multiply: primaryOf('multiply'),
-        rhythmPreference: primaryOf('rhythm'),
+        multiply: primaryOf('habitPurpose'),
+        rhythmPreference: primaryOf('planningRhythm'),
         productivityWindow: deriveProductivityWindow(
           {
-            rhythm: primaryOf('rhythm'),
+            rhythm: primaryOf('planningRhythm'),
             focusLength: savedRhythmDetail.primary,
             energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-            heal: primaryOf('heal'),
+            heal: primaryOf('habitSleep'),
             sleep: primaryOf('habitSleep'),
             calm: primaryOf('habitCalm'),
-            transform: combined('transform'),
+            transform: [savedRhythmDetail.alsoFits[0] ?? ''],
           },
           brainHealthScore
         ),
-        keyStruggles: combined('transform'),
-        goals: combined('yourVictories'),
-        hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
+        keyStruggles: [savedRhythmDetail.alsoFits[0] ?? ''].filter(Boolean),
+        goals: combined('planningGoal'),
+        hasSupport: resolveHasSupport(primaryOf('planningSupport')),
         brainHealthScore,
         completedAt: new Date().toISOString(),
       };
@@ -513,13 +521,13 @@ export default function LaunchAssessment() {
        if (user?.id) {
          const window = deriveProductivityWindow(
            {
-             rhythm: primaryOf('rhythm'),
+             rhythm: primaryOf('planningRhythm'),
              focusLength: savedRhythmDetail.primary,
              energyDrain: savedRhythmDetail.alsoFits[0] ?? '',
-             heal: primaryOf('heal'),
+             heal: primaryOf('habitSleep'),
              sleep: primaryOf('habitSleep'),
              calm: primaryOf('habitCalm'),
-             transform: combined('transform'),
+             transform: [savedRhythmDetail.alsoFits[0] ?? ''],
            },
            brainHealthScore
          );
@@ -594,7 +602,7 @@ export default function LaunchAssessment() {
 
   const handleBack = () => {
     if (currentQuestion > 0) setCurrentQuestion((p) => p - 1);
-    else setPhase('recency');
+    else navigate('/launch/user-type');
   };
 
   return (
@@ -624,37 +632,22 @@ export default function LaunchAssessment() {
           </div>
         </div>
 
-        <MyRhythmStrip
-          questions={questions}
-          currentIndex={currentQuestion}
-          answeredIds={new Set(Object.keys(answers).filter((k) => answers[k]?.primary))}
-          onJump={(i) => setCurrentQuestion(i)}
-        />
+        <p className="text-sm font-semibold text-launch-moss text-center mb-4">
+          {question.section === 'brain-health' ? 'Part 1 of 2 · My everyday brain health' : 'Part 2 of 2 · How my days work best'}
+          {' · '}Question {currentQuestion + 1} of {questions.length}
+        </p>
 
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <span
-            aria-hidden="true"
-            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-launch-ember text-launch-cream font-bold text-lg shadow-sm"
-          >
-            {question.letter}
-          </span>
-          <span className="text-sm font-semibold tracking-wide uppercase text-launch-ink/80">
-            {question.letter} is for {question.word}
-          </span>
+        <div className="flex items-center justify-center mb-4">
+          <span className="text-sm font-semibold text-launch-ink/75">{question.word}</span>
         </div>
 
 
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">{question.title}</h2>
           {question.subtitle && <p className="text-launch-ink/70">{question.subtitle}</p>}
-          <p className="text-xs italic text-launch-ink/60 mt-3">
-            Brain-health lens: {question.brainHealthLens}
-          </p>
         </div>
 
-        <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          Tap the one that fits best <span className="font-semibold">first</span> — that's your primary. Tap any others that also fit. You can change which is primary at any time.
-        </p>
+        <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">Choose the answer that fits best today. You can change it later.</p>
 
         {question.kind === 'rhythm-detail' ? (
           <RhythmDetailStep
