@@ -214,14 +214,14 @@ export default function LaunchAssessment() {
             Welcome, {displayName}
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            Before anything else, a few short questions — here's what to expect.
+            My answers shape how MyRhythm works for me.
           </p>
 
-          <ol className="space-y-3 mb-8">
+          <ol className="space-y-3 mb-4">
             {[
-              'First, everyday brain health. Then, how my days work best.',
-              "At the end, I'll see my complete MYRHYTHM snapshot for free.",
-              "Membership is optional and adds ongoing planning, reminders and follow-through.",
+              <><strong className="text-launch-ink">My diary</strong> — important things planned for the times I'm usually at my best.</>,
+              <><strong className="text-launch-ink">My reminders and breaks</strong> — spaced to suit my energy, not a generic timetable.</>,
+              <><strong className="text-launch-ink">My snapshot</strong> — a free personal report at the end, mine to keep.</>,
             ].map((line, i) => (
               <li
                 key={i}
@@ -234,6 +234,9 @@ export default function LaunchAssessment() {
               </li>
             ))}
           </ol>
+          <p className="text-sm text-launch-ink/60 text-center mb-8">
+            About 5 minutes. No right or wrong answers. I can change anything later.
+          </p>
 
           <LaunchButton onClick={() => setShowWelcome(false)} className="w-full">
             I'm ready
@@ -636,7 +639,7 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm font-semibold text-launch-moss text-center mb-4">
-          {question.section === 'brain-health' ? 'Part 1 of 2 · My everyday brain health' : 'Part 2 of 2 · How my days work best'}
+          {question.section === 'brain-health' ? 'Part 1 of 2 · My everyday brain health' : 'Part 2 of 2 · How I like to plan'}
           {' · '}Question {currentQuestion + 1} of {questions.length}
         </p>
 
@@ -648,6 +651,11 @@ export default function LaunchAssessment() {
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">{question.title}</h2>
           {question.subtitle && <p className="text-launch-ink/70">{question.subtitle}</p>}
+          {QUESTION_HELPS[question.id] && (
+            <p className="mt-3 inline-block rounded-full border border-launch-gold/40 bg-launch-ivory px-4 py-2 text-sm font-medium text-launch-teal">
+              {QUESTION_HELPS[question.id]}
+            </p>
+          )}
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
