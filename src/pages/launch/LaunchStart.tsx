@@ -43,9 +43,14 @@ export default function LaunchStart() {
         >
           <div className="flex flex-col gap-4">
             <EditionBadge tone="onDark" />
-            <h1 className="font-instrument text-5xl leading-[1.05] prestige-ivory md:text-7xl">
-              MyRhythm
-            </h1>
+            <div className="flex flex-col gap-2">
+              <h1 className="font-instrument text-5xl leading-[1.05] prestige-ivory md:text-7xl">
+                MyRhythm
+              </h1>
+              <p className="font-instrument text-lg leading-snug prestige-ivory-75 md:text-xl">
+                Your Pocket PA — <span className="prestige-gold">it remembers</span>, so you don't have to.
+              </p>
+            </div>
           </div>
           <p className="font-instrument max-w-sm text-xl italic leading-snug prestige-ivory-75 md:text-2xl">
             Four minutes to see how MyRhythm keeps your plan going after the conversation ends.
