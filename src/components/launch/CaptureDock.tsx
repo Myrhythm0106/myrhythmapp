@@ -157,7 +157,7 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
         role="dialog"
         aria-modal="true"
         aria-label="Quick start"
-        className="relative w-full sm:max-w-md bg-launch-linen rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 pb-safe border border-launch-gold/20"
+        className="relative w-full sm:max-w-md bg-launch-ivory rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 pb-safe border border-launch-gold/20"
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-launch-ink font-display">Quick start</h2>
