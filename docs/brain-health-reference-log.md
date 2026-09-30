@@ -1,28 +1,39 @@
-# Brain-Health Habit Questions: Reference Log
+# Brain-Health Questions: Reference Log
 
 INTERNAL DOCUMENT. Not shown in the app.
 
-The five everyday habit questions in the assessment (`HABIT_QUESTIONS` in `src/data/launchAssessmentBanks.ts`) are based on the published brain-health material of **Dr Daniel G. Amen**. The founder is a certified Amen Brain Health Coach. Each question carries a `// ref BH-xx` comment in the code that matches a row below, so every question can be traced to its source.
+The eight everyday questions in `src/data/launchAssessmentBanks.ts` use original MyRhythm wording grounded in approved public brain-health source material. Each carries a `// ref BH-xx` code matching one row below.
 
 ## Rules
-- **In-app:** no practitioner, clinic or programme names. The questions are phrased as everyday habits and are never presented as a medical test (see `docs/claims-policy.md`).
-- **Original wording:** all questions and options are written by MyRhythm. They are not copied from any proprietary Amen Clinics questionnaire or scored instrument.
-- **Not a diagnosis:** the results only shape the timing and pacing suggestions. They never diagnose, and the user can override every suggestion.
+- No practitioner, clinic or programme names appear in the app, snapshot, code comments or this log.
+- Questions are everyday self-reflection, not a medical test or risk prediction.
+- MyRhythm does not reproduce a proprietary questionnaire or scoring method.
+- Planning preferences are separate from the brain-health reflection and are not health-scored.
 
-## Source framework
-The **BRIGHT MINDS** risk-factor model, first set out in *Memory Rescue* (Amen, 2017). It is developed further in *The End of Mental Illness* (2020) and *Change Your Brain Every Day* (2023). The underlying brain-health habits come from *Change Your Brain, Change Your Life* (revised edition 2015) and *Use Your Brain to Change Your Age* (2012).
+## Sources
+- *Memory Rescue* (2017), ISBN 9781101988493.
+- *Change Your Brain, Change Your Life*, revised edition (2015), ISBN 9781101904640.
+- *Use Your Brain to Change Your Age* (2012), ISBN 9780307888938.
+- *The End of Mental Illness* (2020), ISBN 9781496438153.
+- *Change Your Brain Every Day* (2023), ISBN 9781496454573.
 
-| Ref | App question (plain) | BRIGHT MINDS factor(s) | Amen source material | How the answer is used |
+## Question traceability
+
+| Ref | Exact app question | Source topic | Source locator | How MyRhythm uses it |
 |---|---|---|---|---|
-| BH-01 | How do most nights go for you? | **S**: Sleep | *Memory Rescue*, ch. "S is for Sleep"; *Change Your Brain Every Day* (sleep habits) | Uneven nights: longer gaps between things, late evenings kept clear. Also counts towards the biological pillar |
-| BH-02 | How often do you get moving in a normal week? | **B**: Blood flow | *Memory Rescue*, ch. "B is for Blood Flow"; *Use Your Brain to Change Your Age* (exercise) | Biological pillar, which sets the length of the protected window and the focus blocks |
-| BH-03 | What does a typical day of eating and drinking look like? | **I**: Inflammation · **D**: Diabesity · **T**: Toxins (hydration) | *Memory Rescue*, chs. I / D; *The Brain Warrior's Way* (2016) nutrition | Biological pillar |
-| BH-04 | Which of these sounds most like you right now? (smoking, alcohol, helmets/seatbelts) | **H**: Head trauma · **T**: Toxins | *Memory Rescue*, chs. H / T; *Change Your Brain, Change Your Life* (protect your brain) | Biological pillar |
-| BH-05 | When worries or stress show up, what usually happens? | **M**: Mind storms · **N**: Neurohormones (stress) · **R**: Retirement/aging (curiosity) | *Change Your Brain, Change Your Life* (ANTs, i.e. automatic negative thoughts, and questioning the thought); *The End of Mental Illness* | Psychological pillar, which sets how many demanding items go in one day. "Racing thoughts" adds a calm-down slot suggestion |
+| BH-01 | How do most nights go for you? | Sleep and restorative habits | *Memory Rescue*, sleep chapter; *Change Your Brain Every Day*, sleep material | Everyday-habits score; uneven nights add more room between plans |
+| BH-02 | How often do you move your body in a usual week? | Movement and circulation | *Memory Rescue*, blood-flow chapter; *Use Your Brain to Change Your Age*, movement material | Everyday-habits score; helps pace the suggested focus window |
+| BH-03 | What are food and drinks like on a usual day? | Food, hydration and metabolic habits | *Memory Rescue*, inflammation and blood-sugar chapters | Everyday-habits score only |
+| BH-04 | How consistently do you protect your head? | Avoiding head injury | *Memory Rescue*, head-trauma chapter; *Change Your Brain, Change Your Life*, protection material | Everyday-habits score only |
+| BH-05 | Which answer is closest to your usual week? | Smoking, alcohol and avoidable exposure | *Memory Rescue*, toxins chapter | Everyday-habits score only |
+| BH-06 | When stress builds, what usually happens? | Stress response and settling busy thoughts | *Change Your Brain, Change Your Life*, thought-pattern material; *The End of Mental Illness*, stress material | Everyday-habits score; a racing-mind answer adds an optional settling pause |
+| BH-07 | How often do you learn something or connect with someone you trust? | New learning and social connection | *Memory Rescue*, aging and learning chapter | Everyday-habits score and social picture |
+| BH-08 | How often does your week include something that matters to you? | Purpose and positive routines | *Memory Rescue*, meaning and aging material | Everyday-habits score and purpose picture |
 
-## Deliberately not asked
-- **G (Genetics)** and **Immunity/infections:** these are medical-history questions. They are out of scope under the no-medical-claims policy.
-- Existing questions already cover part of the model. **R (Retirement/aging: purpose and learning)** is partly covered by the MYRHYTHM "Meaning" question. **Head trauma history** is covered by the brain-injury path's "When did this happen?" question.
+## Deliberately excluded
+- Genetics, immunity, hormone levels, infections and diagnosed conditions are medical-history areas and are not asked or scored.
+- The questions do not estimate the likelihood of dementia, Alzheimer’s disease or any other condition.
+- Best time, focus length, energy drains, support and weekly goal are planning preferences. They shape advisory scheduling but do not affect the everyday brain-health score.
 
 ## Change control
-If you change any habit question, update this table and the `// ref` comment together. Bump `BrainHealthScore.version` when scoring changes.
+Change the matching row and `// ref` code together whenever question wording changes. Bump `ASSESSMENT_SCHEMA_VERSION` whenever questions or scoring change.

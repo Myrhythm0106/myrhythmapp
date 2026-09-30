@@ -27,3 +27,11 @@
 - [x] Mount one dial independently of page headers across established Launch screens
 - [x] Reserve header space so the dial and account control never overlap
 - [ ] Signed-in phone check on My wins, Home, Memory Bridge, Calendar and Diary (externally managed sign-in)
+
+## Shared brain-health + planning assessment (30 Sep 2026)
+- [x] Replace persona-led questions with eight plain everyday brain-health questions and four planning steps
+- [x] Keep the complete snapshot free and membership optional after the result
+- [x] Version new answers separately and safely restart incompatible in-progress answers
+- [x] Preserve completed older snapshots and readable historical answer fallbacks
+- [x] Remove practitioner and programme names from the app, source comments and internal reference log
+- [x] Verify the complete journey at 393×822, a smaller Android width and desktop

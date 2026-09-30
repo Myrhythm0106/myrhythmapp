@@ -229,7 +229,7 @@ Unlike generic productivity tools, LEAP-OS:
 
 **Founder:** Annabel Aaron
 - TBI survivor (personal mission)
-- Certified Dr Amen Brain Health Coach
+- Certified brain-health coach
 - Building the tool she desperately needed
 
 **Advisors:** [TBD - Clinical, Business]
