@@ -23,6 +23,7 @@ Under every question, one small line in the same calm style, e.g.:
 - Best time of day — "This is when I'll suggest your most important tasks."
 - Focus length — "Sets how long your planned blocks and breaks are."
 The progress bar labels read "Part 1 of 2 — Your everyday brain health" and "Part 2 of 2 — How you like to plan".
+Every helper line describes the benefit to the user only — never scores, weightings or scheduling rules — so the approach stays private.
 
 ### 4. The snapshot closes the loop
 The snapshot adds one line: "Here's how your answers now shape your diary" with 2–3 concrete items (best window, block length, break rhythm), linking to the existing calendar agreement step so they still choose whether their calendar reflects it.
