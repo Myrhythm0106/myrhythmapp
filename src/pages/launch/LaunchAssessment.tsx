@@ -661,7 +661,10 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          {question.multiSelect ? 'Choose the best fit first, then any others that also fit.' : 'Choose the answer that fits best today.'} You can change it later.
+          {question.multiSelect
+            ? 'Tap the circle to pick your main answer, then use the small box to add any others that also fit.'
+            : 'Choose the answer that fits best today.'}{' '}
+          You can change it later.
         </p>
 
         {question.kind === 'rhythm-detail' ? (
@@ -678,21 +681,19 @@ export default function LaunchAssessment() {
               const dimmed = isNoneFits;
               const ariaLabel = isPrimary
                 ? `${option.label} — primary answer, tap to remove`
-                : isAlso
-                  ? `${option.label} — also fits, tap to remove`
-                  : `${option.label} — tap to select`;
+                : `${option.label} — tap to choose as your primary answer`;
               return (
                 <div
                   key={option.value}
                   role="button"
                   tabIndex={0}
-                  aria-pressed={isPrimary || isAlso}
+                  aria-pressed={isPrimary}
                   aria-label={ariaLabel}
-                  onClick={() => handleOptionTap(option.value)}
+                  onClick={() => setPrimary(option.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      handleOptionTap(option.value);
+                      setPrimary(option.value);
                     }
                   }}
                   className={cn(
@@ -712,12 +713,10 @@ export default function LaunchAssessment() {
                         'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 flex-shrink-0',
                         isPrimary
                           ? 'border-launch-ember bg-launch-ember'
-                          : isAlso
-                            ? 'border-launch-moss bg-launch-moss'
-                            : 'border-launch-ink/20'
+                          : 'border-launch-ink/20'
                       )}
                     >
-                      {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
+                      {isPrimary && <Check className="h-4 w-4 text-white" />}
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -737,11 +736,41 @@ export default function LaunchAssessment() {
                         <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                       )}
                     </div>
+                    {question.multiSelect && !isPrimary && !dimmed && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleAlso(option.value);
+                        }}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        aria-pressed={isAlso}
+                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
+                        className={cn(
+                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
+                          isAlso
+                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
+                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0',
+                            isAlso ? 'border-launch-cream bg-launch-moss' : 'border-launch-ink/25'
+                          )}
+                        >
+                          {isAlso && <Check className="h-3.5 w-3.5 text-white" />}
+                        </span>
+                        <span className="text-xs font-semibold">Also fits</span>
+                      </button>
+                    )}
                     {isAlso && !isPrimary && !isNoneFits && (
                       <button
                         type="button"
                         onClick={(e) => makePrimary(option.value, e)}
-                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[36px]"
+                        onKeyDown={(e) => e.stopPropagation()}
+                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
                         aria-label={`Make ${option.label} the primary answer`}
                       >
                         Make primary
