@@ -778,17 +778,6 @@ export default function LaunchAssessment() {
                         <span className="text-xs font-semibold">Also fits</span>
                       </button>
                     )}
-                    {isAlso && !isPrimary && !isNoneFits && (
-                      <button
-                        type="button"
-                        onClick={(e) => makePrimary(option.value, e)}
-                        onKeyDown={(e) => e.stopPropagation()}
-                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
-                        aria-label={`Make ${option.label} the primary answer`}
-                      >
-                        Make primary
-                      </button>
-                    )}
                   </div>
                 </div>
               );
