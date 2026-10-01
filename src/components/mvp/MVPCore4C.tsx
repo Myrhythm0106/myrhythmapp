@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
+import { resolveEntryRoute, getEntryState, type EntryState } from '@/launch/onboarding/entryRoute';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -224,6 +224,13 @@ export function MVPCore4C() {
     }
   }, [location]);
 
+  const [entryState, setEntryState] = useState<EntryState>('new');
+  useEffect(() => {
+    let alive = true;
+    getEntryState(user?.id).then((s) => { if (alive) setEntryState(s); });
+    return () => { alive = false; };
+  }, [user?.id]);
+
   useEffect(() => {
     const target = heroCtaRef.current;
     if (!target || typeof IntersectionObserver === 'undefined') return;
@@ -252,6 +259,25 @@ export function MVPCore4C() {
   const handleStartHere = async () => {
     navigate(await resolveEntryRoute('start', user?.id));
   };
+
+  const handlePrimary = () => {
+    if (entryState === 'returning') {
+      navigate('/launch/signin');
+      return;
+    }
+    void handleStartHere();
+  };
+
+  const primaryLabel =
+    entryState === 'returning' ? 'Sign in'
+    : entryState === 'needsQuestions' ? 'Continue my questions'
+    : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to my day'
+    : 'Start here';
+  const showFounding = entryState === 'new' || entryState === 'returning' || entryState === 'hasSnapshot';
+  const firstName =
+    String((user?.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] ||
+    user?.email?.split('@')[0] ||
+    '';
 
   return (
     <div className="launch-theme public-page min-h-screen bg-launch-cream-light text-launch-ink-deep">
