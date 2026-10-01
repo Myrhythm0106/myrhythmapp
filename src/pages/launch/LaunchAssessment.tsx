@@ -394,6 +394,9 @@ export default function LaunchAssessment() {
       if (existing.primary === value) {
         return { ...prev, [question.id]: { primary: '', alsoFits: existing.alsoFits } };
       }
+      if (!question.multiSelect) {
+        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
+      }
       // Selecting the "None fits" escape hatch clears any regular alsoFits picks.
       if (value === NONE_FITS_VALUE) {
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
@@ -408,34 +411,17 @@ export default function LaunchAssessment() {
   };
 
   /**
-   * First tap = primary, later taps = secondary ("also fits").
-   * Tapping a secondary removes it; tapping the primary deselects it and
-   * promotes the first secondary. "Make primary" swaps explicitly.
+   * The small "Also fits" box on each card adds or removes a secondary pick.
+   * The circle (tapping the card) only chooses or clears the primary.
    */
-  const handleOptionTap = (value: string) => {
+  const toggleAlso = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
-      if (!question.multiSelect) {
-        return { ...prev, [question.id]: { primary: existing.primary === value ? '' : value, alsoFits: [] } };
-      }
-      // "None fits" is selected — tapping a real option replaces it as primary.
-      if (existing.primary === NONE_FITS_VALUE) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
-      }
-      // Tapping the primary deselects it; the first secondary is promoted.
-      if (existing.primary === value) {
-        const [nextPrimary, ...rest] = existing.alsoFits;
-        return { ...prev, [question.id]: { primary: nextPrimary ?? '', alsoFits: nextPrimary ? rest : [] } };
-      }
-      // Tapping a secondary removes it.
       if (existing.alsoFits.includes(value)) {
         return { ...prev, [question.id]: { ...existing, alsoFits: existing.alsoFits.filter((v) => v !== value) } };
       }
-      // First tap → primary; later taps → secondary.
-      if (!existing.primary) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: existing.alsoFits } };
-      }
-      return { ...prev, [question.id]: { ...existing, alsoFits: [...existing.alsoFits, value] } };
+      const alsoFits = existing.alsoFits.filter((v) => v !== NONE_FITS_VALUE);
+      return { ...prev, [question.id]: { ...existing, alsoFits: [...alsoFits, value] } };
     });
   };
 
@@ -675,7 +661,10 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          {question.multiSelect ? 'Choose the best fit first, then any others that also fit.' : 'Choose the answer that fits best today.'} You can change it later.
+          {question.multiSelect
+            ? 'Tap the circle to pick your main answer, then use the small box to add any others that also fit.'
+            : 'Choose the answer that fits best today.'}{' '}
+          You can change it later.
         </p>
 
         {question.kind === 'rhythm-detail' ? (
@@ -692,21 +681,19 @@ export default function LaunchAssessment() {
               const dimmed = isNoneFits;
               const ariaLabel = isPrimary
                 ? `${option.label} — primary answer, tap to remove`
-                : isAlso
-                  ? `${option.label} — also fits, tap to remove`
-                  : `${option.label} — tap to select`;
+                : `${option.label} — tap to choose as your primary answer`;
               return (
                 <div
                   key={option.value}
                   role="button"
                   tabIndex={0}
-                  aria-pressed={isPrimary || isAlso}
+                  aria-pressed={isPrimary}
                   aria-label={ariaLabel}
-                  onClick={() => handleOptionTap(option.value)}
+                  onClick={() => setPrimary(option.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      handleOptionTap(option.value);
+                      setPrimary(option.value);
                     }
                   }}
                   className={cn(
@@ -726,12 +713,10 @@ export default function LaunchAssessment() {
                         'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 flex-shrink-0',
                         isPrimary
                           ? 'border-launch-ember bg-launch-ember'
-                          : isAlso
-                            ? 'border-launch-moss bg-launch-moss'
-                            : 'border-launch-ink/20'
+                          : 'border-launch-ink/20'
                       )}
                     >
-                      {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
+                      {isPrimary && <Check className="h-4 w-4 text-white" />}
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -750,15 +735,47 @@ export default function LaunchAssessment() {
                       {option.description && (
                         <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                       )}
+                      {isAlso && !isPrimary && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            makePrimary(option.value, e);
+                          }}
+                          className="mt-2 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
+                          aria-label={`Make ${option.label} the primary answer`}
+                        >
+                          Make primary
+                        </button>
+                      )}
                     </div>
-                    {isAlso && !isPrimary && !isNoneFits && (
+                    {question.multiSelect && !isPrimary && !dimmed && (
                       <button
                         type="button"
-                        onClick={(e) => makePrimary(option.value, e)}
-                        className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[36px]"
-                        aria-label={`Make ${option.label} the primary answer`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleAlso(option.value);
+                        }}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        aria-pressed={isAlso}
+                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
+                        className={cn(
+                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
+                          isAlso
+                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
+                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
+                        )}
                       >
-                        Make primary
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0',
+                            isAlso ? 'border-launch-cream bg-launch-moss' : 'border-launch-ink/25'
+                          )}
+                        >
+                          {isAlso && <Check className="h-3.5 w-3.5 text-white" />}
+                        </span>
+                        <span className="text-xs font-semibold">Also fits</span>
                       </button>
                     )}
                   </div>
