@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         // Check email verification status
         if (session?.user) {
+          try { localStorage.setItem('myrhythm_has_account', '1'); } catch { /* noop */ }
           const emailVerified = session.user.email_confirmed_at != null;
           setEmailVerificationStatus(emailVerified ? 'verified' : 'pending');
           console.log('User email verification status:', emailVerified ? 'verified' : 'pending');
