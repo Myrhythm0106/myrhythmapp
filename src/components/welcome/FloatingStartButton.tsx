@@ -21,7 +21,7 @@ export function FloatingStartButton() {
       }
     } else {
       // If onboarding not complete, go to streamlined get started flow
-      navigate("/get-started");
+      navigate("/launch/register");
     }
   };
 

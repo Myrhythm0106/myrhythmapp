@@ -9,15 +9,15 @@ import { LaunchStepLocator, type StepLocatorItem } from './LaunchStepLocator';
  * and, if so, renders the shared LaunchStepLocator so the user always
  * knows where they are in the sequence:
  *
- *   account → about me → questions → snapshot → home
+ *   account → questions → snapshot → make it yours → home
  *
  * Mount once inside LaunchLayout — no per-page wiring needed.
  */
 const ONBOARDING_STEPS: StepLocatorItem[] = [
   { label: 'Account',     path: '/launch/register' },
-  { label: 'About me',    path: '/launch/user-type' },
   { label: 'Questions',   path: '/launch/assessment' },
   { label: 'My snapshot', path: '/launch/welcome' },
+  { label: 'Make it yours', path: '/launch/user-type' },
   { label: 'Home',       path: '/launch/home' },
 ];
 
@@ -27,9 +27,9 @@ const ONBOARDING_STEPS: StepLocatorItem[] = [
  */
 const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/register':
-    'Create my account. Next: a little about me, then questions that shape my diary.',
+    'Quick sign-up. Next: short questions that shape my diary.',
   '/launch/user-type':
-    'Choose what best describes me. Next: short questions that shape my diary and reminders.',
+    'Optional — who MyRhythm is for. Next: my day.',
   '/launch/assessment':
     'My answers shape my diary, reminders and breaks. Next: my free snapshot.',
   '/launch/welcome':
