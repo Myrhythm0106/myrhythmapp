@@ -35,3 +35,13 @@
 - [x] Preserve completed older snapshots and readable historical answer fallbacks
 - [x] Remove practitioner and programme names from the app, source comments and internal reference log
 - [x] Verify the complete journey at 393×822, a smaller Android width and desktop
+
+## Chronometer You-Are-Here dial (1 Oct 2026)
+- [x] Restyle the dial trigger and open map to the approved "Precision chronometer" direction
+- [x] Move My Compass into the ring; Home stays anchored via the medallion + Take me home
+- [ ] Signed-in phone check of the new dial (externally managed sign-in)
+
+## Assessment selection: circle + Also-fits box (1 Oct 2026)
+- [x] Restore the explicit small "Also fits" box for secondary picks; the circle chooses the primary only
+- [x] Update helper text, aria labels and the single-select guard
+- [ ] Phone check of the tap order: primary tap, box toggle, Make primary
