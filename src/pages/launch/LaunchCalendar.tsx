@@ -214,7 +214,7 @@ export default function LaunchCalendar() {
         <RhythmDayBands date={selectedDate} />
         {/* Controls */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30 mb-4 p-4">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleNavigate('prev')}
