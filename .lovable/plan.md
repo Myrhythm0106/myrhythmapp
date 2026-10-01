@@ -29,9 +29,17 @@ On the landing page (top bar, hero, closing section, floating bottom button):
 ### 4. Check every way in
 Go through each button on the landing page and on /launch/start ("Open MyRhythm Home", "Start a capture now") and the floating buttons, both signed out and signed in. Make sure each one goes where its words promise.
 
+### 5. Light sign-up, then the questions, then the fuller details
+New order: **Light sign-up → Questions → Free snapshot → Fuller details (optional) → Home or membership.**
+- The sign-up page asks for three things only: first name, email and password. Heading: "Takes 30 seconds, then your free questions."
+- "About me" (who it's for) is no longer asked before the questions.
+- After the snapshot, one optional "Make it yours" step asks for the fuller details: who MyRhythm is for, connecting a calendar, phone or reminder preference. Each part can be skipped with "Later". Nothing in it blocks Home.
+- Founding Member still goes: light sign-up → questions → snapshot → membership.
+
 ## Technical notes
 - `MVPCore4C.tsx`: work out an `entryState` (signedOut / needsQuestions / hasSnapshot / member) using the logic in `entryRoute.ts` (expose `isMember` and `hasSnapshot`). Choose labels from it. Navigate to Home with `?from=landing`.
 - `DayOpenWelcome.tsx`: skip opening when `?from=landing` is in the URL or the path is an onboarding path. Do not mark the day as seen, so it still shows on a later visit that day.
 - `LaunchRegister.tsx`: on mount, if a session exists, show the "already signed in" card and use `resolveEntryRoute('start', id)` for its button.
 - Old leftover buttons (`FloatingRegisterButton` → `/mvp/user-type-selection`, `FloatingStartButton` → `/get-started`): send them to `/launch/register` so no old route is ever reachable.
+- Light sign-up: cut `LaunchRegister.tsx` down to first name, email and password. After sign-up, always go to `/launch/assessment?first=1`. `entryRoute.ts` / `nextDestination.ts` stop requiring `/launch/user-type`. Add an optional "Make it yours" step after the snapshot that reuses the existing user-type and calendar pieces. Update `OnboardingProgressBar` to Account → Questions → Snapshot → Make it yours → Home. Update the onboarding rule in project knowledge/AGENTS.md.
 - Check on a 393px phone, both signed out and signed in (with a session), and take screenshots of each button's destination.
