@@ -115,6 +115,11 @@ export default function LaunchWelcome() {
 
   const continueHome = () => {
     if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+    // Optional "Make it yours" step, offered once, after value is shown.
+    if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen')) {
+      navigate('/launch/user-type?after=snapshot');
+      return;
+    }
     navigate('/launch/home?welcome=1');
   };
 

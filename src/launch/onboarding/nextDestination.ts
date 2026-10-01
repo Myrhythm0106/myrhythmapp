@@ -13,7 +13,6 @@ const LOCAL_SNAPSHOT_KEY = 'myrhythm_launch_mode';
 const DEFER_KEY = 'myrhythm_assessment_deferred';
 
 const ONBOARDING_RESUME_PATHS = new Set([
-  '/launch/user-type',
   '/launch/assessment',
 ]);
 

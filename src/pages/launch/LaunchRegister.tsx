@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
 import { supabase } from '@/integrations/supabase/client';
+import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
 
 
 // Real Supabase signup is ON. A real session is required for checkout,
@@ -18,7 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 const BYPASS_REGISTRATION = false;
 
 const registerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(50),
+  name: z.string().trim().min(1, 'Please add your first name').max(50),
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
@@ -28,7 +29,13 @@ export default function LaunchRegister() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const prefilledUserType = searchParams.get('userType');
-  const { signUp, resendVerification } = useAuth();
+  const { user, signOut, resendVerification } = useAuth();
+  const [signedInNext, setSignedInNext] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!user) { setSignedInNext(null); return; }
+    resolveEntryRoute('start', user.id).then(setSignedInNext);
+  }, [user]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -78,7 +85,7 @@ export default function LaunchRegister() {
         options: {
           data: { name },
           emailRedirectTo: `${window.location.origin}${
-            prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type'
+            '/launch/assessment?first=1'
           }`,
         },
       });
@@ -127,7 +134,7 @@ export default function LaunchRegister() {
       }
 
       toast.success("You're in — let's get you set up.");
-      navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type', { replace: true });
+      navigate('/launch/assessment?first=1', { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
       toast.error(err?.message || 'Something went wrong', {
@@ -161,14 +168,38 @@ export default function LaunchRegister() {
       navigate(next);
       return;
     }
-    if (prefilledUserType) {
-      localStorage.setItem('myrhythm_user_type', prefilledUserType);
-      navigate('/launch/assessment?first=1');
-    } else {
-      navigate('/launch/user-type');
-    }
+    if (prefilledUserType) localStorage.setItem('myrhythm_user_type', prefilledUserType);
+    navigate('/launch/assessment?first=1');
   };
 
+
+  // Already signed in: never show an empty sign-up form.
+  if (user && !registrationSuccess && !isLoading) {
+    const name = String((user.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] || user.email;
+    const label = signedInNext?.startsWith('/launch/assessment') ? 'Continue my questions' : 'Go to my day';
+    return (
+      <div className="min-h-screen bg-launch-cream-light flex flex-col items-center justify-center px-6 py-10 pt-safe pb-safe">
+        <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
+          <CardContent className="p-7 space-y-5 text-center">
+            <h1 className="text-3xl font-display text-launch-ink">You're already signed in as {name}.</h1>
+            <Button
+              onClick={() => navigate(signedInNext ?? '/launch/home?from=landing')}
+              className="w-full min-h-14 bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white text-base font-bold"
+            >
+              {label}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <button
+              onClick={async () => { await signOut(); }}
+              className="min-h-11 text-sm text-launch-ink/70 underline underline-offset-4"
+            >
+              Sign out and create a new account
+            </button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   // Success state after registration
   if (registrationSuccess) {
@@ -286,18 +317,18 @@ export default function LaunchRegister() {
             Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Save my progress and begin my free snapshot. Membership is optional and shown separately.
+            Takes 30 seconds, then your free questions. Membership is optional and shown separately.
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">First name</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="e.g. Annabel" autoComplete="given-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className={errors.name ? 'border-launch-ember' : ''}

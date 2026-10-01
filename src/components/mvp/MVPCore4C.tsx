@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
+import { resolveEntryRoute, getEntryState, type EntryState } from '@/launch/onboarding/entryRoute';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -224,6 +224,13 @@ export function MVPCore4C() {
     }
   }, [location]);
 
+  const [entryState, setEntryState] = useState<EntryState>('new');
+  useEffect(() => {
+    let alive = true;
+    getEntryState(user?.id).then((s) => { if (alive) setEntryState(s); });
+    return () => { alive = false; };
+  }, [user?.id]);
+
   useEffect(() => {
     const target = heroCtaRef.current;
     if (!target || typeof IntersectionObserver === 'undefined') return;
@@ -252,6 +259,25 @@ export function MVPCore4C() {
   const handleStartHere = async () => {
     navigate(await resolveEntryRoute('start', user?.id));
   };
+
+  const handlePrimary = () => {
+    if (entryState === 'returning') {
+      navigate('/launch/signin');
+      return;
+    }
+    void handleStartHere();
+  };
+
+  const primaryLabel =
+    entryState === 'returning' ? 'Sign in'
+    : entryState === 'needsQuestions' ? 'Continue my questions'
+    : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to my day'
+    : 'Start here';
+  const showFounding = entryState === 'new' || entryState === 'returning' || entryState === 'hasSnapshot';
+  const firstName =
+    String((user?.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] ||
+    user?.email?.split('@')[0] ||
+    '';
 
   return (
     <div className="launch-theme public-page min-h-screen bg-launch-cream-light text-launch-ink-deep">
@@ -282,28 +308,30 @@ export function MVPCore4C() {
             >
               <HelpCircle className="h-5 w-5" />
             </Button>
-            {!user && (
+            {entryState === 'new' && (
               <Button
                 onClick={handleStartHere}
                 variant="outline"
                 className="hidden min-h-12 rounded-md border-launch-gold/50 bg-launch-ivory px-4 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream md:inline-flex md:px-5"
               >
-                Register
+                Start here
               </Button>
             )}
-            <Button
-              onClick={handleFoundingAction}
-              className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
-            >
-              Founding Member
-            </Button>
+            {showFounding && (
+              <Button
+                onClick={handleFoundingAction}
+                className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
+              >
+                Founding Member
+              </Button>
+            )}
             <Button
               onClick={handleAuthAction}
               variant="ghost"
               className="min-h-14 px-3 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
             >
               <User className="h-4 w-4" />
-              <span className="hidden sm:inline">{user ? 'Sign out' : 'Log in'}</span>
+              <span className={entryState === 'returning' ? 'font-bold' : 'hidden sm:inline'}>{user ? 'Sign out' : 'Sign in'}</span>
             </Button>
           </div>
         </div>
@@ -346,27 +374,52 @@ export function MVPCore4C() {
                 MyRhythm turns conversations and reports into clear, traceable next steps, then helps those steps find a realistic place in your day.
               </p>
               <div ref={heroCtaRef} className="mt-6 md:mt-9">
+                {entryState === 'returning' && (
+                  <p className="mb-3 font-instrument text-2xl text-launch-ink-deep">Welcome back.</p>
+                )}
                 <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                   <Button
                     size="lg"
-                    onClick={handleStartHere}
+                    onClick={handlePrimary}
                     className="min-h-16 rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
                   >
-                    Start here
+                    {primaryLabel}
                     <ArrowRight className="h-5 w-5" />
                   </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={handleFoundingAction}
-                    className="min-h-16 rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream"
-                  >
-                    Become a Founding Member
-                  </Button>
+                  {showFounding && (
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      onClick={handleFoundingAction}
+                      className="min-h-16 rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream"
+                    >
+                      Become a Founding Member
+                    </Button>
+                  )}
                 </div>
-                <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                  Start with a few short questions — about 5 minutes. Your snapshot is free. Founding Member is £10/month for life · limited to 500 places.
-                </p>
+                {entryState === 'new' && (
+                  <>
+                    <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
+                      Quick sign-up, then a few short questions — about 5 minutes. Your snapshot is free. Founding Member is £10/month for life · limited to 500 places.
+                    </p>
+                    <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
+                      Already have an account?{' '}
+                      <button onClick={() => navigate('/launch/signin')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Sign in</button>
+                    </p>
+                  </>
+                )}
+                {entryState === 'returning' && (
+                  <p className="mt-4 font-worksans text-sm text-launch-ink-deep/75">
+                    New here?{' '}
+                    <button onClick={() => navigate('/launch/register')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Start here</button>
+                  </p>
+                )}
+                {user && (
+                  <p className="mt-4 font-worksans text-sm text-launch-ink-deep/75">
+                    Signed in as {firstName} ·{' '}
+                    <button onClick={handleAuthAction} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Not you? Sign out</button>
+                  </p>
+                )}
               </div>
             </motion.div>
           </div>
@@ -479,20 +532,22 @@ export function MVPCore4C() {
             <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
                 size="lg"
-                onClick={handleStartHere}
+                onClick={handlePrimary}
                 className="min-h-16 w-full rounded-md bg-launch-teal px-8 font-worksans font-bold text-primary-foreground shadow-[0_18px_40px_-20px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink sm:w-auto"
               >
-                Start here
+                {primaryLabel}
                 <ArrowRight className="h-5 w-5" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={handleFoundingAction}
-                className="min-h-16 w-full rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream sm:w-auto"
-              >
-                Become a Founding Member
-              </Button>
+              {showFounding && (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={handleFoundingAction}
+                  className="min-h-16 w-full rounded-md border-launch-gold/60 bg-launch-ivory px-8 font-worksans font-bold text-launch-ink-deep hover:bg-launch-cream sm:w-auto"
+                >
+                  Become a Founding Member
+                </Button>
+              )}
             </div>
           </div>
         </section>
@@ -516,19 +571,21 @@ export function MVPCore4C() {
       >
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <Button
-            onClick={handleStartHere}
+            onClick={handlePrimary}
             className="min-h-14 flex-1 rounded-md bg-launch-teal px-4 font-worksans font-bold text-primary-foreground shadow-[0_14px_30px_-16px_hsl(var(--launch-ink-deep)/0.6)] hover:bg-launch-ink"
           >
-            Start here
+            {primaryLabel}
             <ArrowRight className="h-5 w-5" />
           </Button>
-          <Button
-            onClick={handleFoundingAction}
-            variant="outline"
-            className="min-h-14 flex-1 rounded-md border-launch-gold/60 bg-launch-ivory px-3 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream"
-          >
-            Founding Member
-          </Button>
+          {showFounding && (
+            <Button
+              onClick={handleFoundingAction}
+              variant="outline"
+              className="min-h-14 flex-1 rounded-md border-launch-gold/60 bg-launch-ivory px-3 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream"
+            >
+              Founding Member
+            </Button>
+          )}
         </div>
       </div>
 
