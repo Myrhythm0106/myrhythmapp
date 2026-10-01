@@ -116,7 +116,12 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
 
   useEffect(() => {
     try {
-      if (!localStorage.getItem(key)) setOpen(true);
+      // Arriving on purpose from a landing button or straight out of the
+      // snapshot: open Home as asked, no surprise overlay. The day stays
+      // unmarked so the welcome still greets a later visit.
+      const params = new URLSearchParams(window.location.search);
+      const arrivedOnPurpose = params.get('from') === 'landing' || params.get('welcome') === '1';
+      if (!arrivedOnPurpose && !localStorage.getItem(key)) setOpen(true);
     } catch {
       /* storage blocked — skip the overlay rather than trapping the user */
     }
