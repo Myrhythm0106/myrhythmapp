@@ -222,7 +222,7 @@ export default function LaunchCalendar() {
               >
                 <ChevronLeft className="h-5 w-5 text-launch-ink" />
               </button>
-              <h1 className="text-lg md:text-xl font-semibold text-launch-ink font-display min-w-[10rem] text-center">
+              <h1 className="text-lg md:text-xl font-semibold text-launch-ink font-display min-w-0 flex-1 text-center">
                 {getHeaderTitle()}
               </h1>
               <button
