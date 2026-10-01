@@ -5,18 +5,21 @@ On the landing page, "Start here", "Register" and "Become a Founding Member" kee
 
 ## What changes
 
-### 1. The buttons change their words when you're signed in
-On the landing page (top bar, hero, closing section, floating bottom button):
+### 1. The buttons match who you are: new, returning, or signed in
+On the landing page (top bar, hero, closing section, floating bottom button), there are four kinds of visitor:
 
-| Who | Main button | Second button |
+| Who | Main button | Second option |
 |---|---|---|
-| Signed out | Start here: sign up, then the questions | Become a Founding Member: sign up, questions, then membership |
-| Signed in, questions not finished | Continue my questions | Become a Founding Member: back to the questions first |
-| Signed in, snapshot done, not a member | Go to my day | Become a Founding Member: membership page |
-| Signed in, already a member | Go to my day | (hidden) |
+| **New**: first time on this device | Start here: light sign-up, then the questions | "Already have an account? Sign in" |
+| **Returning, signed out**: has used MyRhythm on this device before | **Sign in**: back to where they left off | Quiet link "New here? Start here" |
+| **Signed in, questions not finished** | Continue my questions | none |
+| **Signed in, snapshot done** | Go to my day | Become a Founding Member (hidden for members) |
 
-- The top-bar "Register" button only shows when you're signed out. This is already the case and stays that way.
-- A small line under the buttons when signed in: "Signed in as Annabel · Not you? Sign out".
+- "Become a Founding Member" stays available to new and returning visitors as a clear secondary button. It never replaces Sign in for returning people.
+- The top bar shows **Sign in** for returning visitors and **Start here** for new ones. It never shows "Register" to someone who already has an account.
+- Signed-in visitors see a small line: "Signed in as Annabel · Not you? Sign out".
+- Returning visitors get a quiet "Welcome back" above the Sign in button.
+- How returning is detected: the device remembers that an account was used or created here. This works even after signing out, and nothing personal is stored for it.
 
 ### 2. No surprise daily welcome after tapping a landing button
 - When you go from the landing page to Home with "Go to my day", Home opens normally. The "A new day is mine" welcome does not pop up on top of it.
