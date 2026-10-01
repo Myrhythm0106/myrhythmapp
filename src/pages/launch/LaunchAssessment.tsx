@@ -718,6 +718,35 @@ export default function LaunchAssessment() {
                     >
                       {isPrimary && <Check className="h-4 w-4 text-white" />}
                     </span>
+                    {question.multiSelect && !isPrimary && !dimmed && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleAlso(option.value);
+                        }}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        aria-pressed={isAlso}
+                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
+                        className={cn(
+                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
+                          isAlso
+                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
+                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0',
+                            isAlso ? 'border-launch-cream bg-launch-moss' : 'border-launch-ink/25'
+                          )}
+                        >
+                          {isAlso && <Check className="h-3.5 w-3.5 text-white" />}
+                        </span>
+                        <span className="text-xs font-semibold">Also fits</span>
+                      </button>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-semibold text-launch-ink">{option.label}</p>
@@ -749,35 +778,6 @@ export default function LaunchAssessment() {
                         </button>
                       )}
                     </div>
-                    {question.multiSelect && !isPrimary && !dimmed && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAlso(option.value);
-                        }}
-                        onKeyDown={(e) => e.stopPropagation()}
-                        aria-pressed={isAlso}
-                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
-                        className={cn(
-                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
-                          isAlso
-                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
-                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
-                        )}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0',
-                            isAlso ? 'border-launch-cream bg-launch-moss' : 'border-launch-ink/25'
-                          )}
-                        >
-                          {isAlso && <Check className="h-3.5 w-3.5 text-white" />}
-                        </span>
-                        <span className="text-xs font-semibold">Also fits</span>
-                      </button>
-                    )}
                   </div>
                 </div>
               );
