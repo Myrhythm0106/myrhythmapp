@@ -201,6 +201,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'planningGoal', letter: 'Y', word: 'My next step', slot: 'yourVictories', pillar: 'spiritual',
     brainHealthLens: 'What matters this week',
     title: 'What would make this week feel better or more manageable?',
+    multiSelect: true,
     section: 'planning', scored: false,
     options: [
       { value: 'remember', label: 'Remember the important things', score: 0 },
