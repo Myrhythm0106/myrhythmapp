@@ -394,6 +394,9 @@ export default function LaunchAssessment() {
       if (existing.primary === value) {
         return { ...prev, [question.id]: { primary: '', alsoFits: existing.alsoFits } };
       }
+      if (!question.multiSelect) {
+        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
+      }
       // Selecting the "None fits" escape hatch clears any regular alsoFits picks.
       if (value === NONE_FITS_VALUE) {
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
@@ -408,34 +411,17 @@ export default function LaunchAssessment() {
   };
 
   /**
-   * First tap = primary, later taps = secondary ("also fits").
-   * Tapping a secondary removes it; tapping the primary deselects it and
-   * promotes the first secondary. "Make primary" swaps explicitly.
+   * The small "Also fits" box on each card adds or removes a secondary pick.
+   * The circle (tapping the card) only chooses or clears the primary.
    */
-  const handleOptionTap = (value: string) => {
+  const toggleAlso = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
-      if (!question.multiSelect) {
-        return { ...prev, [question.id]: { primary: existing.primary === value ? '' : value, alsoFits: [] } };
-      }
-      // "None fits" is selected — tapping a real option replaces it as primary.
-      if (existing.primary === NONE_FITS_VALUE) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
-      }
-      // Tapping the primary deselects it; the first secondary is promoted.
-      if (existing.primary === value) {
-        const [nextPrimary, ...rest] = existing.alsoFits;
-        return { ...prev, [question.id]: { primary: nextPrimary ?? '', alsoFits: nextPrimary ? rest : [] } };
-      }
-      // Tapping a secondary removes it.
       if (existing.alsoFits.includes(value)) {
         return { ...prev, [question.id]: { ...existing, alsoFits: existing.alsoFits.filter((v) => v !== value) } };
       }
-      // First tap → primary; later taps → secondary.
-      if (!existing.primary) {
-        return { ...prev, [question.id]: { primary: value, alsoFits: existing.alsoFits } };
-      }
-      return { ...prev, [question.id]: { ...existing, alsoFits: [...existing.alsoFits, value] } };
+      const alsoFits = existing.alsoFits.filter((v) => v !== NONE_FITS_VALUE);
+      return { ...prev, [question.id]: { ...existing, alsoFits: [...alsoFits, value] } };
     });
   };
 
