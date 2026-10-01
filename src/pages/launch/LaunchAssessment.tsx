@@ -735,6 +735,19 @@ export default function LaunchAssessment() {
                       {option.description && (
                         <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                       )}
+                      {isAlso && !isPrimary && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            makePrimary(option.value, e);
+                          }}
+                          className="mt-2 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
+                          aria-label={`Make ${option.label} the primary answer`}
+                        >
+                          Make primary
+                        </button>
+                      )}
                     </div>
                     {question.multiSelect && !isPrimary && !dimmed && (
                       <button
