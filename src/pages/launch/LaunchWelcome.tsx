@@ -120,6 +120,11 @@ export default function LaunchWelcome() {
       navigate('/launch/user-type?after=snapshot');
       return;
     }
+    if (localStorage.getItem('myrhythm_intent') === 'founding') {
+      localStorage.removeItem('myrhythm_intent');
+      navigate('/launch/payment');
+      return;
+    }
     navigate('/launch/home?welcome=1');
   };
 
@@ -468,7 +473,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${GOLD}14`)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                 >
-                  Not now — continue free to Home
+                  Not now — go to Home
                 </button>
               </div>
 

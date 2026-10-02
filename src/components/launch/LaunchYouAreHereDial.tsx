@@ -33,7 +33,7 @@ const RING_PLACES: Place[] = [
 ];
 
 const SECONDARY: Place[] = [
-  { path: '/launch/assessment?mode=retake', label: 'Brain Health Assessment', purpose: 'Take or retake', icon: ClipboardList },
+  { path: '/launch/assessment?mode=retake', label: 'My questions and snapshot', purpose: 'Review or answer again', icon: ClipboardList },
   { path: '/launch/support', label: 'Support Circle', purpose: 'The people with me', icon: Users },
   { path: '/launch/settings', label: 'Settings', purpose: 'Preferences and profile', icon: Settings },
   { path: '/launch/help', label: 'Help', purpose: 'Guidance when I need it', icon: HelpCircle },
@@ -45,7 +45,7 @@ const PLAIN_LABELS: Record<string, string> = {
   '/launch/commit': 'My next steps',
   '/launch/calibrate': 'Daily check-in',
   '/launch/celebrate': 'My wins',
-  '/launch/assessment': 'Brain Health Assessment',
+  '/launch/assessment': 'My questions',
 };
 
 const PLAIN_PURPOSES: Record<string, string> = {
@@ -184,21 +184,28 @@ export function LaunchYouAreHereDial() {
               </ul>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowMore(value => !value)}
-              aria-expanded={showMore}
-              className="mt-6 flex min-h-[56px] w-full items-center justify-between rounded-2xl border border-launch-gold/50 bg-launch-ivory px-5 text-base font-semibold text-launch-ink-deep hover:bg-launch-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
-            >
-              <span className="flex items-center gap-2">
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setShowMore(value => !value)}
+                aria-expanded={showMore}
+                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border border-launch-gold/50 bg-launch-ivory px-3 text-sm font-semibold text-launch-ink-deep hover:bg-launch-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
+              >
                 {showMore ? <Minus className="h-5 w-5 text-launch-gold" /> : <Plus className="h-5 w-5 text-launch-gold" />}
-                {showMore ? 'Show fewer places' : 'More places'}
-              </span>
-            </button>
+                {showMore ? 'Fewer places' : 'More places'}
+              </button>
+              <button
+                type="button"
+                onClick={() => go('/launch/help')}
+                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border border-launch-gold/50 bg-launch-ivory px-3 text-sm font-semibold text-launch-ink-deep hover:bg-launch-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
+              >
+                <HelpCircle className="h-5 w-5 text-launch-teal" /> Help
+              </button>
+            </div>
 
             {showMore && (
               <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                {SECONDARY.map(p => (
+                {SECONDARY.filter(p => p.path !== '/launch/help').map(p => (
                   <PlaceCard key={p.path} place={p} current={current.path.startsWith(p.path.split('?')[0])} onGo={go} />
                 ))}
               </ul>

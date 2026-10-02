@@ -47,13 +47,29 @@ const userTypes = [
 
 export default function LaunchUserType() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const afterSnapshot = searchParams.get('after') === 'snapshot';
 
   React.useEffect(() => {
     setResumePoint('/launch/user-type');
   }, []);
 
+  const finishPersonalisation = () => {
+    localStorage.setItem('myrhythm_make_it_yours_seen', '1');
+    if (localStorage.getItem('myrhythm_intent') === 'founding') {
+      localStorage.removeItem('myrhythm_intent');
+      navigate('/launch/payment');
+      return;
+    }
+    navigate('/launch/home?welcome=1');
+  };
+
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
+    if (afterSnapshot) {
+      finishPersonalisation();
+      return;
+    }
     navigate('/launch/assessment?first=1');
   };
 
@@ -80,7 +96,9 @@ export default function LaunchUserType() {
               What brings you to MyRhythm?
             </h1>
             <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
-              We'll tailor your experience based on your unique needs
+              {afterSnapshot
+                ? 'Optional — this helps MyRhythm use the right words and examples for you.'
+                : "We'll tailor your experience based on your unique needs"}
             </p>
           </motion.div>
 
@@ -121,13 +139,15 @@ export default function LaunchUserType() {
         <div className="text-center space-y-1">
           <button
             onClick={() => {
-              // Neutral default: the general focus questions, never the recovery lens.
-              localStorage.setItem('myrhythm_user_type', 'executive');
+              if (afterSnapshot) {
+                finishPersonalisation();
+                return;
+              }
               navigate('/launch/assessment?first=1');
             }}
             className="text-sm text-launch-ink/70 hover:text-launch-ink underline underline-offset-4"
           >
-            I'm not sure yet — start with the everyday focus questions
+            {afterSnapshot ? 'Not now — go to Home' : 'Not now — start my questions'}
           </button>
           <p className="text-xs text-launch-ink/40">You can change this any time in Settings.</p>
         </div>

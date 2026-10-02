@@ -46,3 +46,13 @@
 - [x] Restore the explicit small "Also fits" box for secondary picks; the circle chooses the primary only
 - [x] Update helper text, aria labels and the single-select guard
 - [ ] Phone check of the tap order: primary tap, box toggle, Make primary
+
+## Questions-first journey consistency (2 Oct 2026)
+- [x] Account goes directly to shared questions; optional personalisation comes after the free snapshot
+- [x] Preserve Founding Member intent through snapshot and optional personalisation
+- [x] Use one “Not now — go to Home” phrase across optional onboarding exits
+- [x] Rename assessment navigation to “My questions and snapshot”
+- [x] Remove the competing legacy signed-in bottom menu
+- [x] Put Help within two taps of every established screen
+- [x] Keep multi-answer selection only for the genuinely additive weekly-goal question
+- [ ] Verify first-time, returning, founding-intent and multi-answer flows on phone

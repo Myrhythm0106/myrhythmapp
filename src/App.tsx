@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MockAuthWrapper } from "@/components/auth/MockAuthWrapper";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
@@ -17,11 +17,9 @@ import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { NavProvider } from "@/components/navigation/NavContext";
-import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { lazy, Suspense } from "react";
 import { PageSkeleton } from "@/components/loading/PageSkeleton";
-import { useAuth } from "@/hooks/useAuth";
 import Landing from "./pages/Landing";
 import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
@@ -168,17 +166,6 @@ const LaunchPrivate = ({ children }: { children: React.ReactNode }) => (
 function NetworkStatusMonitor() {
   useNetworkStatus();
   return null;
-}
-
-// Authenticated Bottom Nav - only shows when user is logged in and NOT on launch pages
-function AuthenticatedBottomNav() {
-  const { user, loading } = useAuth();
-  const location = useLocation();
-  
-  // Hide nav while checking auth, if no user logged in, or on launch routes (they have LaunchNav)
-  if (loading || !user || location.pathname.startsWith('/launch')) return null;
-  
-  return <MobileBottomNav />;
 }
 
 function App() {
@@ -421,7 +408,6 @@ function App() {
                          <Route path="/founder-playbook" element={<Navigate to="/founder/playbook" replace />} />
                    </Routes>
                         </Suspense>
-                        <AuthenticatedBottomNav />
                       </NavProvider>
                     </BrowserRouter>
                     </DayOpenWelcomeProvider>
