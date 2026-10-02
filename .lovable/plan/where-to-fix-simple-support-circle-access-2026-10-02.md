@@ -19,11 +19,13 @@ Primary user  ->  Invite (name + email + "who are they?")
 
 ### Three ready-made access levels (max 3 choices)
 
-| Level | What the helper can do |
-|---|---|
-| **See** | View calendar and next steps. Receive "done" updates. |
-| **Help** | Everything in See, plus send notes/encouragement and suggest calendar items (the person accepts or declines). |
+
+| Level       | What the helper can do                                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **See**     | View calendar and next steps. Receive "done" updates.                                                                                                                     |
+| **Support** | Everything in See, plus send notes/encouragement and suggest calendar items (the person accepts or declines).                                                             |
 | **Step in** | Everything in Help, plus start a recording on the person's behalf when they forget. The recording is saved to the person's Memory Bridge and they are told straight away. |
+
 
 - "Customise" link underneath for individual on/off switches (Calendar, Next steps, Notes, Record) — hidden by default.
 - The person can change level or remove a helper at any time, one tap, takes effect immediately.
