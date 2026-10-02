@@ -10,10 +10,9 @@ import { findLaunchRoute } from '@/launch/routes';
 
 /**
  * LaunchYouAreHereDial — the "Wayfinder".
- * A quiet circular wayfinder in the chronometer style: the compact dial opens
- * a radial map with four familiar landmarks around the current place.
- * Home lives at the centre (and in the Take-me-home action); Compass joins
- * the ring. Secondary places stay behind "More places".
+ * A quiet circular trigger opens a structured path of four familiar landmarks.
+ * The ordered path keeps every destination easy to scan while secondary places
+ * stay behind "More places".
  */
 
 interface Place {
@@ -49,6 +48,14 @@ const PLAIN_LABELS: Record<string, string> = {
   '/launch/assessment': 'Brain Health Assessment',
 };
 
+const PLAIN_PURPOSES: Record<string, string> = {
+  '/launch/assessment': 'My questions and free snapshot',
+};
+
+const PLAIN_ICONS: Record<string, LucideIcon> = {
+  '/launch/assessment': ClipboardList,
+};
+
 export function useCurrentPlace() {
   const location = useLocation();
   const all = [...RING_PLACES, ...SECONDARY];
@@ -56,8 +63,8 @@ export function useCurrentPlace() {
   const route = findLaunchRoute(location.pathname);
   const label =
     direct?.label ?? PLAIN_LABELS[location.pathname] ?? route?.label ?? 'MyRhythm';
-  const purpose = direct?.purpose ?? route?.description ?? '';
-  const icon: LucideIcon = direct?.icon ?? route?.icon ?? MapPin;
+  const purpose = direct?.purpose ?? PLAIN_PURPOSES[location.pathname] ?? route?.description ?? '';
+  const icon: LucideIcon = direct?.icon ?? PLAIN_ICONS[location.pathname] ?? route?.icon ?? MapPin;
   return { label, purpose, icon, path: location.pathname };
 }
 
@@ -162,31 +169,19 @@ export function LaunchYouAreHereDial() {
               </button>
             )}
 
-            {/* Chronometer ring */}
-            <div className="relative mx-auto mt-6 aspect-square w-full max-w-[26rem]">
-              {/* Outer champagne double ring */}
-              <div className="absolute inset-0 rounded-full border border-launch-gold/35" aria-hidden="true" />
-              <div className="absolute inset-[2%] rounded-full border border-launch-gold/10" aria-hidden="true" />
-              {/* Dashed chronometer ring */}
-              <div className="absolute inset-[9%] rounded-full border border-dashed border-launch-gold/55" aria-hidden="true" />
-
-              {/* Centre medallion */}
-              <div className="absolute left-1/2 top-1/2 z-10 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border-4 border-launch-gold bg-launch-ink-deep px-2 text-center shadow-xl sm:h-28 sm:w-28">
-                <span className="absolute -top-1 left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-launch-teal ring-2 ring-launch-cream-light" aria-hidden="true" />
-                <CurrentIcon className="h-5 w-5 text-launch-gold" aria-hidden="true" />
-                <span className="mt-1 text-[8px] uppercase tracking-[0.18em] text-launch-gold/90">You are here</span>
-                <span className="max-w-[7rem] text-sm font-semibold leading-tight text-launch-cream-light">{current.label}</span>
-              </div>
-
-              {RING_PLACES.map((place, index) => (
-                <RingPlace
-                  key={place.path}
-                  place={place}
-                  current={location.pathname.startsWith(place.path)}
-                  position={index}
-                  onGo={go}
-                />
-              ))}
+            {/* Structured path — one calm reading order, no detached ring labels. */}
+            <div className="relative mx-auto mt-6 w-full max-w-lg">
+              <div className="absolute bottom-7 left-7 top-7 w-px bg-launch-gold/40" aria-hidden="true" />
+              <ul className="relative space-y-3">
+                {RING_PLACES.map(place => (
+                  <PathPlace
+                    key={place.path}
+                    place={place}
+                    current={location.pathname.startsWith(place.path)}
+                    onGo={go}
+                  />
+                ))}
+              </ul>
             </div>
 
             <button
@@ -204,7 +199,7 @@ export function LaunchYouAreHereDial() {
             {showMore && (
               <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                 {SECONDARY.map(p => (
-                  <PlaceCard key={p.path} place={p} current={p.path === current.path} onGo={go} />
+                  <PlaceCard key={p.path} place={p} current={current.path.startsWith(p.path.split('?')[0])} onGo={go} />
                 ))}
               </ul>
             )}
@@ -223,50 +218,40 @@ export function LaunchYouAreHereDial() {
   );
 }
 
-const RING_POSITIONS = [
-  'top-0 left-1/2 -translate-x-1/2 -translate-y-1',
-  'right-1 sm:right-4 top-1/2 -translate-y-1/2',
-  'bottom-0 left-1/2 -translate-x-1/2 translate-y-1',
-  'left-1 sm:left-4 top-1/2 -translate-y-1/2',
-] as const;
-
-function RingPlace({
-  place, current, position, onGo,
-}: { place: Place; current: boolean; position: number; onGo: (path: string) => void }) {
+function PathPlace({
+  place, current, onGo,
+}: { place: Place; current: boolean; onGo: (path: string) => void }) {
   const Icon = place.icon;
   return (
-    <button
-      type="button"
-      onClick={() => onGo(place.path)}
-      aria-current={current ? 'page' : undefined}
-      aria-label={`${place.label}. ${current ? 'You are here.' : place.purpose}`}
-      className={cn(
-        'absolute z-10 flex w-20 sm:w-24 flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal rounded-2xl py-1 transition',
-        RING_POSITIONS[position]
-      )}
-    >
-      <span
+    <li className="relative z-10">
+      <button
+        type="button"
+        onClick={() => onGo(place.path)}
+        aria-current={current ? 'page' : undefined}
+        aria-label={`${place.label}. ${current ? 'You are here.' : place.purpose}`}
         className={cn(
-          'flex h-14 w-14 items-center justify-center rounded-full border shadow-sm transition active:scale-95',
+          'flex min-h-[72px] w-full items-stretch overflow-hidden rounded-2xl border text-left shadow-sm transition active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal',
           current
-            ? 'border-launch-teal bg-launch-teal text-white'
-            : 'border-launch-gold/40 bg-launch-ivory text-launch-ink-deep hover:border-launch-gold'
+            ? 'border-launch-teal bg-launch-teal/10'
+            : 'border-launch-gold/35 bg-launch-ivory hover:border-launch-gold/70'
         )}
       >
-        <Icon className="h-6 w-6" aria-hidden="true" />
-      </span>
-      <span className="text-center text-[12px] sm:text-[13px] font-semibold leading-tight text-launch-ink-deep">
-        {place.label}
-      </span>
-      <span
-        className={cn(
-          'text-center text-[10px] uppercase tracking-[0.08em] font-medium leading-tight',
-          current ? 'text-launch-teal' : 'text-launch-ink/55'
-        )}
-      >
-        {current ? 'You are here' : place.hint ?? place.purpose}
-      </span>
-    </button>
+        <span className="flex w-14 shrink-0 items-center justify-center border-r border-launch-gold/25 bg-launch-cream-light">
+          <span className={cn(
+            'relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-4 border-launch-cream-light',
+            current ? 'bg-launch-teal text-white' : 'bg-launch-ink-deep text-launch-gold'
+          )}>
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </span>
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col justify-center px-4 py-3">
+          <span className="text-base font-semibold leading-tight text-launch-ink-deep">{place.label}</span>
+          <span className={cn('mt-1 text-sm leading-snug', current ? 'font-semibold text-launch-teal' : 'text-launch-ink/65')}>
+            {current ? 'You are here' : place.hint ?? place.purpose}
+          </span>
+        </span>
+      </button>
+    </li>
   );
 }
 
