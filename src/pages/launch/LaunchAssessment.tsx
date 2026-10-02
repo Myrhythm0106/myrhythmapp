@@ -408,8 +408,7 @@ export default function LaunchAssessment() {
     });
   };
 
-  const makePrimary = (value: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const makePrimary = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
       if (existing.primary === value) return prev;
@@ -733,8 +732,8 @@ export default function LaunchAssessment() {
                       {isAlso && !isPrimary && (
                         <button
                           type="button"
-                          onClick={(e) => makePrimary(option.value, e)}
-                          className="mt-2 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
+                          onClick={() => makePrimary(option.value)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
                           aria-label={`Make ${option.label} the primary answer`}
                         >
                           Make primary

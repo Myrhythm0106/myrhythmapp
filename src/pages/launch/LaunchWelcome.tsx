@@ -74,6 +74,7 @@ export default function LaunchWelcome() {
   const { persona } = usePersona();
   const [bhs, setBhs] = useState<BHSnapshot | null>(null);
   const [displayTotal, setDisplayTotal] = useState(0);
+  const [foundingIntent] = useState(() => localStorage.getItem('myrhythm_intent') === 'founding');
 
   useEffect(() => {
     const saved = localStorage.getItem('myrhythm_launch_mode');
@@ -115,12 +116,12 @@ export default function LaunchWelcome() {
 
   const continueHome = () => {
     if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+    localStorage.removeItem('myrhythm_intent');
     // Optional "Make it yours" step, offered once, after value is shown.
     if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen')) {
       navigate('/launch/user-type?after=snapshot');
       return;
     }
-    localStorage.removeItem('myrhythm_intent');
     navigate('/launch/home?welcome=1');
   };
 
@@ -459,7 +460,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = MOSS)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = INK)}
                 >
-                  See membership options
+                  {foundingIntent ? 'Continue to membership options' : 'See membership options'}
                   <span aria-hidden="true">→</span>
                 </button>
                 <button
