@@ -36,4 +36,5 @@ The eight everyday questions in `src/data/launchAssessmentBanks.ts` use original
 - Best time, focus length, energy drains, support and weekly goal are planning preferences. They shape advisory scheduling but do not affect the everyday brain-health score.
 
 ## Change control
+- 2 Oct 2026: question titles reworded in plain English for clarity. Question IDs, option values and scoring are unchanged, so `ASSESSMENT_SCHEMA_VERSION` stays at 4 and in-progress answers are preserved. The matching rows above were updated together.
 Change the matching row and `// ref` code together whenever question wording changes. Bump `ASSESSMENT_SCHEMA_VERSION` whenever questions or scoring change.
