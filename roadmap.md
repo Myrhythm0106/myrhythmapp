@@ -40,6 +40,7 @@
 - [x] Restyle the dial trigger and open map to the approved "Precision chronometer" direction
 - [x] Move My Compass into the ring; Home stays anchored via the medallion + Take me home
 - [ ] Signed-in phone check of the new dial (externally managed sign-in)
+- [ ] Replace the rejected ring-chip arrangement with a distinct, more cohesive visual direction
 
 ## Assessment selection: circle + Also-fits box (1 Oct 2026)
 - [x] Restore the explicit small "Also fits" box for secondary picks; the circle chooses the primary only
