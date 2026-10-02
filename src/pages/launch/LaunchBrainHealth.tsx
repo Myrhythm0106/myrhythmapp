@@ -99,15 +99,15 @@ export default function LaunchBrainHealth() {
           <LaunchCard className="bg-launch-ivory border-launch-gold/30">
             <h3 className="font-semibold text-launch-ink mb-1">No snapshot yet</h3>
             <p className="text-sm text-launch-ink/65 mb-4">
-              Eight questions, about three minutes. Once I've done it, my score and how it moves over
-              time will live here.
+              Twelve short steps, about five minutes. Once I've finished, my snapshot and how it moves
+              over time will live here.
             </p>
             <button
               type="button"
               onClick={() => navigate('/launch/assessment')}
               className="inline-flex items-center gap-2 min-h-[56px] px-5 rounded-full bg-launch-teal text-white text-sm font-semibold hover:bg-[hsl(var(--launch-teal)/0.88)] transition-colors"
             >
-              Take my assessment
+              Start my questions
             </button>
           </LaunchCard>
         )}
