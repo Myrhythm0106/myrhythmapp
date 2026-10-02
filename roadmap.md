@@ -55,4 +55,6 @@
 - [x] Remove the competing legacy signed-in bottom menu
 - [x] Put Help within two taps of every established screen
 - [x] Keep multi-answer selection only for the genuinely additive weekly-goal question
+- [x] Keep first-time questions linear by hiding established-screen bottom navigation
+- [x] Use neutral snapshot wording until the person chooses optional personalisation
 - [ ] Verify first-time, returning, founding-intent and multi-answer flows on phone

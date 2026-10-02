@@ -458,7 +458,7 @@ export default function LaunchAssessment() {
       brainHealthScore = computeBrainHealthScore(bank, answers);
       const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
       results = {
-        userType: persona,
+        userType: localStorage.getItem('myrhythm_user_type'),
         schemaVersion: ASSESSMENT_SCHEMA_VERSION,
         answers,
         freeformNotes: freeform,

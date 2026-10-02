@@ -71,7 +71,7 @@ function bandLabel(total: number): string {
 
 export default function LaunchWelcome() {
   const navigate = useNavigate();
-  const { persona } = usePersona();
+  const { persona, rawType } = usePersona();
   const [bhs, setBhs] = useState<BHSnapshot | null>(null);
   const [displayTotal, setDisplayTotal] = useState(0);
   const [foundingIntent] = useState(() => localStorage.getItem('myrhythm_intent') === 'founding');
@@ -143,7 +143,17 @@ export default function LaunchWelcome() {
     return () => cancelAnimationFrame(raf);
   }, [bhs]);
 
-  const content = getMessage(persona);
+  const content = rawType
+    ? getMessage(persona)
+    : {
+        headline: 'My next step starts here',
+        subtitle: 'This snapshot reflects the answers I gave. I can make MyRhythm more personal next, or go straight to Home.',
+        highlights: [
+          'My answers shape what MyRhythm brings forward',
+          'My preferred pace stays flexible',
+          'I decide what to use, change or share',
+        ],
+      };
   const postCheckout = new URLSearchParams(window.location.search).get('postCheckout') === '1';
 
 
