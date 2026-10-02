@@ -22,7 +22,6 @@ import {
   resolveHasSupport,
   computeBrainHealthScore,
   normalizeAnswer,
-  PERSONA_LABEL,
   ASSESSMENT_SCHEMA_VERSION,
   type AssessmentAnswer,
   type PersonaKey,

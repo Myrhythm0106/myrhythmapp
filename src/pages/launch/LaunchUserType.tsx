@@ -56,11 +56,7 @@ export default function LaunchUserType() {
 
   const finishPersonalisation = () => {
     localStorage.setItem('myrhythm_make_it_yours_seen', '1');
-    if (localStorage.getItem('myrhythm_intent') === 'founding') {
-      localStorage.removeItem('myrhythm_intent');
-      navigate('/launch/payment');
-      return;
-    }
+    localStorage.removeItem('myrhythm_intent');
     navigate('/launch/home?welcome=1');
   };
 

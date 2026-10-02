@@ -120,11 +120,7 @@ export default function LaunchWelcome() {
       navigate('/launch/user-type?after=snapshot');
       return;
     }
-    if (localStorage.getItem('myrhythm_intent') === 'founding') {
-      localStorage.removeItem('myrhythm_intent');
-      navigate('/launch/payment');
-      return;
-    }
+    localStorage.removeItem('myrhythm_intent');
     navigate('/launch/home?welcome=1');
   };
 
