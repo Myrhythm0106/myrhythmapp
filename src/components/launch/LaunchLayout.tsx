@@ -126,13 +126,6 @@ export function LaunchLayout({
           </header>
         )}
 
-        {/* One persistent wayfinder, independent of individual page headers.
-            The reserved header space keeps it clear of the account control. */}
-        {showDial && (
-          <div className="fixed right-[4.75rem] top-3 z-[90] pt-safe sm:right-24 xl:right-[calc((100vw-80rem)/2+6rem)]">
-            <LaunchYouAreHereDial />
-          </div>
-        )}
 
         {/* Main Content */}
         {isSelfContained ? (
