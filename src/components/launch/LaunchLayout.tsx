@@ -107,7 +107,14 @@ export function LaunchLayout({
                 </div>
               )}
 
-              <div className={cn("flex items-center gap-2 sm:gap-3", showDial && "pr-[4.5rem]")}>
+              {/* Right cluster: wayfinder dial first, profile button at the
+                  far right — one aligned row, equal spacing. */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                {showDial && (
+                  <div className="shrink-0">
+                    <LaunchYouAreHereDial />
+                  </div>
+                )}
                 <AccountDropdown />
               </div>
             </div>
@@ -119,13 +126,6 @@ export function LaunchLayout({
           </header>
         )}
 
-        {/* One persistent wayfinder, independent of individual page headers.
-            The reserved header space keeps it clear of the account control. */}
-        {showDial && (
-          <div className="fixed right-[4.75rem] top-3 z-[90] pt-safe sm:right-24 xl:right-[calc((100vw-80rem)/2+6rem)]">
-            <LaunchYouAreHereDial />
-          </div>
-        )}
 
         {/* Main Content */}
         {isSelfContained ? (
