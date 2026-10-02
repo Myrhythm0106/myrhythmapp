@@ -107,7 +107,14 @@ export function LaunchLayout({
                 </div>
               )}
 
-              <div className={cn("flex items-center gap-2 sm:gap-3", showDial && "pr-[4.5rem]")}>
+              {/* Right cluster: wayfinder dial first, profile button at the
+                  far right — one aligned row, equal spacing. */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                {showDial && (
+                  <div className="shrink-0">
+                    <LaunchYouAreHereDial />
+                  </div>
+                )}
                 <AccountDropdown />
               </div>
             </div>
