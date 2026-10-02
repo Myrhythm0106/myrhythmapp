@@ -21,14 +21,14 @@ The eight everyday questions in `src/data/launchAssessmentBanks.ts` use original
 
 | Ref | Exact app question | Source topic | Source locator | How MyRhythm uses it |
 |---|---|---|---|---|
-| BH-01 | How do most nights go for you? | Sleep and restorative habits | *Memory Rescue*, sleep chapter; *Change Your Brain Every Day*, sleep material | Everyday-habits score; uneven nights add more room between plans |
-| BH-02 | How often do you move your body in a usual week? | Movement and circulation | *Memory Rescue*, blood-flow chapter; *Use Your Brain to Change Your Age*, movement material | Everyday-habits score; helps pace the suggested focus window |
-| BH-03 | What are food and drinks like on a usual day? | Food, hydration and metabolic habits | *Memory Rescue*, inflammation and blood-sugar chapters | Everyday-habits score only |
-| BH-04 | How consistently do you protect your head? | Avoiding head injury | *Memory Rescue*, head-trauma chapter; *Change Your Brain, Change Your Life*, protection material | Everyday-habits score only |
-| BH-05 | Which answer is closest to your usual week? | Smoking, alcohol and avoidable exposure | *Memory Rescue*, toxins chapter | Everyday-habits score only |
-| BH-06 | When stress builds, what usually happens? | Stress response and settling busy thoughts | *Change Your Brain, Change Your Life*, thought-pattern material; *The End of Mental Illness*, stress material | Everyday-habits score; a racing-mind answer adds an optional settling pause |
-| BH-07 | How often do you learn something or connect with someone you trust? | New learning and social connection | *Memory Rescue*, aging and learning chapter | Everyday-habits score and social picture |
-| BH-08 | How often does your week include something that matters to you? | Purpose and positive routines | *Memory Rescue*, meaning and aging material | Everyday-habits score and purpose picture |
+| BH-01 | How well do you sleep at night? | Sleep and restorative habits | *Memory Rescue*, sleep chapter; *Change Your Brain Every Day*, sleep material | Everyday-habits score; uneven nights add more room between plans |
+| BH-02 | How often do you move your body each week? | Movement and circulation | *Memory Rescue*, blood-flow chapter; *Use Your Brain to Change Your Age*, movement material | Everyday-habits score; helps pace the suggested focus window |
+| BH-03 | How well do you eat and drink on a usual day? | Food, hydration and metabolic habits | *Memory Rescue*, inflammation and blood-sugar chapters | Everyday-habits score only |
+| BH-04 | How often do you protect your head? | Avoiding head injury | *Memory Rescue*, head-trauma chapter; *Change Your Brain, Change Your Life*, protection material | Everyday-habits score only |
+| BH-05 | How often do you smoke or drink alcohol? | Smoking, alcohol and avoidable exposure | *Memory Rescue*, toxins chapter | Everyday-habits score only |
+| BH-06 | What usually happens when you feel stressed? | Stress response and settling busy thoughts | *Change Your Brain, Change Your Life*, thought-pattern material; *The End of Mental Illness*, stress material | Everyday-habits score; a racing-mind answer adds an optional settling pause |
+| BH-07 | How often do you learn something new or spend time with someone you trust? | New learning and social connection | *Memory Rescue*, aging and learning chapter | Everyday-habits score and social picture |
+| BH-08 | How often do you do something that really matters to you? | Purpose and positive routines | *Memory Rescue*, meaning and aging material | Everyday-habits score and purpose picture |
 
 ## Deliberately excluded
 - Genetics, immunity, hormone levels, infections and diagnosed conditions are medical-history areas and are not asked or scored.
