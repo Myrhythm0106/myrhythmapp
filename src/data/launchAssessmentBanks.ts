@@ -82,7 +82,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitSleep', letter: 'H', word: 'Rest', slot: 'heal', pillar: 'biological',
     brainHealthLens: 'Rest and recharge', // ref BH-01
-    title: 'How do most nights go for you?',
+    title: 'How well do you sleep at night?',
     subtitle: 'Choose the answer that is closest to a usual week.', section: 'brain-health', scored: true,
     options: [
       { value: 'under-6', label: 'Short or broken most nights', score: 0 },
@@ -93,7 +93,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitMove', letter: 'R', word: 'Movement', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'Movement and circulation', // ref BH-02
-    title: 'How often do you move your body in a usual week?',
+    title: 'How often do you move your body each week?',
     subtitle: 'Walking, gardening and gentle movement all count.', section: 'brain-health', scored: true,
     options: [
       { value: 'rarely', label: 'Not often at the moment', score: 0 },
@@ -104,7 +104,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitFuel', letter: 'T', word: 'Fuel', slot: 'transform', pillar: 'biological',
     brainHealthLens: 'Everyday food and hydration', // ref BH-03
-    title: 'What are food and drinks like on a usual day?',
+    title: 'How well do you eat and drink on a usual day?',
     subtitle: 'No counting and no judgement.', section: 'brain-health', scored: true,
     options: [
       { value: 'on-the-go', label: 'Often rushed, sugary or low on water', score: 0 },
@@ -115,7 +115,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitProtect', letter: 'Y', word: 'Protection', slot: 'yesReality', pillar: 'biological',
     brainHealthLens: 'Protecting the head from another injury', // ref BH-04
-    title: 'How consistently do you protect your head?',
+    title: 'How often do you protect your head?',
     subtitle: 'For example: seatbelts, helmets and avoiding unsafe knocks.', section: 'brain-health', scored: true,
     options: [
       { value: 'not-always', label: 'Not always', score: 0 },
@@ -126,8 +126,8 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitExposure', letter: 'M', word: 'Everyday choices', slot: 'mindset', pillar: 'biological',
     brainHealthLens: 'Reducing avoidable exposures', // ref BH-05
-    title: 'Which answer is closest to your usual week?',
-    subtitle: 'This is about smoking and alcohol, not perfection.', section: 'brain-health', scored: true,
+    title: 'How often do you smoke or drink alcohol?',
+    subtitle: 'Not about being perfect — just what is typical.', section: 'brain-health', scored: true,
     options: [
       { value: 'often', label: 'Smoking or drinking happens often', score: 0 },
       { value: 'sometimes', label: 'It happens sometimes', score: 1 },
@@ -137,7 +137,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitCalm', letter: 'Y', word: 'Calm', slot: 'yourVictories', pillar: 'psychological',
     brainHealthLens: 'Responding to pressure', // ref BH-06
-    title: 'When stress builds, what usually happens?',
+    title: 'What usually happens when you feel stressed?',
     section: 'brain-health', scored: true,
     options: [
       { value: 'spiral', label: 'My thoughts race and are hard to settle', score: 0 },
@@ -148,7 +148,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitLearnConnect', letter: 'H', word: 'Connection', slot: 'harnessSupport', pillar: 'social',
     brainHealthLens: 'Learning and trusted connection', // ref BH-07
-    title: 'How often do you learn something or connect with someone you trust?',
+    title: 'How often do you learn something new or spend time with someone you trust?',
     section: 'brain-health', scored: true,
     options: [
       { value: 'rarely', label: 'Rarely at the moment', score: 0 },
@@ -159,7 +159,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'habitPurpose', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
     brainHealthLens: 'Purpose and helpful routines', // ref BH-08
-    title: 'How often does your week include something that matters to you?',
+    title: 'How often do you do something that really matters to you?',
     section: 'brain-health', scored: true,
     options: [
       { value: 'hard-to-find', label: 'It is hard to find that right now', score: 0 },
@@ -170,7 +170,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'planningRhythm', letter: 'R', word: 'My best time', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'My preferred time',
-    title: 'At what time of day do thinking and everyday tasks usually feel easiest?',
+    title: 'What time of day do you think and get things done most easily?',
     subtitle: 'This is your preference. You can change it later.', section: 'planning', scored: false,
     options: [
       { value: 'morning', label: 'Morning', score: 0 },
@@ -182,14 +182,14 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'rhythmDetail', letter: 'R', word: 'My pace', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'My focus length and energy drains',
-    title: 'What pace works for you?',
+    title: 'How do you work best?',
     subtitle: 'These choices shape suggested breaks, never rules.', kind: 'rhythm-detail', rows: RHYTHM_DETAIL_ROWS,
     options: [], section: 'planning', scored: false,
   },
   {
     id: 'planningSupport', letter: 'H', word: 'My support', slot: 'harnessSupport', pillar: 'social',
     brainHealthLens: 'Support I choose',
-    title: 'Who, if anyone, may support you?',
+    title: 'Who would you like to support you?',
     subtitle: 'Nobody sees anything unless you give permission.', section: 'planning', scored: false,
     options: [
       { value: 'solo', label: 'Just me for now', score: 0 },
@@ -200,7 +200,7 @@ const QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'planningGoal', letter: 'Y', word: 'My next step', slot: 'yourVictories', pillar: 'spiritual',
     brainHealthLens: 'What matters this week',
-    title: 'What would make this week feel better or more manageable?',
+    title: 'What would make this week feel easier?',
     multiSelect: true,
     section: 'planning', scored: false,
     options: [
