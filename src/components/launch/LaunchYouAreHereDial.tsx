@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   MapPin, X, Home, Brain, Calendar, BookOpen,
@@ -129,9 +130,9 @@ export function LaunchYouAreHereDial() {
         <span className="text-[10px] font-semibold uppercase tracking-[0.12em] leading-none text-launch-ink/70" aria-hidden="true">Where to?</span>
       </div>
 
-      {open && (
+      {open && createPortal(
         <div
-          className="fixed inset-0 z-[100] bg-launch-ink-deep/40 backdrop-blur-sm flex items-start justify-center overflow-y-auto p-3 sm:p-8"
+          className="launch-theme fixed inset-0 z-[200] bg-launch-ink-deep/40 backdrop-blur-sm flex items-start justify-center overflow-y-auto p-3 sm:p-8"
           onMouseDown={e => { if (e.target === e.currentTarget) setOpen(false); }}
         >
           <div
@@ -219,7 +220,8 @@ export function LaunchYouAreHereDial() {
               Close map
             </button>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
