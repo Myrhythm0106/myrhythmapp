@@ -25,7 +25,26 @@ Rewrite the question titles in `src/data/launchAssessmentBanks.ts` so each one i
 - No jargon, no scores mentioned, no practitioner names.
 - Subtitles updated only where the new title already covers the old subtitle (avoid repetition).
 
+## Brain-health and quadrant alignment
+
+All eight scored questions already sit on the four quadrants and match the internal source log, so the alignment is preserved rather than changed:
+
+| Quadrant | Questions | Internal topic |
+|---|---|---|
+| Biological — Body & energy | Sleep, Movement, Food & drink, Head protection, Smoke/alcohol | Sleep, circulation, food/hydration, head injury, avoidable exposures |
+| Psychological — Mind & habits | Stress response | Settling busy thoughts under pressure |
+| Social — People & support | Learning & connection | New learning and trusted connection |
+| Spiritual — Purpose & momentum | Meaning | Purpose and positive routines |
+
+- Planning questions (best time, pace, support, weekly goal) stay separate and unscored, as the framework requires.
+- Every reworded question keeps its `// ref BH-xx` comment; the wording change is recorded in the matching rows of `docs/brain-health-reference-log.md` so tracing stays accurate.
+- No practitioner, clinic or programme name appears anywhere in the app or the log's question column.
+
+## Version and progress handling
+
+- Question IDs, option values and scores are unchanged, so `ASSESSMENT_SCHEMA_VERSION` stays at 4 — this avoids wiping anyone's half-finished answers for a wording-only change. The log's change-control note records the wording update instead.
+
 ## Technical details
 
-- Edit only `title` (and where needed `subtitle`) strings in `src/data/launchAssessmentBanks.ts`; no logic, scoring, or schema changes.
+- Edit only `title` (and where needed `subtitle`) strings in `src/data/launchAssessmentBanks.ts`, plus the matching "Exact app question" rows in `docs/brain-health-reference-log.md`. No logic, scoring, or schema changes.
 - Typecheck after the edit; spot-check the questions on a phone-size screen.
