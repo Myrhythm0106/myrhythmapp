@@ -18,7 +18,7 @@ function formatDate(iso: string) {
 }
 
 /**
- * Home entry point for the MYRHYTHM Brain Health Assessment.
+ * Home entry point for My questions and snapshot.
  * First-timers get one clear invitation; returning users see their last
  * snapshot with a Retake action. One card, one action.
  */
@@ -55,12 +55,12 @@ export function HomeAssessmentCard() {
     <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
       <div className="flex items-center gap-2 mb-1">
         <ClipboardList className="h-4 w-4 text-launch-ember" />
-        <h3 className="font-semibold text-launch-ink">MYRHYTHM Brain Health Assessment</h3>
+        <h3 className="font-semibold text-launch-ink">My questions and snapshot</h3>
       </div>
       <p className="text-sm text-launch-ink/65 mb-4">
         {hasRun
           ? `My last snapshot: ${formatDate(last.completedAt ?? last.createdAt)} · score ${last.total}. Things change — so can my snapshot.`
-          : 'Eight questions, one per letter of MYRHYTHM — about 3 minutes, shaped around me.'}
+          : 'Twelve short steps — about 5 minutes. My free snapshot is shaped by my answers.'}
       </p>
       <button
         type="button"
@@ -70,12 +70,12 @@ export function HomeAssessmentCard() {
         {hasRun ? (
           <>
             <RotateCcw className="h-4 w-4" />
-            Retake my assessment
+            Answer again
           </>
         ) : (
           <>
             <ClipboardList className="h-4 w-4" />
-            Take my assessment
+            Start my questions
           </>
         )}
       </button>

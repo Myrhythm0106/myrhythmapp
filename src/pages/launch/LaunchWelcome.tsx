@@ -71,9 +71,10 @@ function bandLabel(total: number): string {
 
 export default function LaunchWelcome() {
   const navigate = useNavigate();
-  const { persona } = usePersona();
+  const { persona, rawType } = usePersona();
   const [bhs, setBhs] = useState<BHSnapshot | null>(null);
   const [displayTotal, setDisplayTotal] = useState(0);
+  const [foundingIntent] = useState(() => localStorage.getItem('myrhythm_intent') === 'founding');
 
   useEffect(() => {
     const saved = localStorage.getItem('myrhythm_launch_mode');
@@ -115,6 +116,7 @@ export default function LaunchWelcome() {
 
   const continueHome = () => {
     if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+    localStorage.removeItem('myrhythm_intent');
     // Optional "Make it yours" step, offered once, after value is shown.
     if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen')) {
       navigate('/launch/user-type?after=snapshot');
@@ -141,7 +143,17 @@ export default function LaunchWelcome() {
     return () => cancelAnimationFrame(raf);
   }, [bhs]);
 
-  const content = getMessage(persona);
+  const content = rawType
+    ? getMessage(persona)
+    : {
+        headline: 'My next step starts here',
+        subtitle: 'This snapshot reflects the answers I gave. I can make MyRhythm more personal next, or go straight to Home.',
+        highlights: [
+          'My answers shape what MyRhythm brings forward',
+          'My preferred pace stays flexible',
+          'I decide what to use, change or share',
+        ],
+      };
   const postCheckout = new URLSearchParams(window.location.search).get('postCheckout') === '1';
 
 
@@ -458,7 +470,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = MOSS)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = INK)}
                 >
-                  See membership options
+                  {foundingIntent ? 'Continue to membership options' : 'See membership options'}
                   <span aria-hidden="true">→</span>
                 </button>
                 <button
@@ -468,7 +480,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${GOLD}14`)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                 >
-                  Not now — continue free to Home
+                  Not now — go to Home
                 </button>
               </div>
 

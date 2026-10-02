@@ -22,7 +22,6 @@ import {
   resolveHasSupport,
   computeBrainHealthScore,
   normalizeAnswer,
-  PERSONA_LABEL,
   ASSESSMENT_SCHEMA_VERSION,
   type AssessmentAnswer,
   type PersonaKey,
@@ -142,11 +141,10 @@ export default function LaunchAssessment() {
 
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
-    const bank = getAssessmentBank(stored);
-    if (!bank) {
-      navigate('/launch/user-type', { replace: true });
-      return;
-    }
+    // The questions are shared. A first-time user can begin immediately;
+    // personalisation is offered once, after their free snapshot.
+    const bank = getAssessmentBank(stored ?? 'brain-injury');
+    if (!bank) return;
     // If the stored user type no longer matches saved progress, start the
     // matching bank clean — never carry another persona's answers over.
     if (initial?.persona && initial.persona !== bank.persona) {
@@ -160,7 +158,7 @@ export default function LaunchAssessment() {
       setPhase('questions');
     }
     setPersona((prev) => (prev === bank.persona ? prev : bank.persona));
-  }, [navigate, initial]);
+  }, [initial]);
 
   const bank = useMemo(() => getAssessmentBank(persona), [persona]);
 
@@ -267,7 +265,7 @@ export default function LaunchAssessment() {
             }}
             className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
           >
-            Not now — take me to my day
+            Not now — go to Home
           </button>
         </div>
       </LaunchLayout>
@@ -279,18 +277,6 @@ export default function LaunchAssessment() {
     return (
       <LaunchLayout>
         <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
-          <p className="text-xs text-launch-ink/50 mb-4 -mt-2">
-            {PERSONA_LABEL[bank.persona]}{' '}
-            ·{' '}
-            <button
-              type="button"
-              onClick={() => navigate('/launch/user-type')}
-              className="underline underline-offset-2 hover:text-launch-ink"
-            >
-              Not me — change this
-            </button>
-          </p>
-
           <div className="mb-6">
             <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
               <div
@@ -365,7 +351,7 @@ export default function LaunchAssessment() {
                 }}
                 className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
               >
-                Not now — take me to my day
+                Not now — go to Home
               </button>
             )}
           </div>
@@ -410,10 +396,7 @@ export default function LaunchAssessment() {
     });
   };
 
-  /**
-   * The small "Also fits" box on each card adds or removes a secondary pick.
-   * The circle (tapping the card) only chooses or clears the primary.
-   */
+  /** The small "Also fits" control adds or removes a secondary pick. */
   const toggleAlso = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
@@ -425,8 +408,7 @@ export default function LaunchAssessment() {
     });
   };
 
-  const makePrimary = (value: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const makePrimary = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
       if (existing.primary === value) return prev;
@@ -476,7 +458,7 @@ export default function LaunchAssessment() {
       brainHealthScore = computeBrainHealthScore(bank, answers);
       const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
       results = {
-        userType: persona,
+        userType: localStorage.getItem('myrhythm_user_type'),
         schemaVersion: ASSESSMENT_SCHEMA_VERSION,
         answers,
         freeformNotes: freeform,
@@ -610,24 +592,13 @@ export default function LaunchAssessment() {
 
   const handleBack = () => {
     if (currentQuestion > 0) setCurrentQuestion((p) => p - 1);
-    else navigate('/launch/user-type');
+    else navigate('/launch/register');
   };
 
   return (
     <LaunchLayout>
       <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
-        <div className="flex items-center justify-between gap-2 mb-3 -mt-2">
-          <p className="text-xs text-launch-ink/50">
-            {PERSONA_LABEL[bank.persona]}{' '}
-            ·{' '}
-            <button
-              type="button"
-              onClick={() => navigate('/launch/user-type')}
-              className="underline underline-offset-2 hover:text-launch-ink"
-            >
-              Not me — change this
-            </button>
-          </p>
+        <div className="flex items-center justify-end gap-2 mb-3 -mt-2">
           <FrameworkInfoSheet />
         </div>
 
@@ -662,7 +633,7 @@ export default function LaunchAssessment() {
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
           {question.multiSelect
-            ? 'Tap the circle to pick your main answer, then use the small box to add any others that also fit.'
+            ? 'Choose one main answer with the circle. Use + Also fits for every other answer that matters too.'
             : 'Choose the answer that fits best today.'}{' '}
           You can change it later.
         </p>
@@ -681,23 +652,14 @@ export default function LaunchAssessment() {
               const dimmed = isNoneFits;
               const ariaLabel = isPrimary
                 ? `${option.label} — primary answer, tap to remove`
-                : `${option.label} — tap to choose as your primary answer`;
+                : isAlso
+                  ? `${option.label} — also fits, selected as a secondary answer`
+                  : `${option.label} — tap to choose as your primary answer`;
               return (
                 <div
                   key={option.value}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isPrimary}
-                  aria-label={ariaLabel}
-                  onClick={() => setPrimary(option.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setPrimary(option.value);
-                    }
-                  }}
                   className={cn(
-                    'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px] cursor-pointer',
+                    'relative w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[96px]',
                     dimmed && 'opacity-50',
                     isPrimary
                       ? 'border-launch-ember bg-launch-ember/10 ring-2 ring-launch-ember/20'
@@ -707,49 +669,32 @@ export default function LaunchAssessment() {
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <span
-                      aria-hidden="true"
+                    <button
+                      type="button"
+                      onClick={() => setPrimary(option.value)}
+                      aria-pressed={isPrimary}
+                      aria-label={ariaLabel}
                       className={cn(
-                        'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors mt-0.5 flex-shrink-0',
+                        'w-11 h-11 -m-2 rounded-full flex items-center justify-center transition-colors flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal',
+                      )}
+                    >
+                      <span className={cn(
+                        'w-6 h-6 rounded-full border-2 flex items-center justify-center',
                         isPrimary
                           ? 'border-launch-ember bg-launch-ember'
                           : 'border-launch-ink/20'
-                      )}
+                      )}>
+                        {isPrimary && <Check className="h-4 w-4 text-white" />}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPrimary(option.value)}
+                      aria-label={ariaLabel}
+                      className="flex-1 min-w-0 text-left rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-launch-teal"
                     >
-                      {isPrimary && <Check className="h-4 w-4 text-white" />}
-                    </span>
-                    {question.multiSelect && !isPrimary && !dimmed && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAlso(option.value);
-                        }}
-                        onKeyDown={(e) => e.stopPropagation()}
-                        aria-pressed={isAlso}
-                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
-                        className={cn(
-                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
-                          isAlso
-                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
-                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
-                        )}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0',
-                            isAlso ? 'border-launch-cream bg-launch-moss' : 'border-launch-ink/25'
-                          )}
-                        >
-                          {isAlso && <Check className="h-3.5 w-3.5 text-white" />}
-                        </span>
-                        <span className="text-xs font-semibold">Also fits</span>
-                      </button>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-launch-ink">{option.label}</p>
+                      <span className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-launch-ink">{option.label}</span>
                         {isPrimary && (
                           <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">
                             Primary
@@ -760,25 +705,42 @@ export default function LaunchAssessment() {
                             Also fits
                           </span>
                         )}
-                      </div>
+                      </span>
                       {option.description && (
-                        <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
+                        <span className="block text-sm text-launch-ink/60 mt-1">{option.description}</span>
                       )}
+                    </button>
+                  </div>
+
+                  {question.multiSelect && !isPrimary && !dimmed && (
+                    <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleAlso(option.value)}
+                        aria-pressed={isAlso}
+                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
+                        className={cn(
+                          'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
+                          isAlso
+                            ? 'border-launch-moss bg-launch-moss text-launch-cream'
+                            : 'border-launch-moss/50 bg-launch-ivory text-launch-ink hover:border-launch-moss'
+                        )}
+                      >
+                        {isAlso ? <Check className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
+                        <span className="text-xs font-semibold">{isAlso ? 'Also fits' : '+ Also fits'}</span>
+                      </button>
                       {isAlso && !isPrimary && (
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            makePrimary(option.value, e);
-                          }}
-                          className="mt-2 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
+                          onClick={() => makePrimary(option.value)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border border-launch-ember/50 bg-launch-ivory text-launch-ember hover:bg-launch-ember/10 transition-colors min-h-[44px]"
                           aria-label={`Make ${option.label} the primary answer`}
                         >
                           Make primary
                         </button>
                       )}
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
