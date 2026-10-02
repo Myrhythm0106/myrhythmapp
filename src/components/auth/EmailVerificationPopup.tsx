@@ -59,7 +59,7 @@ export const EmailVerificationPopup: React.FC<EmailVerificationPopupProps> = ({
           </DialogTitle>
           
           <DialogDescription className="text-base text-muted-foreground">
-            We've sent a verification email to:
+            We've sent a confirmation email to:
           </DialogDescription>
         </DialogHeader>
 
@@ -81,13 +81,13 @@ export const EmailVerificationPopup: React.FC<EmailVerificationPopupProps> = ({
               <div className="w-6 h-6 rounded-full bg-memory-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
                 <CheckCircle className="w-4 h-4 text-white" />
               </div>
-              <span className="text-base text-foreground">Click the verification link in the email</span>
+              <span className="text-base text-foreground">Click the confirmation link in the email</span>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-memory-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
                 <CheckCircle className="w-4 h-4 text-white" />
               </div>
-              <span className="text-base text-foreground">Verify within 24 hours</span>
+              <span className="text-base text-foreground">Confirm within 24 hours</span>
             </div>
           </div>
 
@@ -146,7 +146,7 @@ export const EmailVerificationPopup: React.FC<EmailVerificationPopupProps> = ({
             onClick={onClose}
             className="w-full h-12 text-base text-muted-foreground hover:text-foreground"
           >
-            I'll verify first
+            I'll confirm first
           </Button>
         </div>
       </DialogContent>

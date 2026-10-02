@@ -67,12 +67,12 @@ const chapters: Chapter[] = [
     number: '02',
     marker: 'THE DECISION',
     title: 'The meaning becomes a next step.',
-    promise: 'Verify my next steps',
+    promise: 'Check my next steps',
     description:
       'Names, decisions and actions are organised into a professional summary. I stay in control: I can edit the wording, owner, priority and dates before I accept it.',
     image: organizedActionImg,
     alt: 'A Black professional with a natural Afro reviewing clear next steps at her desk',
-    detailTitle: 'Why verification matters',
+    detailTitle: 'Why checking matters',
     details: [
       'Each action keeps a simple note of which conversation it came from.',
       'Priority, start date and finish date remain changeable.',
@@ -465,7 +465,7 @@ export function MVPCore4C() {
                 <div className="absolute bottom-6 left-5 top-6 w-px bg-launch-gold" aria-hidden="true" />
                 {[
                   { icon: Mic2, label: 'Record a conversation or upload a report', colour: 'bg-launch-ember' },
-                  { icon: FileText, label: 'Verify my next steps', colour: 'bg-launch-teal' },
+                  { icon: FileText, label: 'Check my next steps', colour: 'bg-launch-teal' },
                   { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
                   { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
                   { icon: Link2, label: 'Return to the original conversation at any time', colour: 'bg-launch-ink' },

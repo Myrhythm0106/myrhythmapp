@@ -75,7 +75,7 @@ export const VerificationBanner: React.FC<VerificationBannerProps> = ({
             <div className="flex items-center gap-2 text-sm">
               <Mail className="h-4 w-4" />
               <span>
-                <strong>Verify your email</strong> to unlock all features
+                <strong>Confirm your email</strong> to unlock all features
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -117,7 +117,7 @@ export const VerificationBanner: React.FC<VerificationBannerProps> = ({
       <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2 mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
           <Mail className="h-4 w-4 shrink-0" />
-          <span>Verify email to unlock all features</span>
+          <span>Confirm your email to unlock all features</span>
         </div>
         <Button
           variant="ghost"
@@ -147,7 +147,7 @@ export const VerificationBanner: React.FC<VerificationBannerProps> = ({
       <Shield className="h-4 w-4 text-amber-600 dark:text-amber-400" />
       <AlertDescription className="flex items-center justify-between flex-wrap gap-2">
         <div className="text-amber-800 dark:text-amber-200">
-          <strong>Email verification required.</strong> Check your inbox and spam folder to unlock all features.
+          <strong>Please confirm your email.</strong> Check your inbox and spam folder to unlock all features.
         </div>
         <div className="flex items-center gap-2">
           <Button

@@ -59,3 +59,7 @@
 - [x] Use neutral snapshot wording until the person chooses optional personalisation
 - [x] Verify questions-first welcome and multi-answer controls at 393×822 with no horizontal overflow
 - [ ] Verify returning, founding-intent and established-screen dial flows while signed in (external auth unavailable to automation)
+
+## Plain wording (2 Oct 2026)
+- [x] Replace visible "verify/verification" with "check/confirm"
+- [ ] Support Circle levels See / Support / Step in: helper page + two-account test

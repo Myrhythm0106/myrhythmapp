@@ -81,7 +81,7 @@ export default function LaunchSignIn() {
     try {
       const { error } = await resendVerification(email);
       if (!error) {
-        toast.success('Verification email sent! Please check your inbox and spam folder.');
+        toast.success('Confirmation email sent! Please check your inbox and spam folder.');
       }
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');

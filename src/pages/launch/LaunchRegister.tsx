@@ -122,7 +122,7 @@ export default function LaunchRegister() {
           if (/confirm/i.test(signInError?.message || '')) {
             // Email confirmation is switched on — show the verify screen.
             setRegistrationSuccess(true);
-            toast.success('Account created! Please check your email to verify.');
+            toast.success('Account created! Please check your email to confirm it.');
             return;
           }
           toast.error("We couldn't sign you in automatically", {
@@ -151,9 +151,9 @@ export default function LaunchRegister() {
     try {
       const { error } = await resendVerification(email);
       if (error) {
-        toast.error(error.message || 'Failed to resend verification email');
+        toast.error(error.message || 'Failed to resend confirmation email');
       } else {
-        toast.success('Verification email sent! Please check your inbox and spam folder.');
+        toast.success('Confirmation email sent! Please check your inbox and spam folder.');
       }
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
@@ -222,7 +222,7 @@ export default function LaunchRegister() {
               Check Your Email
             </h1>
             <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-              We've sent a verification link to <span className="font-semibold text-launch-moss">{email}</span>
+              We've sent a confirmation link to <span className="font-semibold text-launch-moss">{email}</span>
             </p>
 
             <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
