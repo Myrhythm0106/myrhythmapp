@@ -7,6 +7,7 @@
 - Memory Bridge: output choice per recording (transcript + actions / transcript only / actions only / just save), best-accuracy transcript with speakers, timestamps, unclear-word flags, fix-a-word editing with original kept, re-extract, and actions as Table | List.
 
 ## Open
+- [ ] My Vision in ACTion: collapsed focus, Settings choice, truthful vision connection and separate Today’s Priorities highlights.
 - Persist My Compass history and focus checks privately across devices (cloud tables were not approved; on-device experience is active).
 - Real-device proof: 2–4 hour capture on iPhone and on Android.
 - Two-account Support Circle permission test.
