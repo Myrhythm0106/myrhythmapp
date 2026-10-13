@@ -121,6 +121,14 @@ export function usePlanningScope(
     [save],
   );
 
+  // Finish pending edits against their original date before navigation changes it.
+  useEffect(() => () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const patch = pendingPatch.current;
+    pendingPatch.current = {};
+    if (Object.keys(patch).length) void save(patch);
+  }, [save]);
+
   return { row, loading, save, saveDebounced, reload: load, periodStart };
 }
 
