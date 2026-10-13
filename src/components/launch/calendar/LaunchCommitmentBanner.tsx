@@ -217,6 +217,7 @@ export function LaunchCommitmentBanner({
         onClose={() => setAiOpen(false)}
         scope={scope}
         periodStart={periodStart}
+        vision={vision}
         onAccept={acceptAiDraft}
       />
     </section>

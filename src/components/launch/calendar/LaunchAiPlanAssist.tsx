@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type Scope = 'day' | 'week' | 'month' | 'year';
 type Feeling = 'low' | 'steady' | 'strong';
@@ -22,6 +23,7 @@ interface Props {
   scope: Scope;
   periodStart: Date;
   onAccept: (draft: Draft) => void;
+  vision?: string;
 }
 
 const scopeLabel: Record<Scope, string> = {
@@ -31,7 +33,7 @@ const scopeLabel: Record<Scope, string> = {
   year: 'this year',
 };
 
-export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAccept }: Props) {
+export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAccept, vision }: Props) {
   const [step, setStep] = useState<'feeling' | 'aspiration' | 'commitments' | 'draft'>('feeling');
   const [feeling, setFeeling] = useState<Feeling | undefined>();
   const [aspiration, setAspiration] = useState('');
@@ -61,7 +63,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
           scope,
           period_start: format(periodStart, 'yyyy-MM-dd'),
           feeling,
-          aspiration: aspiration || undefined,
+          aspiration: vision ? `My vision: ${vision}\nMy desired step: ${aspiration || 'A realistic step towards my vision'}` : aspiration || undefined,
           existing_commitments: commitments || undefined,
         },
       });
@@ -161,8 +163,9 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
 
           {step === 'aspiration' && (
             <div className="space-y-3">
+              {vision && <p className="text-base text-launch-ink leading-relaxed break-words">My vision: {vision}</p>}
               <p className="text-gray-700">
-                One thing you'd love to be true by the end of {scopeLabel[scope]}?
+                {vision ? `What step towards this vision feels possible ${scopeLabel[scope]}?` : `One thing you'd love to be true by the end of ${scopeLabel[scope]}?`}
               </p>
               <textarea
                 value={aspiration}
@@ -222,6 +225,8 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
 
           {step === 'draft' && draft && (
             <div className="space-y-4">
+              {vision && <p className="text-base text-launch-ink leading-relaxed break-words">My vision: {vision}</p>}
+              <p className="text-base text-launch-ink">Check how these steps fit my vision before keeping them.</p>
               <p className="text-xs text-gray-500 flex items-center gap-1">
                 <Sparkles className="h-3 w-3" /> Suggested — edit anything.
               </p>

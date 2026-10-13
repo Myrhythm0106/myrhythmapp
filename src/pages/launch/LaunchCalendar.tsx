@@ -7,6 +7,7 @@ import { LaunchCard } from '@/components/launch/LaunchCard';
 import { Share2, ChevronLeft, ChevronRight, FileUp, Bell, BellOff } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { useAuth } from '@/hooks/useAuth';
+import { useLaunchSavedVision, useLaunchFocusDisplay } from '@/hooks/useLaunchFocusDisplay';
 
 import { LaunchViewSwitcher, CalendarView } from '@/components/launch/calendar/LaunchViewSwitcher';
 import { LaunchDayView } from '@/components/launch/calendar/LaunchDayView';
@@ -60,6 +61,8 @@ export default function LaunchCalendar() {
   const [importResult, setImportResult] = useState<DocumentImportResult | null>(null);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const { user } = useAuth();
+  const savedVision = useLaunchSavedVision();
+  const focusDisplay = useLaunchFocusDisplay();
   const [showReminders, setShowReminders] = useState(() => {
     try {
       return localStorage.getItem('launch.calendar.showReminders') !== '0';
@@ -368,8 +371,10 @@ export default function LaunchCalendar() {
           }
         }}
         scope={assistScope}
+        vision={savedVision}
         periodStart={periodStartFor(assistScope, selectedDate, dayOfWeek)}
         onAccept={(draft) => {
+          focusDisplay.setExpanded(true);
           (assistScope === 'day' ? dayScope : weekScope).save({
             core: draft.core,
             key: draft.key,
