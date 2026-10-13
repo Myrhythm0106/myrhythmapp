@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { Checkbox } from '@/components/ui/checkbox';
 
 type Scope = 'day' | 'week' | 'month' | 'year';
 type Feeling = 'low' | 'steady' | 'strong';

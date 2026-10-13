@@ -188,7 +188,7 @@ export function LaunchDayView({
               variant="glass" 
               className={cn("p-4", getStatusStyles(event.status), event.id && isActive(event) && priorities.ids.includes(event.id) && 'border-launch-gold bg-launch-gold/5')}
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <div className="text-center min-w-[50px]">
                   <p className={cn(
                     "text-sm font-bold",
@@ -202,7 +202,7 @@ export function LaunchDayView({
                 <div className={cn("w-1 h-12 rounded-full", getTypeColor(event.type))} />
                 <div className="flex-1 min-w-0">
                   <p className={cn(
-                    "font-medium",
+                    "font-medium break-words",
                     event.status === 'done' ? 'text-green-700 line-through' : 
                     event.status === 'cancelled' ? 'text-gray-400 line-through' : 
                     'text-gray-900'

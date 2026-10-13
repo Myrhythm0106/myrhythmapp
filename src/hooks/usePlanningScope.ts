@@ -59,6 +59,7 @@ export function usePlanningScope(
   const [row, setRow] = useState<PlanningRow | null>(null);
   const [loading, setLoading] = useState(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingPatch = useRef<Parameters<typeof save>[0]>({});
 
   const periodStart = periodStartFor(scope, date, planningDayOfWeek);
   const periodStartStr = ymd(periodStart);
@@ -109,8 +110,13 @@ export function usePlanningScope(
   /** Debounced autosave for text fields. */
   const saveDebounced = useCallback(
     (patch: Parameters<typeof save>[0]) => {
+      pendingPatch.current = { ...pendingPatch.current, ...patch };
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => save(patch), 400);
+      debounceRef.current = setTimeout(() => {
+        const combined = pendingPatch.current;
+        pendingPatch.current = {};
+        void save(combined);
+      }, 400);
     },
     [save],
   );

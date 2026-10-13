@@ -41,6 +41,7 @@ export function useLaunchFocusDisplay() {
   const setExpanded = useCallback((next: boolean) => {
     visitExpanded.set(key, next);
     setExpandedState(next);
+    window.dispatchEvent(new Event(CHANGE));
   }, [key]);
   const setStart = (next: boolean) => {
     visitExpanded.set(key, next);
