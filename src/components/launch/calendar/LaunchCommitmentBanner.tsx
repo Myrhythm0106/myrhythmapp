@@ -43,9 +43,9 @@ const empoweringMessages = [
 ];
 
 const commitmentTypes = [
-  { key: 'core' as const, label: 'Core', sublabel: 'My main step towards my vision', icon: Star, iconColor: 'text-launch-ink' },
-  { key: 'key' as const, label: 'Key', sublabel: 'Another step towards it', icon: Zap, iconColor: 'text-launch-ink' },
-  { key: 'stretch' as const, label: 'Stretch', sublabel: 'Only if I feel up to it', icon: Target, iconColor: 'text-launch-ink' },
+  { key: 'core' as const, label: 'Core Goal', sublabel: 'My main step towards my vision', icon: Star, iconColor: 'text-launch-ink' },
+  { key: 'key' as const, label: 'Key Goal', sublabel: 'Another step towards it', icon: Zap, iconColor: 'text-launch-ink' },
+  { key: 'stretch' as const, label: 'Stretch Goal', sublabel: 'Only if I feel up to it', icon: Target, iconColor: 'text-launch-ink' },
 ];
 
 export function LaunchCommitmentBanner({
@@ -205,7 +205,7 @@ export function LaunchCommitmentBanner({
         {vision && local.core.trim() && (
           <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
             <Checkbox checked={linked} onCheckedChange={value => confirmConnection(value === true)} />
-            My Core step supports this vision
+            My Core Goal supports this vision
           </label>
         )}
       </div>

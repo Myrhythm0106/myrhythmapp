@@ -32,7 +32,7 @@ const tourSteps = [
     icon: CheckCircle,
     iconBg: 'bg-gradient-to-br from-blue-400 to-blue-600',
     title: "Today's Focus",
-    description: "Set your Core, Key, and Stretch commitments each day. Small wins add up!",
+    description: "Set your Core Goal, Key Goal and Stretch Goal each day. Small wins add up!",
     tip: "Start with just one thing — that's enough."
   },
   {

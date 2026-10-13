@@ -34,7 +34,7 @@ export function LaunchWeeklyPlanningCard() {
           <p className="text-sm text-gray-600 mt-0.5">
             {hasPlan
               ? "You've started this week's rhythm. Want to refine it?"
-              : 'A gentle 3-minute check-in. One Core, one Key, one Stretch.'}
+              : 'A gentle 3-minute check-in. One Core Goal, one Key Goal, one Stretch Goal.'}
           </p>
           <div className="mt-3 grid sm:grid-cols-2 gap-2">
             <Link
