@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useState } from 'react';
-import { Star, Zap, Target, Sparkles, Compass, ChevronDown } from 'lucide-react';
+import { Star, Zap, Target, Sparkles, Compass, ChevronDown, Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
@@ -92,9 +92,60 @@ export function LaunchCommitmentBanner({
 
   const title = scopeTitles[scope](date);
 
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+
+  const saveNow = async () => {
+    setSaving(true);
+    await save({
+      ...(scope === 'year' ? { vision_text: local.vision } : {}),
+      core: local.core, key: local.key, stretch: local.stretch, source: 'user',
+    } as any);
+    setSaving(false);
+    setDirty(false);
+    setSavedAt(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+  };
+
+  const order = ['core', 'key', 'stretch'] as const;
+  const saveAndNext = async () => {
+    await saveNow();
+    const active = document.activeElement?.id ?? '';
+    const idx = order.findIndex((k) => active === `${detailsId}-${k}`);
+    const next = order[idx + 1];
+    if (next) document.getElementById(`${detailsId}-${next}`)?.focus();
+    else if (scope !== 'year') setExpanded(false);
+  };
+
+  const SaveBar = (light: boolean) => (
+    <div className="flex flex-wrap items-center gap-3 pt-4">
+      <Button onClick={saveNow} disabled={saving}
+        className={cn('min-h-14 px-6 text-base', light ? 'bg-white text-brand-teal-700 hover:bg-white/90' : 'bg-launch-teal text-launch-cream hover:bg-launch-teal/90')}>
+        <Check className="h-5 w-5" /> {saving ? 'Saving…' : 'Save'}
+      </Button>
+      {scope !== 'year' && (
+        <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={saveAndNext} disabled={saving}
+          className="min-h-14 px-5 text-base border border-launch-cream/40 text-launch-cream hover:bg-launch-cream/10 hover:text-launch-cream">
+          Save and next <ArrowRight className="h-5 w-5" />
+        </Button>
+      )}
+      <span className="text-base" aria-live="polite">
+        {dirty ? 'Changes not saved yet' : savedAt ? `Saved ✓ ${savedAt}` : ''}
+      </span>
+    </div>
+  );
+
   const handleChange = (field: 'vision' | 'core' | 'key' | 'stretch', value: string) => {
     if (field === 'core' || field === 'vision') confirmConnection(false);
     setLocal((prev) => ({ ...prev, [field]: value }));
+    setDirty(true);
     if (field === 'vision') saveDebounced({ vision_text: value, source: 'user' });
     else saveDebounced({ [field]: value, source: 'user' } as any);
   };
@@ -140,6 +191,7 @@ export function LaunchCommitmentBanner({
             placeholder="My year of abundance & growth..."
             className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30"
           />
+          {SaveBar(true)}
           <p className="text-white/70 text-xs mt-3 italic">{empoweringMessages[currentMessageIndex]}</p>
         </div>
         <LaunchAiPlanAssist
@@ -208,6 +260,7 @@ export function LaunchCommitmentBanner({
             My Core Goal supports this vision
           </label>
         )}
+        {SaveBar(false)}
       </div>
       )}
       <div className="flex items-center justify-between gap-3 pt-3">
