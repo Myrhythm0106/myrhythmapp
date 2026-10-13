@@ -200,7 +200,7 @@ export function LaunchCommitmentBanner({
             </div>
           ))}
       </div>
-      {expanded && <div id={detailsId} className="pt-4 space-y-4">
+      {expanded && (<div id={detailsId} className="pt-4 space-y-4">
         {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
         {vision && local.core.trim() && (
           <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
