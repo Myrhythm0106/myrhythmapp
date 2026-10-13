@@ -35,6 +35,6 @@ Add one optional button: **Write my vision for me**. Free for everyone.
 
 ## Technical details
 - Label changes in `LaunchCommitmentBanner.tsx`, `LaunchDayView.tsx`, `LaunchFocusDisplaySettings.tsx`, and planning copy (search for "Core"/"Key"/"Stretch" user-facing strings).
-- New edge function `compose-vision` (server-side, `LOVABLE_API_KEY`), streaming via `/v1/responses` with default model `openai/gpt-6-astra`, reasoning low, `store: false`; input = filled prompt answers + future label; system prompt enforces first person, no invented content, no clinical language. 402/429/403 surfaced as friendly messages.
-- `VisionStatementComposer.tsx` gets the button, preview card, undo state; existing auto-stitch fallback kept.
-- No database changes.
+- New edge function `compose-vision` (server-side, `LOVABLE_API_KEY`), streaming via `/v1/responses` with default model `openai/gpt-6-astra`, reasoning low, `store: false`, strict JSON schema output `{ paragraph, who, what, where, when, why, how }`; input = filled prompt answers, optional anchor answers, chosen level, saved goals. System prompt enforces first person, no invented content, no clinical language. 402/429/403 surfaced as friendly messages.
+- `VisionStatementComposer.tsx` gets the level selector, button, preview card with 5W1H summary, optional anchor questions and undo state; existing auto-stitch fallback kept.
+- Per-level vision text and 5W1H summary stored alongside the existing vision statement storage, keyed by level (existing statement becomes "This year"). No new tables.
