@@ -1,5 +1,7 @@
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell } from 'lucide-react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useLaunchPriorityHighlights } from '@/hooks/useLaunchFocusDisplay';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { LaunchDailyBrief } from './LaunchDailyBrief';
@@ -66,6 +68,9 @@ export function LaunchDayView({
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
+  const priorities = useLaunchPriorityHighlights();
+  const isActive = (event: Event) => !event.status || event.status === 'pending';
+  const priorityCount = sortedEvents.filter(event => event.id && isActive(event) && priorities.ids.includes(event.id)).length;
 
 
   const getTypeColor = (type: string) => {
@@ -119,34 +124,13 @@ export function LaunchDayView({
     toast('Opening scheduler...', { description: 'Choose a new date and time' });
   };
 
-  // Build breadcrumb trail
-  const breadcrumbParts = [];
-  if (inheritedVision) breadcrumbParts.push(inheritedVision);
-  if (inheritedMonthFocus) breadcrumbParts.push(inheritedMonthFocus);
-  if (inheritedWeekFocus) breadcrumbParts.push(inheritedWeekFocus);
-
   return (
     <div className={cn("space-y-4", className)}>
-      {/* Vision Cascade Breadcrumb */}
-      {breadcrumbParts.length > 0 && (
-        <div className="text-sm text-brand-teal-600 flex items-center gap-2 flex-wrap px-1">
-          {breadcrumbParts.map((part, i) => (
-            <React.Fragment key={i}>
-              <span className={i === breadcrumbParts.length - 1 ? 'font-medium' : ''}>
-                {part}
-              </span>
-              {i < breadcrumbParts.length - 1 && (
-                <span className="text-brand-teal-400">→</span>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
 
       <LaunchDailyBrief
         date={date}
         eventCount={sortedEvents.filter(e => e.status !== 'cancelled' && e.status !== 'carried').length}
-        focusTitle={sortedEvents.find(e => e.status !== 'done' && e.status !== 'cancelled' && e.status !== 'carried')?.title}
+        focusTitle={undefined}
       />
 
       <LaunchCommitmentBanner 
@@ -155,6 +139,11 @@ export function LaunchDayView({
         inheritedVision={inheritedVision}
         inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
       />
+
+      <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
+        <h2 className="text-xl font-semibold font-display">Today’s Priorities</h2>
+        {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
+      </div>
 
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
@@ -195,11 +184,11 @@ export function LaunchDayView({
         <div className="space-y-3">
           {sortedEvents.map((event, i) => (
             <LaunchCard 
-              key={i} 
+              key={event.id ?? i}
               variant="glass" 
-              className={cn("p-4", getStatusStyles(event.status))}
+              className={cn("p-4", getStatusStyles(event.status), event.id && isActive(event) && priorities.ids.includes(event.id) && 'border-launch-gold bg-launch-gold/5')}
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <div className="text-center min-w-[50px]">
                   <p className={cn(
                     "text-sm font-bold",
@@ -213,7 +202,7 @@ export function LaunchDayView({
                 <div className={cn("w-1 h-12 rounded-full", getTypeColor(event.type))} />
                 <div className="flex-1 min-w-0">
                   <p className={cn(
-                    "font-medium",
+                    "font-medium break-words",
                     event.status === 'done' ? 'text-green-700 line-through' : 
                     event.status === 'cancelled' ? 'text-gray-400 line-through' : 
                     'text-gray-900'
@@ -222,6 +211,9 @@ export function LaunchDayView({
                     {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-gray-400" />}
                     {event.title}
                   </p>
+                  {event.id && isActive(event) && priorities.ids.includes(event.id) && (
+                    <span className="inline-flex items-center gap-1 text-base text-launch-ink mt-1"><Star className="h-4 w-4 fill-current" />Priority</span>
+                  )}
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-xs text-gray-500 capitalize">{event.type}</p>
                     {event.source === 'memory_bridge' && (
@@ -254,6 +246,16 @@ export function LaunchDayView({
                   <ExpandableBrief text={event.description} className="mt-1.5" />
                 </div>
                 
+                {event.id && isActive(event) && (
+                  <Button variant="ghost" size="icon"
+                    className="shrink-0 min-h-11 min-w-11 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10"
+                    aria-label={`${priorities.ids.includes(event.id) ? 'Remove priority' : 'Mark as a priority'}: ${event.title}`}
+                    title={priorities.ids.includes(event.id) ? 'Remove priority' : 'Mark as a priority'}
+                    aria-pressed={priorities.ids.includes(event.id)}
+                    onClick={() => { if (event.id) priorities.toggle(event.id); }}>
+                    <Star className={cn('h-5 w-5', priorities.ids.includes(event.id) && 'fill-current')} />
+                  </Button>
+                )}
                 {/* Action Menu */}
                 {event.status !== 'done' && event.status !== 'cancelled' && event.status !== 'carried' && (
                   <DropdownMenu>

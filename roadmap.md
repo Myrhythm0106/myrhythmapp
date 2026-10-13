@@ -1,12 +1,14 @@
 # MyRhythm — task roadmap
 
 ## Done
+- [x] My Vision in ACTion: collapsed focus, Settings choice, confirmed vision connection and separate Today’s Priorities highlights; isolated phone/desktop interaction checks passed.
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
 
 ## Done (Memory Bridge)
 - Memory Bridge: output choice per recording (transcript + actions / transcript only / actions only / just save), best-accuracy transcript with speakers, timestamps, unclear-word flags, fix-a-word editing with original kept, re-extract, and actions as Table | List.
 
 ## Open
+- [ ] Signed-in focus saving, AI draft acceptance and full calendar navigation check (externally managed sign-in unavailable to automation).
 - Persist My Compass history and focus checks privately across devices (cloud tables were not approved; on-device experience is active).
 - Real-device proof: 2–4 hour capture on iPhone and on Android.
 - Two-account Support Circle permission test.
