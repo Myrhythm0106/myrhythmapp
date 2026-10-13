@@ -168,7 +168,7 @@ export function LaunchCommitmentBanner({
         </details>
       ) : (
         <Button asChild variant="ghost" className="min-h-11 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10">
-          <Link to="/launch/vision">Add my vision</Link>
+          <Link to="/launch/vision-statement">Add my vision</Link>
         </Button>
       )}
       {local.core.trim() && <p className="text-lg font-medium leading-relaxed break-words">{local.core}</p>}

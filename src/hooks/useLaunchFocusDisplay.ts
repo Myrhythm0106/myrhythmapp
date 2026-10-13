@@ -19,13 +19,13 @@ export function writeLocalFocusValue(key: string, value: unknown) {
 export function useLaunchFocusDisplay() {
   const { user } = useAuth();
   const key = `launch.focus-display:${user?.id ?? 'signed-out'}`;
-  const read = () => readLocalFocusValue(key, false) === true;
+  const read = () => readLocalFocusValue<unknown>(key, false) === true;
   const [startOpen, setStartOpen] = useState(read);
   const [expanded, setExpandedState] = useState(() => visitExpanded.get(key) ?? read());
 
   useEffect(() => {
     const sync = () => {
-      const next = readLocalFocusValue(key, false) === true;
+      const next = readLocalFocusValue<unknown>(key, false) === true;
       setStartOpen(next);
       setExpandedState(visitExpanded.get(key) ?? next);
     };
