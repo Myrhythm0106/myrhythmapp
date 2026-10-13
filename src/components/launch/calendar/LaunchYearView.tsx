@@ -79,7 +79,7 @@ export function LaunchYearView({
                       className={cn(
                         'relative min-h-11 rounded-lg text-sm flex flex-col items-center justify-center transition-colors hover:bg-launch-teal/10',
                         n >= 3 ? 'bg-launch-teal/25' : n > 0 ? 'bg-launch-teal/10' : '',
-                        isSameDay(d, today) && 'ring-2 ring-launch-orange',
+                        isSameDay(d, today) && 'ring-2 ring-launch-ember',
                       )}>
                       <span className="text-launch-ink">{format(d, 'd')}</span>
                       {n > 0 && <span className="text-[11px] font-bold leading-none text-launch-teal">{n}</span>}
@@ -113,7 +113,7 @@ export function LaunchYearView({
               ))}
               {dayReminders.map((r) => (
                 <li key={r.id} className="flex items-start gap-3 rounded-xl border border-launch-gold/30 bg-white p-3">
-                  <Bell className="h-5 w-5 mt-0.5 text-launch-orange shrink-0" />
+                  <Bell className="h-5 w-5 mt-0.5 text-launch-ember shrink-0" />
                   <div className="min-w-0">
                     <p className="text-base font-medium text-launch-ink break-words">{r.actionText}</p>
                     <p className="text-sm text-launch-ink/70">Reminder{r.sent ? ' · sent' : ''}</p>
