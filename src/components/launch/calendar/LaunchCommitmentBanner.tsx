@@ -175,7 +175,7 @@ export function LaunchCommitmentBanner({
           <Link to="/launch/vision-statement">Add my vision</Link>
         </Button>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-3 border-y border-launch-cream/25 divide-y md:divide-y-0 md:divide-x divide-launch-cream/25">
+      <div id={detailsId} className="grid grid-cols-1 md:grid-cols-3 border-y border-launch-cream/25 divide-y md:divide-y-0 md:divide-x divide-launch-cream/25">
           {commitmentTypes.map((type) => (
             <div key={type.key} className={cn('min-w-0 py-4 md:px-5 first:md:pl-0 last:md:pr-0 space-y-3', type.key === 'core' && 'bg-launch-cream/5')}>
               <label htmlFor={expanded ? `${detailsId}-${type.key}` : undefined} className="flex items-center gap-2 text-base font-semibold">
@@ -200,7 +200,7 @@ export function LaunchCommitmentBanner({
             </div>
           ))}
       </div>
-      {expanded && (<div id={detailsId} className="pt-4 space-y-4">
+      {expanded && (<div className="pt-4 space-y-4">
         {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
         {vision && local.core.trim() && (
           <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
