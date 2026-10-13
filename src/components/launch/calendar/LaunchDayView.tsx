@@ -133,17 +133,17 @@ export function LaunchDayView({
         focusTitle={undefined}
       />
 
-      <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
-        <h2 className="text-xl font-semibold font-display">Today’s Priorities</h2>
-        {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
-      </div>
-
       <LaunchCommitmentBanner 
         scope="day" 
         date={date} 
         inheritedVision={inheritedVision}
         inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
       />
+
+      <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
+        <h2 className="text-xl font-semibold font-display">Today’s Priorities</h2>
+        {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
+      </div>
 
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
