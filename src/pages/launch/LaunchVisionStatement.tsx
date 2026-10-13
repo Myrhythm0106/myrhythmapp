@@ -3,7 +3,7 @@ import { Compass } from 'lucide-react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { CapabilityHero } from '@/components/launch/chrome/CapabilityHero';
 import { FivePromptCard } from '@/components/launch/vision/FivePromptCard';
-import { VisionStatementComposer } from '@/components/launch/vision/VisionStatementComposer';
+import { VisionStatementComposer, type VisionLevel, type AnchorSummary } from '@/components/launch/vision/VisionStatementComposer';
 import { fivePrompts } from '@/data/fivePrompts';
 
 const STORAGE_KEY = 'myrhythm.visionStatement.v1';
@@ -13,6 +13,8 @@ interface Persisted {
   futureLabel: string;
   statement: string;
   savedAt: string | null;
+  level: VisionLevel;
+  levels: Partial<Record<VisionLevel, { statement: string; summary: AnchorSummary | null }>>;
 }
 
 const initial: Persisted = {
@@ -20,13 +22,17 @@ const initial: Persisted = {
   futureLabel: 'Future',
   statement: '',
   savedAt: null,
+  level: 'year',
+  levels: {},
 };
 
 function load(): Persisted {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initial;
-    return { ...initial, ...JSON.parse(raw) };
+    const p = { ...initial, ...JSON.parse(raw) } as Persisted;
+    if (!p.levels?.year && p.statement) p.levels = { ...p.levels, year: { statement: p.statement, summary: null } };
+    return p;
   } catch {
     return initial;
   }
@@ -43,6 +49,14 @@ export default function LaunchVisionStatement() {
 
   const setAnswer = (id: string, v: string) =>
     update({ answers: { ...state.answers, [id]: v } });
+
+  const current = state.levels[state.level] ?? { statement: '', summary: null };
+  const setLevelData = (patch: Partial<{ statement: string; summary: AnchorSummary | null }>) =>
+    setState((s) => {
+      const cur = s.levels[s.level] ?? { statement: '', summary: null };
+      const next = { ...cur, ...patch };
+      return { ...s, levels: { ...s.levels, [s.level]: next }, ...(s.level === 'year' ? { statement: next.statement } : {}) };
+    });
 
   const handleSave = () => {
     const savedAt = new Date().toLocaleString('en-GB', {
@@ -84,8 +98,12 @@ export default function LaunchVisionStatement() {
         <VisionStatementComposer
           answers={state.answers}
           futureLabel={state.futureLabel}
-          statement={state.statement}
-          onStatementChange={(v) => update({ statement: v })}
+          level={state.level}
+          onLevelChange={(l) => update({ level: l })}
+          statement={current.statement}
+          summary={current.summary}
+          onStatementChange={(v) => setLevelData({ statement: v })}
+          onSummaryChange={(sm) => setLevelData({ summary: sm })}
           onSave={handleSave}
           lastSaved={state.savedAt}
         />
