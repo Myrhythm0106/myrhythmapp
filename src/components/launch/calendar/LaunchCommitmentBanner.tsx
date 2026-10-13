@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useLaunchFocusDisplay, useLaunchSavedVision, readLocalFocusValue, writeLocalFocusValue } from '@/hooks/useLaunchFocusDisplay';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { usePlanningScope, usePlanningDay } from '@/hooks/usePlanningScope';
 import { LaunchAiPlanAssist } from './LaunchAiPlanAssist';
 
@@ -108,7 +109,7 @@ export function LaunchCommitmentBanner({
   const AssistChip = scope !== 'year' && (
     <Button variant="ghost"
       onClick={() => setAiOpen(true)}
-      className="min-h-14 px-3 text-launch-ink hover:bg-launch-gold/10 hover:text-launch-ink"
+      className="min-h-14 px-4 border border-launch-cream/30 bg-launch-cream/10 text-launch-cream hover:bg-launch-cream/20 hover:text-launch-cream"
       aria-label="Help me plan with AI"
     >
       <Sparkles className="h-3 w-3" /> Help me plan
@@ -153,56 +154,54 @@ export function LaunchCommitmentBanner({
   }
 
   return (
-    <section aria-labelledby={`${detailsId}-title`} className={cn('border-y border-launch-gold/30 py-5 text-launch-ink', className)}>
-      <div className="flex items-center gap-2 mb-3">
-        <Compass className="h-5 w-5 shrink-0" />
+    <section aria-labelledby={`${detailsId}-title`} className={cn('bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream px-5 py-6 sm:p-7 border-t-2 border-launch-gold', className)}>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+        <Compass className="h-6 w-6 shrink-0 text-launch-gold" />
         <h2 id={`${detailsId}-title`} className="text-xl font-semibold font-display">{title}</h2>
+        </div>
+        {AssistChip}
       </div>
       {vision ? (
-        <details className="mb-3">
-          <summary className="cursor-pointer min-h-11 leading-relaxed break-words text-base marker:text-launch-moss">
+        <details className="mb-5">
+          <summary className="cursor-pointer min-h-11 leading-relaxed break-words text-lg marker:text-launch-gold">
             <span className="font-medium">My vision: </span>
             {vision.length > 120 ? `${vision.slice(0, 120)}…` : vision}
           </summary>
           <p className="text-base leading-relaxed break-words pt-2">{vision}</p>
         </details>
       ) : (
-        <Button asChild variant="ghost" className="min-h-11 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10">
+        <Button asChild variant="ghost" className="min-h-14 text-launch-cream hover:text-launch-cream hover:bg-launch-cream/10">
           <Link to="/launch/vision-statement">Add my vision</Link>
         </Button>
       )}
-      {local.core.trim() && <p className="text-lg font-medium leading-relaxed break-words">{local.core}</p>}
-      {linked && <p className="text-base text-launch-ink mt-2">This supports my vision</p>}
-      <div className="flex flex-wrap items-center justify-between gap-2 mt-2">
-        <Button variant="ghost" aria-expanded={expanded} aria-controls={detailsId}
-          onClick={() => setExpanded(!expanded)}
-          className="min-h-14 h-auto py-3 px-0 whitespace-normal text-left text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10">
-          {expanded ? 'Hide my focus details' : 'Show my focus details'}
-          <ChevronDown className={cn('h-5 w-5', expanded && 'rotate-180')} />
-        </Button>
-        {AssistChip}
-      </div>
-      {expanded && (
-      <div id={detailsId} className="pt-4 space-y-4">
-        {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 border-y border-launch-cream/25 divide-y md:divide-y-0 md:divide-x divide-launch-cream/25">
           {commitmentTypes.map((type) => (
-            <div key={type.key} className="space-y-2">
-              <label htmlFor={`${detailsId}-${type.key}`} className="flex items-center gap-2 text-base font-medium">
-                <type.icon className={cn('h-4 w-4', type.iconColor)} />
+            <div key={type.key} className={cn('min-w-0 py-4 md:px-5 first:md:pl-0 last:md:pr-0 space-y-3', type.key === 'core' && 'bg-launch-cream/5')}>
+              <label htmlFor={expanded ? `${detailsId}-${type.key}` : undefined} className="flex items-center gap-2 text-base font-semibold">
+                <type.icon className="h-5 w-5 text-launch-gold shrink-0" />
                 <span>{type.label}</span>
               </label>
+              {expanded ? <>
               <p className="text-base leading-relaxed">{type.sublabel}</p>
-              <Input
+              <Textarea
                 id={`${detailsId}-${type.key}`}
                 value={local[type.key]}
                 onChange={(e) => handleChange(type.key, e.target.value)}
                 placeholder={type.sublabel}
-                className="min-h-14 bg-launch-ivory border-launch-gold/40 text-launch-ink placeholder:text-launch-ink/70 text-base"
+                className="min-h-24 bg-launch-cream border-launch-gold/40 text-launch-ink-deep placeholder:text-launch-ink/70 text-base leading-relaxed resize-y"
               />
+              </> : local[type.key].trim() ? (
+                local[type.key].length > 180 ? <details>
+                  <summary className="cursor-pointer text-lg leading-relaxed break-words marker:text-launch-gold">{local[type.key].slice(0, 180)}… <span className="text-base underline">Read full target</span></summary>
+                  <p className="pt-3 text-lg leading-relaxed break-words">{local[type.key]}</p>
+                </details> : <p className="text-lg leading-relaxed break-words">{local[type.key]}</p>
+              ) : <p className="text-base italic">{type.key === 'stretch' ? 'Only if I feel up to it' : 'Not chosen yet'}</p>}
             </div>
           ))}
-        </div>
+      </div>
+      {expanded && <div id={detailsId} className="pt-4 space-y-4">
+        {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
         {vision && local.core.trim() && (
           <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
             <Checkbox checked={linked} onCheckedChange={value => confirmConnection(value === true)} />
@@ -211,6 +210,15 @@ export function LaunchCommitmentBanner({
         )}
       </div>
       )}
+      <div className="flex items-center justify-between gap-3 pt-3">
+        <Button variant="ghost" aria-expanded={expanded} aria-controls={detailsId}
+          onClick={() => setExpanded(!expanded)}
+          className="min-h-14 px-0 text-base text-launch-cream hover:text-launch-cream hover:bg-launch-cream/10">
+          {expanded ? 'Hide details' : 'Show details'}
+          <ChevronDown className={cn('h-5 w-5', expanded && 'rotate-180')} />
+        </Button>
+        {linked && <span className="text-base">This supports my vision</span>}
+      </div>
 
       <LaunchAiPlanAssist
         isOpen={aiOpen}
