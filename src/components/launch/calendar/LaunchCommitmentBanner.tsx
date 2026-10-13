@@ -97,6 +97,12 @@ export function LaunchCommitmentBanner({
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    if (!row?.updated_at) return;
+    setDirty(false);
+    setSavedAt(new Date(row.updated_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+  }, [row?.updated_at]);
+
+  useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
     window.addEventListener('beforeunload', warn);
