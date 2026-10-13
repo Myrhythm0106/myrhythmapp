@@ -325,6 +325,9 @@ export default function LaunchCalendar() {
           <LaunchYearView
             date={selectedDate}
             onMonthSelect={handleMonthSelect}
+            onDaySelect={handleDaySelect}
+            events={events}
+            reminders={reminders}
             yearVision={yearVision}
             onYearVisionChange={setYearVision}
           />
