@@ -1,7 +1,7 @@
 # MyRhythm — task roadmap
 
 ## Done
-- [x] My Vision in ACTion: collapsed focus, Settings choice, confirmed vision connection and separate Today’s Priorities highlights; isolated phone/desktop interaction checks passed.
+- [x] My Vision in ACTion: restored rich vision banner with Core, Key and Stretch always visible; optional editing details, Settings choice and separate My Daily Rhythm with priority stars. Isolated phone/desktop interaction checks passed.
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
 
 ## Done (Memory Bridge)

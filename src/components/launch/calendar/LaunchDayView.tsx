@@ -141,9 +141,10 @@ export function LaunchDayView({
       />
 
       <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
-        <h2 className="text-xl font-semibold font-display">Today’s Priorities</h2>
+        <h2 className="text-xl font-semibold font-display">My Daily Rhythm</h2>
         {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
       </div>
+      <p className="text-base text-launch-ink">My schedule</p>
 
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
