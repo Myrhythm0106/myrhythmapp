@@ -2,7 +2,7 @@
 
 ## Recommendation
 
-**Keep vision focus and everyday priorities distinct.** Rename the current Today’s Focus section **My Vision in Action**, keeping its Core, Key and Stretch details closed by default. Everyday tasks belong under **Today’s Priorities** within the existing calendar. Neither should masquerade as the other.
+**Keep vision focus and everyday priorities distinct.** Rename the current Today’s Focus section **My Vision in ACTion**, keeping its Core, Key and Stretch details closed by default. Everyday tasks belong under **Today’s Priorities** within the existing calendar. Neither should masquerade as the other.
 
 The current calendar focus section shows Core, Key and Stretch together. Core is described as “This is non-negotiable”, and encouragement changes every eight seconds. These can feel demanding or distracting. A calmer presentation should be steady, personal and optional.
 
@@ -10,7 +10,7 @@ No design will feel right to everyone. The strongest starting point is a quiet d
 
 ## What the person sees
 
-- A compact, unframed **My Vision in Action** section, closed by default. Avoid “Today’s focus” for this area because it sounds like a daily task list.
+- A compact, unframed **My Vision in ACTion** section, closed by default. Preserve this chosen capitalisation. Avoid “Today’s focus” for this area because it sounds like a daily task list.
 - Their saved Core focus remains visible as a readable sentence—not just an icon or a clipped label.
 - Show the person’s saved vision as a quiet **My vision** line, with their saved Core vision focus beneath it. This area is exclusively for the direction they want to work towards—not everyday errands.
 - Existing Core/Key/Stretch text may have been used for daily tasks under the old label. Preserve it, but do not retroactively claim a vision link. Let the person confirm or revise the connection in expanded details.
@@ -21,7 +21,7 @@ No design will feel right to everyone. The strongest starting point is a quiet d
 Illustrative presentation—not invented user data:
 
 ```text
-My Vision in Action
+My Vision in ACTion
 My vision: [My saved vision, when available]
 [My saved Core focus]
 
@@ -35,7 +35,7 @@ Today’s Priorities
 ## Vision and everyday priorities: two roles, not two competing lists
 
 - **Vision answers “Where do I want to get to?”** Keep just one quiet reminder; longer vision text opens on request rather than filling the calendar.
-- **My Vision in Action answers “What am I working towards?”** Core, Key and Stretch belong here and relate to the person’s vision. Do not use them as the daily-priority fields.
+- **My Vision in ACTion answers “What am I working towards?”** Core, Key and Stretch belong here and relate to the person’s vision. Do not use them as the daily-priority fields.
 - **Today’s Priorities answers “What needs my attention today?”** The person can highlight existing calendar items using a familiar star control labelled **Mark as a priority** / **Remove priority**. Show the star and readable priority label on the original item; do not create a duplicate checklist. A modest Today’s Priorities heading within the existing schedule makes the distinction clear.
 - Day-to-day priorities require no vision connection. For example, collecting a prescription can be today’s priority while the vision focus concerns reconnecting with friends.
 - Do not automatically mark the next appointment as a priority or reorder timed appointments away from their real times. Priority is chosen by the person and never changes scheduling.
@@ -57,7 +57,7 @@ All three remain optional. Stop rotating encouragement automatically in this sec
 
 ## Settings: my choice, remembered
 
-Add one simple **Vision in Action details** choice:
+Add one simple **Vision in ACTion details** choice:
 
 - **Start closed** — recommended default; the focus reminder remains visible.
 - **Start open** — show the full focus when entering the calendar.
