@@ -266,14 +266,24 @@ export function LaunchCommitmentBanner({
             My Core Goal supports this vision
           </label>
         )}
-        {SaveBar(false)}
       </div>
+      )}
+      {expanded ? SaveBar(false) : (
+        <div className="flex flex-wrap items-center gap-3 pt-4">
+          <Button onClick={() => setExpanded(true)}
+            className="min-h-14 px-6 text-base bg-launch-teal text-launch-cream hover:bg-launch-teal/90">
+            Edit my goals
+          </Button>
+          <span className="text-base" aria-live="polite">
+            {savedAt ? `Saved ✓ ${savedAt}` : ''}
+          </span>
+        </div>
       )}
       <div className="flex items-center justify-between gap-3 pt-3">
         <Button variant="ghost" aria-expanded={expanded} aria-controls={detailsId}
           onClick={() => setExpanded(!expanded)}
           className="min-h-14 px-0 text-base text-launch-cream hover:text-launch-cream hover:bg-launch-cream/10">
-          {expanded ? 'Hide details' : 'Show details'}
+          {expanded ? 'Done editing' : 'Edit goals'}
           <ChevronDown className={cn('h-5 w-5', expanded && 'rotate-180')} />
         </Button>
         {linked && <span className="text-base">This supports my vision</span>}
