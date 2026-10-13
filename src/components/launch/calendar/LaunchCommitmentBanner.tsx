@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Star, Zap, Target, Sparkles } from 'lucide-react';
+import React, { useEffect, useId, useState } from 'react';
+import { Star, Zap, Target, Sparkles, Compass, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router-dom';
+import { useLaunchFocusDisplay, useLaunchSavedVision, readLocalFocusValue, writeLocalFocusValue } from '@/hooks/useLaunchFocusDisplay';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { usePlanningScope, usePlanningDay } from '@/hooks/usePlanningScope';
@@ -20,9 +24,9 @@ interface LaunchCommitmentBannerProps {
 }
 
 const scopeTitles: Record<ViewScope, (date: Date) => string> = {
-  day: () => "Today's Focus",
-  week: () => "This Week's Focus",
-  month: (date) => `${date.toLocaleDateString('en-US', { month: 'long' })} Focus`,
+  day: () => 'My Vision in ACTion',
+  week: () => 'My Vision in ACTion · This week',
+  month: (date) => `My Vision in ACTion · ${date.toLocaleDateString('en-US', { month: 'long' })}`,
   year: (date) => `${date.getFullYear()} Vision`,
 };
 
@@ -38,9 +42,9 @@ const empoweringMessages = [
 ];
 
 const commitmentTypes = [
-  { key: 'core' as const, label: 'Core', sublabel: 'This is non-negotiable', icon: Star, iconColor: 'text-amber-300' },
-  { key: 'key' as const, label: 'Key', sublabel: 'Important to me', icon: Zap, iconColor: 'text-white' },
-  { key: 'stretch' as const, label: 'Stretch', sublabel: 'When energy allows', icon: Target, iconColor: 'text-brand-teal-200' },
+  { key: 'core' as const, label: 'Core', sublabel: 'My main step towards my vision', icon: Star, iconColor: 'text-launch-ink' },
+  { key: 'key' as const, label: 'Key', sublabel: 'Another step towards it', icon: Zap, iconColor: 'text-launch-ink' },
+  { key: 'stretch' as const, label: 'Stretch', sublabel: 'Only if I feel up to it', icon: Target, iconColor: 'text-launch-ink' },
 ];
 
 export function LaunchCommitmentBanner({
@@ -55,6 +59,21 @@ export function LaunchCommitmentBanner({
   const [local, setLocal] = useState({ vision: '', core: '', key: '', stretch: '' });
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [aiOpen, setAiOpen] = useState(false);
+  const { expanded, setExpanded, userKey } = useLaunchFocusDisplay();
+  const savedVision = useLaunchSavedVision();
+  const vision = savedVision || row?.vision_text?.trim() || '';
+  const detailsId = useId();
+  const connectionKey = `launch.vision-connection:${userKey}:${scope}:${periodStart.toISOString()}`;
+  const [connection, setConnection] = useState<{ vision: string; core: string } | null>(null);
+  useEffect(() => {
+    setConnection(readLocalFocusValue(connectionKey, null));
+  }, [connectionKey]);
+  const linked = Boolean(vision && local.core.trim() && connection?.vision === vision && connection.core === local.core);
+  const confirmConnection = (checked: boolean) => {
+    const next = checked ? { vision, core: local.core } : null;
+    setConnection(next);
+    writeLocalFocusValue(connectionKey, next);
+  };
 
   // Hydrate from persistence when the row changes.
   useEffect(() => {
@@ -67,33 +86,33 @@ export function LaunchCommitmentBanner({
   }, [row?.id, row?.vision_text, row?.core, row?.key, row?.stretch]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentMessageIndex((prev) => (prev + 1) % empoweringMessages.length);
-    }, 8000);
-    return () => clearInterval(timer);
+    setCurrentMessageIndex(0);
   }, []);
 
   const title = scopeTitles[scope](date);
 
   const handleChange = (field: 'vision' | 'core' | 'key' | 'stretch', value: string) => {
+    if (field === 'core' || field === 'vision') confirmConnection(false);
     setLocal((prev) => ({ ...prev, [field]: value }));
     if (field === 'vision') saveDebounced({ vision_text: value, source: 'user' });
     else saveDebounced({ [field]: value, source: 'user' } as any);
   };
 
   const acceptAiDraft = (draft: { core: string; key: string; stretch: string }) => {
+    confirmConnection(false);
+    setExpanded(true);
     setLocal((prev) => ({ ...prev, ...draft }));
     save({ core: draft.core, key: draft.key, stretch: draft.stretch, source: 'ai_assisted' });
   };
 
   const AssistChip = scope !== 'year' && (
-    <button
+    <Button variant="ghost"
       onClick={() => setAiOpen(true)}
-      className="text-xs px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 border border-white/30 text-white flex items-center gap-1 transition-colors"
+      className="min-h-14 px-3 text-launch-ink hover:bg-launch-gold/10 hover:text-launch-ink"
       aria-label="Help me plan with AI"
     >
       <Sparkles className="h-3 w-3" /> Help me plan
-    </button>
+    </Button>
   );
 
   // Year vision surface
@@ -134,43 +153,64 @@ export function LaunchCommitmentBanner({
   }
 
   return (
-    <div className={cn('rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500', className)}>
-      <div className="p-6 text-white">
-        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-300" />
-            <h2 className="text-xl font-bold">{title}</h2>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-white/80 text-sm italic hidden sm:inline">{empoweringMessages[currentMessageIndex]}</span>
-            {AssistChip}
-          </div>
-        </div>
-
-        {row?.source === 'ai_assisted' && (
-          <p className="text-white/70 text-xs mb-3 flex items-center gap-1">
-            <Sparkles className="h-3 w-3" /> AI-assisted draft — edit anytime
-          </p>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <section aria-labelledby={`${detailsId}-title`} className={cn('border-y border-launch-gold/30 py-5 text-launch-ink', className)}>
+      <div className="flex items-center gap-2 mb-3">
+        <Compass className="h-5 w-5 shrink-0" />
+        <h2 id={`${detailsId}-title`} className="text-xl font-semibold font-display">{title}</h2>
+      </div>
+      {vision ? (
+        <details className="mb-3">
+          <summary className="cursor-pointer min-h-11 leading-relaxed break-words text-base marker:text-launch-moss">
+            <span className="font-medium">My vision: </span>
+            {vision.length > 120 ? `${vision.slice(0, 120)}…` : vision}
+          </summary>
+          <p className="text-base leading-relaxed break-words pt-2">{vision}</p>
+        </details>
+      ) : (
+        <Button asChild variant="ghost" className="min-h-11 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10">
+          <Link to="/launch/vision">Add my vision</Link>
+        </Button>
+      )}
+      {local.core.trim() && <p className="text-lg font-medium leading-relaxed break-words">{local.core}</p>}
+      {linked && <p className="text-base text-launch-ink mt-2">This supports my vision</p>}
+      <div className="flex flex-wrap items-center justify-between gap-2 mt-2">
+        <Button variant="ghost" aria-expanded={expanded} aria-controls={detailsId}
+          onClick={() => setExpanded(!expanded)}
+          className="min-h-14 h-auto py-3 px-0 whitespace-normal text-left text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10">
+          {expanded ? 'Hide my focus details' : 'Show my focus details'}
+          <ChevronDown className={cn('h-5 w-5', expanded && 'rotate-180')} />
+        </Button>
+        {AssistChip}
+      </div>
+      {expanded && (
+      <div id={detailsId} className="pt-4 space-y-4">
+        {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {commitmentTypes.map((type) => (
             <div key={type.key} className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium">
+              <label htmlFor={`${detailsId}-${type.key}`} className="flex items-center gap-2 text-base font-medium">
                 <type.icon className={cn('h-4 w-4', type.iconColor)} />
                 <span>{type.label}</span>
-                <span className="text-white/60 text-xs">- {type.sublabel}</span>
               </label>
+              <p className="text-base leading-relaxed">{type.sublabel}</p>
               <Input
+                id={`${detailsId}-${type.key}`}
                 value={local[type.key]}
                 onChange={(e) => handleChange(type.key, e.target.value)}
                 placeholder={type.sublabel}
-                className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 text-sm"
+                className="min-h-14 bg-launch-ivory border-launch-gold/40 text-launch-ink placeholder:text-launch-ink/70 text-base"
               />
             </div>
           ))}
         </div>
+        {vision && local.core.trim() && (
+          <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
+            <Checkbox checked={linked} onCheckedChange={value => confirmConnection(value === true)} />
+            My Core step supports this vision
+          </label>
+        )}
       </div>
+      )}
 
       <LaunchAiPlanAssist
         isOpen={aiOpen}
@@ -179,6 +219,6 @@ export function LaunchCommitmentBanner({
         periodStart={periodStart}
         onAccept={acceptAiDraft}
       />
-    </div>
+    </section>
   );
 }
