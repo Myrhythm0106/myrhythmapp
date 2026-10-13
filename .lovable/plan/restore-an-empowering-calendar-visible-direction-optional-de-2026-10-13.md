@@ -33,7 +33,7 @@ The current day-view banner shows only the saved Core sentence when closed; Key 
 - Do not label every appointment as a chosen priority: use a small **My schedule** subheading for the full timed list, with stars identifying the person's highlighted priorities.
 
 ```text
-MY VISION IN ACTion                           Help me plan
+MY VISION IN ACTON                           Help me plan
 My vision: [saved statement]
 
 Core                     Key                    Stretch
@@ -41,8 +41,8 @@ Core                     Key                    Stretch
 
 Show details                                                   ˅
 ────────────────────────────────────────────────────────────────
-TODAY’S PRIORITIES
-My schedule
+MY DAILY RHYTHM
+
 09:00  [everyday appointment]                  ☆
 11:00  [chosen everyday priority]              ★ Priority
 ```
