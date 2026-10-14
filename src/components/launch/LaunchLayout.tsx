@@ -14,6 +14,7 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAppReady } from '@/hooks/useAppReady';
+import { LaunchGuidedStart } from './LaunchGuidedStart';
 
 
 
@@ -64,7 +65,7 @@ export function LaunchLayout({
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   // First-time setup stays linear. Returning users can still use the dial
   // while revisiting their assessment.
-  const showDial = !isOnboardingPath || (
+  const showDial = location.pathname === '/launch/welcome' || !isOnboardingPath || (
     appReady && ['/launch/assessment', '/launch/user-type', '/launch/welcome'].includes(location.pathname)
   );
 
@@ -134,6 +135,7 @@ export function LaunchLayout({
           <main className="flex-1 pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto px-4 py-6">
               {showBack && <LaunchPageHeader />}
+              {!isOnboardingPath && <LaunchGuidedStart />}
               {children}
             </div>
           </main>

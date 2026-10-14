@@ -10,6 +10,9 @@ import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentR
 import { RhythmCalendarConsent } from '@/components/launch/rhythm/RhythmCalendarConsent';
 import { LivingCompassReport } from '@/components/launch/assessment/LivingCompassReport';
 import { YesPlanCard } from '@/components/launch/assessment/YesPlanCard';
+import { LaunchStartingChoices } from '@/components/launch/LaunchStartingChoices';
+import type { StartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
+import { Button } from '@/components/ui/button';
 
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
@@ -115,11 +118,11 @@ export default function LaunchWelcome() {
     } catch { /* noop */ }
   }, [navigate]);
 
-  const continueHome = () => {
+  const continueHome = (startingStyle?: StartingStyle) => {
     if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
     localStorage.removeItem('myrhythm_intent');
     // Optional "Make it yours" step, offered once, after value is shown.
-    if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen')) {
+    if (!startingStyle && !localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen')) {
       navigate('/launch/user-type?after=snapshot');
       return;
     }
@@ -177,10 +180,6 @@ export default function LaunchWelcome() {
         rel="stylesheet"
       />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-4">
-        <LaunchPageHeader fallbackPath="/launch/assessment" />
-      </div>
-
       {postCheckout && (
         <div className="max-w-6xl mx-auto px-4 md:px-8 pt-2">
           <div
@@ -194,7 +193,7 @@ export default function LaunchWelcome() {
               My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home.
             </p>
             <button
-              onClick={continueHome}
+              onClick={() => continueHome()}
               className="mt-4 w-full md:w-auto min-h-[56px] px-8 rounded-xl font-semibold text-white"
               style={{ backgroundColor: INK }}
             >
@@ -263,6 +262,10 @@ export default function LaunchWelcome() {
                 <p className="mt-4 text-xs leading-relaxed" style={{ color: `${CREAM}99` }}>
                   Each letter is a facet of my rhythm.
                 </p>
+                {!bhs && <div className="mt-5">
+                  <p className="text-base leading-relaxed text-launch-cream">No saved snapshot is available on this device yet.</p>
+                  <Button variant="ghost" onClick={() => navigate('/launch/assessment?first=1')} className="mt-3 min-h-[56px] h-auto whitespace-normal bg-brand-orange-500 text-primary-foreground hover:bg-brand-orange-600 hover:text-primary-foreground">Start my questions</Button>
+                </div>}
               </div>
 
               {/* Letter bars */}
@@ -464,6 +467,9 @@ export default function LaunchWelcome() {
                 </div>
               </div>
 
+              <div className="max-w-md mb-6">
+                <LaunchStartingChoices onChoose={continueHome} />
+              </div>
               <div className="flex flex-col gap-3 max-w-md">
                 <button
                   onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}
@@ -475,15 +481,12 @@ export default function LaunchWelcome() {
                   {foundingIntent ? 'Continue to membership options' : 'See membership options'}
                   <span aria-hidden="true">→</span>
                 </button>
-                <button
-                  onClick={continueHome}
-                  className="w-full py-4 px-8 rounded-none border font-bold text-xs tracking-[0.2em] uppercase transition-colors min-h-[56px] flex items-center justify-center"
-                  style={{ borderColor: `${INK}33`, color: INK, backgroundColor: 'transparent' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = `${GOLD}14`)}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                >
-                  Not now — go to Home
-                </button>
+                <Button variant="ghost" onClick={() => {
+                  if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+                  navigate('/launch/user-type?after=snapshot');
+                }} className="min-h-[56px] whitespace-normal text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
+                  Make it yours (optional)
+                </Button>
               </div>
 
             </div>
@@ -548,13 +551,10 @@ export default function LaunchWelcome() {
               This is my MYRHYTHM snapshot. I can come back to it any time from Home.
             </p>
             <div className="flex items-center gap-4">
-              <button
-                onClick={continueHome}
-                className="min-h-[56px] px-8 font-bold text-xs tracking-[0.3em] uppercase"
-                style={{ backgroundColor: INK, color: CREAM, ...SORA }}
-              >
-                Continue to Home →
-              </button>
+              <Button variant="ghost" onClick={() => document.querySelector('[aria-label="How would I like to begin?"]')?.scrollIntoView({ behavior: 'auto', block: 'center' })}
+                className="min-h-[56px] whitespace-normal bg-brand-orange-500 text-primary-foreground hover:bg-brand-orange-600 hover:text-primary-foreground">
+                Choose how I begin →
+              </Button>
             </div>
           </div>
         )}
