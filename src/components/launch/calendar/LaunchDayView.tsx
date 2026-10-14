@@ -1,3 +1,5 @@
+import { LaunchYesWeekCard } from './LaunchYesWeekCard';
+import type { YesAction } from '@/launch/yes/yesActions';
 import React from 'react';
 import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,6 +49,7 @@ interface LaunchDayViewProps {
   onEventCarryOver?: (eventIndex: number) => void;
   onEventReschedule?: (eventIndex: number) => void;
   onEventOpenSource?: (event: Event) => void;
+  onAddYesAction?: (action: YesAction) => void;
 }
 
 
@@ -63,8 +66,8 @@ export function LaunchDayView({
   onEventStatusChange,
   onEventCarryOver,
   onEventReschedule,
-  onEventOpenSource
-
+  onEventOpenSource,
+  onAddYesAction
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
@@ -144,6 +147,7 @@ export function LaunchDayView({
         <h2 className="text-xl font-semibold font-display">My Daily Rhythm</h2>
         {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
       </div>
+      <LaunchYesWeekCard date={date} onAdd={onAddYesAction} />
       <p className="text-base text-launch-ink">My schedule</p>
 
       {sortedReminders.length > 0 && (

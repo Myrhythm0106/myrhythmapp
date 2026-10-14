@@ -300,6 +300,7 @@ export default function LaunchCalendar() {
             onEventCarryOver={handleEventCarryOver}
             onEventReschedule={handleEventReschedule}
             onEventOpenSource={handleOpenEventSource}
+            onAddYesAction={(a) => addEvent({ title: a.title, time: a.suggestedTime, type: 'task', description: 'From my YES plan', date: selectedDate })}
           />
         )}
         {currentView === 'week' && (

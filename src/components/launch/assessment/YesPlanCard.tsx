@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { YES_LETTERS, loadFullPicture } from '@/launch/framework/yes';
+import { YES_LETTERS, loadFullPicture, setYesStart } from '@/launch/framework/yes';
 import { FULL_PICTURE_LETTERS } from '@/data/launchAssessmentBanks';
 
 function readAnswers(): Record<string, { primary?: string } | undefined> {
@@ -61,7 +61,7 @@ export function YesPlanCard() {
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="button"
-          onClick={() => navigate('/launch/home')}
+          onClick={() => { setYesStart(); navigate('/launch/calendar'); }}
           className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-launch-ember text-white font-semibold"
         >
           Start week 1 <ArrowRight className="h-4 w-4" />

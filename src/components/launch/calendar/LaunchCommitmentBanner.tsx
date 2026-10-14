@@ -3,7 +3,8 @@ import { Star, Zap, Target, Sparkles, Compass, ChevronDown, Check, ArrowRight } 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
-import { useLaunchFocusDisplay, useLaunchSavedVision, readLocalFocusValue, writeLocalFocusValue } from '@/hooks/useLaunchFocusDisplay';
+import { useLaunchFocusDisplay, useLaunchVisionTimeframe, VISION_TIMEFRAME_LABEL, type VisionTimeframe, readLocalFocusValue, writeLocalFocusValue } from '@/hooks/useLaunchFocusDisplay';
+import { YES_LETTERS, getYesWeek } from '@/launch/framework/yes';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -61,7 +62,8 @@ export function LaunchCommitmentBanner({
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [aiOpen, setAiOpen] = useState(false);
   const { expanded, setExpanded, userKey } = useLaunchFocusDisplay();
-  const savedVision = useLaunchSavedVision();
+  const { vision: savedVision, chosen: chosenVision, level: visionLevel, setLevel: setVisionLevel } = useLaunchVisionTimeframe();
+  const yesWeek = getYesWeek(date);
   const vision = savedVision || row?.vision_text?.trim() || '';
   const detailsId = useId();
   const connectionKey = `launch.vision-connection:${userKey}:${scope}:${periodStart.toISOString()}`;
@@ -90,7 +92,7 @@ export function LaunchCommitmentBanner({
     setCurrentMessageIndex(0);
   }, []);
 
-  const title = scopeTitles[scope](date);
+  const title = scope === 'year' ? scopeTitles[scope](date) : `${scopeTitles[scope](date)} · ${VISION_TIMEFRAME_LABEL[visionLevel]}`;
 
   const [dirty, setDirty] = useState(false);
   const [savedAt, setSavedAt] = useState<string | null>(null);
@@ -220,6 +222,35 @@ export function LaunchCommitmentBanner({
         </div>
         {AssistChip}
       </div>
+      <div role="group" aria-label="Vision timeframe" className="flex flex-wrap gap-2 mb-3">
+        {(Object.keys(VISION_TIMEFRAME_LABEL) as VisionTimeframe[]).map((l) => (
+          <button
+            key={l}
+            type="button"
+            aria-pressed={visionLevel === l}
+            onClick={() => setVisionLevel(l)}
+            className={cn(
+              'min-h-11 px-3 rounded-full text-sm font-semibold border transition-colors',
+              visionLevel === l ? 'bg-launch-gold text-launch-ink border-launch-gold' : 'border-launch-cream/40 text-launch-cream hover:bg-launch-cream/10'
+            )}
+          >
+            {VISION_TIMEFRAME_LABEL[l]}
+          </button>
+        ))}
+      </div>
+      {!chosenVision && visionLevel !== 'year' && (
+        <p className="text-base mb-3">
+          No {VISION_TIMEFRAME_LABEL[visionLevel].toLowerCase()} yet{vision ? " — showing this year's for now." : '.'}{' '}
+          <Link to="/launch/vision-statement" className="underline underline-offset-4 text-launch-gold font-semibold">
+            Write my {visionLevel === 'three' ? '3-year' : 'long-term'} vision
+          </Link>
+        </p>
+      )}
+      {yesWeek && yesWeek !== 'done' && (
+        <p className="text-sm mb-3 text-launch-cream/90">
+          <span className="font-semibold text-launch-gold">YES · Week {yesWeek} of 3</span> — this week's step: {YES_LETTERS[yesWeek - 1].word}
+        </p>
+      )}
       {vision ? (
         <details className="mb-5">
           <summary className="cursor-pointer min-h-11 leading-relaxed break-words text-lg marker:text-launch-gold">

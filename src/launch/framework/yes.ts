@@ -89,3 +89,32 @@ export function isCheckInDue(s: FullPictureState = loadFullPicture()): boolean {
   if (!s.lastCompletedAt) return true;
   return now - s.lastCompletedAt >= 2 * 86400000;
 }
+
+/* ---------- YES weeks on the calendar ---------- */
+
+const START_KEY = 'myrhythm_yes_start';
+
+function dayStart(d: Date) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+
+export function setYesStart(date = new Date()) {
+  try { localStorage.setItem(START_KEY, dayStart(date).toISOString()); } catch {/* noop */}
+}
+
+/** Day 1 = "Start week 1" tap, otherwise the day the questions were finished. */
+export function getYesStart(): Date | null {
+  try {
+    const raw = localStorage.getItem(START_KEY);
+    if (raw) return new Date(raw);
+    const done = JSON.parse(localStorage.getItem('myrhythm_launch_mode') || '{}')?.assessmentResults?.completedAt;
+    return done ? dayStart(new Date(done)) : null;
+  } catch { return null; }
+}
+
+export function getYesWeek(date: Date): 1 | 2 | 3 | 'done' | null {
+  const start = getYesStart();
+  if (!start) return null;
+  const days = Math.floor((dayStart(date).getTime() - start.getTime()) / 86400000);
+  if (days < 0) return null;
+  if (days < 21) return (Math.floor(days / 7) + 1) as 1 | 2 | 3;
+  return 'done';
+}
