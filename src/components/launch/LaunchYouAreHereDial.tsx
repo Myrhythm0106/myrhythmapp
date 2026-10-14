@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { findLaunchRoute } from '@/launch/routes';
+import { Button } from '@/components/ui/button';
+import { LaunchStartingChoices } from './LaunchStartingChoices';
+import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 
 /**
  * LaunchYouAreHereDial — the "Wayfinder".
@@ -42,6 +45,7 @@ const SECONDARY: Place[] = [
 ];
 
 const PLAIN_LABELS: Record<string, string> = {
+  '/launch/welcome': 'My snapshot',
   '/launch/capture': 'Capture',
   '/launch/commit': 'My next steps',
   '/launch/calibrate': 'Daily check-in',
@@ -76,6 +80,9 @@ export function LaunchYouAreHereDial() {
   const [showMore, setShowMore] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [showStarting, setShowStarting] = useState(false);
+  const starting = useLaunchStartingStyle();
   const current = useCurrentPlace();
   const CurrentIcon = current.icon;
   const isHome = location.pathname === '/launch/home';
@@ -83,6 +90,7 @@ export function LaunchYouAreHereDial() {
   useEffect(() => {
     setOpen(false);
     setShowMore(false);
+    setShowStarting(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -93,12 +101,23 @@ export function LaunchYouAreHereDial() {
         setOpen(false);
         triggerRef.current?.focus();
       }
+      if (e.key === 'Tab') {
+        const controls = panelRef.current?.querySelectorAll<HTMLElement>('button, a[href], input, [tabindex="0"]');
+        if (!controls?.length) return;
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     };
     window.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
+    const trigger = triggerRef.current;
     document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
     };
   }, [open]);
 
@@ -136,6 +155,7 @@ export function LaunchYouAreHereDial() {
           onMouseDown={e => { if (e.target === e.currentTarget) setOpen(false); }}
         >
           <div
+            ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-label="Map of MyRhythm"
@@ -211,6 +231,17 @@ export function LaunchYouAreHereDial() {
                 ))}
               </ul>
             )}
+
+            <div className="mt-5 border-t border-launch-gold/30 pt-4">
+              <Button variant="ghost" onClick={() => setShowStarting(value => !value)} aria-expanded={showStarting}
+                className="min-h-[56px] h-auto w-full whitespace-normal text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep">
+                <Compass /> {starting.style === 'guided' ? 'My approach: Guide me' : starting.style === 'explore' ? 'My approach: Explore my way' : 'Choose my starting approach'}
+              </Button>
+              {showStarting && <div className="mt-3">
+                <LaunchStartingChoices compact onChoose={() => { setOpen(false); navigate('/launch/home'); }} />
+                {starting.style === 'guided' && starting.step >= 3 && <Button variant="ghost" onClick={() => { starting.restart(); go('/launch/home'); }} className="min-h-[56px] mt-3 w-full text-launch-ink hover:bg-launch-cream hover:text-launch-ink">Start my guide again</Button>}
+              </div>}
+            </div>
 
             <button
               type="button"

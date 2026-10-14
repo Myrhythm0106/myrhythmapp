@@ -19,6 +19,7 @@ import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { HomeFullPictureCard } from './HomeFullPictureCard';
+import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -34,6 +35,7 @@ export function QuietHome() {
   const { subject, supportedName } = useSubject();
   const { isPause } = useStage();
   const firstSession = useFirstSession();
+  const starting = useLaunchStartingStyle();
 
   if (isPause) return <QuietHomePause />;
 
@@ -45,7 +47,7 @@ export function QuietHome() {
   const greeting = copy.greeting[timeBucket()];
 
   // Day one: one clear next move instead of a dozen empty panels.
-  const settlingIn = !firstSession.loading && firstSession.isNewAccount;
+  const settlingIn = starting.style === null && !firstSession.loading && firstSession.isNewAccount;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -81,7 +83,7 @@ export function QuietHome() {
       <RhythmLine />
 
       {/* The guided first session */}
-      <FirstSessionCard state={firstSession} />
+      {starting.style === null && <FirstSessionCard state={firstSession} />}
 
       {/* One MYRHYTHM letter every few days during the YES weeks */}
       {!settlingIn && <HomeFullPictureCard />}
