@@ -18,6 +18,7 @@ import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
+import { HomeFullPictureCard } from './HomeFullPictureCard';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -81,6 +82,9 @@ export function QuietHome() {
 
       {/* The guided first session */}
       <FirstSessionCard state={firstSession} />
+
+      {/* One MYRHYTHM letter every few days during the YES weeks */}
+      {!settlingIn && <HomeFullPictureCard />}
 
       {/* Returning Home: one priority and two familiar places. */}
       {!settlingIn && (
