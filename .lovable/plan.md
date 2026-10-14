@@ -37,8 +37,20 @@ Snapshot shows the YES result and sets up: week 1 memory support (reminder style
 - Skippable and snoozable; each finished letter updates the snapshot with "New: based on what you just added".
 - Wording says "your first 3 weeks", never "a habit in 21 days". Any credential line reads "designed by a certified brain health coach" — no practitioner names.
 
+## "+ Also fits" restored where it makes sense
+Right now only one question (the weekly goal) allows more than one answer. Every question where real life has more than one answer gets the primary circle (top left) plus "+ Also fits" (bottom right):
+- What slips most?
+- How do you remember things now?
+- Easiest thinking time, and when energy dips
+- What drains your energy (Full Picture)
+- Who helps you
+- Food and drink habits
+- Weekly goal (already has it)
+- Full Picture: hardest situations, reminder style, vision areas
+Single-answer questions stay single, because one honest answer keeps the score fair: sleep, movement, calm, next-day recall, focus length, wake/wind-down times. Each multi-answer question shows the hint "Pick the main one first, then add any others that also fit."
+
 ## Kept as-is
-Free snapshot stated up front; primary circle + "+ Also fits"; no practitioner names in-app; non-medical wording; old results viewable; resume where you stopped; max 3 choices on welcome.
+Free snapshot stated up front; no practitioner names in-app; non-medical wording; old results viewable; resume where you stopped; max 3 choices on welcome.
 
 ## Technical details
 - New `YES` definitions alongside `src/launch/framework/myrhythm.ts` (single source of truth); memory note saved for the YES → MYRHYTHM structure.
