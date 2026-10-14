@@ -30,8 +30,12 @@ Each part opens with one line saying what it changes in the app, and ends with a
 ## Your 3-week YES plan (result of Quick Start)
 Snapshot shows the YES result and sets up: week 1 memory support (reminder style, Memory Bridge), week 2 one energy habit, week 3 rhythm on the calendar (with existing consent step). One button: **Start week 1**.
 
-## Full Picture — MYRHYTHM, about 15 min, 8 short parts (one per letter)
-Offered from the snapshot and Home ("Unlock your full MYRHYTHM"), save and come back anytime. Each letter goes deeper: Mindset, Yes to Reality, Rhythm, Harness Support (Support Circle help), Your Victories, Transform, Heal, Meaning (vision areas). Each finished letter updates the snapshot.
+## Full Picture — MYRHYTHM, spread across the 3 YES weeks
+8 short parts (one per letter, about 2 minutes each): Mindset, Yes to Reality, Rhythm, Harness Support (Support Circle help), Your Victories, Transform, Heal, Meaning (vision areas).
+- By default one letter appears on Home every 2–3 days during the YES weeks ("2-minute check-in: Rhythm"), so the full picture is finished by day 21 without a long sitting.
+- "Do it all now" option on the snapshot for keen users (about 15 minutes, save and come back).
+- Skippable and snoozable; each finished letter updates the snapshot with "New: based on what you just added".
+- Wording says "your first 3 weeks", never "a habit in 21 days". Any credential line reads "designed by a certified brain health coach" — no practitioner names.
 
 ## Kept as-is
 Free snapshot stated up front; primary circle + "+ Also fits"; no practitioner names in-app; non-medical wording; old results viewable; resume where you stopped; max 3 choices on welcome.
