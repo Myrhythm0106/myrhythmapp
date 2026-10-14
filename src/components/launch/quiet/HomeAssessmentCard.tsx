@@ -60,7 +60,7 @@ export function HomeAssessmentCard() {
       <p className="text-sm text-launch-ink/65 mb-4">
         {hasRun
           ? `My last snapshot: ${formatDate(last.completedAt ?? last.createdAt)} · score ${last.total}. Things change — so can my snapshot.`
-          : 'Twelve short steps — about 5 minutes. My free snapshot is shaped by my answers.'}
+          : 'YES Quick Start — about 6 minutes. My free snapshot and 3-week plan are shaped by my answers.'}
       </p>
       <button
         type="button"

@@ -9,6 +9,7 @@ import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentRetakeCard';
 import { RhythmCalendarConsent } from '@/components/launch/rhythm/RhythmCalendarConsent';
 import { LivingCompassReport } from '@/components/launch/assessment/LivingCompassReport';
+import { YesPlanCard } from '@/components/launch/assessment/YesPlanCard';
 
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
@@ -331,6 +332,7 @@ export default function LaunchWelcome() {
           </div>
 
           {bhs && <LivingCompassReport />}
+          {bhs && <YesPlanCard />}
 
            {bhs && (
              <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[#064e3b]/5">
