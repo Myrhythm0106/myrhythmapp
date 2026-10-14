@@ -419,13 +419,6 @@ const banks = Object.fromEntries(PERSONAS.map((persona) => [persona, {
 }])) as Record<PersonaKey, AssessmentBank>;
 
 
-const PERSONAS: PersonaKey[] = ['brain-injury', 'caregiver', 'executive', 'student'];
-const banks = Object.fromEntries(PERSONAS.map((persona) => [persona, {
-  persona,
-  intro: 'First, everyday brain health. Then, how my days work best.',
-  preQuestion: { title: 'A few questions about everyday life', subtitle: 'There are no right or wrong answers.' },
-  questions: QUESTIONS,
-}])) as Record<PersonaKey, AssessmentBank>;
 
 export function getAssessmentBank(persona: string | null | undefined): AssessmentBank | null {
   if (!persona) return null;
