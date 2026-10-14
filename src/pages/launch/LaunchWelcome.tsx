@@ -180,10 +180,6 @@ export default function LaunchWelcome() {
         rel="stylesheet"
       />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-4">
-        <LaunchPageHeader fallbackPath="/launch/assessment" />
-      </div>
-
       {postCheckout && (
         <div className="max-w-6xl mx-auto px-4 md:px-8 pt-2">
           <div
@@ -266,6 +262,10 @@ export default function LaunchWelcome() {
                 <p className="mt-4 text-xs leading-relaxed" style={{ color: `${CREAM}99` }}>
                   Each letter is a facet of my rhythm.
                 </p>
+                {!bhs && <div className="mt-5">
+                  <p className="text-base leading-relaxed text-launch-cream">No saved snapshot is available on this device yet.</p>
+                  <Button variant="ghost" onClick={() => navigate('/launch/assessment?first=1')} className="mt-3 min-h-[56px] h-auto whitespace-normal bg-brand-orange-500 text-primary-foreground hover:bg-brand-orange-600 hover:text-primary-foreground">Start my questions</Button>
+                </div>}
               </div>
 
               {/* Letter bars */}
@@ -481,7 +481,10 @@ export default function LaunchWelcome() {
                   {foundingIntent ? 'Continue to membership options' : 'See membership options'}
                   <span aria-hidden="true">→</span>
                 </button>
-                <Button variant="ghost" onClick={() => continueHome()} className="min-h-[56px] whitespace-normal text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
+                <Button variant="ghost" onClick={() => {
+                  if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
+                  navigate('/launch/user-type?after=snapshot');
+                }} className="min-h-[56px] whitespace-normal text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
                   Make it yours (optional)
                 </Button>
               </div>
