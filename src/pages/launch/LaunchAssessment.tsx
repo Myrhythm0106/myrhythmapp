@@ -17,6 +17,7 @@ import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
+import { YES_BY_ID, markLetterComplete } from '@/launch/framework/yes';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -31,6 +32,36 @@ type AnswerMap = Record<string, AssessmentAnswer>;
 type FreeformMap = Record<string, string>;
 
 const PROGRESS_KEY = 'myrhythm_assessment_progress';
+const FULL_PROGRESS_KEY = 'myrhythm_full_picture_progress';
+const WANTS_FULL_KEY = 'myrhythm_wants_full_picture';
+const IS_FULL_MODE = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'full';
+const ACTIVE_KEY = IS_FULL_MODE ? FULL_PROGRESS_KEY : PROGRESS_KEY;
+
+/** Full Picture builds on the YES answers already given. */
+function seedFromSnapshot(): AnswerMap {
+  try {
+    const r = JSON.parse(localStorage.getItem('myrhythm_launch_mode') || '{}')?.assessmentResults?.answers ?? {};
+    const out: AnswerMap = {};
+    for (const k of Object.keys(r)) { const n = normalizeAnswer(r[k]); if (n) out[k] = n; }
+    return out;
+  } catch { return {}; }
+}
+
+/** A one-line preview of what the part just finished will change. */
+function partPreview(part: string, a: AnswerMap): string | null {
+  const p = (id: string) => a[id]?.primary ?? '';
+  if (part === 'Y') {
+    if (p('memorySlips') === 'appointments') return "I'll remind you the evening before appointments, and again on the day.";
+    if (p('memorySlips') === 'what-was-said') return 'Memory Bridge will turn conversations into a short written note you can check later.';
+    if (p('memorySlips') === 'half-done') return "I'll gently bring back tasks you started, so they don't get lost.";
+    return "I'll keep reminders simple and well timed.";
+  }
+  if (part === 'E') {
+    if (p('habitSleep') === 'under-6') return "After a poor night, I'll suggest a lighter day first.";
+    return "I'll pace your day with breaks that suit your energy.";
+  }
+  return null;
+}
 const NONE_FITS_VALUE = '__none_fits__';
 
 
@@ -57,12 +88,15 @@ type StoredProgress = {
 
 function loadProgress(): StoredProgress | null {
   try {
-    const raw = localStorage.getItem(PROGRESS_KEY);
+    const raw = localStorage.getItem(ACTIVE_KEY);
+    if (!raw && IS_FULL_MODE) {
+      return { persona: null, currentQuestion: 0, answers: seedFromSnapshot(), freeform: {}, eventRecency: null, phase: 'questions', schemaVersion: ASSESSMENT_SCHEMA_VERSION };
+    }
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
     if (parsed.schemaVersion !== ASSESSMENT_SCHEMA_VERSION) {
-      localStorage.removeItem(PROGRESS_KEY);
+      localStorage.removeItem(ACTIVE_KEY);
       return null;
     }
     const answersIn = parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : {};
@@ -99,6 +133,14 @@ const QUESTION_HELPS: Record<string, string> = {
   rhythmDetail: 'Sets how long my planned blocks and breaks are.',
   planningSupport: 'Decides who, if anyone, I can choose to share with.',
   planningGoal: 'Becomes the first focus in my diary this week.',
+  memorySlips: 'Decides what I remind you about first.',
+  memoryMethod: 'Lets MyRhythm work with what already helps you.',
+  memoryRecall: 'Decides how soon after a conversation I offer a written note.',
+  dayStart: 'Sets the start and end of your day on the calendar.',
+  energyDip: "I'll keep these times lighter.",
+  reminderStyle: 'Sets how your reminders arrive.',
+  reminderLead: 'Sets when your reminders arrive.',
+  circleHelp: 'Only suggestions — you still choose what anyone can see.',
 };
 
 export default function LaunchAssessment() {
@@ -121,15 +163,15 @@ export default function LaunchAssessment() {
     return new URLSearchParams(window.location.search).get('first') === '1';
   }, []);
   // First-timers get a warm welcome before any question appears.
-  const [showWelcome, setShowWelcome] = useState<boolean>(isFirstRun);
+  const [showWelcome, setShowWelcome] = useState<boolean>(isFirstRun && !IS_FULL_MODE);
   // Retake from Profile/dial: ask before reusing earlier answers.
   const [askRetake, setAskRetake] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     const isRetake = new URLSearchParams(window.location.search).get('mode') === 'retake';
-    return isRetake && !!initial && Object.keys(initial.answers).length > 0;
+    return !IS_FULL_MODE && isRetake && !!initial && Object.keys(initial.answers).length > 0;
   });
   const startFresh = () => {
-    try { localStorage.removeItem(PROGRESS_KEY); } catch {/* noop */}
+    try { localStorage.removeItem(ACTIVE_KEY); } catch {/* noop */}
     setAnswers({}); setFreeform({}); setCurrentQuestion(0); setEventRecency(null); setPhase('questions');
     setAskRetake(false);
   };
@@ -147,9 +189,9 @@ export default function LaunchAssessment() {
     if (!bank) return;
     // If the stored user type no longer matches saved progress, start the
     // matching bank clean — never carry another persona's answers over.
-    if (initial?.persona && initial.persona !== bank.persona) {
+    if (!IS_FULL_MODE && initial?.persona && initial.persona !== bank.persona) {
       try {
-        localStorage.removeItem(PROGRESS_KEY);
+        localStorage.removeItem(ACTIVE_KEY);
       } catch {/* noop */}
       setAnswers({});
       setFreeform({});
@@ -166,7 +208,7 @@ export default function LaunchAssessment() {
     if (!persona) return;
     try {
       localStorage.setItem(
-        PROGRESS_KEY,
+        ACTIVE_KEY,
         JSON.stringify({
           persona,
           currentQuestion,
@@ -231,31 +273,41 @@ export default function LaunchAssessment() {
             My answers shape how MyRhythm works for me.
           </p>
 
-          <ol className="space-y-3 mb-4">
+          <ol className="space-y-3 mb-6">
             {[
               <><strong className="text-launch-ink">My diary</strong> — important things planned for the times I'm usually at my best.</>,
-              <><strong className="text-launch-ink">My reminders and breaks</strong> — spaced to suit my energy, not a generic timetable.</>,
-              <><strong className="text-launch-ink">My snapshot</strong> — a free personal report at the end, mine to keep.</>,
+              <><strong className="text-launch-ink">My reminders</strong> — shaped around what slips and what already helps me.</>,
+              <><strong className="text-launch-ink">My snapshot and 3-week YES plan</strong> — free, mine to keep.</>,
             ].map((line, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4"
-              >
-                <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">
-                  {i + 1}
-                </span>
+              <li key={i} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
+                <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">{i + 1}</span>
                 <p className="text-launch-ink/80 text-sm pt-1.5">{line}</p>
               </li>
             ))}
           </ol>
-          <p className="text-sm text-launch-ink/60 text-center mb-8">
-            About 5 minutes. No right or wrong answers. I can change anything later.
-          </p>
-
-          <LaunchButton onClick={() => setShowWelcome(false)} className="w-full">
-            I'm ready
-            <ArrowRight className="h-5 w-5" />
-          </LaunchButton>
+          <p className="text-sm font-semibold text-launch-ink text-center mb-3">How would I like to start?</p>
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => { try { localStorage.removeItem(WANTS_FULL_KEY); } catch {/* noop */} setShowWelcome(false); }}
+              className="w-full text-left rounded-2xl border-2 border-launch-ember bg-launch-ember/10 p-4 min-h-[56px]"
+            >
+              <span className="flex items-center justify-between gap-2">
+                <span className="font-semibold text-launch-ink">YES Quick Start · about 6 minutes</span>
+                <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">Recommended</span>
+              </span>
+              <span className="block text-sm text-launch-ink/70 mt-1">Enough to set up my diary, reminders and free snapshot. More can come later, two minutes at a time.</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { try { localStorage.setItem(WANTS_FULL_KEY, '1'); } catch {/* noop */} setShowWelcome(false); }}
+              className="w-full text-left rounded-2xl border-2 border-launch-gold/40 bg-launch-ivory p-4 min-h-[56px] hover:border-launch-moss"
+            >
+              <span className="font-semibold text-launch-ink">The full picture · about 20 minutes</span>
+              <span className="block text-sm text-launch-ink/70 mt-1">YES first, then all eight MYRHYTHM letters for smarter planning, memory support and Support Circle ideas. I can stop and come back.</span>
+            </button>
+          </div>
+          <p className="text-sm text-launch-ink/60 text-center mt-4">No right or wrong answers. I can change anything later.</p>
 
           <button
             type="button"
@@ -361,7 +413,7 @@ export default function LaunchAssessment() {
   }
 
   /* ------------------- Question phase ------------------- */
-  const questions = bank.questions;
+  const questions = IS_FULL_MODE ? bank.fullQuestions : bank.quickQuestions;
   const question = questions[currentQuestion];
   const isLast = currentQuestion === questions.length - 1;
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -438,6 +490,15 @@ export default function LaunchAssessment() {
   };
 
   const handleNext = () => {
+    const nextQ = questions[currentQuestion + 1];
+    if (IS_FULL_MODE && question.slot && (!nextQ || nextQ.slot !== question.slot)) {
+      markLetterComplete(question.slot);
+      if (nextQ) toast.success(`${question.word} done — saved. Stop here or carry on.`, { duration: 2400 });
+    }
+    if (!IS_FULL_MODE && question.yes && nextQ && nextQ.yes !== question.yes) {
+      const preview = partPreview(question.yes, answers);
+      if (preview) toast(preview, { duration: 3200 });
+    }
     if (!isLast) {
       setCurrentQuestion((p) => p + 1);
       return;
@@ -505,8 +566,8 @@ export default function LaunchAssessment() {
           purchasedFeatures: [],
         })
        );
-       localStorage.removeItem(PROGRESS_KEY);
-       resetRhythmConsentForRetake();
+       localStorage.removeItem(ACTIVE_KEY);
+       if (!IS_FULL_MODE) resetRhythmConsentForRetake();
 
        if (user?.id) {
          const window = deriveProductivityWindow(
@@ -568,7 +629,9 @@ export default function LaunchAssessment() {
     }
 
     // Show the processing state immediately, save in the background.
-    pendingNav.current = '/launch/welcome';
+    let wantsFull = false;
+    try { wantsFull = !IS_FULL_MODE && localStorage.getItem(WANTS_FULL_KEY) === '1'; localStorage.removeItem(WANTS_FULL_KEY); } catch {/* noop */}
+    pendingNav.current = wantsFull ? '/launch/assessment?mode=full' : '/launch/welcome';
     setSaveWarning(null);
     setProcessing(true);
 
@@ -592,7 +655,7 @@ export default function LaunchAssessment() {
 
   const handleBack = () => {
     if (currentQuestion > 0) setCurrentQuestion((p) => p - 1);
-    else navigate('/launch/register');
+    else navigate(IS_FULL_MODE ? '/launch/welcome' : '/launch/register');
   };
 
   return (
@@ -612,12 +675,18 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm font-semibold text-launch-moss text-center mb-4">
-          {question.section === 'brain-health' ? 'Part 1 of 2 · My everyday brain health' : 'Part 2 of 2 · How I like to plan'}
+          {IS_FULL_MODE
+            ? `The full picture · ${question.word}`
+            : question.yes
+              ? `Part ${['Y', 'E', 'S'].indexOf(question.yes) + 1} of 3 · ${question.yes} — ${YES_BY_ID[question.yes].word}`
+              : ''}
           {' · '}Question {currentQuestion + 1} of {questions.length}
         </p>
 
         <div className="flex items-center justify-center mb-4">
-          <span className="text-sm font-semibold text-launch-ink/75">{question.word}</span>
+          <span className="text-sm font-semibold text-launch-ink/75">
+            {!IS_FULL_MODE && question.yes ? YES_BY_ID[question.yes].shapes : question.word}
+          </span>
         </div>
 
 
@@ -633,7 +702,7 @@ export default function LaunchAssessment() {
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
           {question.multiSelect
-            ? 'Choose one main answer with the circle. Use + Also fits for every other answer that matters too.'
+            ? 'Choose your main answer with the circle. Then use + Also fits for any others that fit too.'
             : 'Choose the answer that fits best today.'}{' '}
           You can change it later.
         </p>
