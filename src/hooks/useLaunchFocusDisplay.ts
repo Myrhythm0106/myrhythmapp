@@ -50,14 +50,30 @@ export function useLaunchFocusDisplay() {
   return { startOpen, setStartOpen: setStart, expanded, setExpanded, userKey: user?.id ?? 'signed-out' };
 }
 
-export function useLaunchSavedVision() {
-  const read = () => {
-    const value = readLocalFocusValue<{ statement?: unknown }>('myrhythm.visionStatement.v1', {});
-    return typeof value.statement === 'string' ? value.statement.trim() : '';
+export type VisionTimeframe = 'year' | 'three' | 'long';
+export const VISION_TIMEFRAME_LABEL: Record<VisionTimeframe, string> = {
+  year: 'This year', three: '3-year vision', long: 'Long-term vision',
+};
+const VISION_KEY = 'myrhythm.visionStatement.v1';
+type StoredVision = { statement?: unknown; level?: unknown; levels?: Record<string, { statement?: unknown } | undefined> };
+
+function readVision() {
+  const v = readLocalFocusValue<StoredVision>(VISION_KEY, {});
+  const level: VisionTimeframe = v.level === 'three' || v.level === 'long' ? v.level : 'year';
+  const pick = (l: string) => {
+    const s = v.levels?.[l]?.statement;
+    return typeof s === 'string' ? s.trim() : '';
   };
-  const [vision, setVision] = useState(read);
+  const yearText = pick('year') || (typeof v.statement === 'string' ? v.statement.trim() : '');
+  const chosen = level === 'year' ? yearText : pick(level);
+  return { level, chosen, vision: chosen || yearText };
+}
+
+/** The vision for the chosen timeframe (falls back to "This year"). */
+export function useLaunchVisionTimeframe() {
+  const [state, setState] = useState(readVision);
   useEffect(() => {
-    const sync = () => setVision(read());
+    const sync = () => setState(readVision());
     window.addEventListener('focus', sync);
     window.addEventListener('storage', sync);
     window.addEventListener(CHANGE, sync);
@@ -67,7 +83,15 @@ export function useLaunchSavedVision() {
       window.removeEventListener(CHANGE, sync);
     };
   }, []);
-  return vision;
+  const setLevel = useCallback((level: VisionTimeframe) => {
+    const v = readLocalFocusValue<Record<string, unknown>>(VISION_KEY, {});
+    writeLocalFocusValue(VISION_KEY, { ...v, level });
+  }, []);
+  return { ...state, setLevel };
+}
+
+export function useLaunchSavedVision() {
+  return useLaunchVisionTimeframe().vision;
 }
 
 export function useLaunchPriorityHighlights() {
