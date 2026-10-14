@@ -89,7 +89,6 @@ export function resolveHasSupport(answerValue: string | undefined): boolean {
   return Boolean(answerValue && !NO_SUPPORT_VALUES.has(answerValue));
 }
 
-const MULTI_HINT = 'Pick the main one first, then add any others that also fit.';
 
 const QUESTIONS: AssessmentQuestion[] = [
   /* ---------------- Quick Start · Y — Your Starting Point ---------------- */
@@ -97,7 +96,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'memorySlips', yes: 'Y', tier: 'quick', letter: 'Y', word: 'What slips', slot: 'yesReality', pillar: 'psychological',
     brainHealthLens: 'An honest memory starting point', // ref BH-09
     title: 'What slips your mind most often?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'appointments', label: 'Appointments and dates', score: 0 },
       { value: 'half-done', label: 'Tasks I started but did not finish', score: 0 },
@@ -109,7 +108,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'memoryMethod', yes: 'Y', tier: 'quick', letter: 'H', word: 'What helps now', slot: 'harnessSupport', pillar: 'social',
     brainHealthLens: 'Memory supports already in place', // ref BH-09
     title: 'How do you remember things now?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'phone', label: 'Reminders on my phone', score: 0 },
       { value: 'paper', label: 'Notes, lists or a paper diary', score: 0 },
@@ -191,7 +190,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'planningRhythm', yes: 'S', tier: 'quick', letter: 'R', word: 'My best time', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'My preferred time',
     title: 'What time of day do you think and get things done most easily?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'morning', label: 'Morning', score: 0 },
       { value: 'afternoon', label: 'Afternoon', score: 0 },
@@ -203,7 +202,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'energyDip', yes: 'S', tier: 'quick', letter: 'R', word: 'Energy dip', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'When energy usually drops',
     title: 'When does your energy usually dip?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'mid-morning', label: 'Mid-morning', score: 0 },
       { value: 'after-lunch', label: 'After lunch', score: 0 },
@@ -222,7 +221,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'planningSupport', yes: 'S', tier: 'quick', letter: 'H', word: 'My support', slot: 'harnessSupport', pillar: 'social',
     brainHealthLens: 'Support I choose',
     title: 'Who helps you, or would you like to help you?',
-    subtitle: 'Nobody sees anything unless you give permission. ' + MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    subtitle: 'Nobody sees anything unless you give permission.', multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'family', label: 'Family or partner', score: 0 },
       { value: 'friend', label: 'A friend', score: 0 },
@@ -234,7 +233,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'planningGoal', yes: 'S', tier: 'quick', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
     brainHealthLens: 'What matters this week',
     title: 'What would make this week feel easier — and matter most to you?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'remember', label: 'Remember the important things', score: 0 },
       { value: 'pace', label: 'Have a steadier pace', score: 0 },
@@ -280,7 +279,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'hardSituations', tier: 'full', letter: 'Y', word: 'Yes to Reality', slot: 'yesReality', pillar: 'psychological',
     brainHealthLens: 'Where memory is hardest',
     title: 'Which situations are hardest to remember afterwards?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'appointments', label: 'Medical or official appointments', score: 0 },
       { value: 'phone-calls', label: 'Phone calls', score: 0 },
@@ -292,7 +291,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'weekFixed', tier: 'full', letter: 'R', word: 'Rhythm', slot: 'rhythm', pillar: 'biological',
     brainHealthLens: 'Fixed parts of my week',
     title: 'Which parts of your week are fixed?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'work', label: 'Work, study or volunteering', score: 0 },
       { value: 'appointments', label: 'Regular appointments', score: 0 },
@@ -315,7 +314,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'circleHelp', tier: 'full', letter: 'H', word: 'Harness Support', slot: 'harnessSupport', pillar: 'social',
     brainHealthLens: 'Help I would welcome',
     title: 'What help from your Support Circle would you welcome?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'reminders', label: 'A nudge before important things', score: 0 },
       { value: 'check-ins', label: 'A quick check-in now and then', score: 0 },
@@ -338,7 +337,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'reminderStyle', tier: 'full', letter: 'T', word: 'Transform', slot: 'transform', pillar: 'psychological',
     brainHealthLens: 'Reminders that actually land',
     title: 'Which kind of reminder works best for you?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'sound', label: 'A sound', score: 0 },
       { value: 'vibration', label: 'A vibration', score: 0 },
@@ -361,7 +360,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'hardDays', tier: 'full', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
     brainHealthLens: 'What helps on a harder day',
     title: 'On a harder day, what helps most?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'fewer-things', label: 'Fewer things on the list', score: 0 },
       { value: 'rest-breaks', label: 'More rest breaks', score: 0 },
@@ -384,7 +383,7 @@ const QUESTIONS: AssessmentQuestion[] = [
     id: 'visionAreas', tier: 'full', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
     brainHealthLens: 'Where I want my life to grow',
     title: 'Which areas of life matter most to you right now?',
-    subtitle: MULTI_HINT, multiSelect: true, section: 'planning', scored: false,
+    multiSelect: true, section: 'planning', scored: false,
     options: [
       { value: 'health', label: 'Health and wellbeing', score: 0 },
       { value: 'family', label: 'Family and friends', score: 0 },
