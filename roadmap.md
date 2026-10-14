@@ -1,5 +1,10 @@
 # MyRhythm — task roadmap
 
+## Welcome starting choices (14 Oct 2026)
+- [ ] Add Guide me / Explore my way, with changeable user-scoped device preferences.
+- [ ] Keep the existing map available at welcome and provide one-step guidance.
+- [ ] Check phone/desktop flows and investigate the reported blank 1.
+
 ## Done
 - [x] My Vision in ACTion: restored rich vision banner with Core, Key and Stretch always visible; optional editing details, Settings choice and separate My Daily Rhythm with priority stars. Isolated phone/desktop interaction checks passed.
 - External calendar delivery without sign-in: Add to my calendar (Google / Outlook / Apple file / email to me) on every dated step, Send my week on the calendar page, and a private subscribe link in Settings.
