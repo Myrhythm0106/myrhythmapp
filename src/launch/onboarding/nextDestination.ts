@@ -14,6 +14,7 @@ const DEFER_KEY = 'myrhythm_assessment_deferred';
 
 const ONBOARDING_RESUME_PATHS = new Set([
   '/launch/assessment',
+  '/launch/user-type',
 ]);
 
 /** A completed run stored locally (works for tester / offline sessions too). */
@@ -64,7 +65,10 @@ export async function resolveNextDestination(requested?: string | null): Promise
   if (resume && ONBOARDING_RESUME_PATHS.has(resume)) return resume;
 
   const done = await hasCompletedAssessment();
-  if (!done && !isAssessmentDeferred()) return '/launch/assessment?first=1';
+  if (!done && !isAssessmentDeferred()) {
+    if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_starting_point_seen')) return '/launch/user-type';
+    return '/launch/assessment?first=1';
+  }
 
   return requested && requested !== '/launch/signin' ? requested : '/launch/home';
 }

@@ -1,5 +1,10 @@
 # MyRhythm — task roadmap
 
+## Always-visible joining (15 Oct 2026)
+- [x] Keep Join Now visible in the landing heading on phone and desktop.
+- [x] Route new accounts through an accessible starting choice before questions, with a neutral skip and no repeat after the snapshot.
+- [x] Public Join Now → registration and isolated real starting-choice checks passed at 1242px, 393px and 320px; authenticated account → snapshot journey remains unavailable with externally managed sign-in.
+
 ## Welcome starting choices (14 Oct 2026)
 - [x] Add Guide me / Explore my way, with changeable user-scoped device preferences.
 - [x] Keep the existing map available at welcome and provide one-step guidance.
@@ -57,7 +62,7 @@
 - [x] Phone check of the tap order: primary tap, box toggle, Make primary
 
 ## Questions-first journey consistency (2 Oct 2026)
-- [x] Account goes directly to shared questions; optional personalisation comes after the free snapshot
+- [x] Account now offers the brief starting choice before shared questions; repeat personalisation is hidden after the free snapshot (15 Oct update)
 - [x] Preserve Founding Member intent through snapshot and optional personalisation
 - [x] Use one “Not now — go to Home” phrase across optional onboarding exits
 - [x] Rename assessment navigation to “My questions and snapshot”

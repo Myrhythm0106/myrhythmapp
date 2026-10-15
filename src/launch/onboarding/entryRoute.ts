@@ -3,7 +3,7 @@ import { getResumePoint } from './resumePoint';
 
 /**
  * One rule for every landing button: questions first, payment after the snapshot.
- * Light sign-up → Questions → My snapshot → Make it yours (optional) → Home or membership.
+ * Light sign-up → Starting choice → Questions → My snapshot → Home or membership.
  */
 export type EntryIntent = 'start' | 'founding';
 
@@ -61,6 +61,7 @@ export async function resolveEntryRoute(intent: EntryIntent, userId?: string | n
   if (!hasSnapshot()) {
     const resume = getResumePoint();
     if (resume?.startsWith('/launch/assessment')) return '/launch/assessment';
+    if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_starting_point_seen')) return '/launch/user-type';
     return '/launch/assessment?first=1';
   }
 

@@ -481,12 +481,12 @@ export default function LaunchWelcome() {
                   {foundingIntent ? 'Continue to membership options' : 'See membership options'}
                   <span aria-hidden="true">→</span>
                 </button>
-                <Button variant="ghost" onClick={() => {
+                {!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_make_it_yours_seen') && <Button variant="ghost" onClick={() => {
                   if (ackKey) localStorage.setItem('myrhythm_report_ack', ackKey);
                   navigate('/launch/user-type?after=snapshot');
                 }} className="min-h-[56px] whitespace-normal text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
                   Make it yours (optional)
-                </Button>
+                </Button>}
               </div>
 
             </div>
