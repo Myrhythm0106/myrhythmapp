@@ -1,3 +1,4 @@
+import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -1086,6 +1087,8 @@ export function ActionsViewer({
                                           />
                                         </div>
                                       </div>
+
+                                      <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
 
                                       {/* SUCCESS CRITERIA - Emerald glass */}
                                       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-memory-emerald-50/90 to-memory-emerald-100/70 backdrop-blur-sm border border-memory-emerald-200/50 shadow-lg p-4">

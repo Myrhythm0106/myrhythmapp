@@ -1,3 +1,4 @@
+import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useEffect, useRef, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -631,6 +632,8 @@ const ActionCard = ({
         )}
       </div>
 
+      <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
+
       {/* Ivory success callout with orange rule */}
       <div className="mt-3 rounded-r-[8px] border-l-2 border-exhibit-accent bg-exhibit-surface px-3 py-2">
         {onSuccessCriteriaChange ? (
@@ -1217,6 +1220,7 @@ export function ActionsTableView({
                               </p>
                             ) : null}
 
+                            <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
                             {action.reference_code && (
                               <div className="mt-1.5 font-mono text-[10.5px] text-exhibit-soft">
                                 <SourceRefLine

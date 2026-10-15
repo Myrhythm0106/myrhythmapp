@@ -7,6 +7,8 @@ import { LaunchCard } from '@/components/launch/LaunchCard';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
 import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useConversationDisclosure } from '@/hooks/memoryBridge/useConversationDisclosure';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -83,6 +85,7 @@ interface VoiceRecording {
 export default function LaunchMemoryBridge() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const conversationDetails = useConversationDisclosure(user?.id);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [state, setState] = useState<RecordingState>('idle');
@@ -336,7 +339,9 @@ export default function LaunchMemoryBridge() {
     const next = new URLSearchParams(searchParams);
     next.delete('open');
     setSearchParams(next, { replace: true });
-    setViewingActions({ recordingId: openId, title: match?.title || 'My conversation' });
+    if (!match) return;
+    conversationDetails.setOpen(match.id, true);
+    setViewingActions({ recordingId: match.id, title: match.title });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, recordings]);
 
@@ -488,6 +493,7 @@ export default function LaunchMemoryBridge() {
       if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
       setRecoverableCapture(null);
       allowance.refresh();
+      toast.success('Conversation saved.', { action: { label: 'Open conversation', onClick: () => { conversationDetails.setOpen(saved.id, true); recordsRef.current?.scrollIntoView({ block: 'start' }); } } });
 
       // Automatically start extraction
       console.log('handleSave: stage 3 — starting extraction');
@@ -1081,6 +1087,7 @@ export default function LaunchMemoryBridge() {
               const isCurrentlyProcessing = processingId === recording.id;
               
               const actionsCount = actionsCountMap[recording.id] || 0;
+              const detailsOpen = conversationDetails.isOpen(recording.id);
 
               return (
                 <React.Fragment key={recording.id}>
@@ -1132,6 +1139,14 @@ export default function LaunchMemoryBridge() {
                     </div>
 
                     {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
+                    {isCurrentlyProcessing && <p role="status" className="text-base text-launch-ink">Finding my next steps…</p>}
+                    <Button variant="ghost" type="button" className="min-h-14 h-auto text-base text-launch-ink-deep justify-start px-0"
+                      aria-expanded={detailsOpen} aria-controls={`conversation-${recording.id}`}
+                      onClick={() => conversationDetails.setOpen(recording.id, !detailsOpen)}>
+                      {detailsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      {detailsOpen ? 'Hide details' : 'Show details'}
+                    </Button>
+                    {detailsOpen && <div id={`conversation-${recording.id}`} className="space-y-4">
                     {/* Listen to this saved conversation */}
                     <RecordingPlayer
                       id={recording.id}
@@ -1212,6 +1227,7 @@ export default function LaunchMemoryBridge() {
                       size="compact"
                       className="pt-1"
                     />
+                    </div>}
                   </div>
                 </LaunchCard>
                 </React.Fragment>
