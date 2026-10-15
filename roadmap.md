@@ -3,7 +3,7 @@
 ## Calm conversations and action origins (15 Oct 2026)
 - [x] Roll up saved conversations and remember each user's choices on this device.
 - [x] Add shared original-word disclosure to saved and checking views with safe transcript highlighting.
-- [ ] Verify disclosure persistence, source-matching edge cases and phone/desktop layouts.
+- [x] Build OK; isolated real disclosure persistence, exact/whitespace/duplicate/absent quote matching, removed-source suppression and action → highlighted transcript checked on desktop and 320px phone without browser errors. Full saved-record layout remains part of the signed-in check below.
 - [ ] Signed-in save → reopen → action → transcript check (external authentication unavailable to automation).
 
 ## Memory Bridge working brief (15 Oct 2026)

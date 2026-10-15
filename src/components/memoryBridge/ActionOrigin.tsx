@@ -44,9 +44,9 @@ export function ActionOrigin({ meetingId, actionId, quote, referenceCode, userAd
   };
   const matched = source && !source.removed && !source.manual && uniqueQuoteMatch(source.transcript || '', quote);
   return (
-    <div className="min-w-0 text-base text-foreground">
+    <div className="min-w-0 text-base text-launch-ink-deep">
       <Button variant="ghost" type="button" aria-expanded={open} aria-controls={id}
-        className="min-h-14 h-auto px-0 text-left whitespace-normal text-base font-medium text-foreground hover:bg-transparent"
+        className="min-h-14 h-auto px-0 text-left whitespace-normal text-base font-medium text-launch-ink-deep hover:bg-transparent hover:text-launch-teal"
         onClick={() => { setOpen(!open); if (!open) void load(); }}>
         {open ? <ChevronUp className="h-4 w-4 shrink-0" /> : <ChevronDown className="h-4 w-4 shrink-0" />}
         Where did this come from?
@@ -54,13 +54,13 @@ export function ActionOrigin({ meetingId, actionId, quote, referenceCode, userAd
       {open && <div id={id} className="space-y-3 border-l-2 border-border pl-3 pb-3" role="region" aria-label="Original words for this next step">
         {referenceCode && <SourceRefLine referenceCode={referenceCode} state={source?.transcript && !source.removed ? 'available' : 'retired'} className="text-base" />}
         {loading ? <p role="status" className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />Opening the conversation…</p> : failed ?
-          <><p>Could not open the original words. Please try again.</p><Button variant="outline" onClick={() => void load()}>Try again</Button></> :
+          <><p>Could not open the original words. Please try again.</p><Button variant="outline" className="min-h-14 border-launch-gold/40 text-launch-ink-deep hover:bg-launch-gold/10" onClick={() => void load()}>Try again</Button></> :
           <>
             {source && <p className="font-semibold break-words">{source.title}</p>}
             {userAdded || source?.manual ? <p>Added by me — not taken from the conversation.</p> : matched ?
-              <><p className="text-muted-foreground">Original words</p><blockquote className="whitespace-pre-wrap break-words leading-relaxed">“{source?.transcript?.slice(matched.start, matched.end)}”</blockquote></> :
+              <><p className="text-launch-ink">Original words</p><blockquote className="whitespace-pre-wrap break-words leading-relaxed">“{source?.transcript?.slice(matched.start, matched.end)}”</blockquote></> :
               <p>{source?.removed ? 'The transcript is no longer available. My next step and reference stay.' : source?.transcript ? 'No exact passage could be identified. I can check the full transcript.' : 'The original transcript is not available.'}</p>}
-            {source?.transcript && !source.removed && <Button variant="outline" className="min-h-14 text-base h-auto whitespace-normal" onClick={() => setShowTranscript(true)}><FileText className="h-4 w-4" />Read in transcript</Button>}
+            {source?.transcript && !source.removed && <Button variant="outline" className="min-h-14 text-base h-auto whitespace-normal border-launch-gold/40 text-launch-ink-deep hover:bg-launch-gold/10" onClick={() => setShowTranscript(true)}><FileText className="h-4 w-4" />Read in transcript</Button>}
           </>}
       </div>}
       {source && <TranscriptView open={showTranscript} onClose={() => setShowTranscript(false)} meetingId={source.id} title={source.title} highlightQuote={matched ? quote : null} />}
