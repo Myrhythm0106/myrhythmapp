@@ -104,6 +104,8 @@ export function useVoiceRecorder() {
   const [isPaused, setIsPaused] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordings, setRecordings] = useState<VoiceRecording[]>([]);
+  const [recordingsLoading, setRecordingsLoading] = useState(true);
+  const [recordingsFailed, setRecordingsFailed] = useState(false);
   const [duration, setDuration] = useState(0);
   const [recordedBytes, setRecordedBytes] = useState(0);
   const [recordingMimeType, setRecordingMimeType] = useState<string>('audio/webm');
@@ -463,6 +465,8 @@ export function useVoiceRecorder() {
   const fetchRecordings = useCallback(async (): Promise<void> => {
     if (!user) return;
 
+    setRecordingsLoading(true);
+    setRecordingsFailed(false);
     try {
       const { data, error } = await supabase
         .from('voice_recordings')
@@ -473,7 +477,10 @@ export function useVoiceRecorder() {
       if (error) throw error;
       setRecordings(data || []);
     } catch (error) {
+      setRecordingsFailed(true);
       console.error('Error fetching recordings:', error);
+    } finally {
+      setRecordingsLoading(false);
     }
   }, [user]);
 
@@ -515,6 +522,8 @@ export function useVoiceRecorder() {
     isPaused,
     isProcessing,
     recordings,
+    recordingsLoading,
+    recordingsFailed,
     duration,
     recordedBytes,
     recordingMimeType,
