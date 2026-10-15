@@ -32,7 +32,23 @@ export function LivingCompassReport() {
       <div className="flex items-center gap-3 mb-6"><Compass className="h-7 w-7 text-launch-teal" /><div><p className="text-xs uppercase tracking-[0.2em] font-semibold text-launch-ember">My free, complete insight</p><h2 id="living-report-title" className="font-display text-2xl md:text-3xl text-launch-ink">This is what MyRhythm heard</h2></div></div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <article className="rounded-lg border border-launch-gold/30 bg-launch-cream p-5"><p className="text-xs font-semibold uppercase tracking-wide text-launch-ink/55">1 · What I told MyRhythm</p><ul className="mt-3 space-y-2">{insight.toldMe.map((line) => <li key={line} className="flex gap-2 text-sm text-launch-ink/80"><Check className="h-4 w-4 mt-0.5 shrink-0 text-launch-teal" />{line}</li>)}</ul></article>
+        <article className="min-w-0 rounded-lg border border-launch-gold/30 bg-launch-cream p-5">
+          <h3 className="text-lg font-semibold leading-relaxed text-launch-ink-deep">1 · What I told MyRhythm</h3>
+          <dl className="mt-4">
+            {insight.toldMe.map((line, index) => {
+              const separator = line.indexOf(':');
+              const label = separator > 0 ? line.slice(0, separator).trim() : null;
+              const answer = label ? line.slice(separator + 1).trim() : line;
+
+              return (
+                <div key={`${index}-${line}`} className="border-b border-launch-gold/30 py-4 first:pt-0 last:border-b-0 last:pb-0">
+                  {label && <dt className="break-words text-lg font-normal leading-relaxed text-launch-ink-deep">{label}</dt>}
+                  <dd className="mt-1 break-words text-lg font-bold leading-relaxed text-launch-ink-deep">{answer}</dd>
+                </div>
+              );
+            })}
+          </dl>
+        </article>
         <article className="rounded-lg border border-launch-gold/30 bg-launch-cream p-5"><p className="text-xs font-semibold uppercase tracking-wide text-launch-ink/55">2 · What this may mean for my days</p><p className="mt-3 text-launch-ink leading-relaxed">{insight.meaning}</p><div className="mt-3 flex gap-2"><Button size="sm" variant="outline" onClick={() => toast.success('Good — this stays in my Compass only when I choose it.')}>This feels right</Button><Button size="sm" variant="ghost" onClick={() => setEditingAction(true)}>Not true for me</Button></div></article>
         <article className="rounded-lg border-2 border-launch-teal/40 bg-launch-teal/5 p-5 md:col-span-2"><p className="text-xs font-semibold uppercase tracking-wide text-launch-teal">3 · My key insight right now</p><h3 className="mt-2 font-display text-xl md:text-2xl text-launch-ink">{insight.insight}</h3><button type="button" onClick={() => setShowWhy(!showWhy)} className="mt-3 min-h-[44px] inline-flex items-center gap-2 text-sm font-semibold text-launch-teal underline underline-offset-4" aria-expanded={showWhy}>Why this?<ChevronDown className={`h-4 w-4 transition-transform ${showWhy ? 'rotate-180' : ''}`} /></button>{showWhy && <ul className="mt-2 space-y-1 text-sm text-launch-ink/70">{insight.why.map((line) => <li key={line}>From my assessment: {line}</li>)}</ul>}</article>
         <article className="rounded-lg border border-launch-gold/30 bg-launch-cream p-5 md:col-span-2"><p className="text-xs font-semibold uppercase tracking-wide text-launch-ink/55">4 · What is already working for me</p><p className="mt-2 text-lg font-semibold text-launch-ink">{insight.strength}</p></article>
