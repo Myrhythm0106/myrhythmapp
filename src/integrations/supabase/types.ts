@@ -3485,6 +3485,7 @@ export type Database = {
           audio_deleted_at: string | null
           audio_expires_at: string | null
           audio_hold_count: number
+          audio_notice_history: Json
           category: string
           created_at: string
           description: string | null
@@ -3513,6 +3514,7 @@ export type Database = {
           audio_deleted_at?: string | null
           audio_expires_at?: string | null
           audio_hold_count?: number
+          audio_notice_history?: Json
           category?: string
           created_at?: string
           description?: string | null
@@ -3541,6 +3543,7 @@ export type Database = {
           audio_deleted_at?: string | null
           audio_expires_at?: string | null
           audio_hold_count?: number
+          audio_notice_history?: Json
           category?: string
           created_at?: string
           description?: string | null
@@ -3789,6 +3792,7 @@ export type Database = {
         }
         Returns: string
       }
+      queue_audio_removal_notices: { Args: never; Returns: number }
       redeem_access_code: { Args: { p_code: string }; Returns: Json }
       research_aggregate: {
         Args: { _days?: number; _metric: string }
