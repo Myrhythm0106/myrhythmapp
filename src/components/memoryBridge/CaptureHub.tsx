@@ -52,7 +52,7 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
       toast.error('Could not save the note. Please try again.');
       return;
     }
-    toast.success('Note saved to My Records.');
+    toast.success('My note is saved.');
     setNoteOpen(false);
     setNoteTitle('');
     setNoteContent('');
@@ -104,10 +104,10 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
                 <p className="mt-1 text-base text-launch-ink/70">
                   Open the app in its own browser tab and recording will work normally.
                 </p>
-                <Button variant="ghost"
+                <Button variant="action"
                   type="button"
                   onClick={() => window.open(window.location.href, '_blank', 'noopener')}
-                  className="mt-3 inline-flex min-h-[48px] items-center justify-center rounded-xl bg-[hsl(var(--launch-ember))] px-4 text-base font-semibold text-primary-foreground"
+                  className="mt-3 min-h-14 rounded-md px-4 text-base font-semibold"
                 >
                   Open in a new tab
                 </Button>
