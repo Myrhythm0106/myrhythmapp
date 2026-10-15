@@ -1113,7 +1113,7 @@ export default function LaunchMemoryBridge() {
                         </div>
                         <div className="min-w-0">
                           <h3 className="text-xl font-semibold text-launch-ink-deep break-words leading-relaxed">{recording.title}</h3>
-                          <p className="text-base text-launch-ink/60 flex items-center gap-1">
+                          <p className="text-base text-launch-ink flex flex-wrap items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {formatRecordingDate(recording.created_at)}
                             {recording.duration_seconds && (
@@ -1131,7 +1131,7 @@ export default function LaunchMemoryBridge() {
                       )}
                     </div>
 
-                    {recording.reference_code && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
+                    {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
                     {/* Listen to this saved conversation */}
                     <RecordingPlayer
                       id={recording.id}
