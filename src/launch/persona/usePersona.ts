@@ -89,12 +89,13 @@ export function usePersona(): PersonaInfo {
   }, []);
 
   const persona = mapToPersona(rawType);
+  const hasChosenPersona = Boolean(rawType && rawType !== 'general');
   return {
     persona,
-    label: PERSONA_LABEL[persona],
-    labelPlural: PERSONA_LABEL_PLURAL[persona],
-    definition: PERSONA_DEFINITION[persona],
-    definitionShort: PERSONA_DEFINITION_SHORT[persona],
+    label: hasChosenPersona ? PERSONA_LABEL[persona] : 'My own starting point',
+    labelPlural: hasChosenPersona ? PERSONA_LABEL_PLURAL[persona] : 'People finding their rhythm',
+    definition: hasChosenPersona ? PERSONA_DEFINITION[persona] : 'Using MyRhythm to remember, plan and follow through in a way that fits everyday life.',
+    definitionShort: hasChosenPersona ? PERSONA_DEFINITION_SHORT[persona] : 'Memory, planning and follow-through for everyday life.',
     isCaregiver: persona === 'caregiver',
     rawType,
   };

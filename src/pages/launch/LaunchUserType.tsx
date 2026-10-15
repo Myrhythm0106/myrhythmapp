@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
@@ -9,7 +9,7 @@ import { setResumePoint } from '@/launch/onboarding/resumePoint';
 const userTypes = [
   {
     id: 'brain-injury',
-    title: 'Rebuilding after a brain change',
+    title: 'I have had a brain injury or brain change',
     definition:
       'Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again, one steady step at a time.',
     icon: Compass,
@@ -18,7 +18,7 @@ const userTypes = [
   },
   {
     id: 'caregiver',
-    title: 'Caring for someone I love',
+    title: 'I support someone with a brain injury or brain change',
     definition:
       'Family carer, spouse, adult child — holding it together for them, without losing your own day.',
     icon: Anchor,
@@ -49,10 +49,11 @@ export default function LaunchUserType() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const afterSnapshot = searchParams.get('after') === 'snapshot';
+  const [showOtherChoices, setShowOtherChoices] = React.useState(false);
 
   React.useEffect(() => {
-    setResumePoint('/launch/user-type');
-  }, []);
+    if (!afterSnapshot) setResumePoint('/launch/user-type');
+  }, [afterSnapshot]);
 
   const finishPersonalisation = () => {
     localStorage.setItem('myrhythm_make_it_yours_seen', '1');
@@ -62,6 +63,8 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
+    localStorage.setItem('myrhythm_starting_point_seen', '1');
+    localStorage.setItem('myrhythm_make_it_yours_seen', '1');
     if (afterSnapshot) {
       finishPersonalisation();
       return;
@@ -71,10 +74,10 @@ export default function LaunchUserType() {
 
 
   return (
-    <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
+    <div className="min-h-full bg-launch-cream-light flex flex-col pt-safe pb-safe px-safe">
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto py-6 px-4">
+      <div className="flex-1 py-6 px-4">
         <div className="max-w-4xl mx-auto">
           <LaunchPageHeader fallbackPath="/launch/register" />
 
@@ -94,58 +97,63 @@ export default function LaunchUserType() {
             <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
               {afterSnapshot
                 ? 'Optional — this helps MyRhythm use the right words and examples for you.'
-                : "We'll tailor your experience based on your unique needs"}
+                : 'Choose what fits your life. This helps us use relevant words and examples in your questions and free snapshot.'}
             </p>
           </motion.div>
 
           {/* User Type Grid */}
           <div className="grid md:grid-cols-2 gap-4 mb-8">
-            {userTypes.map((type, index) => (
+            {userTypes.filter((_, index) => showOtherChoices || index < 2).map((type, index) => (
               <motion.div
                 key={type.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card
-                  className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-launch-gold/50 bg-launch-ivory"
+                <Button
+                  variant="outline"
+                  className="h-auto min-h-14 w-full whitespace-normal rounded-lg p-5 text-left hover:shadow-lg transition-all duration-300 border-2 border-launch-gold/30 hover:border-launch-gold bg-launch-ivory"
                   onClick={() => handleSelect(type.id)}
                 >
-                  <CardContent className="p-5">
-                    <div className="flex items-start gap-4">
-                      <div className={`w-12 h-12 ${type.color} rounded-xl flex items-center justify-center flex-shrink-0 ring-1 ring-launch-gold/30`}>
-                        <type.icon className={`h-6 w-6 ${type.iconColor}`} />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-launch-ink mb-2 text-lg">{type.title}</h3>
-                        <p className="text-base text-launch-ink/70 leading-relaxed">{type.definition}</p>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-launch-gold mt-1" />
-                    </div>
-                  </CardContent>
-                </Card>
+                    <span className="flex w-full items-start gap-4">
+                      <span className={`w-12 h-12 ${type.color} rounded-lg flex items-center justify-center flex-shrink-0 ring-1 ring-launch-gold/30`}>
+                        <type.icon className={`h-6 w-6 ${type.iconColor}`} aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-semibold text-launch-ink-deep mb-2 text-lg leading-relaxed">{type.title}</span>
+                        <span className="block text-base font-normal text-launch-ink-deep leading-relaxed">{type.definition}</span>
+                      </span>
+                      <ArrowRight className="h-5 w-5 shrink-0 text-launch-ink mt-1" aria-hidden="true" />
+                    </span>
+                </Button>
               </motion.div>
             ))}
           </div>
+          <Button variant="ghost" className="min-h-14 w-full whitespace-normal text-base text-launch-ink-deep" aria-expanded={showOtherChoices} onClick={() => setShowOtherChoices((value) => !value)}>
+            {showOtherChoices ? 'Show fewer choices' : 'Work, study or another starting point'}
+          </Button>
         </div>
       </div>
 
       {/* Sticky Footer */}
       <div className="flex-shrink-0 px-4 py-4 pb-8 bg-launch-cream-light border-t border-launch-gold/10">
         <div className="text-center space-y-1">
-          <button
+          <Button variant="ghost"
             onClick={() => {
               if (afterSnapshot) {
                 finishPersonalisation();
                 return;
               }
+              localStorage.removeItem('myrhythm_user_type');
+              localStorage.setItem('myrhythm_starting_point_seen', '1');
+              localStorage.setItem('myrhythm_make_it_yours_seen', '1');
               navigate('/launch/assessment?first=1');
             }}
-            className="text-sm text-launch-ink/70 hover:text-launch-ink underline underline-offset-4"
+            className="min-h-14 whitespace-normal text-base text-launch-ink-deep underline underline-offset-4"
           >
             {afterSnapshot ? 'Not now — go to Home' : 'Not now — start my questions'}
-          </button>
-          <p className="text-xs text-launch-ink/40">You can change this any time in Settings.</p>
+          </Button>
+          <p className="text-base leading-relaxed text-launch-ink-deep">You can change this any time in Settings.</p>
         </div>
       </div>
     </div>
