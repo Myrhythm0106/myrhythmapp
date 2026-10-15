@@ -53,7 +53,11 @@ export default function LaunchCalendar() {
   const [currentView, setCurrentView] = useState<CalendarView>(
     (['day', 'week', 'month', 'year'] as CalendarView[]).includes(initialView) ? initialView : 'day'
   );
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const day = searchParams.get('date');
+    const parsed = day && /^\d{4}-\d{2}-\d{2}$/.test(day) ? new Date(`${day}T00:00:00`) : new Date();
+    return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+  });
   const [showAddModal, setShowAddModal] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState<LaunchCalendarEvent | null>(null);
   const [assistOpen, setAssistOpen] = useState(searchParams.get('assist') === '1');
