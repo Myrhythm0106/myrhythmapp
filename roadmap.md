@@ -1,5 +1,11 @@
 # MyRhythm — task roadmap
 
+## Guided Memory Bridge (15 Oct 2026)
+- [ ] Simplify entry, saving, next-step checking and saved-detail tools into one guided path.
+- [ ] Show confirmed additions and link to the relevant calendar day; preserve failure recovery.
+- [ ] Add requested audio-removal notices at 7/3/1 days, retained transcript and dated deletion reference; reliable speaker labels only.
+- [ ] Check responsive interactions and cognitive-load safeguards; real-user stress reduction remains unproven until observed trials.
+
 ## Compact conversation library (15 Oct 2026)
 - [x] Add compact month-grouped rows, title/reference search, date filters and ten-record paging while preserving recording and detail controls.
 - [x] Add latest/explicit-record reveal, loaded-count wording and retrieval loading/error states.
