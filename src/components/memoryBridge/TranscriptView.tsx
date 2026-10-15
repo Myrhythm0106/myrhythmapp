@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { runMeetingJob } from '@/lib/memoryBridge/outputMode';
 import { useAuth } from '@/hooks/useAuth';
+import { uniqueQuoteMatch } from '@/lib/memoryBridge/quoteMatch';
 
 interface Utterance {
   speaker: string;
@@ -24,6 +25,7 @@ interface Props {
   onClose: () => void;
   meetingId?: string | null;
   title: string;
+  highlightQuote?: string | null;
   /** Called after actions were re-extracted from the corrected transcript. */
   onActionsUpdated?: () => void;
 }
@@ -69,7 +71,7 @@ function renderWithUnclear(text: string, unclear: string[] = []) {
   });
 }
 
-export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdated }: Props) {
+export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdated, highlightQuote }: Props) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [utts, setUtts] = useState<Utterance[]>([]);
@@ -92,6 +94,12 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
     if (!open || !meetingId) return;
     let cancelled = false;
     setLoading(true);
+    setUtts([]);
+    setAudioUrl(null);
+    setOriginal(null);
+    setEditing(null);
+    setRenaming(null);
+    setShowOriginal(false);
     (async () => {
       const { data } = await supabase
         .from('meeting_recordings')
@@ -101,12 +109,13 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
       if (cancelled) return;
       const row = data as any;
       const stored = Array.isArray(row?.transcript_utterances) ? (row.transcript_utterances as Utterance[]) : null;
-      setUtts(stored && stored.length > 0 ? stored : toUtterances(row?.transcript || ''));
+      const removed = Boolean(row?.transcript_deleted_at);
+      setUtts(removed ? [] : stored && stored.length > 0 ? stored : toUtterances(row?.transcript || '')); 
       setNames((row?.speaker_names as Record<string, string>) || {});
-      setOriginal(row?.transcript_original ?? null);
+      setOriginal(removed ? null : row?.transcript_original ?? null);
       setEditedAt(row?.transcript_edited_at ?? null);
       setQuality(row?.transcription_quality ?? null);
-      setDeleted(!row?.transcript && Boolean(row?.transcript_deleted_at));
+      setDeleted(removed);
       setLoading(false);
       if (row?.recording_id) {
         const { data: rec } = await supabase
@@ -119,6 +128,14 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
     })();
     return () => { cancelled = true; };
   }, [open, meetingId]);
+
+  const passageRef = useRef<HTMLLIElement>(null);
+  const match = useMemo(() => uniqueQuoteMatch(utts.map(u => u.text).join('\n\n'), highlightQuote), [utts, highlightQuote]);
+  useEffect(() => {
+    if (!open || loading || !match || showOriginal) return;
+    const timer = window.setTimeout(() => passageRef.current?.scrollIntoView({ block: 'center', behavior: 'auto' }), 250);
+    return () => window.clearTimeout(timer);
+  }, [open, loading, match, showOriginal]);
 
   const speakerLabel = (s: string) => (s ? names[s] || `Speaker ${s}` : '');
   const plainText = useMemo(
@@ -234,8 +251,13 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
             <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-foreground">{original}</pre>
           ) : (
             <ol className="space-y-4">
-              {utts.map((u, i) => (
-                <li key={i} className="group">
+              {utts.map((u, i) => {
+                const offset = utts.slice(0, i).reduce((n, line) => n + line.text.length + 2, 0);
+                const start = match ? Math.max(0, match.start - offset) : -1;
+                const end = match ? Math.min(u.text.length, match.end - offset) : -1;
+                const highlighted = start >= 0 && end > start && start < u.text.length;
+                return (
+                <li key={i} ref={highlighted && match?.start === offset + start ? passageRef : undefined} className="group">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
                     {u.speaker && (
                       renaming === u.speaker ? (
@@ -295,10 +317,10 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
                       </div>
                     </div>
                   ) : (
-                    <p className="text-base leading-relaxed text-foreground">{renderWithUnclear(u.text, u.unclear)}</p>
+                    <p className="text-base leading-relaxed text-foreground">{highlighted ? <>{u.text.slice(0, start)}<mark className="bg-accent text-accent-foreground underline decoration-2 underline-offset-4">{u.text.slice(start, end)}</mark>{u.text.slice(end)}</> : renderWithUnclear(u.text, u.unclear)}</p>
                   )}
                 </li>
-              ))}
+              ); })}
             </ol>
           )}
         </div>

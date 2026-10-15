@@ -1,3 +1,4 @@
+import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
@@ -38,6 +39,7 @@ export interface ReviewRowState {
   slotIsSuggestion: boolean;
   needsCheck: boolean;
   sourceQuote?: string;
+  userAdded?: boolean;
   /** Seconds into the recording where this was said. */
   saidAt?: number | null;
 }
@@ -248,7 +250,8 @@ export function ReviewStep({
               adhocLoopIns: (a.adhoc_loop_ins || []) as AdhocLoopIn[],
               slotIsSuggestion: !date,
               needsCheck: Boolean(a.requires_review) || Number(a.confidence_score ?? 1) < 0.65,
-              sourceQuote: a.source_quote || a.transcript_excerpt || a.due_context || undefined,
+              sourceQuote: a.source_quote || a.transcript_excerpt || undefined,
+              userAdded: a.extraction_method === 'user_added',
               saidAt: a.timestamp_in_recording ?? null,
             } as ReviewRowState;
           }),
@@ -627,22 +630,8 @@ export function ReviewStep({
                                 suggested — check this
                               </Badge>
                             )}
-                            {r.sourceQuote && (
-                              <button
-                                type="button"
-                                onClick={() => toggleExpanded(r.id)}
-                                className="text-[11px] text-primary hover:underline"
-                              >
-                                {expanded.has(r.id) ? 'Hide where this was said' : 'Where was this said?'}
-                                {typeof r.saidAt === 'number' ? ` · at ${Math.floor(r.saidAt / 60)}:${String(r.saidAt % 60).padStart(2, '0')}` : ''}
-                              </button>
-                            )}
                           </div>
-                          {expanded.has(r.id) && r.sourceQuote && (
-                            <blockquote className="mt-1 border-l-2 border-border pl-2 text-xs italic text-muted-foreground">
-                              “{r.sourceQuote}”
-                            </blockquote>
-                          )}
+                          <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
                         </td>
                         <td className="py-3 pr-3">
                           <Input
@@ -791,11 +780,7 @@ export function ReviewStep({
                                 </Select>
                               </div>
                               {renderPeople(r)}
-                              {r.sourceQuote && (
-                                <blockquote className="border-l-2 border-border pl-2 text-xs italic text-muted-foreground">
-                                  “{r.sourceQuote}”
-                                </blockquote>
-                              )}
+                              <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
                               <Button
                                 variant="ghost"
                                 className="min-h-11 w-full text-destructive"
