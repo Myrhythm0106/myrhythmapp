@@ -9,6 +9,7 @@ import type { MeetingScheduleSummary } from './capture-brief/model/scheduleFromM
 interface Props {
   summary: MeetingScheduleSummary | null;
   onClose: () => void;
+  onSeeDay?: (date: string) => void;
 }
 
 function slotLabel(date: string, time: string): string {
@@ -24,7 +25,7 @@ function slotLabel(date: string, time: string): string {
  * The single confirmation shown after committing next steps — same view
  * whether one action or all of them were scheduled.
  */
-export function CommitSummarySheet({ summary, onClose }: Props) {
+export function CommitSummarySheet({ summary, onClose, onSeeDay }: Props) {
   const [undoing, setUndoing] = useState(false);
   const [undone, setUndone] = useState(false);
 
@@ -62,7 +63,7 @@ export function CommitSummarySheet({ summary, onClose }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
             <CalendarCheck className="h-5 w-5 text-launch-moss" />
-            {undone ? 'Removed from my diary' : "Here's what's now in my diary"}
+            {undone ? 'Removed from my diary' : `${summary.scheduled} of ${summary.total} steps added to my day`}
           </DialogTitle>
         </DialogHeader>
 
@@ -71,13 +72,13 @@ export function CommitSummarySheet({ summary, onClose }: Props) {
             <ul className="space-y-2 max-h-56 overflow-y-auto">
               {summary.entries.map(e => (
                 <li key={e.actionId} className="rounded-lg border border-border/60 p-3">
-                  <p className="text-sm font-medium leading-snug">{e.text}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{slotLabel(e.date, e.time)}</p>
+                  <p className="text-base font-medium leading-snug">{e.text}</p>
+                  <p className="text-base text-muted-foreground mt-1">{slotLabel(e.date, e.time)}</p>
                 </li>
               ))}
             </ul>
 
-            <div className="space-y-1.5 text-sm text-muted-foreground">
+            <div className="space-y-1.5 text-base text-muted-foreground">
               <p className="flex items-center gap-2">
                 <BellRing className="h-4 w-4" />
                 Reminders are set before each one.
@@ -102,14 +103,15 @@ export function CommitSummarySheet({ summary, onClose }: Props) {
           </div>
         )}
 
+        {!undone && summary.entries[0] && onSeeDay && <Button variant="action" className="min-h-14 w-full" onClick={() => onSeeDay(summary.entries[0].date)}>See my day</Button>}
         <div className="flex gap-2 pt-2">
           {!undone && (
-            <Button variant="outline" onClick={handleUndo} disabled={undoing} className="flex-1">
+            <Button variant="outline" onClick={handleUndo} disabled={undoing} className="min-h-14 flex-1">
               {undoing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Undo2 className="h-4 w-4 mr-1" />}
               Undo
             </Button>
           )}
-          <Button onClick={onClose} className="flex-1">Done</Button>
+          <Button variant="ghost" onClick={onClose} className="min-h-14 flex-1 h-auto whitespace-normal">Back to Memory Bridge</Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -2,7 +2,6 @@ import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
-import { useActionsView } from '@/lib/memoryBridge/actionsView';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -99,7 +98,7 @@ function StepTextField({
       className={cn(
         'flex w-full rounded-md border border-input bg-background px-3 py-2.5 text-base ring-offset-background',
         'placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'resize-none overflow-hidden min-h-11 leading-snug',
+        'resize-none overflow-hidden min-h-14 leading-snug',
         className,
       )}
     />
@@ -117,7 +116,7 @@ function DateField({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="h-11 min-h-11 justify-start gap-2 px-3 text-base font-normal"
+            className="h-14 min-h-14 justify-start gap-2 px-3 text-base font-normal"
           >
             <CalendarDays className="h-4 w-4 shrink-0 opacity-70" />
             {value ? niceDate(value) : <span className="text-muted-foreground">{placeholder}</span>}
@@ -141,7 +140,7 @@ function DateField({
           variant="ghost"
           size="icon"
           aria-label="Clear date"
-          className="h-11 w-11"
+          className="h-14 w-14"
           onClick={() => onChange('')}
         >
           <X className="h-4 w-4" />
@@ -160,7 +159,7 @@ function TimeField({ value, onChange }: { value: string; onChange: (v: string) =
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label="Start time"
-        className="h-11 min-h-11 pl-9 text-base"
+        className="h-14 min-h-14 pl-9 text-base"
       />
     </div>
   );
@@ -182,7 +181,8 @@ export function ReviewStep({
   const [newText, setNewText] = useState('');
   const [pendingRemove, setPendingRemove] = useState<ReviewRowState | null>(null);
   const { deleteWithUndo } = useUndoableDelete();
-  const [view, setView] = useActionsView();
+  const [view, setView] = useState<'table' | 'list'>('list');
+  const [loadFailed, setLoadFailed] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [meetingSummaryData, setMeetingSummaryData] = useState<{
@@ -196,6 +196,9 @@ export function ReviewStep({
     if (!isOpen || !meetingId) return;
     let cancelled = false;
     setLoading(true);
+    setLoadFailed(false);
+    setExpanded(new Set());
+    setView('list');
     setConfirmedAccurate(false);
     (async () => {
       const [actionsResult, meetingResult] = await Promise.all([
@@ -231,6 +234,7 @@ export function ReviewStep({
         setMeetingSummaryData(null);
       }
       if (error) {
+        setLoadFailed(true);
         console.warn('ReviewStep: failed to load actions', error);
         setRows([]);
       } else {
@@ -242,13 +246,13 @@ export function ReviewStep({
               include: true,
               text: a.action_text || a.what_outcome || '',
               owner: a.owner || a.assigned_to || 'Me',
-              date: date || isoDay(1),
-              time: (a.scheduled_time || a.proposed_time || '09:00').slice(0, 5),
+              date,
+              time: (a.scheduled_time || a.proposed_time || '').slice(0, 5),
               dueDate: a.end_date || '',
               priority: a.priority_level ?? 3,
               circleMemberIds: (a.assigned_watchers || []) as string[],
               adhocLoopIns: (a.adhoc_loop_ins || []) as AdhocLoopIn[],
-              slotIsSuggestion: !date,
+              slotIsSuggestion: !a.scheduled_date,
               needsCheck: Boolean(a.requires_review) || Number(a.confidence_score ?? 1) < 0.65,
               sourceQuote: a.source_quote || a.transcript_excerpt || undefined,
               userAdded: a.extraction_method === 'user_added',
@@ -451,6 +455,8 @@ export function ReviewStep({
       toast.info('Tick at least one step first.');
       return;
     }
+    const missingDate = included.find(row => !row.date || !row.time);
+    if (missingDate) { toast.info('Choose a day and time for each selected step first.'); return; }
     const blankStep = included.find(row => !row.text.trim());
     if (blankStep) {
       toast.error('A next step needs some words.');
@@ -534,15 +540,16 @@ export function ReviewStep({
         {/* Header */}
         <div className="shrink-0 border-b border-border px-4 md:px-6 py-4">
           <DialogTitle className="text-xl md:text-2xl font-semibold text-foreground">
-            Review before it reaches my diary
+            Check my next steps
           </DialogTitle>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
-            From “{meetingTitle}”. Change anything here — nothing is scheduled until I say so.
+            From “{meetingTitle}”. Nothing goes into my day until I approve it.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <div role="tablist" aria-label="Show my actions as" className="inline-flex rounded-lg border border-border p-1">
               {(['table', 'list'] as const).map(v => (
-                <button
+                <Button
+                  variant="ghost"
                   key={v}
                   type="button"
                   role="tab"
@@ -553,8 +560,8 @@ export function ReviewStep({
                     view === v ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
-                  {v === 'table' ? 'Table' : 'List'}
-                </button>
+                  {v === 'table' ? 'Table' : 'Simple list'}
+                </Button>
               ))}
             </div>
             {meetingId && !sourceFilePath && (
@@ -577,15 +584,16 @@ export function ReviewStep({
               <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
               Gathering my next steps…
             </div>
+          ) : loadFailed ? (
+            <div role="alert" className="py-8 space-y-4 text-base"><p>My saved next steps could not be opened. Nothing has been changed.</p><Button variant="outline" className="min-h-14" onClick={() => setReloadKey(key => key + 1)}>Try again</Button></div>
           ) : rows.length === 0 ? (
             <div className="py-16 text-center text-muted-foreground text-base">
-              Nothing left to review — everything from this capture is already in my diary.
+              No unscheduled next steps to check. I can add one below or return to my conversation.
             </div>
           ) : (
             <>
-              <div className="mb-6">
-                <ExecutiveSummaryPanel model={executiveSummary} />
-              </div>
+              <p className="text-base font-medium mb-5">{rows.length} next {rows.length === 1 ? 'step' : 'steps'} to check</p>
+              <details className="mb-5"><summary className="min-h-14 flex items-center cursor-pointer text-base">Conversation overview</summary><ExecutiveSummaryPanel model={executiveSummary} /></details>
 
               {/* ---------- Table view ---------- */}
               {view === 'table' && (
@@ -626,7 +634,7 @@ export function ReviewStep({
                           />
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {r.needsCheck && (
-                              <Badge variant="outline" className="text-[11px] border-primary/50 text-primary">
+                              <Badge variant="outline" className="text-base border-primary/50 text-primary">
                                 suggested — check this
                               </Badge>
                             )}
@@ -637,7 +645,7 @@ export function ReviewStep({
                           <Input
                             value={r.owner}
                             onChange={e => patch(r.id, { owner: e.target.value })}
-                            className="h-11 text-base"
+                            className="h-14 text-base"
                             aria-label="Owner"
                           />
                         </td>
@@ -650,7 +658,7 @@ export function ReviewStep({
                             />
                             <TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} />
                             {r.slotIsSuggestion && (
-                              <span className="text-[11px] text-muted-foreground">suggested slot</span>
+                              <span className="text-base text-muted-foreground">suggested slot</span>
                             )}
                           </div>
                         </td>
@@ -667,7 +675,7 @@ export function ReviewStep({
                             value={priorityValue(r.priority)}
                             onValueChange={v => patch(r.id, { priority: Number(v) })}
                           >
-                            <SelectTrigger className="h-11 text-base"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="h-14 text-base"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               {PRIORITIES.map(p => (
                                 <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
@@ -681,7 +689,7 @@ export function ReviewStep({
                             variant="ghost"
                             size="icon"
                             aria-label="Remove this step"
-                            className="h-11 w-11 text-muted-foreground hover:text-destructive"
+                            className="h-14 w-14 text-muted-foreground hover:text-destructive"
                             onClick={() => requestRemove(r.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -703,7 +711,7 @@ export function ReviewStep({
                     <div
                       key={r.id}
                       className={cn(
-                        'rounded-xl border border-border bg-card p-3',
+                        'rounded-md border border-border bg-card p-3',
                         !r.include && 'opacity-50',
                       )}
                     >
@@ -721,11 +729,11 @@ export function ReviewStep({
                             className="font-medium"
                           />
                           {r.needsCheck && (
-                            <Badge variant="outline" className="mt-2 text-[11px] border-primary/50 text-primary">
+                            <Badge variant="outline" className="mt-2 text-base border-primary/50 text-primary">
                               suggested — check this
                             </Badge>
                           )}
-                          <div className="mt-2 grid grid-cols-2 gap-2">
+                          <div className="mt-2 flex flex-wrap gap-2">
                             <DateField
                               value={r.date}
                               onChange={v => patch(r.id, { date: v, slotIsSuggestion: false })}
@@ -734,30 +742,33 @@ export function ReviewStep({
                             <TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} />
                           </div>
                           {r.slotIsSuggestion && (
-                            <p className="mt-1 text-[11px] text-muted-foreground">Suggested slot — tap to change.</p>
+                            <p className="mt-1 text-base text-muted-foreground">Suggested, not confirmed — change anything before adding.</p>
                           )}
 
-                          <button
+                          <Button
+                            variant="ghost"
+                            aria-expanded={open}
                             type="button"
                             onClick={() => toggleExpanded(r.id)}
-                            className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm text-primary"
+                            className="mt-2 inline-flex min-h-14 items-center gap-1 text-sm text-primary"
                           >
                             {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            {open ? 'Less' : 'More'}
-                          </button>
+                            {open ? 'Close details' : 'Details'}
+                          </Button>
 
+                          <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
                           {open && (
                             <div className="mt-2 space-y-3">
                               <div>
-                                <label className="text-xs text-muted-foreground">Owner</label>
+                                <label className="text-base text-muted-foreground">Owner</label>
                                 <Input
                                   value={r.owner}
                                   onChange={e => patch(r.id, { owner: e.target.value })}
-                                  className="min-h-11 text-base"
+                                  className="min-h-14 text-base"
                                 />
                               </div>
                               <div>
-                                <label className="text-xs text-muted-foreground">Due</label>
+                                <label className="text-base text-muted-foreground">Due</label>
                                 <DateField
                                   value={r.dueDate}
                                   onChange={v => patch(r.id, { dueDate: v })}
@@ -766,12 +777,12 @@ export function ReviewStep({
                                 />
                               </div>
                               <div>
-                                <label className="text-xs text-muted-foreground">Priority</label>
+                                <label className="text-base text-muted-foreground">Priority</label>
                                 <Select
                                   value={priorityValue(r.priority)}
                                   onValueChange={v => patch(r.id, { priority: Number(v) })}
                                 >
-                                  <SelectTrigger className="min-h-11 text-base"><SelectValue /></SelectTrigger>
+                                  <SelectTrigger className="min-h-14 text-base"><SelectValue /></SelectTrigger>
                                   <SelectContent>
                                     {PRIORITIES.map(p => (
                                       <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
@@ -780,10 +791,9 @@ export function ReviewStep({
                                 </Select>
                               </div>
                               {renderPeople(r)}
-                              <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
                               <Button
                                 variant="ghost"
-                                className="min-h-11 w-full text-destructive"
+                                className="min-h-14 w-full text-destructive"
                                 onClick={() => requestRemove(r.id)}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" /> Remove this step
@@ -811,17 +821,17 @@ export function ReviewStep({
                     onChange={e => setNewText(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleAddStep()}
                     placeholder="Something I said I'd do…"
-                    className="min-h-11 text-base"
+                    className="min-h-14 text-base"
                   />
                   <div className="flex gap-2">
-                    <Button className="min-h-11" onClick={handleAddStep}>Add</Button>
-                    <Button variant="ghost" className="min-h-11" onClick={() => { setAdding(false); setNewText(''); }}>
+                    <Button className="min-h-14" onClick={handleAddStep}>Add</Button>
+                    <Button variant="ghost" className="min-h-14" onClick={() => { setAdding(false); setNewText(''); }}>
                       Cancel
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button variant="outline" className="min-h-11" onClick={() => setAdding(true)}>
+                <Button variant="outline" className="min-h-14" onClick={() => setAdding(true)}>
                   <Plus className="h-4 w-4 mr-2" /> Add a step
                 </Button>
               )}
@@ -845,21 +855,22 @@ export function ReviewStep({
           )}
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2">
             <span className="text-sm text-muted-foreground">
-              {included.length} of {rows.length} will go in my diary
+              {included.length} of {rows.length} selected
             </span>
             <div className="flex gap-2">
-              <Button variant="outline" className="min-h-11 flex-1 sm:flex-none" onClick={onClose}>
+              <Button variant="outline" className="min-h-14 flex-1 sm:flex-none" onClick={onClose}>
                 Not yet
               </Button>
               <Button
-                className="min-h-11 flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground"
+                variant="action"
+                className="min-h-14 h-auto whitespace-normal flex-1 sm:flex-none"
                 onClick={handleCommit}
                 disabled={saving || included.length === 0 || (!!sourceFilePath && !confirmedAccurate)}
               >
                 {saving ? (
                   <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Adding…</>
                 ) : (
-                  <><CalendarPlus className="h-4 w-4 mr-2" /> Add these to my diary</>
+                  <><CalendarPlus className="h-4 w-4 mr-2" /> Add selected steps to my day</>
                 )}
               </Button>
             </div>
