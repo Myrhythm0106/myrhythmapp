@@ -158,7 +158,7 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
         {moreOpen && <div className="pt-2"><Button variant="outline" onClick={() => setNoteOpen(true)} className="min-h-14 rounded-md border-launch-gold/50 text-launch-ink-deep"><PenLine />Write a quick note</Button></div>}
       </div>
       <Dialog open={noteOpen} onOpenChange={setNoteOpen}>
-        <DialogContent className="bg-launch-ivory border-launch-gold/30 font-worksans">
+        <DialogContent className="launch-theme bg-launch-ivory border-launch-gold/30 font-worksans max-h-[90svh] overflow-y-auto">
           <DialogHeader><DialogTitle className="text-launch-ink-deep text-xl">Quick Note</DialogTitle></DialogHeader>
           <label htmlFor="quick-note-title" className="text-base text-launch-ink">Title (optional)</label>
           <input id="quick-note-title" value={noteTitle} onChange={e => setNoteTitle(e.target.value)} className="w-full min-h-14 px-4 rounded-md border border-launch-gold/40 bg-launch-ivory text-launch-ink text-base" />
