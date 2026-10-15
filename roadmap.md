@@ -1,5 +1,11 @@
 # MyRhythm — task roadmap
 
+## Memory Bridge working brief (15 Oct 2026)
+- [x] Replace duplicate headings and the enclosed hub with a recording-first working layout, upload choices and optional quick notes.
+- [x] Give the latest conversation clear space and align recording, saving and records presentation with /start.
+- [x] Build OK; isolated real entry controls, upload disclosure and note dialog passed at desktop, 393px and 320px with no horizontal overflow. Full saved-record presentation remains part of the signed-in check below.
+- [ ] Verify signed-in recording → save → reopen → next steps (externally managed sign-in unavailable to automation).
+
 ## Always-visible joining (15 Oct 2026)
 - [x] Keep Join Now visible in the landing heading on phone and desktop.
 - [x] Route new accounts through an accessible starting choice before questions, with a neutral skip and no repeat after the snapshot.

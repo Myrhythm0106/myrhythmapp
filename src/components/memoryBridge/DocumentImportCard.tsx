@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { LaunchButton } from '@/components/launch/LaunchButton';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const MAX_MB = 20;
@@ -125,7 +125,7 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
   return (
     <LaunchCard
       className={cn(
-        'bg-launch-ivory border-launch-gold/30',
+        'rounded-md bg-launch-ivory border-launch-gold/30',
         compact ? 'p-4' : 'p-5 mb-4',
       )}
     >
@@ -141,10 +141,10 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
           handleFiles(e.dataTransfer?.files ?? null);
         }}
         className={cn(
-          'rounded-xl border-2 border-dashed p-5 flex flex-col sm:flex-row items-center gap-4 transition-colors',
+          'rounded-md border border-dashed p-4 flex flex-col sm:flex-row items-start gap-4 transition-colors',
           dragging
             ? 'border-launch-ember bg-launch-ember/5'
-            : 'border-launch-gold/40 bg-white/60',
+            : 'border-launch-gold/40 bg-launch-ivory',
         )}
       >
         <div className="w-12 h-12 rounded-xl bg-launch-moss/10 flex items-center justify-center shrink-0">
@@ -155,23 +155,23 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
           )}
         </div>
         <div className="flex-1 text-center sm:text-left">
-          <p className="font-semibold text-launch-ink">
-            Import from a document
+          <p className="text-lg font-semibold text-launch-ink">
+            Upload a report or document
           </p>
-          <p className="text-sm text-launch-ink/70 mt-0.5">
-            Drop a discharge letter, care plan, schedule, or meeting note. We'll extract every action with the exact line it came from — so you can check nothing was missed.
+          <p className="text-base text-launch-ink mt-1 leading-relaxed">
+            A letter, care plan, schedule or meeting note. Check the suggested next steps against your document before adding them to your calendar.
           </p>
-          <p className="text-xs text-launch-moss/80 mt-1 font-medium">
+          <p className="text-base text-launch-moss mt-2 font-medium">
             🔒 Your file is read once and deleted straight after — only the extracted actions are kept.
           </p>
-          <p className="text-xs text-launch-ink/50 mt-1">
+          <p className="text-base text-launch-ink mt-2">
             PDF, DOCX, images, or plain text · max {MAX_MB} MB
           </p>
         </div>
-        <LaunchButton
+        <Button variant="outline"
           onClick={openPicker}
           disabled={uploading}
-          className="bg-launch-ember hover:bg-launch-ember/90 text-white shrink-0"
+          className="min-h-14 rounded-md border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 shrink-0"
         >
           {uploading ? (
             <>
@@ -184,7 +184,7 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
               Choose file
             </>
           )}
-        </LaunchButton>
+        </Button>
         <input
           ref={inputRef}
           type="file"

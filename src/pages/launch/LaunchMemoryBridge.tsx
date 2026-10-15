@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { recordAction, SURFACES } from '@/lib/evidence/track';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
-import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
+import { Button } from '@/components/ui/button';
+import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
 import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -77,6 +77,7 @@ interface VoiceRecording {
   transcription?: string;
   access_level: string;
   created_at: string;
+  reference_code?: string | null;
 }
 
 export default function LaunchMemoryBridge() {
@@ -99,7 +100,7 @@ export default function LaunchMemoryBridge() {
       .limit(1)
       .maybeSingle();
     if (!data?.id) {
-      toast.info('No transcript yet for this recording.', { description: 'Tap "Discover Actions" to write it up.' });
+      toast.info('No transcript yet for this recording.', { description: 'Tap "Find my next steps" to write it up.' });
       return;
     }
     setTranscriptFor({ meetingId: data.id, title });
@@ -802,14 +803,7 @@ export default function LaunchMemoryBridge() {
     <LaunchLayout>
       
 
-      <LaunchHeroBand
-        eyebrow="Capture"
-        title="Memory Bridge"
-        subtitle="Record conversations, we'll extract the actions — so nothing important is left to recall under pressure."
-        align="center"
-      />
-
-      <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
+      <div className="max-w-5xl mx-auto py-4 md:py-8 pb-24 font-worksans text-launch-ink-deep">
         {/* Import from a document (schedule, discharge letter, care plan, notes) */}
         {recoverableCapture && (
           <LaunchCard className="mb-6 border-launch-gold/40 bg-launch-gold/10 p-5">
@@ -819,11 +813,11 @@ export default function LaunchMemoryBridge() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-launch-ink">I found a conversation that was safely kept on this device.</p>
-                <p className="mt-1 text-sm text-launch-ink/70">
+                <p className="mt-1 text-base text-launch-ink/70">
                   {formatDuration(recoverableCapture.meta.duration)} captured · not uploaded or shared yet
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <LaunchButton
+                  <Button
                     onClick={() => {
                       audioBlobRef.current = recoverableCapture.blob;
                       setRestoredDuration(recoverableCapture.meta.duration);
@@ -832,13 +826,13 @@ export default function LaunchMemoryBridge() {
                     }}
                   >
                     Continue with this recording
-                  </LaunchButton>
-                  <LaunchButton
+                  </Button>
+                  <Button
                     variant="outline"
                     onClick={() => setConfirmDiscardCapture(true)}
                   >
                     Discard it
-                  </LaunchButton>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -867,7 +861,6 @@ export default function LaunchMemoryBridge() {
             onStartCapture={handleStartRecording}
             onOpenMyRecords={() => recordsRef.current?.scrollIntoView({ behavior: 'smooth' })}
             onUploadClick={() => uploadInputRef.current?.click()}
-            onOpenRecording={(recording) => handleViewActions(recording)}
             isStarting={isStarting}
             isUploading={isUploading}
             isExtracting={isExtracting}
@@ -885,66 +878,45 @@ export default function LaunchMemoryBridge() {
                   }
                 : null
             }
-            recentRecordings={recordings.slice(0, 2)}
-            formatDuration={formatDuration}
-          />
+          >
+        <DocumentImportCard
+          onExtracted={(res: DocumentImportResult) => {
+            setLastExtractionResult({
+              meetingId: res.meetingId,
+              recordingId: '',
+              actionsCount: res.actionsCount,
+              title: res.title,
+              sourceFilePath: res.filePath,
+              sourceFileName: res.fileName,
+            });
+            fetchRecordings();
+            setShowPostExtractionDialog(true);
+          }}
+        />
+          </CaptureHub>
         ) : (
-          <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">
-
-            {/* Subtle topographic decoration */}
-            <div className="absolute top-4 right-4 w-24 h-24 opacity-10 text-launch-gold">
-              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-                <circle cx="80" cy="20" r="6" fill="currentColor" />
-                <circle cx="60" cy="40" r="4" fill="currentColor" />
-                <path d="M80,20 Q70,30 60,40" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </div>
-            <div className="absolute bottom-4 left-4 w-20 h-20 opacity-10 text-launch-gold">
-              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-                <circle cx="20" cy="80" r="5" fill="currentColor" />
-                <circle cx="40" cy="60" r="3" fill="currentColor" />
-                <path d="M20,80 Q30,70 40,60" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </div>
+          <LaunchCard className="relative overflow-hidden rounded-md bg-launch-ivory border-launch-gold/30 mb-8 text-center py-8 px-4 md:px-8">
 
             <div className="relative z-10" ref={recorderCardRef}>
               {(state === 'recording' || state === 'paused') && (
                 <>
-                  <div className={cn(
-                    "relative w-28 h-28 mx-auto mb-4"
-                  )}>
-                    {/* Recording pulse effect */}
-                    {state === 'recording' && (
-                      <>
-                        <div className="absolute inset-0 bg-launch-ember rounded-full animate-ping opacity-30" />
-                        <div className="absolute inset-0 bg-launch-ember rounded-full animate-pulse opacity-50" />
-                      </>
-                    )}
-                    <div className={cn(
-                      "absolute inset-0 rounded-full flex items-center justify-center shadow-2xl transition-all",
-                      state === 'recording' ? "bg-gradient-to-br from-launch-ember to-launch-ember/80" : "bg-gradient-to-br from-launch-gold to-launch-gold/80"
-                    )}>
-                      {state === 'recording' ? (
-                        <div className="w-10 h-10 bg-white rounded-lg shadow-inner" />
-                      ) : (
-                        <Pause className="h-12 w-12 text-white" />
-                      )}
-                    </div>
+                  <div className="w-16 h-16 mx-auto mb-5 rounded-md bg-launch-teal/10 flex items-center justify-center">
+                    {state === 'recording' ? <Mic className="h-8 w-8 text-launch-teal" /> : <Pause className="h-8 w-8 text-launch-teal" />}
                   </div>
-                  <p className="text-3xl font-bold text-launch-ink mb-1 font-display">{formatDuration(duration)}</p>
+                  <p className="text-3xl font-bold text-launch-ink mb-1 font-worksans">{formatDuration(duration)}</p>
                   <Badge className={cn(
                     "mb-2",
                     state === 'recording'
                       ? "bg-launch-ember/10 text-launch-ember border-launch-ember/30"
                       : "bg-launch-gold/10 text-launch-gold border-launch-gold/30"
                   )}>
-                    {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
+                    {state === 'recording' ? <><Mic className="h-4 w-4 mr-2" />Recording</> : <><Pause className="h-4 w-4 mr-2" />Paused</>}
                   </Badge>
 
                   <div className="mb-2 flex justify-center">
                     <span
                       className={cn(
-                        'rounded-full px-3 py-1 text-xs font-medium',
+                        'rounded-full px-3 py-1 text-base font-medium',
                         remainingSessionSeconds <= 60
                           ? 'bg-launch-ember/10 text-launch-ember'
                           : remainingSessionSeconds <= 300
@@ -960,7 +932,7 @@ export default function LaunchMemoryBridge() {
                   <MicLevelMeter state={micLevel} paused={state === 'paused'} className="mb-3" />
 
                   <p className={cn(
-                    "text-xs mb-4",
+                    "text-base mb-4",
                     recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
                   )} role="status" aria-live="polite">
                     {recordedBytes > 0
@@ -970,22 +942,22 @@ export default function LaunchMemoryBridge() {
 
 
 
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-3">
                     {state === 'recording' ? (
-                      <LaunchButton onClick={handlePauseRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+                      <Button onClick={handlePauseRecording} variant="outline" className="min-h-14 rounded-md border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
                         <Pause className="h-5 w-5" />
                         Pause
-                      </LaunchButton>
+                      </Button>
                     ) : (
-                      <LaunchButton onClick={handleResumeRecording} variant="outline" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+                      <Button onClick={handleResumeRecording} variant="outline" className="min-h-14 rounded-md border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
                         <Play className="h-5 w-5" />
                         Continue
-                      </LaunchButton>
+                      </Button>
                     )}
-                    <LaunchButton onClick={handleStopRecording} variant="outline" className="border-launch-ember/30 text-launch-ember hover:bg-launch-ember/5">
+                    <Button onClick={handleStopRecording} variant="action" className="min-h-14 rounded-md">
                       <Square className="h-5 w-5" />
                       Stop
-                    </LaunchButton>
+                    </Button>
                   </div>
                 </>
               )}
@@ -996,36 +968,36 @@ export default function LaunchMemoryBridge() {
                     <Play className="h-12 w-12 text-launch-moss ml-1" />
                   </div>
                   <p className="text-lg font-semibold text-launch-ink mb-1">Captured. Add details (optional)</p>
-                  <p className="text-sm text-launch-ink/65 mb-3">Everything below is already filled in — change anything, or just save.</p>
+                  <p className="text-base text-launch-ink/65 mb-3">Everything below is already filled in — change anything, or just save.</p>
                   <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
 
-                  <label htmlFor="mb-title" className="block text-xs font-medium text-launch-ink/60 mb-1.5">Name for this conversation</label>
+                  <label htmlFor="mb-title" className="block text-base font-medium text-launch-ink/60 mb-1.5">Name for this conversation</label>
                   <input
                     id="mb-title"
                     type="text"
                     value={recordingTitle}
                     onChange={(e) => setRecordingTitle(e.target.value)}
                     placeholder={`Conversation · ${format(new Date(), 'd MMM, HH:mm')}`}
-                    className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-xl border border-launch-gold/30 bg-white text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
+                    className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-md border border-launch-gold/30 bg-launch-ivory text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
                   />
 
                   <div className="flex items-center justify-center gap-3 mb-6">
-                    <button
+                    <Button variant="ghost"
                       onClick={() => setNotifySupport(!notifySupport)}
                       className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
+                        "flex items-center gap-2 px-4 py-2 rounded-full text-base font-medium transition-all",
                         notifySupport
                           ? "bg-launch-moss/10 text-launch-moss border border-launch-moss/30"
-                          : "bg-white text-launch-ink/70 border border-launch-gold/30"
+                          : "bg-launch-ivory text-launch-ink/70 border border-launch-gold/30"
                       )}
                     >
                       <Users className="h-4 w-4" />
                       Notify Support Circle
-                    </button>
+                    </Button>
                   </div>
 
                   <div className="max-w-xs mx-auto mb-4 text-left">
-                    <p className="text-xs font-medium text-launch-ink/60 mb-1.5 text-center">
+                    <p className="text-base font-medium text-launch-ink/60 mb-1.5 text-center">
                       Loop someone in on the actions from this recording
                     </p>
                     <div className="flex justify-center">
@@ -1043,7 +1015,7 @@ export default function LaunchMemoryBridge() {
 
                   <OutputModeChooser value={outputMode} onChange={setOutputMode} className="mb-5" />
 
-                  <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-launch-ember hover:bg-launch-ember/90 text-white" disabled={isProcessing || isExtracting}>
+                  <Button variant="action" onClick={handleSave} className="w-full max-w-md min-h-14 rounded-md whitespace-normal h-auto py-4" disabled={isProcessing || isExtracting}>
                     {isProcessing || isExtracting ? (
                       <>
                         <Loader2 className="h-5 w-5 animate-spin" />
@@ -1055,28 +1027,23 @@ export default function LaunchMemoryBridge() {
                         {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save & write transcript' : 'Save & Extract Actions'}
                       </>
                     )}
-                  </LaunchButton>
+                  </Button>
 
                   {(isProcessing || isExtracting) && (
-                    <p className="mt-3 text-sm text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
+                    <p className="mt-3 text-base text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
                       This can take a minute on a phone. Your recording is safe — you can leave this
                       screen and come back, it'll be waiting in your captures.
                     </p>
                   )}
 
                   {!(isProcessing || isExtracting) && (
-                    <button
+                    <Button variant="ghost"
                       type="button"
-                      onClick={async () => {
-                        audioBlobRef.current = null;
-                        setRestoredDuration(null);
-                        await clearPendingRecording();
-                        setState('idle');
-                      }}
-                      className="mt-4 text-sm font-medium text-launch-ink/60 underline underline-offset-4 hover:text-launch-ink"
+                      onClick={() => setConfirmDiscardCapture(true)}
+                      className="mt-4 text-base font-medium text-launch-ink/60 underline underline-offset-4 hover:text-launch-ink"
                     >
                       Discard and record something new
-                    </button>
+                    </Button>
                   )}
                 </>
               )}
@@ -1093,53 +1060,37 @@ export default function LaunchMemoryBridge() {
           onChange={(e) => handleUploadSelected(e.target.files?.[0])}
         />
 
-        <DocumentImportCard
-          onExtracted={(res: DocumentImportResult) => {
-            setLastExtractionResult({
-              meetingId: res.meetingId,
-              recordingId: '',
-              actionsCount: res.actionsCount,
-              title: res.title,
-              sourceFilePath: res.filePath,
-              sourceFileName: res.fileName,
-            });
-            fetchRecordings();
-            setShowPostExtractionDialog(true);
-          }}
-        />
 
         {/* My Records */}
-        <div ref={recordsRef} className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-launch-ink">My Records</h2>
-          <button
-            onClick={() => recordsRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            className="text-sm text-launch-ember font-medium hover:text-launch-ember/80 transition-colors"
-          >
-            View all
-          </button>
+        <div ref={recordsRef} className="scroll-mt-28 mb-6 border-b border-launch-gold/30 pb-4 flex flex-wrap items-end justify-between gap-3">
+          <div><p className="text-launch-teal text-base mb-2">Kept for me. Ready when I need it.</p>
+          <h2 className="font-instrument text-3xl md:text-4xl text-launch-ink-deep">{recordings.length ? 'Latest conversation' : 'My conversations'}</h2></div>
+          <span className="text-base text-launch-ink">{recordings.length} saved {recordings.length === 1 ? 'recording' : 'recordings'}</span>
         </div>
 
-        <div className="space-y-3 mb-24">
+        <div className="space-y-5 mb-10">
           {recordings.length === 0 ? (
-            <LaunchCard className="bg-launch-ivory border-launch-gold/30 p-6 text-center">
-              <p className="text-launch-ink/70">No recordings yet. Start your first one!</p>
-            </LaunchCard>
+            <div className="py-6 border-b border-launch-gold/30">
+              <h3 className="text-xl font-semibold mb-3">A conversation worth keeping</h3>
+              <p className="text-lg leading-relaxed max-w-xl">An appointment, a family conversation, or an idea I want to return to. My first recording will appear here.</p>
+            </div>
           ) : (
 
-            recordings.slice(0, 5).map((recording) => {
+            recordings.map((recording, index) => {
               const isProcessed = processedRecordings.has(recording.id);
               const isCurrentlyProcessing = processingId === recording.id;
               
               const actionsCount = actionsCountMap[recording.id] || 0;
 
               return (
+                <React.Fragment key={recording.id}>
+                {index === 1 && <h2 className="font-instrument text-3xl text-launch-ink-deep pt-6 pb-4 border-b border-launch-gold/30">Earlier conversations</h2>}
                 <LaunchCard
-                  key={recording.id}
-                  className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 p-4"
+                  className={cn("relative overflow-hidden rounded-md bg-launch-ivory border-launch-gold/30 p-5 md:p-7", index === 0 && "border-launch-teal/40")}
                 >
                   {/* Left accent bar */}
                   <div className={cn(
-                    "absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl",
+                    "absolute left-0 top-0 bottom-0 w-1",
                     isProcessed
                       ? "bg-launch-moss"
                       : "bg-launch-ember"
@@ -1147,10 +1098,10 @@ export default function LaunchMemoryBridge() {
 
                   <div className="relative z-10 flex flex-col gap-3 pl-3">
                     {/* Header row */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
                         <div className={cn(
-                          "w-11 h-11 rounded-xl flex items-center justify-center",
+                          "w-11 h-11 shrink-0 rounded-md flex items-center justify-center",
                           isProcessed
                             ? "bg-launch-moss/10"
                             : "bg-launch-ember/10"
@@ -1160,9 +1111,9 @@ export default function LaunchMemoryBridge() {
                             isProcessed ? "text-launch-moss" : "text-launch-ember"
                           )} />
                         </div>
-                        <div>
-                          <p className="font-semibold text-launch-ink">{recording.title}</p>
-                          <p className="text-xs text-launch-ink/60 flex items-center gap-1">
+                        <div className="min-w-0">
+                          <h3 className="text-xl font-semibold text-launch-ink-deep break-words leading-relaxed">{recording.title}</h3>
+                          <p className="text-base text-launch-ink flex flex-wrap items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {formatRecordingDate(recording.created_at)}
                             {recording.duration_seconds && (
@@ -1175,12 +1126,13 @@ export default function LaunchMemoryBridge() {
                       {isProcessed && (
                         <Badge className="bg-launch-moss/10 text-launch-moss border-launch-moss/30">
                           <CheckCircle className="h-3 w-3 mr-1" />
-                          Actions Ready
+                          {actionsCount > 0 ? `${actionsCount} next ${actionsCount === 1 ? 'step' : 'steps'}` : 'Saved'}
                         </Badge>
                       )}
                     </div>
 
-                    {/* Action buttons */}
+                    {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
+                    {/* Listen to this saved conversation */}
                     <RecordingPlayer
                       id={recording.id}
                       getUrl={() => getRecordingUrl(recording.file_path)}
@@ -1190,32 +1142,32 @@ export default function LaunchMemoryBridge() {
 
                     {/* Action buttons */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <button
+                      <Button variant="ghost"
                         type="button"
                         onClick={() => openTranscriptForRecording(recording.id, recording.title)}
-                        className="flex min-h-[44px] items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium border border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 transition-all"
+                        className="flex min-h-[44px] items-center gap-1.5 px-4 py-2 rounded-md text-base font-medium border border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 transition-all"
                       >
                         Read transcript
-                      </button>
+                      </Button>
 
 
                       {isProcessed ? (
-                        <button
+                        <Button variant="ghost"
                           onClick={() => handleViewActions(recording)}
-                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium bg-launch-moss text-white hover:bg-launch-moss/90 transition-all"
+                          className="flex min-h-14 items-center gap-1.5 px-4 py-2 rounded-md whitespace-normal h-auto text-base font-medium bg-launch-teal/10 text-launch-ink-deep hover:bg-launch-teal/20 border border-launch-teal/40 transition-all"
                         >
                           <Eye className="h-4 w-4" />
-                          Open Executive Summary &amp; {actionsCount} Action{actionsCount !== 1 ? 's' : ''}
-                        </button>
+                          {actionsCount > 0 ? 'Check my next steps' : 'Open my saved write-up'}
+                        </Button>
                       ) : (
-                        <button
+                        <Button variant="ghost"
                           onClick={() => handleProcessRecording(recording)}
                           disabled={isCurrentlyProcessing}
                           className={cn(
-                            "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                            "flex min-h-14 items-center gap-1.5 px-4 py-2 rounded-md whitespace-normal h-auto text-base font-medium transition-all",
                             isCurrentlyProcessing
                               ? "bg-launch-ink/10 text-launch-ink/50 cursor-not-allowed"
-                              : "bg-launch-ember text-white hover:bg-launch-ember/90"
+                              : "bg-launch-teal/10 text-launch-ink-deep hover:bg-launch-teal/20 border border-launch-teal/40"
                           )}
                         >
                           {isCurrentlyProcessing ? (
@@ -1226,23 +1178,23 @@ export default function LaunchMemoryBridge() {
                           ) : (
                             <>
                               <Brain className="h-4 w-4" />
-                              Discover Actions
+                              Find my next steps
                             </>
                           )}
-                        </button>
+                        </Button>
                       )}
                     </div>
 
                     <div className="flex justify-end">
                       {!Boolean((recording as { legal_retention_required?: boolean }).legal_retention_required) && (
-                        <button
+                        <Button variant="ghost"
                           type="button"
                           onClick={() => setRecordingToDelete(recording)}
-                          className="flex min-h-[44px] items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-launch-ink/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
+                          className="flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-2 text-base font-medium text-launch-ink/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
                           Delete recording
-                        </button>
+                        </Button>
                       )}
                     </div>
 
@@ -1262,11 +1214,13 @@ export default function LaunchMemoryBridge() {
                     />
                   </div>
                 </LaunchCard>
+                </React.Fragment>
               );
 
             })
           )}
         </div>
+        <p className="text-base leading-relaxed text-launch-ink border-t border-launch-gold/30 pt-5">MyRhythm supports everyday planning and follow-through. It does not diagnose, treat or fix medical conditions.</p>
       </div>
 
       {/* Review & edit everything before it reaches my diary */}
@@ -1339,6 +1293,10 @@ export default function LaunchMemoryBridge() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={async () => {
                 if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
+                audioBlobRef.current = null;
+                setRestoredDuration(null);
+                await clearPendingRecording();
+                setState('idle');
                 setRecoverableCapture(null);
                 setConfirmDiscardCapture(false);
               }}
