@@ -6,7 +6,7 @@ import type { PillarId } from '@/launch/framework/cognitiveCapital';
 import type { YesId } from '@/launch/framework/yes';
 
 export const ASSESSMENT_SCHEMA_VERSION = 5;
-export type PersonaKey = 'brain-injury' | 'caregiver' | 'executive' | 'student';
+export type PersonaKey = 'brain-injury' | 'caregiver' | 'executive' | 'student' | 'general';
 export type LetterId =
   | 'mindset' | 'yesReality' | 'rhythm' | 'harnessSupport'
   | 'yourVictories' | 'transform' | 'heal' | 'multiply';
@@ -408,7 +408,7 @@ export const FULL_PICTURE_LETTERS: { slot: LetterId; word: string }[] = [
 const QUICK = QUESTIONS.filter((q) => q.tier === 'quick');
 const FULL = FULL_PICTURE_LETTERS.flatMap((l) => QUESTIONS.filter((q) => q.tier === 'full' && q.slot === l.slot));
 
-const PERSONAS: PersonaKey[] = ['brain-injury', 'caregiver', 'executive', 'student'];
+const PERSONAS: PersonaKey[] = ['brain-injury', 'caregiver', 'executive', 'student', 'general'];
 const banks = Object.fromEntries(PERSONAS.map((persona) => [persona, {
   persona,
   intro: 'YES: your starting point, everyday energy and steady rhythm.',
@@ -421,7 +421,7 @@ const banks = Object.fromEntries(PERSONAS.map((persona) => [persona, {
 
 
 export function getAssessmentBank(persona: string | null | undefined): AssessmentBank | null {
-  if (!persona) return null;
+  if (!persona) return banks.general;
   const legacyMap: Record<string, PersonaKey> = {
     recovery: 'brain-injury', 'goal-achiever': 'executive', productivity: 'executive', wellness: 'brain-injury',
   };
@@ -430,6 +430,7 @@ export function getAssessmentBank(persona: string | null | undefined): Assessmen
 }
 
 export const PERSONA_LABEL: Record<PersonaKey, string> = {
+  general: 'My own starting point',
   'brain-injury': 'Rebuilding after a brain change', caregiver: 'Caring for someone I love',
   executive: 'Protecting my focus at work', student: 'Studying and learning',
 };

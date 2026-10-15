@@ -85,7 +85,7 @@ export default function LaunchRegister() {
         options: {
           data: { name },
           emailRedirectTo: `${window.location.origin}${
-            '/launch/assessment?first=1'
+            prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type'
           }`,
         },
       });
@@ -134,7 +134,7 @@ export default function LaunchRegister() {
       }
 
       toast.success("You're in — let's get you set up.");
-      navigate('/launch/assessment?first=1', { replace: true });
+      navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type', { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
       toast.error(err?.message || 'Something went wrong', {
@@ -169,14 +169,14 @@ export default function LaunchRegister() {
       return;
     }
     if (prefilledUserType) localStorage.setItem('myrhythm_user_type', prefilledUserType);
-    navigate('/launch/assessment?first=1');
+    navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type');
   };
 
 
   // Already signed in: never show an empty sign-up form.
   if (user && !registrationSuccess && !isLoading) {
     const name = String((user.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] || user.email;
-    const label = signedInNext?.startsWith('/launch/assessment') ? 'Continue my questions' : 'Go to my day';
+    const label = signedInNext === '/launch/user-type' ? 'Choose my starting point' : signedInNext?.startsWith('/launch/assessment') ? 'Continue my questions' : 'Go to my day';
     return (
       <div className="min-h-screen bg-launch-cream-light flex flex-col items-center justify-center px-6 py-10 pt-safe pb-safe">
         <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
@@ -317,7 +317,7 @@ export default function LaunchRegister() {
             Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Takes 30 seconds, then your free questions. Membership is optional and shown separately.
+            Create your account, choose what brings you here, then begin your free questions. Membership is optional and shown separately.
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">

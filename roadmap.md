@@ -1,5 +1,10 @@
 # MyRhythm — task roadmap
 
+## Always-visible joining (15 Oct 2026)
+- [ ] Keep Join Now visible in the landing heading on phone and desktop.
+- [ ] Route new accounts through an accessible starting choice before questions, with a neutral skip and no repeat after the snapshot.
+- [ ] Check the public joining path and starting choices; disclose unavailable authenticated checks.
+
 ## Welcome starting choices (14 Oct 2026)
 - [x] Add Guide me / Explore my way, with changeable user-scoped device preferences.
 - [x] Keep the existing map available at welcome and provide one-step guidance.

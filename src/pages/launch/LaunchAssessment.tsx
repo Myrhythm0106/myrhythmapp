@@ -183,9 +183,8 @@ export default function LaunchAssessment() {
 
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
-    // The questions are shared. A first-time user can begin immediately;
-    // personalisation is offered once, after their free snapshot.
-    const bank = getAssessmentBank(stored ?? 'brain-injury');
+    // Shared questions remain available without assigning a personal identity.
+    const bank = getAssessmentBank(stored ?? 'general');
     if (!bank) return;
     // If the stored user type no longer matches saved progress, start the
     // matching bank clean — never carry another persona's answers over.

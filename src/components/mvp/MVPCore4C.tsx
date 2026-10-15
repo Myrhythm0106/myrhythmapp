@@ -282,14 +282,14 @@ export function MVPCore4C() {
   return (
     <div className="launch-theme public-page min-h-screen bg-launch-cream-light text-launch-ink-deep">
       <nav className="sticky top-0 z-50 border-b border-launch-gold/30 bg-launch-cream-light/90 backdrop-blur-xl" aria-label="Main navigation">
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:px-8">
+        <div className="mx-auto flex min-h-[72px] max-w-7xl flex-wrap items-center justify-between gap-x-2 px-3 py-2 md:px-8">
           <Button
             variant="ghost"
             onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })}
-            className="flex min-h-14 items-center gap-3 rounded-md px-0 text-left hover:bg-transparent"
+            className="flex min-h-14 items-center gap-2 rounded-md px-0 text-left hover:bg-transparent md:gap-3"
             aria-label="MyRhythm, return to top"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-launch-gold/30 bg-launch-ivory">
+            <span className="hidden h-10 w-10 items-center justify-center rounded-full border border-launch-gold/30 bg-launch-ivory sm:flex">
               <Brain className="h-5 w-5 text-launch-teal" aria-hidden="true" />
             </span>
             <span>
@@ -302,25 +302,30 @@ export function MVPCore4C() {
               onClick={() => navigate('/help/getting-started')}
               variant="ghost"
               size="icon"
-              className="text-launch-moss hover:bg-launch-cream hover:text-launch-ink-deep"
+              className="hidden min-h-14 min-w-14 text-launch-moss hover:bg-launch-cream hover:text-launch-ink-deep md:inline-flex"
               aria-label="Help"
               title="Help"
             >
               <HelpCircle className="h-5 w-5" />
             </Button>
-            {entryState === 'new' && (
+            {!user && (
               <Button
                 onClick={handleStartHere}
-                variant="outline"
-                className="hidden min-h-12 rounded-md border-launch-gold/50 bg-launch-ivory px-4 font-worksans text-sm font-bold text-launch-ink-deep hover:bg-launch-cream md:inline-flex md:px-5"
+                variant="action"
+                className="min-h-14 rounded-md px-3 font-worksans text-base font-bold md:px-5"
               >
-                Start here
+                Join Now
+              </Button>
+            )}
+            {user && (
+              <Button onClick={handlePrimary} variant="action" className="min-h-14 whitespace-normal rounded-md px-3 text-base font-bold md:px-5">
+                {primaryLabel}
               </Button>
             )}
             {showFounding && (
               <Button
                 onClick={handleFoundingAction}
-                className="hidden min-h-12 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink md:inline-flex md:px-5"
+                className="hidden min-h-14 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink lg:inline-flex lg:px-5"
               >
                 Founding Member
               </Button>
@@ -328,10 +333,10 @@ export function MVPCore4C() {
             <Button
               onClick={handleAuthAction}
               variant="ghost"
-              className="min-h-14 px-3 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
+              className="min-h-14 px-2 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
             >
-              <User className="h-4 w-4" />
-              <span className={entryState === 'returning' ? 'font-bold' : 'hidden sm:inline'}>{user ? 'Sign out' : 'Sign in'}</span>
+              <User className="hidden h-4 w-4 sm:block" aria-hidden="true" />
+              <span className={entryState === 'returning' ? 'font-bold' : ''}>{user ? 'Sign out' : 'Sign in'}</span>
             </Button>
           </div>
         </div>
