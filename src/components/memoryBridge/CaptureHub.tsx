@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mic, History, PenLine, Upload, ChevronDown, Loader2, ArrowRight } from 'lucide-react';
+import { Mic, PenLine, Upload, ChevronDown, Loader2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/hooks/useAuth';
@@ -23,7 +23,7 @@ interface CaptureHubProps {
   children?: React.ReactNode;
 }
 
-export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isStarting, isUploading, isExtracting, micPermission, micBlockReason, refreshMicStatus, outOfAllowance, allowance, nextTierInfo, children }: CaptureHubProps) {
+export function CaptureHub({ onStartCapture, onUploadClick, isStarting, isUploading, isExtracting, micPermission, micBlockReason, refreshMicStatus, outOfAllowance, allowance, nextTierInfo, children }: CaptureHubProps) {
   const { user } = useAuth();
   const [noteOpen, setNoteOpen] = useState(false);
   const [noteTitle, setNoteTitle] = useState('');
@@ -66,9 +66,9 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
     <section className="border-b border-launch-gold/30 pb-8 mb-10">
       <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-12">
         <div className="flex-1 min-w-0">
-          <p className="text-base font-medium text-launch-teal mb-3">Keep the conversation. Carry the plan forward.</p>
+          <p className="text-base font-medium text-launch-teal mb-3">Keep the conversation. Check the next steps. Bring them into my day.</p>
           <h1 className="font-instrument text-4xl md:text-5xl text-launch-ink-deep leading-tight mb-4">Memory Bridge</h1>
-          <p className="text-lg text-launch-ink-deep leading-relaxed max-w-lg">Capture what matters, then check the next steps in your own time.</p>
+          
         </div>
         <div className="w-full lg:w-auto lg:min-w-80">
           <Button variant="action" size="lg" onClick={onStartCapture} disabled={primaryDisabled} className="w-full rounded-md px-6 min-h-16 whitespace-normal">
@@ -83,8 +83,7 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-3 mt-6">
-        <Button variant="outline" onClick={() => setUploadOpen(!uploadOpen)} aria-expanded={uploadOpen} className="min-h-14 rounded-md border-launch-gold/50 text-launch-ink-deep hover:bg-launch-gold/10"><Upload />Upload<ChevronDown /></Button>
-        <Button variant="outline" onClick={onOpenMyRecords} className="min-h-14 rounded-md border-launch-gold/50 text-launch-ink-deep hover:bg-launch-gold/10"><History />My Records</Button>
+        <Button variant="outline" onClick={() => setUploadOpen(!uploadOpen)} aria-expanded={uploadOpen} className="min-h-14 h-auto whitespace-normal rounded-md border-launch-gold/50 text-launch-ink-deep hover:bg-launch-gold/10"><Upload />Upload a recording or report<ChevronDown /></Button>
       </div>
       {uploadOpen && <div className="mt-6 border-t border-launch-gold/30 pt-5 space-y-4">
         <h2 className="text-lg font-semibold text-launch-ink-deep">Bring something I already have</h2>

@@ -44,7 +44,7 @@ import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRec
 import { CaptureHub } from '@/components/memoryBridge/CaptureHub';
 import { OutputModeChooser } from '@/components/memoryBridge/OutputModeChooser';
 import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
-import { useOutputMode } from '@/lib/memoryBridge/outputMode';
+import { useOutputMode, OUTPUT_MODE_LABELS } from '@/lib/memoryBridge/outputMode';
 
 import { setRecordingLive } from '@/launch/capture/recordingSignal';
 import { useCapturePreferences } from '@/hooks/useCapturePreferences';
@@ -90,7 +90,9 @@ export default function LaunchMemoryBridge() {
 
   const [state, setState] = useState<RecordingState>('idle');
   const [showCelebration, setShowCelebration] = useState(false);
-  const [notifySupport, setNotifySupport] = useState(true);
+  const [notifySupport, setNotifySupport] = useState(false);
+  const [supportOptionsOpen, setSupportOptionsOpen] = useState(false);
+  const [outputOptionsOpen, setOutputOptionsOpen] = useState(false);
   const [recordingTitle, setRecordingTitle] = useState('');
   const [outputMode, setOutputMode] = useOutputMode();
   const [transcriptFor, setTranscriptFor] = useState<{ meetingId: string; title: string } | null>(null);
@@ -497,7 +499,7 @@ export default function LaunchMemoryBridge() {
       if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
       setRecoverableCapture(null);
       allowance.refresh();
-      toast.success('Conversation saved.', { action: { label: 'Open conversation', onClick: () => { setRequestedConversationId(saved.id); conversationDetails.setOpen(saved.id, true); recordsRef.current?.scrollIntoView({ block: 'start' }); } } });
+      setRequestedConversationId(saved.id);
 
       // Automatically start extraction
       console.log('handleSave: stage 3 — starting extraction');
@@ -541,14 +543,14 @@ export default function LaunchMemoryBridge() {
         }
 
         setLastExtractionResult({
-          meetingId: result.meetingId!,
+          meetingId: result.meetingId,
           recordingId: saved.id,
           actionsCount: result.actionsCount,
           title
         });
         setShowPostExtractionDialog(true);
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
-        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount }));
         setLoopCircleIds([]);
         setLoopAdhoc([]);
       } else if (result.success) {
@@ -632,14 +634,14 @@ export default function LaunchMemoryBridge() {
             .eq('meeting_recording_id', result.meetingId);
         }
         setLastExtractionResult({
-          meetingId: result.meetingId!,
+          meetingId: result.meetingId,
           recordingId: saved.id,
           actionsCount: result.actionsCount,
           title,
         });
         setShowPostExtractionDialog(true);
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
-        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount }));
         setLoopCircleIds([]);
         setLoopAdhoc([]);
       } else if (result.success) {
@@ -683,7 +685,7 @@ export default function LaunchMemoryBridge() {
         },
         duration: 12000,
       });
-      return;
+      throw new Error('Sign in again to add these steps.');
     }
 
     try {
@@ -701,6 +703,7 @@ export default function LaunchMemoryBridge() {
             ? 'There are no next steps to schedule yet.'
             : 'Nothing could be added to my diary — please try again.',
         );
+        throw new Error('No steps were added. Please try again.');
       } else {
         recordAction(SURFACES.commit, 'scheduled', {
           value: summary.scheduled,
@@ -724,7 +727,7 @@ export default function LaunchMemoryBridge() {
 
     } catch (error) {
       console.error('Error scheduling all actions:', error);
-      toast.error('Failed to schedule actions');
+      throw error;
     }
   };
 
@@ -977,11 +980,11 @@ export default function LaunchMemoryBridge() {
                   <div className="w-28 h-28 mx-auto mb-4 bg-launch-moss/10 rounded-full flex items-center justify-center border border-launch-moss/20">
                     <Play className="h-12 w-12 text-launch-moss ml-1" />
                   </div>
-                  <p className="text-lg font-semibold text-launch-ink mb-1">Captured. Add details (optional)</p>
-                  <p className="text-base text-launch-ink/65 mb-3">Everything below is already filled in — change anything, or just save.</p>
+                  <p className="text-lg font-semibold text-launch-ink mb-1">My recording is ready to save</p>
+                  
                   <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
 
-                  <label htmlFor="mb-title" className="block text-base font-medium text-launch-ink/60 mb-1.5">Name for this conversation</label>
+                  <label htmlFor="mb-title" className="block text-base font-medium text-launch-ink/60 mb-1.5">Name for this conversation (optional)</label>
                   <input
                     id="mb-title"
                     type="text"
@@ -991,9 +994,10 @@ export default function LaunchMemoryBridge() {
                     className="w-full max-w-xs mx-auto mb-4 px-4 py-3 rounded-md border border-launch-gold/30 bg-launch-ivory text-launch-ink placeholder:text-launch-ink/40 focus:outline-none focus:ring-2 focus:ring-launch-gold/50 shadow-sm block"
                   />
 
-                  <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="flex items-center justify-center gap-3 mb-3">
                     <Button variant="ghost"
-                      onClick={() => setNotifySupport(!notifySupport)}
+                      onClick={() => setSupportOptionsOpen(!supportOptionsOpen)}
+                      aria-expanded={supportOptionsOpen}
                       className={cn(
                         "flex items-center gap-2 px-4 py-2 rounded-full text-base font-medium transition-all",
                         notifySupport
@@ -1002,11 +1006,12 @@ export default function LaunchMemoryBridge() {
                       )}
                     >
                       <Users className="h-4 w-4" />
-                      Notify Support Circle
+                      Support Circle (optional)
                     </Button>
                   </div>
 
-                  <div className="max-w-xs mx-auto mb-4 text-left">
+                  {supportOptionsOpen && <div className="max-w-xs mx-auto mb-4 text-left">
+                    <label className="flex items-center gap-3 min-h-14 text-base"><input type="checkbox" checked={notifySupport} onChange={e => setNotifySupport(e.target.checked)} />Notify my Support Circle</label>
                     <p className="text-base font-medium text-launch-ink/60 mb-1.5 text-center">
                       Loop someone in on the actions from this recording
                     </p>
@@ -1021,20 +1026,27 @@ export default function LaunchMemoryBridge() {
                         triggerLabel="Loop someone in"
                       />
                     </div>
-                  </div>
+                  </div>}
 
-                  <OutputModeChooser value={outputMode} onChange={setOutputMode} className="mb-5" />
+                  <div className="max-w-md mx-auto text-left mb-5">
+                    <div className="flex items-center justify-between gap-3 border-y border-launch-gold/30 py-2">
+                      <p className="text-base font-medium">{OUTPUT_MODE_LABELS[outputMode].title}</p>
+                      <Button variant="ghost" className="min-h-14 text-base" aria-expanded={outputOptionsOpen} onClick={() => setOutputOptionsOpen(!outputOptionsOpen)}>{outputOptionsOpen ? 'Close choices' : 'Change'}</Button>
+                    </div>
+                    {outputMode === 'actions' && <p className="text-base mt-2">Only next steps will be kept; the transcript will not be saved.</p>}
+                    {outputOptionsOpen && <OutputModeChooser value={outputMode} onChange={setOutputMode} className="mt-4" />}
+                  </div>
 
                   <Button variant="action" onClick={handleSave} className="w-full max-w-md min-h-14 rounded-md whitespace-normal h-auto py-4" disabled={isProcessing || isExtracting}>
                     {isProcessing || isExtracting ? (
                       <>
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        {isExtracting ? 'Extracting Actions...' : 'Saving...'}
+                        {isExtracting ? 'Saved. Finding my next steps…' : 'Saving…'}
                       </>
                     ) : (
                       <>
                         <Save className="h-5 w-5" />
-                        {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save & write transcript' : 'Save & Extract Actions'}
+                        {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save and write my transcript' : 'Save and find my next steps'}
                       </>
                     )}
                   </Button>
@@ -1088,7 +1100,8 @@ export default function LaunchMemoryBridge() {
               const actionsCount = actionsCountMap[recording.id] || 0;
               return <>
                 {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
-                    {/* Listen to this saved conversation */}
+                    {/* Secondary listening tools */}
+                    <details><summary className="min-h-14 flex items-center text-base font-medium cursor-pointer">Listen to my recording</summary>
                     <RecordingPlayer
                       id={recording.id}
                       getUrl={() => getRecordingUrl(recording.file_path)}
@@ -1096,6 +1109,7 @@ export default function LaunchMemoryBridge() {
                       audioDeleted={Boolean((recording as { audio_deleted_at?: string | null }).audio_deleted_at)}
                     />
 
+                    </details>
                     {/* Action buttons */}
                     <div className="flex items-center gap-2 flex-wrap">
                       <Button variant="ghost"
@@ -1141,6 +1155,7 @@ export default function LaunchMemoryBridge() {
                       )}
                     </div>
 
+                    <details><summary className="min-h-14 flex items-center text-base font-medium cursor-pointer">Share, download or remove</summary>
                     <div className="flex justify-end">
                       {!Boolean((recording as { legal_retention_required?: boolean }).legal_retention_required) && (
                         <Button variant="ghost"
@@ -1168,6 +1183,7 @@ export default function LaunchMemoryBridge() {
                       size="compact"
                       className="pt-1"
                     />
+                    </details>
               </>;
             }}
           />
@@ -1207,7 +1223,7 @@ export default function LaunchMemoryBridge() {
         onActionsUpdated={() => fetchRecordings()}
       />
 
-      <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
+      <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} onSeeDay={date => { setCommitSummary(null); navigate(`/launch/calendar?view=day&date=${encodeURIComponent(date)}`); }} />
 
       <AlertDialog open={Boolean(recordingToDelete)} onOpenChange={(open) => !open && setRecordingToDelete(null)}>
         <AlertDialogContent>
