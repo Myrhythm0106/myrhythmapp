@@ -8,7 +8,7 @@ import { CompletionCelebration } from '@/components/launch/CompletionCelebration
 import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload, Trash2, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useConversationDisclosure } from '@/hooks/memoryBridge/useConversationDisclosure';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { LaunchConversationLibrary } from '@/components/memoryBridge/LaunchConversationLibrary';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -145,6 +145,8 @@ export default function LaunchMemoryBridge() {
     isPaused,
     isProcessing,
     recordings,
+    recordingsLoading,
+    recordingsFailed,
     duration,
     recordedBytes,
     mediaStream,
@@ -313,6 +315,7 @@ export default function LaunchMemoryBridge() {
   const autoStartedRef = useRef(false);
   const recorderCardRef = useRef<HTMLDivElement | null>(null);
   const recordsRef = useRef<HTMLDivElement | null>(null);
+  const [requestedConversationId, setRequestedConversationId] = useState<string | null>(null);
   useEffect(() => {
     const wants = searchParams.get('record') === '1' || searchParams.get('quick') === '1';
     if (!wants || autoStartedRef.current) return;
@@ -333,17 +336,18 @@ export default function LaunchMemoryBridge() {
   useEffect(() => {
     const openId = searchParams.get('open');
     if (!openId || autoOpenedRef.current) return;
-    if (recordings.length === 0) return;
+    if (recordingsLoading || recordingsFailed) return;
     autoOpenedRef.current = true;
     const match = recordings.find(r => r.id === openId);
     const next = new URLSearchParams(searchParams);
     next.delete('open');
     setSearchParams(next, { replace: true });
-    if (!match) return;
+    if (!match) { toast.info('This conversation is not in the loaded library.'); return; }
+    setRequestedConversationId(match.id);
     conversationDetails.setOpen(match.id, true);
     setViewingActions({ recordingId: match.id, title: match.title });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, recordings]);
+  }, [searchParams, recordings, recordingsLoading, recordingsFailed]);
 
   const handlePauseRecording = () => {
     pauseRecording();
@@ -493,7 +497,7 @@ export default function LaunchMemoryBridge() {
       if (recoverableCapture?.meta.id) await deleteCaptureSession(recoverableCapture.meta.id);
       setRecoverableCapture(null);
       allowance.refresh();
-      toast.success('Conversation saved.', { action: { label: 'Open conversation', onClick: () => { conversationDetails.setOpen(saved.id, true); recordsRef.current?.scrollIntoView({ block: 'start' }); } } });
+      toast.success('Conversation saved.', { action: { label: 'Open conversation', onClick: () => { setRequestedConversationId(saved.id); conversationDetails.setOpen(saved.id, true); recordsRef.current?.scrollIntoView({ block: 'start' }); } } });
 
       // Automatically start extraction
       console.log('handleSave: stage 3 — starting extraction');
@@ -1067,86 +1071,23 @@ export default function LaunchMemoryBridge() {
         />
 
 
-        {/* My Records */}
-        <div ref={recordsRef} className="scroll-mt-28 mb-6 border-b border-launch-gold/30 pb-4 flex flex-wrap items-end justify-between gap-3">
-          <div><p className="text-launch-teal text-base mb-2">Kept for me. Ready when I need it.</p>
-          <h2 className="font-instrument text-3xl md:text-4xl text-launch-ink-deep">{recordings.length ? 'Latest conversation' : 'My conversations'}</h2></div>
-          <span className="text-base text-launch-ink">{recordings.length} saved {recordings.length === 1 ? 'recording' : 'recordings'}</span>
-        </div>
-
-        <div className="space-y-5 mb-10">
-          {recordings.length === 0 ? (
-            <div className="py-6 border-b border-launch-gold/30">
-              <h3 className="text-xl font-semibold mb-3">A conversation worth keeping</h3>
-              <p className="text-lg leading-relaxed max-w-xl">An appointment, a family conversation, or an idea I want to return to. My first recording will appear here.</p>
-            </div>
-          ) : (
-
-            recordings.map((recording, index) => {
+        <div ref={recordsRef} className="scroll-mt-28">
+          <LaunchConversationLibrary
+            recordings={recordings}
+            loading={recordingsLoading}
+            failed={recordingsFailed}
+            onRetry={() => void fetchRecordings()}
+            requestedId={requestedConversationId}
+            isOpen={conversationDetails.isOpen}
+            setOpen={conversationDetails.setOpen}
+            formatDuration={formatDuration}
+            getStatus={recording => processingId === recording.id ? 'Finding my next steps…' : (actionsCountMap[recording.id] || 0) > 0 ? `${actionsCountMap[recording.id]} next ${actionsCountMap[recording.id] === 1 ? 'step' : 'steps'}` : 'Saved'}
+            renderDetails={recording => {
               const isProcessed = processedRecordings.has(recording.id);
               const isCurrentlyProcessing = processingId === recording.id;
-              
               const actionsCount = actionsCountMap[recording.id] || 0;
-              const detailsOpen = conversationDetails.isOpen(recording.id);
-
-              return (
-                <React.Fragment key={recording.id}>
-                {index === 1 && <h2 className="font-instrument text-3xl text-launch-ink-deep pt-6 pb-4 border-b border-launch-gold/30">Earlier conversations</h2>}
-                <LaunchCard
-                  className={cn("relative overflow-hidden rounded-md bg-launch-ivory border-launch-gold/30 p-5 md:p-7", index === 0 && "border-launch-teal/40")}
-                >
-                  {/* Left accent bar */}
-                  <div className={cn(
-                    "absolute left-0 top-0 bottom-0 w-1",
-                    isProcessed
-                      ? "bg-launch-moss"
-                      : "bg-launch-ember"
-                  )} />
-
-                  <div className="relative z-10 flex flex-col gap-3 pl-3">
-                    {/* Header row */}
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="flex items-start gap-3 min-w-0 flex-1">
-                        <div className={cn(
-                          "w-11 h-11 shrink-0 rounded-md flex items-center justify-center",
-                          isProcessed
-                            ? "bg-launch-moss/10"
-                            : "bg-launch-ember/10"
-                        )}>
-                          <Mic className={cn(
-                            "h-5 w-5",
-                            isProcessed ? "text-launch-moss" : "text-launch-ember"
-                          )} />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="text-xl font-semibold text-launch-ink-deep break-words leading-relaxed">{recording.title}</h3>
-                          <p className="text-base text-launch-ink flex flex-wrap items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatRecordingDate(recording.created_at)}
-                            {recording.duration_seconds && (
-                              <span className="ml-2">• {formatDuration(recording.duration_seconds)}</span>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-
-                      {isProcessed && (
-                        <Badge className="bg-launch-moss/10 text-launch-moss border-launch-moss/30">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          {actionsCount > 0 ? `${actionsCount} next ${actionsCount === 1 ? 'step' : 'steps'}` : 'Saved'}
-                        </Badge>
-                      )}
-                    </div>
-
-                    {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
-                    {isCurrentlyProcessing && <p role="status" className="text-base text-launch-ink">Finding my next steps…</p>}
-                    <Button variant="ghost" type="button" className="min-h-14 h-auto text-base text-launch-ink-deep justify-start px-0"
-                      aria-expanded={detailsOpen} aria-controls={`conversation-${recording.id}`}
-                      onClick={() => conversationDetails.setOpen(recording.id, !detailsOpen)}>
-                      {detailsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                      {detailsOpen ? 'Hide details' : 'Show details'}
-                    </Button>
-                    {detailsOpen && <div id={`conversation-${recording.id}`} className="space-y-4">
+              return <>
+                {'reference_code' in recording && typeof recording.reference_code === 'string' && <SourceRefLine referenceCode={recording.reference_code} className="text-base text-launch-ink" />}
                     {/* Listen to this saved conversation */}
                     <RecordingPlayer
                       id={recording.id}
@@ -1227,14 +1168,9 @@ export default function LaunchMemoryBridge() {
                       size="compact"
                       className="pt-1"
                     />
-                    </div>}
-                  </div>
-                </LaunchCard>
-                </React.Fragment>
-              );
-
-            })
-          )}
+              </>;
+            }}
+          />
         </div>
         <p className="text-base leading-relaxed text-launch-ink border-t border-launch-gold/30 pt-5">MyRhythm supports everyday planning and follow-through. It does not diagnose, treat or fix medical conditions.</p>
       </div>

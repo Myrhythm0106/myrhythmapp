@@ -1,5 +1,11 @@
 # MyRhythm — task roadmap
 
+## Compact conversation library (15 Oct 2026)
+- [x] Add compact month-grouped rows, title/reference search, date filters and ten-record paging while preserving recording and detail controls.
+- [x] Add latest/explicit-record reveal, loaded-count wording and retrieval loading/error states.
+- [ ] Check 0/1/25/200-record sample libraries, paging, filters, deletion and phone/zoom layouts.
+- [ ] Signed-in saved-library check (external authentication unavailable to automation).
+
 ## Calm conversations and action origins (15 Oct 2026)
 - [x] Roll up saved conversations and remember each user's choices on this device.
 - [x] Add shared original-word disclosure to saved and checking views with safe transcript highlighting.
