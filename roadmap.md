@@ -1,6 +1,7 @@
 # MyRhythm — task roadmap
 
 ## Guided Memory Bridge (15 Oct 2026)
+- [ ] Add bounded transcript sections, optional tools, confirmed speaker names and accurate action-to-passage navigation.
 - [ ] Simplify entry, saving, next-step checking and saved-detail tools into one guided path.
 - [ ] Show confirmed additions and link to the relevant calendar day; preserve failure recovery.
 - [ ] Add requested audio-removal notices at 7/3/1 days, retained transcript and dated deletion reference; reliable speaker labels only.
