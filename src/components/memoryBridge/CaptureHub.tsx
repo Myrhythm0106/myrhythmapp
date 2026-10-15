@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 
 interface CaptureHubProps {
   onStartCapture: () => void;
@@ -155,7 +156,7 @@ export function CaptureHub({ onStartCapture, onOpenMyRecords, onUploadClick, isS
 
       <div className="mt-5">
         <Button variant="ghost" onClick={() => setMoreOpen(!moreOpen)} aria-expanded={moreOpen} className="px-0 text-launch-ink-deep hover:bg-transparent hover:text-launch-teal"><ChevronDown />More options</Button>
-        {moreOpen && <div className="pt-2"><Button variant="outline" onClick={() => setNoteOpen(true)} className="min-h-14 rounded-md border-launch-gold/50 text-launch-ink-deep"><PenLine />Write a quick note</Button></div>}
+        {moreOpen && <div className="pt-2 space-y-4"><Button variant="outline" onClick={() => setNoteOpen(true)} className="min-h-14 rounded-md border-launch-gold/50 text-launch-ink-deep"><PenLine />Write a quick note</Button><RecordingEggTimer compact /></div>}
       </div>
       <Dialog open={noteOpen} onOpenChange={setNoteOpen}>
         <DialogContent className="launch-theme bg-launch-ivory border-launch-gold/30 font-worksans max-h-[90svh] overflow-y-auto">
