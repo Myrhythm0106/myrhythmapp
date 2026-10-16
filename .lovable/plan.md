@@ -8,9 +8,11 @@ Clear and honest, but not yet enticing. All three lines describe **set-up** ("my
 Intro line under "Welcome, {name}":
 "About 6 minutes. My answers set MyRhythm up around me — not the other way round."
 
-1. **Fewer things slip.** Reminders built around what I forget and what already works for me.
-2. **My best hours, protected.** Important things land when my mind is usually clearest — with breaks built in.
-3. **Free to keep: my snapshot and first 3 weeks.** A personal picture of my brain health habits and a simple plan to start, step by step.
+1. **Nothing important slips.** What I need to do after a conversation or appointment is captured, planned and followed through until it's done.
+2. **My best hours, protected.** Important things land when my mind is usually clearest, with reminders shaped around what I forget and breaks built in.
+3. **Free to keep: my snapshot and first 3 weeks.** A personal picture of my brain-health habits and a simple plan to start, step by step.
+
+Card 1 leads with follow-through because that's the main difference from other apps. Recording apps stop at notes, and planners don't know what was said.
 
 ## Why this works
 - Outcome-first bold lead (what changes for me), feature second.
