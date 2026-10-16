@@ -1,57 +1,76 @@
-# The report that does the job before it asks, with mindset at its heart
+# Lighter questions, a report that reveals, and mindset at the heart
 
-## The unobvious idea
-Most reports describe you, then ask you to sign up. Ours **saves something real for you, on the spot**, using your own answers. It also shows the hidden thing nobody else names: **what you tell yourself when something slips**. Once that's shown, asking "would you like to use the app?" sounds silly.
+## Part 1: What's hard about the current questions
 
-## 1. Questions: quiet brain-health basis, with mindset added to the Quick Start
-The quick questions already cover the four sides of brain health without naming them: body (rest, movement, fuel, rhythm), mind (memory, calm), people (support) and meaning (what matters). Mindset currently only appears in the longer Full Picture.
+The Quick Start has 13 questions. For someone with memory challenges or a brain injury, several of them ask for a kind of self-judgement that is genuinely hard to make:
 
-Add **one mindset question** to the Quick Start, worded naturally:
-**"When I forget something or a plan slips, what do I usually say to myself?"**
-- "That's okay, I'll sort it." (kind)
-- "Not again. What's wrong with me?" (harsh)
-- "I'll just let it go." (giving up)
-- "Someone else will remind me." (relying on others)
+| Hard to answer | Why it's hard |
+|---|---|
+| "The day after a conversation, how much do you remember?" | People often can't tell what they've forgotten. |
+| "When does your day start and wind down?", "What time do you get things done most easily?", "When does your energy dip?", "How do you work best?" | Four separate questions about the same day. Each asks the person to step back and study themselves. Tiring, and they overlap. |
+| "What usually happens when you feel stressed?" | Abstract, and hard to recall on the spot. |
+| "How well do you eat and drink?" | "Balanced" means different things to different people. |
 
-The Quick Start stays about 6 minutes. No practitioner or programme names appear anywhere in the app. The internal reference log gets a neutral entry for the source.
+## Part 2: How the questions fit together, and how to lighten them
 
-## 2. The flow after the last question (about 60 seconds)
+**Ask about real moments, not self-ratings.** People recognise a moment far more easily than they can rate themselves.
 
-**Step 1: "What's on your mind that you can't afford to forget?"**
-Type it or speak it. Examples help you start. It can be skipped, but the screen invites you warmly.
+The 13 questions become **8**, grouped under the three welcome words. Each question shows a small line saying what it sets up.
 
-**Step 2: My slip line** (the reveal, built only from my answers)
-*Without MyRhythm:*
-- Today: "I'll remember."
-- Tonight: "It's fading." (next-day memory)
-- Thursday 4pm: "It slips." (what slips plus energy dip)
-- **And then I tell myself: "Not again. What's wrong with me?"** (my own mindset answer, shown in my words)
+**Remembered (memory)**
+1. **"Think of your last appointment or important chat. A day later, what happened?"** (replaces next-day memory)
+   - "I remembered it well" · "I had the gist, but lost details" · "I had to ask someone or guess" · "I'd forgotten it happened"
+   *This sets up: how MyRhythm captures conversations for me.*
+2. **"What slips most?"** (unchanged, with "Also fits" for extra answers)
+3. **"What do you use to remember now?"** (unchanged)
 
-*With MyRhythm:*
-- **Remembered:** saved word for word now
-- **Reliable:** set for 9:30 tomorrow, my clearest hour, with reminders the evening before and that morning
-- **Resilient:** if I miss it, it waits for me. It's not lost, and there's nothing to beat myself up about.
+**Reliable (follow-through and rhythm)**
+4. **"My day at a glance"**: one simple day strip (morning, midday, afternoon, evening). I tap **when I feel sharp** and **when I feel drained**. This replaces four rhythm questions with one screen.
+   *This sets up: when important things go in my diary, and where breaks go.*
+5. **"Who would you like on your side?"** (unchanged)
 
-**Step 3: "Keep this for me"**
-One tap. The item lands in tomorrow's plan, and the screen says "Done. MyRhythm has it."
+**Resilient (body and mindset)**
+6. **"How do you usually feel when you wake up?"** Rested / Okay / Tired. This covers sleep, and is easier to answer than "how well do you sleep".
+7. **"Most weeks, I..."** (tap any that apply): walk or move most days · eat proper meals · drink enough water · have time to wind down. One screen covering movement, food, water and calm.
+8. **Mindset (new): "When I forget something or a plan slips, what do I tell myself?"**
+   - "That's okay, I'll sort it" · "Not again, what's wrong with me?" · "I'll just let it go" · "Someone will remind me"
 
-**Step 4: My brain-health snapshot** (short and personal)
-- **My pattern** in one sentence, linking memory, rhythm and mindset
-- **My four sides:** Body, Mind, People and Meaning, each marked Strong, Building or Needs support, with one line on why. These are habits, not scores or diagnoses.
-- **My best window**
-- **What's already working**
-- **One action I choose**, with a gentle mindset reframe when my answer was harsh. For example: "Swap 'What's wrong with me?' for 'MyRhythm has it.'"
+Plus one closing choice: **"What would make this week easier?"** (unchanged)
 
-Each insight keeps "Why this?" (which answers it came from) and "This feels right" or "Not true for me".
+The result is about 4 minutes instead of 6, with less self-study and more recognition. The quiet brain-health basis is kept: body, mind, people and meaning are all still covered. No practitioner names appear anywhere.
 
-**Step 5: Honest choice, unchanged.** Free stays free, and membership is clearly explained.
+## Part 3: The report does something before it asks
+
+**Step 1: "What's on your mind that you can't afford to forget?"** I type or speak it. I can skip, but the screen invites me warmly.
+
+**Step 2: My slip line**, built from my answers:
+- *Without MyRhythm:* Today: "I'll remember." → Tonight: "It's fading." → Thursday afternoon (my drained time): "It slips." → **"And then I tell myself: 'Not again, what's wrong with me?'"** (shown in my own mindset words)
+- *With MyRhythm:* **Remembered**: saved now · **Reliable**: set for tomorrow at my sharp time, with reminders · **Resilient**: if I miss it, it waits for me, so there's nothing to beat myself up about.
+
+**Step 3: "Keep this for me"**. One tap, and it lands in tomorrow's plan. "Done. MyRhythm has it."
+
+**Step 4: My snapshot**, kept short:
+- My pattern in one sentence
+- Remembered · Reliable · Resilient, each marked Strong, Building or Needs support, with a one-line reason
+- My sharp time on the day strip
+- What's already working
+- A mindset reframe, when my answer was harsh: "Swap 'What's wrong with me?' for 'MyRhythm has it.'"
+- One action I choose
+
+Each insight keeps "Why this?" and "Not true for me".
+
+**Step 5: Honest free or membership choice**, unchanged.
 
 ## Guardrails
-First-person voice, plain words, no medical claims, no diagnosis, and no practitioner names in the app or the code.
+First person, plain words, no medical claims, no diagnosis, and no practitioner names in the app or the code. The Full Picture stays as the deeper, optional option.
 
 ## Technical
-- Add a quick-tier `mindsetSlip` question to `src/data/launchAssessmentBanks.ts` (letter M, slot mindset, pillar psychological). Bump the bank version so older saved answers still load, and add a neutral entry to `docs/brain-health-reference-log.md`.
-- Add `buildSlipLine(results, bestTime)` and `buildFourSides(results)` to `src/launch/compass/myCompass.ts`. These use existing pillar tags and fall back to gentler wording if an answer is missing. Add tests for three sample answer sets, including harsh vs kind mindset.
-- Add a new `CatchOneThing.tsx` step before `LivingCompassReport`. "Keep this for me" saves it through the existing next-step and reminder path, for tomorrow at the best window.
+- **Question bank** (`src/data/launchAssessmentBanks.ts`):
+  - Add new quick items `recallMoment`, `dayStrip` (a new `kind: 'day-strip'` component with sharp and drained taps per time block), `wakeFeel`, `weekHabits` (multi-select) and `mindsetSlip`.
+  - Retire `memoryRecall`, `dayStart`, `planningRhythm`, `energyDip`, `rhythmDetail`, `habitSleep`, `habitMove`, `habitFuel` and `habitCalm` from the quick tier.
+  - Bump the bank version. Map `dayStrip` onto the existing best-time and energy-dip fields so Calendar and Help me plan keep working, and keep scoring the habit items.
+- Add a neutral entry to `docs/brain-health-reference-log.md`.
+- Add `buildSlipLine` and `buildThreeR` to `src/launch/compass/myCompass.ts`, with tests covering three answer sets, including harsh vs kind mindset.
+- Add `CatchOneThing.tsx` before the report. "Keep this for me" saves through the existing next-step and reminder path, for tomorrow at my sharp time.
 - Trim `LivingCompassReport` to the Step 4 order.
-- Check on a phone at 320px and 393px.
+- Check that older saved answers still load. Check phone layouts at 320px and 393px.
