@@ -1,46 +1,44 @@
-# Make the report after the questions revealing
+# The report that does the job before it asks
 
-## What's wrong now
-The report mostly repeats my answers back to me ("What I told MyRhythm"). The key insight is a single generic line: "[word] may be the most useful place to make life feel easier right now." Nothing connects the dots, so there's no "that's exactly me" moment.
+## The unobvious idea
+Most reports describe you, then ask you to sign up. Ours **saves something real for you, on the spot**, using your own answers. By the time you finish reading, MyRhythm has already caught something you would have forgotten. Asking "would you like to use the app?" then sounds silly, because you already are.
 
-## What makes a report revealing
-It shows me a **pattern I hadn't put into words**, explains **why it keeps happening**, and shows **what changes** if it's handled. That's the moment that makes people want to use the app.
+## The flow (about 60 seconds, after the last question)
 
-## New report, top to bottom
+**1. "What's on your mind that you can't afford to forget?"**
+One big box, with a microphone or typing. Examples help you start: "Call the surgery about my results", "Mum's birthday on Saturday". You can skip, but the screen invites you warmly.
 
-**Headline (personal, built from my answers)**
-Example: "Annabel, things aren't slipping because you don't care. They slip in the gap after the conversation ends."
+**2. Your personal "slip line"** (the reveal, built only from your answers)
+A simple timeline from now to next week shows what normally happens to that item for *you*:
+- *Today:* "I'll remember." (you said things feel clear in the moment)
+- *Tonight:* "It's fading." (you said next-day memory fades quickly)
+- *Thursday 4pm:* "It slips." (you said appointments and dates slip, and afternoons are your hardest time)
 
-**1. My pattern** (the reveal)
-MyRhythm links two or three of my answers into one clear sentence.
-Example: "You said appointments slip, memories fade by the next day, and your clearest time is the morning. So by the afternoon, what was agreed has already gone, before you've had a chance to act on it."
+Then the same line **with MyRhythm**, built from your rhythm:
+- **Remembered:** saved word for word now
+- **Reliable:** placed at 9:30 tomorrow, your clearest hour, with a reminder the evening before and on the morning
+- **Resilient:** if you miss it, it waits for you the next morning. It's not lost.
 
-**2. My Remembered · Reliable · Resilient picture**
-These match the three promises on the welcome screen. Each one gets a simple marker (Strong / Building / Needs support) and one line of meaning.
-- *Remembered:* how well what's said is kept
-- *Reliable:* how often plans get followed through to the end
-- *Resilient:* how easily I get back on track after a hard day
+The words **"Remembered · Reliable · Resilient"** tie straight back to the welcome promise.
 
-**3. What this is quietly costing me**
-One honest line taken from my answers. Example: "Missed follow-ups, repeated phone calls, and relying on others to remind you." It's kind in tone, never blaming.
+**3. One tap: "Keep this for me"**
+The item is saved and shown in tomorrow's plan. You see "Done. MyRhythm has it." and that's the yes.
 
-**4. My best window**
-"My clearest hours are around 9 to 11am. That's when important things should go." It's shown as a small day bar.
+**4. Then your snapshot** (the current report, made shorter)
+Your pattern in one sentence, your best window, what's already working, and one action you choose. "Why this?" still shows which answers each insight came from.
 
-**5. What's already working**
-My real strength, in my own words.
+**5. Honest choice, unchanged**
+Free stays free. Membership is clearly explained as "keep this going for everything, every day".
 
-**6. What changes in my first week**
-Three concrete moments, linked to Remembered, Reliable and Resilient. Example: "Your next appointment gets recorded. Its next steps land at 9:30 the following morning. If you miss a day, they're waiting for you, not lost."
-
-**7. One action I choose** (stays as now: pick, edit or write my own; choose when to look again)
-
-**8. Free vs membership** (stays clear and honest, as now)
-
-Every insight keeps its "Why this?" link showing which answers it came from. Every insight also keeps "This feels right" and "Not true for me". Wording stays first person, with no medical claims, no diagnosis and no scores that feel like a test.
+## Why this works
+- It **proves** the promise, instead of describing it.
+- The "before" line uses their own answers, so it feels uncomfortably accurate. That's the "that's me" moment.
+- They act once and get relief straight away. The yes comes from what they did, not from a sales pitch.
+- It's calm and personal, with no scores, no diagnosis and no medical claims.
 
 ## Technical
-- Extend `deriveReport` in `src/launch/compass/myCompass.ts` to return `headline`, `pattern`, `cost`, `rrr` (three markers with reasons), `bestWindow` and `firstWeek[]`. These are built from rules that combine answers, mapped to quick-tier question ids. The existing fields are kept, so My Compass still works.
-- Rebuild the layout of `LivingCompassReport.tsx` in the order above, using existing launch tokens. Check it on a phone at 320px and 393px.
-- Add a small test for `deriveReport`: three sample answer sets should each give a different pattern and the correct markers.
-- Read the question bank first so each pattern rule uses real question ids. If an answer is missing, fall back to a gentler, general line.
+- Add a "Catch one thing" step (`CatchOneThing.tsx`) before `LivingCompassReport`. It uses typing first, plus the existing quick-capture microphone where available.
+- Add a `buildSlipLine(results, bestTime)` helper in `src/launch/compass/myCompass.ts`. It maps quick-tier answers (what slips, next-day memory, best time of day) to the "without" points, and the best window to the "with" points. If an answer is missing, it falls back to gentler wording. Includes a test with three answer sets.
+- "Keep this for me" saves the item using the existing next-step and reminder path, for tomorrow at the best window, so it appears on Home and in the Calendar. Nothing is added without the tap.
+- Trim `LivingCompassReport` to: pattern, best window, strength, chosen action, and free vs membership.
+- Check it on a phone at 320px and 393px.
