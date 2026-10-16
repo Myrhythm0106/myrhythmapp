@@ -276,8 +276,8 @@ export default function LaunchAssessment() {
           <ol className="space-y-3 mb-4">
             {[
               { word: 'Remembered.', when: 'When I forget what was said:', text: 'I record it, and MyRhythm keeps every word and pulls out every next step.' },
-              { word: 'Reliable.', when: 'When things slip:', text: "each step gets a time in my day and a reminder, and MyRhythm stays with it until it's done." },
-              { word: 'Confident.', when: 'When I doubt myself:', text: 'I can check what was agreed at any time. I decide, and nothing changes without my yes.' },
+              { word: 'Reliable.', when: 'When things slip:', text: "each step gets a time in my day and a reminder, and MyRhythm follows it through with me until it's done. Every finished step builds my confidence." },
+              { word: 'Resilient.', when: 'When a day goes wrong:', text: 'nothing is lost. MyRhythm picks up where I left off, and I decide what happens next.' },
             ].map((item, i) => (
               <li key={i} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
                 <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">{i + 1}</span>
