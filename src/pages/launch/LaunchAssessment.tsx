@@ -296,7 +296,7 @@ export default function LaunchAssessment() {
                 <span className="font-semibold text-launch-ink">YES Quick Start · about 6 minutes</span>
                 <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">Recommended</span>
               </span>
-              <span className="block text-sm text-launch-ink/70 mt-1">Enough to set up my diary, reminders and free snapshot. More can come later, two minutes at a time.</span>
+              <span className="block text-sm text-launch-ink/70 mt-1">This is enough to set up my diary, reminders and free snapshot. I can add more later, two minutes at a time.</span>
             </button>
             <button
               type="button"
