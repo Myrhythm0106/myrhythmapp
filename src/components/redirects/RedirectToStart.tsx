@@ -18,7 +18,7 @@ export function RedirectToStart() {
       }
       
       const queryString = searchParams.toString();
-      const targetPath = queryString ? `/start?${queryString}` : '/start';
+      const targetPath = queryString ? `/launch/landingpage?${queryString}` : '/launch/landingpage';
       
       navigate(targetPath, { replace: true });
     } else {

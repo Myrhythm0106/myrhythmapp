@@ -25,7 +25,7 @@ const SubscribePage = () => {
     if (!authLoading && !user) {
       console.log('SubscribePage: User not authenticated, redirecting to /start');
       toast.error('Please sign in to view plans');
-      navigate('/start', { replace: true });
+      navigate('/launch/landingpage', { replace: true });
     }
   }, [user, authLoading, navigate]);
 

@@ -7,7 +7,7 @@ export default function CognitiveSupportWelcomePage() {
 
   const handleStartJourney = () => {
     localStorage.setItem('selected_user_type', 'cognitive-support');
-    navigate('/start');
+    navigate('/launch/landingpage');
   };
 
   return <CognitiveSupportWelcome onStartJourney={handleStartJourney} />;

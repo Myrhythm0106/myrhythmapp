@@ -173,7 +173,7 @@ export default function LaunchPayment() {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => navigate(cameFromReport ? '/launch/welcome' : '/start')}
+            onClick={() => navigate(cameFromReport ? '/launch/welcome' : '/launch/landingpage')}
             className="mb-4 min-h-[44px] px-0 text-sm font-medium text-launch-ink/75 hover:text-launch-ink"
             aria-label={cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
           >

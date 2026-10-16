@@ -245,7 +245,7 @@ export function MVPCore4C() {
   const handleAuthAction = async () => {
     if (user) {
       await signOut();
-      navigate('/launch');
+      navigate('/launch/landingpage');
       return;
     }
     navigate('/launch/signin');

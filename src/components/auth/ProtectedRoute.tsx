@@ -59,7 +59,7 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     // If onboarding not complete and not on start page, redirect to /start
     if (!onboardingComplete && !location.pathname.includes('/start') && !location.pathname.includes('/auth')) {
       console.log('ProtectedRoute: User has not completed onboarding, redirecting to /start');
-      return <Navigate to="/start" replace />;
+      return <Navigate to="/launch/landingpage" replace />;
     }
     
     // If trying to access guided-journey without choosing guided path

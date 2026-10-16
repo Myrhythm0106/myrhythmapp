@@ -207,7 +207,7 @@ export default function LaunchRegister() {
       <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
         {/* Back Button */}
         <div className="flex-shrink-0 p-4">
-          <BackButton onClick={() => navigate('/launch')} />
+          <BackButton onClick={() => navigate('/launch/landingpage')} />
         </div>
         
         {/* Scrollable Content Area */}
@@ -302,7 +302,7 @@ export default function LaunchRegister() {
     <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
       {/* Back Button */}
       <div className="flex-shrink-0 p-4">
-        <BackButton onClick={() => navigate('/launch')} />
+        <BackButton onClick={() => navigate('/launch/landingpage')} />
       </div>
       
       {/* Scrollable Content Area */}
