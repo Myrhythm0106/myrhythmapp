@@ -59,8 +59,8 @@ export function HomeAssessmentCard() {
       </div>
       <p className="text-sm text-launch-ink/65 mb-4">
         {hasRun
-          ? `My last snapshot: ${formatDate(last.completedAt ?? last.createdAt)} · score ${last.total}. Things change — so can my snapshot.`
-          : 'YES Quick Start — about 6 minutes. My free snapshot and 3-week plan are shaped by my answers.'}
+          ? `My last snapshot: ${formatDate(last.completedAt ?? last.createdAt)} · score ${last.total}. Life changes, and my snapshot can change too.`
+          : 'It takes about 6 minutes. My answers shape my free snapshot and my first 3 weeks.'}
       </p>
       <button
         type="button"
