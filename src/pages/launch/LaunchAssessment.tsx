@@ -270,7 +270,7 @@ export default function LaunchAssessment() {
             Welcome, {displayName}
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            About 6 minutes. My answers set MyRhythm up around me — not the other way round.
+            This takes about 6 minutes. I answer a few questions, and MyRhythm fits itself around me.
           </p>
 
           <ol className="space-y-3 mb-6">
@@ -296,7 +296,7 @@ export default function LaunchAssessment() {
                 <span className="font-semibold text-launch-ink">YES Quick Start · about 6 minutes</span>
                 <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">Recommended</span>
               </span>
-              <span className="block text-sm text-launch-ink/70 mt-1">Enough to set up my diary, reminders and free snapshot. More can come later, two minutes at a time.</span>
+              <span className="block text-sm text-launch-ink/70 mt-1">This is enough to set up my diary, reminders and free snapshot. I can add more later, two minutes at a time.</span>
             </button>
             <button
               type="button"

@@ -99,8 +99,7 @@ export default function LaunchBrainHealth() {
           <LaunchCard className="bg-launch-ivory border-launch-gold/30">
             <h3 className="font-semibold text-launch-ink mb-1">No snapshot yet</h3>
             <p className="text-sm text-launch-ink/65 mb-4">
-              Twelve short steps, about five minutes. Once I've finished, my snapshot and how it moves
-              over time will live here.
+              It takes about five minutes. When I finish, I'll see my snapshot here and how it changes over time.
             </p>
             <button
               type="button"
