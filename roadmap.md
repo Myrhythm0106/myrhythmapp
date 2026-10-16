@@ -1,5 +1,11 @@
 # MyRhythm — task roadmap
 
+## Monthly pool and quiet removal reminders (16 Oct 2026)
+- [ ] Free: 240 monthly minutes, no separate 20-minute cap or recording-count gate; durable usage and all-path enforcement.
+- [ ] Monthly-only allowance and exact balance; keep paid caps unchanged.
+- [ ] Calm 7/3/2/1-day removal disclosure, Keep longer/stop removal and dated confirmation; finish notice scheduling.
+- [ ] Rule tests and responsive checks; real-device/authenticated evidence remains required for pilot readiness.
+
 ## Guided Memory Bridge (15 Oct 2026)
 - [ ] Add bounded transcript sections, optional tools, confirmed speaker names and accurate action-to-passage navigation.
 - [ ] Simplify entry, saving, next-step checking and saved-detail tools into one guided path.
