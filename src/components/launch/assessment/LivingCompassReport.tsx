@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { buildInitialCompass, readLatestAssessment, saveCompassVersion } from '@/launch/compass/myCompass';
 import { foundingMemberConfig } from '@/config/pricing';
+import { CatchOneThing } from './CatchOneThing';
 
 export function LivingCompassReport() {
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ export function LivingCompassReport() {
   };
 
   return (
+    <>
+    <CatchOneThing answers={(assessment?.results.answers ?? {}) as Record<string, unknown>} />
     <section className="px-5 md:px-12 py-8 md:py-10 bg-launch-ivory border-b border-launch-gold/30" aria-labelledby="living-report-title">
       <div className="flex items-center gap-3 mb-6"><Compass className="h-7 w-7 text-launch-teal" /><div><p className="text-xs uppercase tracking-[0.2em] font-semibold text-launch-ember">My free, complete insight</p><h2 id="living-report-title" className="font-display text-2xl md:text-3xl text-launch-ink">This is what MyRhythm heard</h2></div></div>
 
@@ -65,5 +68,6 @@ export function LivingCompassReport() {
       </div>
       <div className="mt-5 rounded-lg bg-launch-ink p-5 text-launch-ivory"><p className="font-semibold">My snapshot and chosen focus are free.</p><p className="mt-1 text-sm text-launch-ivory/75">Membership is optional. It adds the tools that help me record, plan and follow actions through. Founding membership is £{foundingMemberConfig.currentPrice.monthly.toFixed(0)}/month after a 7-day free trial; a card is required and I can cancel before being charged.</p><div className="mt-4 flex flex-col sm:flex-row gap-2"><Button variant="action" onClick={() => navigate('/launch/payment', { state: { fromReport: true } })}>See membership options</Button><Button variant="outline" className="border-launch-gold text-launch-ivory hover:bg-launch-ivory/10" onClick={() => navigate('/launch/home')}>Continue with my free snapshot</Button></div></div>
     </section>
+    </>
   );
 }
