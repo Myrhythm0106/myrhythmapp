@@ -116,3 +116,5 @@
 ## Plain wording (2 Oct 2026)
 - [x] Replace visible "verify/verification" with "check/confirm"
 - [ ] Support Circle levels See / Support / Step in: helper page + two-account test
+
+- [ ] Post-questions report: instrumental "rescue one real thing now" reveal (awaiting plan approval)
