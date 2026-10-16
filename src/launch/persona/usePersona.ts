@@ -17,14 +17,14 @@ export const PERSONA_LABEL_PLURAL: Record<Persona, string> = {
 };
 
 export const PERSONA_DEFINITION: Record<Persona, string> = {
-  recovery: 'People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS. Pathfinders use MyRhythm to bridge clinical-ready and life-ready, one steady step at a time.',
+  recovery: 'People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS, ADHD. Pathfinders use MyRhythm to bridge clinical-ready and life-ready, one steady step at a time.',
   caregiver: 'The people who hold the line for someone else — family carers, spouses, adult children, professional carers. Anchors use MyRhythm to coordinate care without losing their own day, and to protect themselves from burnout.',
   productivity: 'High-output professionals and focus-seekers protecting their best thinking. Operators use MyRhythm to defend deep work, convert meetings into leverage, and keep signal above noise.',
   student: 'Students and lifelong learners pacing themselves toward recall, not burnout. Scholars use MyRhythm to turn lectures and revision into a searchable record, and to compound study across the week.',
 };
 
 export const PERSONA_DEFINITION_SHORT: Record<Persona, string> = {
-  recovery: 'Rebuilding cognitive ground after a neurological event or condition.',
+  recovery: 'Rebuilding cognitive ground after a neurological event or condition, including ADHD.',
   caregiver: 'Holding the line for someone you love — without losing your own day.',
   productivity: 'High-output professionals protecting their best thinking.',
   student: 'Pacing study toward recall, not burnout.',
