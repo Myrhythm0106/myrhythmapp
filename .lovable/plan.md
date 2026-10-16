@@ -49,7 +49,8 @@ They read like a form ("How do you remember things now?"), and nothing comes bac
    → *"MyRhythm will go easier on the mornings that start heavy."*
 
 7. **"In a usual week, I manage to..."** (tap all that fit)
-   - "Get outside or move most days" · "Eat proper meals" · "Drink enough water" · "Switch off before bed"
+   - "Get outside or move most days" · "Eat proper meals" · "Drink enough water" · "Switch off before bed" · "Keep alcohol and smoking low or none" · "Learn or try something new"
+   (Covers body, blood flow, blood sugar, stress, toxins and new learning, without naming them.)
    → *"Small things that keep the mind sharp. MyRhythm gently protects time for them."*
 
 8. **"Be honest. When I forget something, the voice in my head says..."**
