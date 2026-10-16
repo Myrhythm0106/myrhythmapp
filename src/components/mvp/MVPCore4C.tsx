@@ -269,10 +269,10 @@ export function MVPCore4C() {
   };
 
   const primaryLabel =
-    entryState === 'returning' ? 'Sign in'
-    : entryState === 'needsQuestions' ? 'Continue my questions'
+    entryState === 'returning' ? 'Log In'
+    : entryState === 'needsQuestions' ? 'Continue where I stopped'
     : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to my day'
-    : 'Start here';
+    : 'Get Started';
   const showFounding = entryState === 'new' || entryState === 'returning' || entryState === 'hasSnapshot';
   const firstName =
     String((user?.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] ||
@@ -407,18 +407,18 @@ export function MVPCore4C() {
                 {entryState === 'new' && (
                   <>
                     <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                      Quick sign-up, then a few short questions — about 5 minutes. Your snapshot is free. Founding Member is £10/month for life · limited to 500 places.
+                      Get Started: 4 short steps — account, about me, a few questions (about 5 minutes), your free snapshot. Stop and come back any time. Founding Member is £10/month for life · limited to 500 places.
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
-                      Already have an account?{' '}
-                      <button onClick={() => navigate('/launch/signin')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Sign in</button>
+                      Already registered?{' '}
+                      <button onClick={() => navigate('/launch/signin')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Log In</button>
                     </p>
                   </>
                 )}
                 {entryState === 'returning' && (
                   <p className="mt-4 font-worksans text-sm text-launch-ink-deep/75">
                     New here?{' '}
-                    <button onClick={() => navigate('/launch/register')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Start here</button>
+                    <button onClick={() => navigate('/launch/register')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Get Started</button>
                   </p>
                 )}
                 {user && (
