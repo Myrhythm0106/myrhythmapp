@@ -7,7 +7,6 @@ import { AccountDropdown } from './AccountDropdown';
 
 import { CaptureDock } from './CaptureDock';
 import { EditionBadge } from './EditionBadge';
-import { OnboardingProgressBar } from './OnboardingProgressBar';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
 import { usePersona } from '@/launch/persona/usePersona';
@@ -85,7 +84,7 @@ export function LaunchLayout({
         {/* Progress strip — mounted inside the fixed-height column on
             self-contained screens so it never pushes the page past the
             viewport (App.tsx hides its global copy on these routes). */}
-        {isSelfContained && <OnboardingProgressBar mount="layout" />}
+        {/* Get Started screens show JourneySteps instead of the old dot strip. */}
 
         {/* Top Header Bar */}
         {showHeader && !isSelfContained && (
