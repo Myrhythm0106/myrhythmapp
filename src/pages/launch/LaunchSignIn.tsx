@@ -63,6 +63,8 @@ export default function LaunchSignIn() {
       const destination = await resolveNextDestination(
         (location.state as { from?: string } | null)?.from ?? null
       );
+      if (destination.startsWith('/launch/assessment')) toast.success('Welcome back — continuing at Step 3, Questions.');
+      else if (destination.startsWith('/launch/user-type')) toast.success('Welcome back — continuing at Step 2, About me.');
       navigate(destination, { replace: true });
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
