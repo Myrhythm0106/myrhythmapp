@@ -12,7 +12,7 @@ const userTypes = [
     id: 'brain-injury',
     title: 'I have had a brain injury or brain change',
     definition:
-      'Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again, one steady step at a time.',
+      'Brain injury, stroke, dementia, long COVID, MS, ADHD — finding your rhythm again, one steady step at a time.',
     icon: Compass,
     color: 'bg-launch-ink',
     iconColor: 'text-launch-gold',
