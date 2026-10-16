@@ -75,10 +75,10 @@ export default function LaunchUserType() {
 
 
   return (
-    <div className="min-h-full bg-launch-cream-light flex flex-col pt-safe pb-safe px-safe">
+    <div className="h-full min-h-0 bg-launch-cream-light flex flex-col pt-safe pb-safe px-safe">
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 py-6 px-4">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain py-6 px-4 pb-10">
         <div className="max-w-4xl mx-auto">
           <LaunchPageHeader fallbackPath="/launch/register" />
           {!afterSnapshot && <JourneySteps current={2} canSaveLater className="mb-8" />}
@@ -138,7 +138,7 @@ export default function LaunchUserType() {
       </div>
 
       {/* Sticky Footer */}
-      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-launch-cream-light border-t border-launch-gold/10">
+      <div className="flex-shrink-0 px-4 py-4 bg-launch-cream-light border-t border-launch-gold/10">
         <div className="text-center space-y-1">
           <Button variant="ghost"
             onClick={() => {
