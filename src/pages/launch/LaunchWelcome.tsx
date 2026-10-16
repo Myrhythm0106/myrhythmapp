@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { JourneySteps } from '@/components/launch/JourneySteps';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { usePersona, type Persona } from '@/launch/persona/usePersona';
@@ -206,6 +207,7 @@ export default function LaunchWelcome() {
 
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 pb-16">
+        {!postCheckout && <JourneySteps current={4} className="pt-4 pb-6" />}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}

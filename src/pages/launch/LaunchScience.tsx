@@ -68,7 +68,7 @@ export default function LaunchScience() {
       <div className="container mx-auto max-w-4xl px-6 py-16">
         <header className="mb-12 text-center">
           <Link
-            to="/launch"
+            to="/launch/landingpage"
             className="text-sm text-brain-health-600 hover:text-brand-orange-500 underline-offset-4 hover:underline"
           >
             &larr; Back to MyRhythm

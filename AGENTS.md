@@ -3,6 +3,8 @@
 - Use LaunchNav plus one safe-area-aware circular You-Are-Here dial from LaunchLayout as the only app navigation system; keep first-time onboarding linear to reduce cognitive load.
 - Treat membership as an optional branch from the free snapshot; the canonical onboarding sequence is light Account → optional Starting choice → Questions → My snapshot → Home or membership; why: establish user-chosen context before questions without putting payment before value.
 - Keep an unselected starting point distinct from a recovery identity using the shared neutral assessment bank; why: skipping a choice must never imply brain injury.
+- `/launch/landingpage` is the single front door; `/`, `/start`, `/launch`, `/landing`, `/mvp` redirect there via `ToLanding` keeping query strings. Its banner offers only Log In (registered: trial or member) and Get Started (full registration); why: one obvious start, never lost.
+- Get Started screens show `JourneySteps` (Create account → About me → Questions → My snapshot) with Save and finish later; why: people always know where they are and what is next.
 - Landing buttons derive from `getEntryState` (new / returning / needsQuestions / hasSnapshot / member) in `entryRoute.ts`; why: labels must promise exactly where they lead, and returning visitors see Sign in, not sign-up.
 - Home presents one current priority plus Record and See my day; secondary destinations belong in the You-Are-Here dial.
 - Calendar vision-focus disclosure, confirmed vision relationships and event priority highlights are user-scoped device-local presentation state; why: keep vision direction distinct from everyday priorities without changing schedules or promising cloud sync.

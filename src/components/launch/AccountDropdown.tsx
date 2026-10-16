@@ -17,7 +17,7 @@ export function AccountDropdown() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/launch');
+    navigate('/launch/landingpage');
   };
 
   return (

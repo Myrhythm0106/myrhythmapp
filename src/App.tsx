@@ -86,6 +86,7 @@ import VisionPage from "./pages/VisionPage";
 import ColorSystemBible from "./pages/ColorSystemBible";
 import FirstTimePage from "./pages/FirstTimePage";
 import WhatsNew from "./pages/WhatsNew";
+import { ToLanding } from "./launch/onboarding/ToLanding";
 import { SmartReminderToast } from "./components/notifications/SmartReminderToast";
 import BrainInjuryWelcomePage from "./pages/BrainInjuryWelcomePage";
 import MemoryFirstWelcomePage from "./pages/MemoryFirstWelcomePage";
@@ -142,7 +143,6 @@ import LaunchCommit from "./pages/launch/LaunchCommit";
 import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 import { LaunchLayout } from "./components/launch/LaunchLayout";
-import { OnboardingProgressBar } from "./components/launch/OnboardingProgressBar";
 import { DayOpenWelcomeProvider } from "./launch/daily/DayOpenWelcomeContext";
 
 
@@ -186,16 +186,15 @@ function App() {
                       <NavProvider>
 
                         <SetupProgressBar />
-                        <OnboardingProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
      {/* Landing and Discovery Routes */}
-                     <Route path="/" element={<Navigate to="/start" replace />} />
+                     <Route path="/" element={<ToLanding />} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/dashboard" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/prototype/*" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/journey/*" element={<Navigate to="/launch/home" replace />} />
-                     <Route path="/landing" element={<Landing />} />
+                     <Route path="/landing" element={<ToLanding />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
                      {/* Subscription Routes - Now requires authentication */}
@@ -284,7 +283,7 @@ function App() {
                     <Route path="/web-onboarding" element={<Navigate to="/launch/register" replace />} />
                     
                      {/* Warm Onboarding Flow */}
-                     <Route path="/start" element={<LaunchLanding />} />
+                     <Route path="/start" element={<ToLanding />} />
                      <Route path="/launch/start" element={<LaunchStart />} />
 
                      <Route path="/mvp/memory-first-welcome" element={<MemoryFirstWelcomePage />} />
@@ -318,7 +317,7 @@ function App() {
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment-protected" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
-                     <Route path="/mvp" element={<Navigate to="/start" replace />} />
+                     <Route path="/mvp" element={<ToLanding />} />
                      <Route path="/mvp/user-selection" element={<GetStartedPage />} />
                      <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
                       <Route path="/brain-friendly-dashboard" element={
@@ -337,7 +336,7 @@ function App() {
                        <Route path="/investor-deck-productivity" element={<ProductivityDeckPage />} />
                        
                        {/* V1 Launch Mode Routes */}
-                       <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
+                       <Route path="/launch" element={<ToLanding />} />
                        <Route path="/launch/landingpage" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
                         <Route path="/launch/register" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchRegister /></LaunchLayout></LaunchModeProvider>} />
                         <Route path="/launch/signin" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchSignIn /></LaunchLayout></LaunchModeProvider>} />

@@ -52,7 +52,7 @@ export default function LaunchProfile() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/launch');
+    navigate('/launch/landingpage');
   };
 
   return (

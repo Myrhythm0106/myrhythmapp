@@ -1,4 +1,5 @@
 import React from 'react';
+import { JourneySteps } from '@/components/launch/JourneySteps';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -80,6 +81,7 @@ export default function LaunchUserType() {
       <div className="flex-1 py-6 px-4">
         <div className="max-w-4xl mx-auto">
           <LaunchPageHeader fallbackPath="/launch/register" />
+          {!afterSnapshot && <JourneySteps current={2} canSaveLater className="mb-8" />}
 
           {/* Header */}
           <motion.div

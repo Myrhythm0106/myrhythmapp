@@ -17,7 +17,7 @@ export default function MedicalProfessionalWelcomePage() {
       navigate('/memory-bridge');
     } else {
       // New user - go through onboarding
-      navigate('/start');
+      navigate('/launch/landingpage');
     }
   };
 

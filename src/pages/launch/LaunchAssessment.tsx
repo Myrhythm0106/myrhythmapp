@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { JourneySteps } from '@/components/launch/JourneySteps';
 import { resetRhythmConsentForRetake } from '@/launch/calendar/rhythmConsent';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -660,6 +661,7 @@ export default function LaunchAssessment() {
   return (
     <LaunchLayout>
       <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
+        {!IS_FULL_MODE && <JourneySteps current={3} canSaveLater className="mb-6" />}
         <div className="flex items-center justify-end gap-2 mb-3 -mt-2">
           <FrameworkInfoSheet />
         </div>

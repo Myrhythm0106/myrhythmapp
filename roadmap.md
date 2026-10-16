@@ -1,5 +1,12 @@
 # MyRhythm — task roadmap
 
+## Front door: Log In or Get Started (16 Oct 2026)
+- [x] `/launch/landingpage` is the only start page; old addresses redirect there.
+- [x] Banner shows Log In and Get Started only; signed-in shows Continue + Sign out.
+- [x] Step 1–4 indicator with Save and finish later on account, about me, questions, snapshot.
+- [ ] Account-level saved progress across devices (needs database approval via the card).
+- [ ] Recording-allowance security fix migration (needs database approval via the card).
+
 ## Monthly pool and quiet removal reminders (16 Oct 2026)
 - [ ] Free: 240 monthly minutes, no separate 20-minute cap or recording-count gate; durable usage and all-path enforcement.
 - [ ] Monthly-only allowance and exact balance; keep paid caps unchanged.

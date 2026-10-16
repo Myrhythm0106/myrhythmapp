@@ -216,7 +216,7 @@ export function MVPUserTypeSelection() {
           </p>
           <Button
             variant="outline"
-            onClick={() => navigate('/start')}
+            onClick={() => navigate('/launch/landingpage')}
             className="border-neural-indigo-200 hover:bg-neural-purple-50"
           >
             <Calendar className="mr-2 h-4 w-4" />

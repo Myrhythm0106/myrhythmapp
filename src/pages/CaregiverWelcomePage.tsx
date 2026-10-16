@@ -7,7 +7,7 @@ export default function CaregiverWelcomePage() {
 
   const handleStartJourney = () => {
     localStorage.setItem('selected_user_type', 'caregiver');
-    navigate('/start');
+    navigate('/launch/landingpage');
   };
 
   return <CaregiverWelcome onStartJourney={handleStartJourney} />;
