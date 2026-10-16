@@ -38,3 +38,7 @@ The eight everyday questions in `src/data/launchAssessmentBanks.ts` use original
 ## Change control
 - 2 Oct 2026: question titles reworded in plain English for clarity. Question IDs, option values and scoring are unchanged, so `ASSESSMENT_SCHEMA_VERSION` stays at 4 and in-progress answers are preserved. The matching rows above were updated together.
 Change the matching row and `// ref` code together whenever question wording changes. Bump `ASSESSMENT_SCHEMA_VERSION` whenever questions or scoring change.
+## Oct 2026 bank (schema v6)
+- `habitSleep`, `habitCalm`, `habitMove`, `habitFuel`, `habitExposure`, `habitLearnConnect`, `habitPurpose`: same neutral sources as BH-01 to BH-08, reworded as everyday moments.
+- `mindsetSlip` (BH-10): self-talk after a memory slip. Based on self-compassion and negative-automatic-thought research, kept neutral.
+- `healthChanges`: optional, Full Picture only, used for pacing and never for labelling.
