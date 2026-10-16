@@ -267,24 +267,32 @@ export default function LaunchAssessment() {
       <LaunchLayout>
         <div className="max-w-md mx-auto w-full px-4 md:px-8 py-10 pb-24">
           <h1 className="text-3xl font-bold text-launch-ink font-display mb-3 text-center">
-            Welcome, {displayName}
+            Welcome, {displayName}. MyRhythm remembers, so I don't have to.
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            This takes about 6 minutes. I answer a few questions, and MyRhythm fits itself around me.
+            This takes about 6 minutes. My answers set MyRhythm up around me.
           </p>
 
-          <ol className="space-y-3 mb-6">
+          <ol className="space-y-3 mb-4">
             {[
-              <><strong className="text-launch-ink">Nothing important slips.</strong> What I need to do after a conversation or appointment is captured, planned and followed through until it's done.</>,
-              <><strong className="text-launch-ink">My best hours, protected.</strong> Important things land when my mind is usually clearest, with reminders shaped around what I forget and breaks built in.</>,
-              <><strong className="text-launch-ink">Free to keep: my snapshot and first 3 weeks.</strong> A personal picture of my brain-health habits and a simple plan to start, step by step.</>,
-            ].map((line, i) => (
+              { word: 'Remembered.', when: 'When I forget what was said:', text: 'I record it, and MyRhythm keeps every word and pulls out every next step.' },
+              { word: 'Reliable.', when: 'When things slip:', text: "each step gets a time in my day and a reminder, and MyRhythm stays with it until it's done." },
+              { word: 'Confident.', when: 'When I doubt myself:', text: 'I can check what was agreed at any time. I decide, and nothing changes without my yes.' },
+            ].map((item, i) => (
               <li key={i} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
                 <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">{i + 1}</span>
-                <p className="text-launch-ink/80 text-sm pt-1.5">{line}</p>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold text-launch-ink font-display leading-tight">{item.word}</p>
+                  <p className="mt-1 text-base text-launch-ink/80 leading-relaxed">
+                    <em className="text-launch-ink/65">{item.when}</em> {item.text}
+                  </p>
+                </div>
               </li>
             ))}
           </ol>
+          <p className="text-base font-bold text-launch-teal text-center mb-8">
+            My snapshot and first 3 weeks are free and mine to keep.
+          </p>
           <p className="text-sm font-semibold text-launch-ink text-center mb-3">How would I like to start?</p>
           <div className="space-y-3">
             <button
