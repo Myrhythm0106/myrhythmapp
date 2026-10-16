@@ -5,7 +5,7 @@
 import type { PillarId } from '@/launch/framework/cognitiveCapital';
 import type { YesId } from '@/launch/framework/yes';
 
-export const ASSESSMENT_SCHEMA_VERSION = 5;
+export const ASSESSMENT_SCHEMA_VERSION = 6;
 export type PersonaKey = 'brain-injury' | 'caregiver' | 'executive' | 'student' | 'general';
 export type LetterId =
   | 'mindset' | 'yesReality' | 'rhythm' | 'harnessSupport'
@@ -16,7 +16,10 @@ export type HabitId =
 export type PlanningId = 'rhythmDetail' | 'planningRhythm' | 'planningSupport' | 'planningGoal'
   | 'memorySlips' | 'memoryMethod' | 'memoryRecall' | 'dayStart' | 'energyDip'
   | 'mindsetTalk' | 'hardSituations' | 'weekFixed' | 'circleHelp' | 'winsStyle'
-  | 'reminderStyle' | 'reminderLead' | 'hardDays' | 'visionAreas';
+  | 'reminderStyle' | 'reminderLead' | 'hardDays' | 'visionAreas'
+  | 'findAgain' | 'mindsetSlip' | 'startHard' | 'reminderStop' | 'harderToKeep' | 'dayGoesWell'
+  | 'interrupts' | 'progressLooks' | 'pauseSigns' | 'healthChanges' | 'stepsEasy' | 'decideFirst'
+  | 'planOverload' | 'distractions' | 'returnAfter' | 'shareComfort' | 'checkInStyle' | 'oneChoice';
 export type QuestionId = LetterId | 'followThrough' | HabitId | PlanningId;
 
 export interface AssessmentOption {
@@ -24,6 +27,8 @@ export interface AssessmentOption {
   label: string;
   description?: string;
   score: 0 | 1 | 2 | 3;
+  /** Instant first-person reply shown after choosing this answer. */
+  reply?: string;
 }
 
 export interface RhythmDetailRow {
@@ -91,318 +96,479 @@ export function resolveHasSupport(answerValue: string | undefined): boolean {
 
 
 const QUESTIONS: AssessmentQuestion[] = [
-  /* ---------------- Quick Start · Y — Your Starting Point ---------------- */
+  /* ================= Quick Start · REMEMBERED (Y part) ================= */
   {
-    id: 'memorySlips', yes: 'Y', tier: 'quick', letter: 'Y', word: 'What slips', slot: 'yesReality', pillar: 'psychological',
-    brainHealthLens: 'An honest memory starting point', // ref BH-09
-    title: 'What slips your mind most often?',
+    id: 'memorySlips', yes: 'Y', tier: 'quick', letter: 'R', word: 'Remember what matters', slot: 'rhythm', pillar: 'psychological',
+    brainHealthLens: 'What I most want help remembering', // ref BH-09
+    title: 'Which of these has caught me out lately?',
+    subtitle: 'This is what I most want help remembering.',
     multiSelect: true, section: 'planning', scored: false,
     options: [
-      { value: 'appointments', label: 'Appointments and dates', score: 0 },
-      { value: 'half-done', label: 'Tasks I started but did not finish', score: 0 },
-      { value: 'what-was-said', label: 'What people told me', score: 0 },
-      { value: 'where-things-are', label: 'Where I put things', score: 0 },
+      { value: 'appointments', label: 'A date or appointment I completely missed', score: 0, reply: "Noted. Appointments are the first thing MyRhythm will guard, with a reminder the evening before." },
+      { value: 'half-done', label: 'Something I started and never finished', score: 0, reply: 'Noted. MyRhythm will gently bring unfinished things back, so they don’t get lost.' },
+      { value: 'what-was-said', label: 'What someone told me, gone by the next day', score: 0, reply: 'Noted. Conversations become a short written note I can check any time.' },
+      { value: 'where-things-are', label: 'Searching for my keys, phone or papers', score: 0, reply: 'Noted. MyRhythm will help me keep track of the things that matter.' },
     ],
   },
   {
-    id: 'memoryMethod', yes: 'Y', tier: 'quick', letter: 'H', word: 'What helps now', slot: 'harnessSupport', pillar: 'social',
-    brainHealthLens: 'Memory supports already in place', // ref BH-09
-    title: 'How do you remember things now?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'phone', label: 'Reminders on my phone', score: 0 },
-      { value: 'paper', label: 'Notes, lists or a paper diary', score: 0 },
-      { value: 'someone', label: 'Someone reminds me', score: 0 },
-      { value: 'nothing', label: 'Nothing yet — I try to keep it in my head', score: 0 },
-    ],
-  },
-  {
-    id: 'memoryRecall', yes: 'Y', tier: 'quick', letter: 'M', word: 'Next-day memory', slot: 'mindset', pillar: 'psychological',
-    brainHealthLens: 'Recall after a conversation', // ref BH-09
-    title: 'The day after a conversation or appointment, how much do you usually remember?',
+    id: 'memoryRecall', yes: 'Y', tier: 'quick', letter: 'R', word: 'Remember what matters', slot: 'rhythm', pillar: 'psychological',
+    brainHealthLens: 'Remembering what was agreed', // ref BH-09
+    title: 'I’ve just left an important appointment. By the time I’m home, what’s left?',
     section: 'planning', scored: false,
     options: [
-      { value: 'little', label: 'Very little — it fades quickly', score: 0 },
-      { value: 'main-points', label: 'The main points, not the details', score: 0 },
-      { value: 'most', label: 'Most of it', score: 0 },
+      { value: 'most', label: 'Most of it. I’m fine for now.', score: 0, reply: 'Good. MyRhythm will still keep a copy, so nothing fades by next week.' },
+      { value: 'main-points', label: 'The gist, but the details have gone.', score: 0, reply: 'Then MyRhythm keeps the details for me, word for word.' },
+      { value: 'little', label: 'Hardly anything. I’ll have to ask someone.', score: 0, reply: 'Then MyRhythm listens for me. Every word is kept and every next step is pulled out.' },
+      { value: 'unsure', label: 'I’m not even sure what was decided.', score: 0, reply: 'Then MyRhythm shows me exactly what was agreed, in plain words.' },
+    ],
+  },
+  {
+    id: 'findAgain', yes: 'Y', tier: 'quick', letter: 'R', word: 'Remember what matters', slot: 'rhythm', pillar: 'psychological',
+    brainHealthLens: 'Finding saved information again',
+    title: 'How often do I know I saved something, but can’t find it again?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'often', label: 'All the time. It’s somewhere, but where?', score: 0, reply: 'MyRhythm keeps everything in one place, by date, so I can find it again.' },
+      { value: 'sometimes', label: 'Sometimes, when it really matters', score: 0, reply: 'MyRhythm makes the important things easy to find again.' },
+      { value: 'rarely', label: 'Rarely. I usually know where things are', score: 0, reply: 'Great. MyRhythm will keep it that way.' },
     ],
   },
 
-  /* ---------------- Quick Start · E — Everyday Energy ---------------- */
+  /* ================= Quick Start · RESILIENT (E part) ================= */
   {
-    id: 'habitSleep', yes: 'E', tier: 'quick', letter: 'H', word: 'Rest', slot: 'heal', pillar: 'biological',
+    id: 'habitSleep', yes: 'E', tier: 'quick', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
     brainHealthLens: 'Rest and recharge', // ref BH-01
-    title: 'How well do you sleep at night?',
-    subtitle: 'Choose the answer that is closest to a usual week.', section: 'brain-health', scored: true,
-    options: [
-      { value: 'under-6', label: 'Short or broken most nights', score: 0 },
-      { value: 'patchy', label: 'Some restful nights, some not', score: 1 },
-      { value: 'rested', label: 'I usually wake feeling rested', score: 3 },
-    ],
-  },
-  {
-    id: 'habitMove', yes: 'E', tier: 'quick', letter: 'R', word: 'Movement', slot: 'rhythm', pillar: 'biological',
-    brainHealthLens: 'Movement and circulation', // ref BH-02
-    title: 'How often do you move your body each week?',
-    subtitle: 'Walking, gardening and gentle movement all count.', section: 'brain-health', scored: true,
-    options: [
-      { value: 'rarely', label: 'Not often at the moment', score: 0 },
-      { value: 'once-twice', label: 'Once or twice most weeks', score: 1 },
-      { value: 'most-days', label: 'On most days', score: 3 },
-    ],
-  },
-  {
-    id: 'habitFuel', yes: 'E', tier: 'quick', letter: 'T', word: 'Fuel', slot: 'transform', pillar: 'biological',
-    brainHealthLens: 'Everyday food and hydration', // ref BH-03
-    title: 'How well do you eat and drink on a usual day?',
-    subtitle: 'No counting and no judgement.', section: 'brain-health', scored: true,
-    options: [
-      { value: 'on-the-go', label: 'Often rushed, sugary or low on water', score: 0 },
-      { value: 'mixed', label: 'It varies from day to day', score: 1 },
-      { value: 'mostly-fresh', label: 'Mostly balanced meals and enough water', score: 3 },
-    ],
-  },
-  {
-    id: 'habitCalm', yes: 'E', tier: 'quick', letter: 'Y', word: 'Calm', slot: 'yourVictories', pillar: 'psychological',
-    brainHealthLens: 'Responding to pressure', // ref BH-06
-    title: 'What usually happens when you feel stressed?',
+    title: 'Most mornings, I wake up feeling…',
     section: 'brain-health', scored: true,
     options: [
-      { value: 'spiral', label: 'My thoughts race and are hard to settle', score: 0 },
-      { value: 'push-through', label: 'I push through and feel it later', score: 1 },
-      { value: 'some-tools', label: 'I have a way to pause and settle', score: 3 },
+      { value: 'under-6', label: 'Like I haven’t slept at all', score: 0, reply: 'MyRhythm will go easier on the mornings that start heavy.' },
+      { value: 'patchy', label: 'Okay, once I get moving', score: 1, reply: 'MyRhythm will keep the first hour gentle.' },
+      { value: 'rested', label: 'Rested and ready to go', score: 3, reply: 'Good. MyRhythm will protect that.' },
+    ],
+  },
+  {
+    id: 'habitCalm', yes: 'E', tier: 'quick', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'psychological',
+    brainHealthLens: 'Stress, worry and low mood', // ref BH-06
+    title: 'How much are stress, worry or low mood getting in the way of my days?',
+    section: 'brain-health', scored: true,
+    options: [
+      { value: 'spiral', label: 'A lot. My thoughts race and it’s hard to settle.', score: 0, reply: 'MyRhythm will keep my days lighter and build in pauses. I’m not on my own with this.' },
+      { value: 'push-through', label: 'Some. I push through and feel it later.', score: 1, reply: 'MyRhythm will spot the busy days and add breathing space.' },
+      { value: 'some-tools', label: 'Not much. I have ways to settle myself.', score: 3, reply: 'Good. MyRhythm will make room for what already works.' },
+    ],
+  },
+  {
+    id: 'mindsetSlip', yes: 'E', tier: 'quick', letter: 'T', word: 'Turn intention into follow-through', slot: 'transform', pillar: 'psychological',
+    brainHealthLens: 'How I talk to myself after a slip', // ref BH-10
+    title: 'Honestly, when I forget something, the voice in my head says…',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'kind', label: '“No harm done. I’ll sort it.”', score: 0, reply: 'That kindness is a strength. MyRhythm will build on it.' },
+      { value: 'harsh', label: '“Not again. What is wrong with me?”', score: 0, reply: 'That voice is about to have a lot less to say.' },
+      { value: 'give-up', label: '“Forget it. What’s the point?”', score: 0, reply: 'MyRhythm keeps it safe, so I can pick it back up when I’m ready.' },
+      { value: 'others', label: '“Someone else will catch it.”', score: 0, reply: 'MyRhythm helps me catch it myself, with help only if I want it.' },
     ],
   },
 
-  /* ---------------- Quick Start · S — Steady Rhythm ---------------- */
+  /* ================= Quick Start · RELIABLE (S part) ================= */
   {
-    id: 'dayStart', yes: 'S', tier: 'quick', letter: 'R', word: 'My day', slot: 'rhythm', pillar: 'biological',
-    brainHealthLens: 'When my day starts and winds down',
-    title: 'When does your day usually start and wind down?',
+    id: 'planningRhythm', yes: 'S', tier: 'quick', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'When my thinking is clearest',
+    title: 'When is my thinking at its sharpest?',
+    subtitle: 'This is when important things should go in my day.',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'morning', label: 'Morning', score: 0, reply: 'Important things will go in my mornings.' },
+      { value: 'afternoon', label: 'Afternoon', score: 0, reply: 'Important things will go in my afternoons.' },
+      { value: 'evening', label: 'Evening', score: 0, reply: 'Important things will go in my evenings.' },
+      { value: 'varies', label: 'It changes from day to day', score: 0, reply: 'MyRhythm will check in and adjust, day by day.' },
+    ],
+  },
+  {
+    id: 'energyDip', yes: 'S', tier: 'quick', letter: 'Y', word: 'Your pace, your capacity', slot: 'yourVictories', pillar: 'biological',
+    brainHealthLens: 'When energy usually drops',
+    title: 'And when am I running on empty?',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'mid-morning', label: 'Mid-morning', score: 0, reply: 'Mid-mornings stay light.' },
+      { value: 'after-lunch', label: 'After lunch', score: 0, reply: 'After lunch stays light.' },
+      { value: 'late-afternoon', label: 'Late afternoon', score: 0, reply: 'Late afternoons stay light.' },
+      { value: 'evening', label: 'Evening', score: 0, reply: 'Evenings stay light.' },
+    ],
+  },
+  {
+    id: 'startHard', yes: 'S', tier: 'quick', letter: 'H', word: 'Help me begin', slot: 'harnessSupport', pillar: 'psychological',
+    brainHealthLens: 'What makes starting hard',
+    title: 'When I know what I need to do, what stops me starting?',
     section: 'planning', scored: false,
     options: [
-      { value: 'early', label: 'Early — up before 7am, winding down by 9pm', score: 0 },
-      { value: 'middle', label: 'Middle — up 7–9am, winding down by 10–11pm', score: 0 },
-      { value: 'late', label: 'Late — up after 9am, winding down after 11pm', score: 0 },
+      { value: 'too-big', label: 'It feels too big', score: 0, reply: 'MyRhythm will break it into one small first step.' },
+      { value: 'where-start', label: 'I don’t know where to begin', score: 0, reply: 'MyRhythm will show me the first step, so I don’t have to work it out.' },
+      { value: 'energy', label: 'I don’t have the energy', score: 0, reply: 'MyRhythm will place it when my energy is highest.' },
+      { value: 'forget', label: 'I forget I meant to', score: 0, reply: 'MyRhythm will remind me at the right moment.' },
     ],
   },
   {
-    id: 'planningRhythm', yes: 'S', tier: 'quick', letter: 'R', word: 'My best time', slot: 'rhythm', pillar: 'biological',
-    brainHealthLens: 'My preferred time',
-    title: 'What time of day do you think and get things done most easily?',
+    id: 'reminderStop', yes: 'S', tier: 'quick', letter: 'T', word: 'Turn intention into follow-through', slot: 'transform', pillar: 'psychological',
+    brainHealthLens: 'What gets between a reminder and action',
+    title: 'When a reminder goes off, what stops me acting on it?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'wrong-time', label: 'It comes at the wrong time', score: 0, reply: 'MyRhythm times reminders around my day, not the clock.' },
+      { value: 'dismiss', label: 'I swipe it away and forget', score: 0, reply: 'MyRhythm will come back once, gently, until it’s done.' },
+      { value: 'unclear', label: 'I’m not sure what it’s for any more', score: 0, reply: 'Every reminder will say what it’s for and where it came from.' },
+      { value: 'acts', label: 'Usually nothing. I act on it.', score: 0, reply: 'Great. MyRhythm will keep reminders that work for me.' },
+    ],
+  },
+  {
+    id: 'planningGoal', yes: 'S', tier: 'quick', letter: 'M', word: 'What matters to me', slot: 'mindset', pillar: 'spiritual',
+    brainHealthLens: 'What I want to feel in control of',
+    title: 'If one thing changed this week, I’d want it to be…',
+    subtitle: 'This becomes my first focus.',
     multiSelect: true, section: 'planning', scored: false,
     options: [
-      { value: 'morning', label: 'Morning', score: 0 },
-      { value: 'afternoon', label: 'Afternoon', score: 0 },
-      { value: 'evening', label: 'Evening', score: 0 },
-      { value: 'varies', label: 'It varies', score: 0 },
+      { value: 'remember', label: 'Nothing important slips', score: 0, reply: 'That becomes my first focus.' },
+      { value: 'pace', label: 'My days feel calmer', score: 0, reply: 'That becomes my first focus.' },
+      { value: 'complete', label: 'I finally finish what matters', score: 0, reply: 'That becomes my first focus.' },
     ],
   },
+
+  /* ================= Full Picture · M — What matters to me ================= */
   {
-    id: 'energyDip', yes: 'S', tier: 'quick', letter: 'R', word: 'Energy dip', slot: 'rhythm', pillar: 'biological',
-    brainHealthLens: 'When energy usually drops',
-    title: 'When does your energy usually dip?',
+    id: 'harderToKeep', tier: 'full', letter: 'M', word: 'What matters to me', slot: 'mindset', pillar: 'spiritual',
+    brainHealthLens: 'What has become harder to keep up with',
+    title: 'What matters to me that has become harder to keep up with?',
     multiSelect: true, section: 'planning', scored: false,
     options: [
-      { value: 'mid-morning', label: 'Mid-morning', score: 0 },
-      { value: 'after-lunch', label: 'After lunch', score: 0 },
-      { value: 'late-afternoon', label: 'Late afternoon', score: 0 },
-      { value: 'evening', label: 'Evening', score: 0 },
+      { value: 'people', label: 'Keeping in touch with people I love', score: 0 },
+      { value: 'home', label: 'Running my home and paperwork', score: 0 },
+      { value: 'work', label: 'Work, study or volunteering', score: 0 },
+      { value: 'me', label: 'Time for the things I enjoy', score: 0 },
     ],
   },
   {
-    id: 'rhythmDetail', yes: 'S', tier: 'quick', letter: 'R', word: 'My pace', slot: 'rhythm', pillar: 'biological',
+    id: 'dayGoesWell', tier: 'full', letter: 'M', word: 'What matters to me', slot: 'mindset', pillar: 'psychological',
+    brainHealthLens: 'What makes a good day work',
+    title: 'When my day goes well, what made it work?',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'slept', label: 'I slept well', score: 0 },
+      { value: 'plan', label: 'I knew what was coming', score: 0 },
+      { value: 'one-thing', label: 'I only had a few things to do', score: 0 },
+      { value: 'people', label: 'Someone was there for me', score: 0 },
+    ],
+  },
+  {
+    id: 'interrupts', tier: 'full', letter: 'M', word: 'What matters to me', slot: 'mindset', pillar: 'psychological',
+    brainHealthLens: 'What interrupts my rhythm',
+    title: 'What usually knocks my day off course?',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'surprises', label: 'Surprises and last-minute changes', score: 0 },
+      { value: 'tired', label: 'Running out of energy', score: 0 },
+      { value: 'too-much', label: 'Too much at once', score: 0 },
+      { value: 'mood', label: 'A low or anxious mood', score: 0 },
+    ],
+  },
+  {
+    id: 'progressLooks', tier: 'full', letter: 'M', word: 'What matters to me', slot: 'mindset', pillar: 'spiritual',
+    brainHealthLens: 'What meaningful progress looks like',
+    title: 'Real progress for me right now would look like…',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'independent', label: 'Doing more on my own again', score: 0 },
+      { value: 'calmer', label: 'Feeling calmer and less behind', score: 0 },
+      { value: 'trusted', label: 'People trusting me to remember', score: 0 },
+      { value: 'purpose', label: 'Getting back to something I love', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · Y — Your brain, your starting point ================= */
+  {
+    id: 'pauseSigns', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'Signs my brain needs a pause',
+    title: 'What tells me my brain needs a pause?',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'words', label: 'I lose my words or my thread', score: 0 },
+      { value: 'irritable', label: 'I get short with people', score: 0 },
+      { value: 'headache', label: 'My head aches or feels foggy', score: 0 },
+      { value: 'slow', label: 'Everything takes twice as long', score: 0 },
+    ],
+  },
+  {
+    id: 'habitMove', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'Movement and circulation', // ref BH-02
+    title: 'How easy is it to move my body in a way that suits me?',
+    subtitle: 'Walking, gardening and gentle stretching all count.', section: 'brain-health', scored: true,
+    options: [
+      { value: 'rarely', label: 'Hard. It doesn’t happen much right now.', score: 0 },
+      { value: 'once-twice', label: 'Once or twice most weeks', score: 1 },
+      { value: 'most-days', label: 'Easy. I move on most days.', score: 3 },
+    ],
+  },
+  {
+    id: 'habitFuel', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'Everyday food and hydration', // ref BH-03
+    title: 'How easy is it to eat regular meals and drink enough water?',
+    subtitle: 'No counting and no judgement.', section: 'brain-health', scored: true,
+    options: [
+      { value: 'on-the-go', label: 'Hard. I skip meals or grab what’s quick.', score: 0 },
+      { value: 'mixed', label: 'It depends on the day', score: 1 },
+      { value: 'mostly-fresh', label: 'Easy. Proper meals and plenty of water.', score: 3 },
+    ],
+  },
+  {
+    id: 'habitExposure', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'Reducing avoidable exposures', // ref BH-05
+    title: 'How often do I smoke or drink alcohol?',
+    subtitle: 'Not about being perfect, just what’s usual.', section: 'brain-health', scored: true,
+    options: [
+      { value: 'often', label: 'Often', score: 0 },
+      { value: 'sometimes', label: 'Sometimes', score: 1 },
+      { value: 'rarely-never', label: 'Rarely or never', score: 3 },
+    ],
+  },
+  {
+    id: 'healthChanges', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'Health changes that affect my day (optional)',
+    title: 'Has a brain injury, stroke, illness or other health change affected how I remember or plan?',
+    subtitle: 'Optional. This only helps MyRhythm pace things. It never labels me.', section: 'planning', scored: false,
+    options: [
+      { value: 'yes', label: 'Yes, it has', score: 0 },
+      { value: 'a-little', label: 'A little', score: 0 },
+      { value: 'no', label: 'No', score: 0 },
+      { value: 'rather-not', label: 'I’d rather not say', score: 0 },
+    ],
+  },
+  {
+    id: 'dayStart', tier: 'full', letter: 'Y', word: 'Your brain, your starting point', slot: 'yesReality', pillar: 'biological',
+    brainHealthLens: 'When my day starts and winds down',
+    title: 'When does my day usually start and wind down?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'early', label: 'Early: up before 7am, winding down by 9pm', score: 0 },
+      { value: 'middle', label: 'Middle: up 7 to 9am, winding down by 10 or 11pm', score: 0 },
+      { value: 'late', label: 'Late: up after 9am, winding down after 11pm', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · R — Remember what matters ================= */
+  {
+    id: 'memoryMethod', tier: 'full', letter: 'R', word: 'Remember what matters', slot: 'rhythm', pillar: 'social',
+    brainHealthLens: 'How I capture important information', // ref BH-09
+    title: 'Right now, my memory is held together by…',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'phone', label: 'My phone, buzzing at me', score: 0 },
+      { value: 'paper', label: 'Sticky notes and lists everywhere', score: 0 },
+      { value: 'someone', label: 'Someone who reminds me', score: 0 },
+      { value: 'nothing', label: 'My head, and hoping for the best', score: 0 },
+    ],
+  },
+  {
+    id: 'reminderStyle', tier: 'full', letter: 'R', word: 'Remember what matters', slot: 'rhythm', pillar: 'psychological',
+    brainHealthLens: 'Reminders I notice and act on',
+    title: 'Which reminders do I actually notice and act on?',
+    multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'text', label: 'A short written message', score: 0 },
+      { value: 'voice', label: 'A spoken reminder', score: 0 },
+      { value: 'picture', label: 'A picture or icon', score: 0 },
+      { value: 'mix', label: 'A mix of these', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · H — Help me begin ================= */
+  {
+    id: 'stepsEasy', tier: 'full', letter: 'H', word: 'Help me begin', slot: 'harnessSupport', pillar: 'psychological',
+    brainHealthLens: 'Breaking big tasks into steps',
+    title: 'How easy is it to turn a big task into small, clear steps?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'hard', label: 'Hard. It all blurs into one big thing.', score: 0 },
+      { value: 'sometimes', label: 'I can, on a good day', score: 0 },
+      { value: 'easy', label: 'Easy. I do it naturally.', score: 0 },
+    ],
+  },
+  {
+    id: 'decideFirst', tier: 'full', letter: 'H', word: 'Help me begin', slot: 'harnessSupport', pillar: 'psychological',
+    brainHealthLens: 'Deciding what comes first',
+    title: 'What helps me decide what needs my attention first?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'deadline', label: 'Whatever is due soonest', score: 0 },
+      { value: 'someone', label: 'Someone tells me', score: 0 },
+      { value: 'list', label: 'A list in front of me', score: 0 },
+      { value: 'stuck', label: 'Nothing. I often get stuck choosing.', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · Y — Your pace, your capacity ================= */
+  {
+    id: 'planOverload', tier: 'full', letter: 'Y', word: 'Your pace, your capacity', slot: 'yourVictories', pillar: 'biological',
+    brainHealthLens: 'Plans versus energy',
+    title: 'How often do my plans ask more of me than my energy allows?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'most-days', label: 'Most days', score: 0 },
+      { value: 'some-days', label: 'Some days', score: 0 },
+      { value: 'rarely', label: 'Rarely', score: 0 },
+    ],
+  },
+  {
+    id: 'rhythmDetail', tier: 'full', letter: 'Y', word: 'Your pace, your capacity', slot: 'yourVictories', pillar: 'biological',
     brainHealthLens: 'My focus length and energy drains',
-    title: 'How do you work best?',
+    title: 'How do I work best?',
     subtitle: 'These choices shape suggested breaks, never rules.', kind: 'rhythm-detail', rows: RHYTHM_DETAIL_ROWS,
     options: [], section: 'planning', scored: false,
   },
   {
-    id: 'planningSupport', yes: 'S', tier: 'quick', letter: 'H', word: 'My support', slot: 'harnessSupport', pillar: 'social',
-    brainHealthLens: 'Support I choose',
-    title: 'Who helps you, or would you like to help you?',
-    subtitle: 'Nobody sees anything unless you give permission.', multiSelect: true, section: 'planning', scored: false,
+    id: 'distractions', tier: 'full', letter: 'Y', word: 'Your pace, your capacity', slot: 'yourVictories', pillar: 'psychological',
+    brainHealthLens: 'Staying with a task',
+    title: 'What helps me stay with a task when distractions appear?',
+    section: 'planning', scored: false,
     options: [
-      { value: 'family', label: 'Family or partner', score: 0 },
+      { value: 'quiet', label: 'A quiet space', score: 0 },
+      { value: 'timer', label: 'A short timer', score: 0 },
+      { value: 'one-thing', label: 'Only one thing in front of me', score: 0 },
+      { value: 'nothing-yet', label: 'I haven’t found what works yet', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · T — Turn intention into follow-through ================= */
+  {
+    id: 'returnAfter', tier: 'full', letter: 'T', word: 'Turn intention into follow-through', slot: 'transform', pillar: 'psychological',
+    brainHealthLens: 'Getting back on track after interruptions',
+    title: 'When life interrupts, what would help me get back to what matters?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'where-left', label: 'Seeing exactly where I left off', score: 0 },
+      { value: 'one-step', label: 'Just one small step to restart', score: 0 },
+      { value: 'nudge', label: 'A kind nudge from someone I trust', score: 0 },
+      { value: 'no-guilt', label: 'No guilt about the days I missed', score: 0 },
+    ],
+  },
+  {
+    id: 'reminderLead', tier: 'full', letter: 'T', word: 'Turn intention into follow-through', slot: 'transform', pillar: 'psychological',
+    brainHealthLens: 'When reminders should arrive',
+    title: 'When do I want reminders to arrive?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'evening-before', label: 'The evening before', score: 0 },
+      { value: 'morning', label: 'That morning', score: 0 },
+      { value: 'hour-before', label: 'An hour before', score: 0 },
+    ],
+  },
+
+  /* ================= Full Picture · H — Help that works for me ================= */
+  {
+    id: 'planningSupport', tier: 'full', letter: 'H', word: 'Help that works for me', slot: 'heal', pillar: 'social',
+    brainHealthLens: 'Support I choose',
+    title: 'When something really matters, who do I want in my corner?',
+    subtitle: 'Nobody sees anything unless I give permission.', multiSelect: true, section: 'planning', scored: false,
+    options: [
+      { value: 'family', label: 'Family or my partner', score: 0 },
       { value: 'friend', label: 'A friend', score: 0 },
       { value: 'professional', label: 'A carer or professional', score: 0 },
       { value: 'solo', label: 'Just me for now', score: 0 },
     ],
   },
   {
-    id: 'planningGoal', yes: 'S', tier: 'quick', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
-    brainHealthLens: 'What matters this week',
-    title: 'What would make this week feel easier — and matter most to you?',
+    id: 'circleHelp', tier: 'full', letter: 'H', word: 'Help that works for me', slot: 'heal', pillar: 'social',
+    brainHealthLens: 'What I would like help with',
+    title: 'What would I like them to help with?',
     multiSelect: true, section: 'planning', scored: false,
     options: [
-      { value: 'remember', label: 'Remember the important things', score: 0 },
-      { value: 'pace', label: 'Have a steadier pace', score: 0 },
-      { value: 'complete', label: 'Finish one thing that matters', score: 0 },
+      { value: 'appointments', label: 'Keeping track of appointments', score: 0 },
+      { value: 'record', label: 'Recording a conversation if I forget', score: 0 },
+      { value: 'encourage', label: 'Sending me encouragement', score: 0 },
+      { value: 'nothing', label: 'Nothing for now', score: 0 },
+    ],
+  },
+  {
+    id: 'shareComfort', tier: 'full', letter: 'H', word: 'Help that works for me', slot: 'heal', pillar: 'social',
+    brainHealthLens: 'What I am comfortable sharing',
+    title: 'What would I feel comfortable sharing?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'calendar', label: 'My calendar only', score: 0 },
+      { value: 'actions', label: 'My calendar and next steps', score: 0 },
+      { value: 'more', label: 'Recordings too, when I choose', score: 0 },
+      { value: 'private', label: 'Nothing yet. I’ll keep it private.', score: 0 },
+    ],
+  },
+  {
+    id: 'checkInStyle', tier: 'full', letter: 'H', word: 'Help that works for me', slot: 'heal', pillar: 'social',
+    brainHealthLens: 'How I like to be checked in on',
+    title: 'How would I like someone to check in, so I feel supported and still in control?',
+    section: 'planning', scored: false,
+    options: [
+      { value: 'message', label: 'A short message', score: 0 },
+      { value: 'call', label: 'A quick call', score: 0 },
+      { value: 'only-ask', label: 'Only when I ask', score: 0 },
     ],
   },
 
-  /* ---------------- Full Picture · MYRHYTHM, one short part per letter ---------------- */
+  /* ================= Full Picture · M — My progress, my next choice ================= */
   {
-    id: 'habitExposure', tier: 'full', letter: 'M', word: 'Mindset', slot: 'mindset', pillar: 'biological',
-    brainHealthLens: 'Reducing avoidable exposures', // ref BH-05
-    title: 'How often do you smoke or drink alcohol?',
-    subtitle: 'Not about being perfect — just what is typical.', section: 'brain-health', scored: true,
-    options: [
-      { value: 'often', label: 'Smoking or drinking happens often', score: 0 },
-      { value: 'sometimes', label: 'It happens sometimes', score: 1 },
-      { value: 'rarely-never', label: 'Rarely or never', score: 3 },
-    ],
-  },
-  {
-    id: 'mindsetTalk', tier: 'full', letter: 'M', word: 'Mindset', slot: 'mindset', pillar: 'psychological',
-    brainHealthLens: 'How I talk to myself after a slip',
-    title: 'When you forget something, what do you usually tell yourself?',
+    id: 'winsStyle', tier: 'full', letter: 'M', word: 'My progress, my next choice', slot: 'multiply', pillar: 'psychological',
+    brainHealthLens: 'Recognising what I have managed',
+    title: 'What have I managed recently that deserves recognising?',
     section: 'planning', scored: false,
     options: [
-      { value: 'hard-on-me', label: 'I am hard on myself', score: 0 },
-      { value: 'shrug', label: 'I shrug it off and move on', score: 0 },
-      { value: 'plan', label: 'I look for a way to make it easier next time', score: 0 },
+      { value: 'appointment', label: 'I got to an appointment', score: 0 },
+      { value: 'finished', label: 'I finished something I started', score: 0 },
+      { value: 'asked', label: 'I asked for help when I needed it', score: 0 },
+      { value: 'kept-going', label: 'I kept going on a hard day', score: 0 },
     ],
   },
   {
-    id: 'habitProtect', tier: 'full', letter: 'Y', word: 'Yes to Reality', slot: 'yesReality', pillar: 'biological',
-    brainHealthLens: 'Protecting the head from another injury', // ref BH-04
-    title: 'How often do you protect your head?',
-    subtitle: 'For example: seatbelts, helmets and avoiding unsafe knocks.', section: 'brain-health', scored: true,
-    options: [
-      { value: 'not-always', label: 'Not always', score: 0 },
-      { value: 'usually', label: 'Usually, but I sometimes forget', score: 2 },
-      { value: 'careful', label: 'Consistently', score: 3 },
-    ],
-  },
-  {
-    id: 'hardSituations', tier: 'full', letter: 'Y', word: 'Yes to Reality', slot: 'yesReality', pillar: 'psychological',
-    brainHealthLens: 'Where memory is hardest',
-    title: 'Which situations are hardest to remember afterwards?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'appointments', label: 'Medical or official appointments', score: 0 },
-      { value: 'phone-calls', label: 'Phone calls', score: 0 },
-      { value: 'family-plans', label: 'Family plans and arrangements', score: 0 },
-      { value: 'work', label: 'Work or study meetings', score: 0 },
-    ],
-  },
-  {
-    id: 'weekFixed', tier: 'full', letter: 'R', word: 'Rhythm', slot: 'rhythm', pillar: 'biological',
-    brainHealthLens: 'Fixed parts of my week',
-    title: 'Which parts of your week are fixed?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'work', label: 'Work, study or volunteering', score: 0 },
-      { value: 'appointments', label: 'Regular appointments', score: 0 },
-      { value: 'caring', label: 'Caring for someone', score: 0 },
-      { value: 'regular-reminders', label: 'Regular reminders I rely on', score: 0 },
-    ],
-  },
-  {
-    id: 'habitLearnConnect', tier: 'full', letter: 'H', word: 'Harness Support', slot: 'harnessSupport', pillar: 'social',
-    brainHealthLens: 'Learning and trusted connection', // ref BH-07
-    title: 'How often do you learn something new or spend time with someone you trust?',
+    id: 'habitLearnConnect', tier: 'full', letter: 'M', word: 'My progress, my next choice', slot: 'multiply', pillar: 'social',
+    brainHealthLens: 'New learning and connection', // ref BH-07
+    title: 'How often do I learn something new or spend time with people?',
     section: 'brain-health', scored: true,
     options: [
       { value: 'rarely', label: 'Rarely at the moment', score: 0 },
-      { value: 'some-weeks', label: 'Some weeks', score: 1 },
-      { value: 'most-weeks', label: 'Most weeks', score: 3 },
+      { value: 'sometimes', label: 'Now and then', score: 1 },
+      { value: 'often', label: 'Most weeks', score: 3 },
     ],
   },
   {
-    id: 'circleHelp', tier: 'full', letter: 'H', word: 'Harness Support', slot: 'harnessSupport', pillar: 'social',
-    brainHealthLens: 'Help I would welcome',
-    title: 'What help from your Support Circle would you welcome?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'reminders', label: 'A nudge before important things', score: 0 },
-      { value: 'check-ins', label: 'A quick check-in now and then', score: 0 },
-      { value: 'come-along', label: 'Coming with me to appointments', score: 0 },
-      { value: 'none-yet', label: 'None for now', score: 0 },
-    ],
-  },
-  {
-    id: 'winsStyle', tier: 'full', letter: 'Y', word: 'Your Victories', slot: 'yourVictories', pillar: 'psychological',
-    brainHealthLens: 'Noticing progress',
-    title: 'How would you like to notice your wins?',
-    section: 'planning', scored: false,
-    options: [
-      { value: 'quiet', label: 'A quiet tick — nothing fussy', score: 0 },
-      { value: 'weekly', label: 'A short look back each week', score: 0 },
-      { value: 'share', label: 'Share them with someone I choose', score: 0 },
-    ],
-  },
-  {
-    id: 'reminderStyle', tier: 'full', letter: 'T', word: 'Transform', slot: 'transform', pillar: 'psychological',
-    brainHealthLens: 'Reminders that actually land',
-    title: 'Which kind of reminder works best for you?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'sound', label: 'A sound', score: 0 },
-      { value: 'vibration', label: 'A vibration', score: 0 },
-      { value: 'spoken', label: 'Spoken out loud', score: 0 },
-      { value: 'written', label: 'A short written note', score: 0 },
-    ],
-  },
-  {
-    id: 'reminderLead', tier: 'full', letter: 'T', word: 'Transform', slot: 'transform', pillar: 'psychological',
-    brainHealthLens: 'How far ahead to remind',
-    title: 'How far ahead would you like to be reminded?',
-    section: 'planning', scored: false,
-    options: [
-      { value: 'evening-before', label: 'The evening before', score: 0 },
-      { value: 'hour-before', label: 'An hour before', score: 0 },
-      { value: 'both', label: 'Both', score: 0 },
-    ],
-  },
-  {
-    id: 'hardDays', tier: 'full', letter: 'H', word: 'Heal', slot: 'heal', pillar: 'biological',
-    brainHealthLens: 'What helps on a harder day',
-    title: 'On a harder day, what helps most?',
-    multiSelect: true, section: 'planning', scored: false,
-    options: [
-      { value: 'fewer-things', label: 'Fewer things on the list', score: 0 },
-      { value: 'rest-breaks', label: 'More rest breaks', score: 0 },
-      { value: 'fresh-air', label: 'Fresh air or a short walk', score: 0 },
-      { value: 'someone', label: 'Talking to someone', score: 0 },
-    ],
-  },
-  {
-    id: 'habitPurpose', tier: 'full', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
-    brainHealthLens: 'Purpose and helpful routines', // ref BH-08
-    title: 'How often do you do something that really matters to you?',
+    id: 'habitPurpose', tier: 'full', letter: 'M', word: 'My progress, my next choice', slot: 'multiply', pillar: 'spiritual',
+    brainHealthLens: 'Purpose in the week', // ref BH-08
+    title: 'How often does my week include something that feels meaningful to me?',
     section: 'brain-health', scored: true,
     options: [
-      { value: 'hard-to-find', label: 'It is hard to find that right now', score: 0 },
+      { value: 'rarely', label: 'Rarely', score: 0 },
       { value: 'sometimes', label: 'Sometimes', score: 1 },
-      { value: 'often', label: 'Often', score: 3 },
+      { value: 'often', label: 'Most weeks', score: 3 },
     ],
   },
   {
-    id: 'visionAreas', tier: 'full', letter: 'M', word: 'Meaning', slot: 'multiply', pillar: 'spiritual',
-    brainHealthLens: 'Where I want my life to grow',
-    title: 'Which areas of life matter most to you right now?',
-    multiSelect: true, section: 'planning', scored: false,
+    id: 'oneChoice', tier: 'full', letter: 'M', word: 'My progress, my next choice', slot: 'multiply', pillar: 'spiritual',
+    brainHealthLens: 'One choice for today',
+    title: 'One choice I want to make today is…',
+    section: 'planning', scored: false,
     options: [
-      { value: 'health', label: 'Health and wellbeing', score: 0 },
-      { value: 'family', label: 'Family and friends', score: 0 },
-      { value: 'work', label: 'Work, study or purpose', score: 0 },
-      { value: 'finances', label: 'Finances and independence', score: 0 },
+      { value: 'rest', label: 'Rest without guilt', score: 0 },
+      { value: 'one-task', label: 'Finish one small task', score: 0 },
+      { value: 'reach-out', label: 'Reach out to someone', score: 0 },
+      { value: 'move', label: 'Move my body', score: 0 },
     ],
   },
 ];
 
 /** Full Picture letter order (M-Y-R-H-Y-T-H-M). */
 export const FULL_PICTURE_LETTERS: { slot: LetterId; word: string }[] = [
-  { slot: 'mindset', word: 'Mindset' },
-  { slot: 'yesReality', word: 'Yes to Reality' },
-  { slot: 'rhythm', word: 'Rhythm' },
-  { slot: 'harnessSupport', word: 'Harness Support' },
-  { slot: 'yourVictories', word: 'Your Victories' },
-  { slot: 'transform', word: 'Transform' },
-  { slot: 'heal', word: 'Heal' },
-  { slot: 'multiply', word: 'Meaning' },
+  { slot: 'mindset', word: 'What matters to me' },
+  { slot: 'yesReality', word: 'Your brain, your starting point' },
+  { slot: 'rhythm', word: 'Remember what matters' },
+  { slot: 'harnessSupport', word: 'Help me begin' },
+  { slot: 'yourVictories', word: 'Your pace, your capacity' },
+  { slot: 'transform', word: 'Turn intention into follow-through' },
+  { slot: 'heal', word: 'Help that works for me' },
+  { slot: 'multiply', word: 'My progress, my next choice' },
 ];
 
 const QUICK = QUESTIONS.filter((q) => q.tier === 'quick');
@@ -411,7 +577,7 @@ const FULL = FULL_PICTURE_LETTERS.flatMap((l) => QUESTIONS.filter((q) => q.tier 
 const PERSONAS: PersonaKey[] = ['brain-injury', 'caregiver', 'executive', 'student', 'general'];
 const banks = Object.fromEntries(PERSONAS.map((persona) => [persona, {
   persona,
-  intro: 'YES: your starting point, everyday energy and steady rhythm.',
+  intro: 'Remembered, Resilient, Reliable: a few moments from everyday life.',
   preQuestion: { title: 'A few questions about everyday life', subtitle: 'There are no right or wrong answers.' },
   questions: QUESTIONS,
   quickQuestions: QUICK,
