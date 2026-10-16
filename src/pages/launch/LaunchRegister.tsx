@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { JourneySteps } from '@/components/launch/JourneySteps';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Brain, ArrowRight, Loader2, Eye, EyeOff, CheckCircle, Mail, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -313,11 +314,12 @@ export default function LaunchRegister() {
             <Brain className="h-8 w-8 text-white" />
           </div>
 
+          <JourneySteps current={1} className="mb-6" />
           <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
             Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Create your account, choose what brings you here, then begin your free questions. Membership is optional and shown separately.
+            Your email and a password, so your progress is saved. Membership is optional and comes later.
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
@@ -414,12 +416,12 @@ export default function LaunchRegister() {
 
           {/* Sign in link */}
           <p className="mt-6 text-sm text-launch-ink/60 pb-8">
-            Already have an account?{' '}
+            Already registered?{' '}
             <button
               onClick={() => navigate('/launch/signin')}
-              className="text-launch-moss hover:text-launch-moss/80 font-medium"
+              className="min-h-11 text-launch-moss hover:text-launch-moss/80 font-medium underline underline-offset-4"
             >
-              Sign in
+              Log In
             </button>
           </p>
 

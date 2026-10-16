@@ -105,12 +105,12 @@ export default function LaunchSignIn() {
           </div>
 
           <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
-            Welcome Back
+            Log In
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
             {returningTo
-              ? "Sign in to continue where you were. I'll bring you straight back."
-              : 'Sign in to see what needs your attention today.'}
+              ? "Log in to continue where you were. I'll bring you straight back."
+              : 'For people already registered. I’ll take you to exactly where you stopped — or to your day.'}
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
@@ -243,12 +243,12 @@ export default function LaunchSignIn() {
 
           {/* Sign up link */}
           <p className="mt-6 text-sm text-launch-ink/60 pb-8">
-            Don't have an account?{' '}
+            New here?{' '}
             <button
               onClick={() => navigate('/launch/register')}
-              className="text-launch-moss hover:text-launch-moss/80 font-medium"
+              className="min-h-11 text-launch-moss hover:text-launch-moss/80 font-medium underline underline-offset-4"
             >
-              Create one
+              Get Started
             </button>
           </p>
 
