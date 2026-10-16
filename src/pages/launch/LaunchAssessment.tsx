@@ -270,14 +270,14 @@ export default function LaunchAssessment() {
             Welcome, {displayName}
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            My answers shape how MyRhythm works for me.
+            About 6 minutes. My answers set MyRhythm up around me — not the other way round.
           </p>
 
           <ol className="space-y-3 mb-6">
             {[
-              <><strong className="text-launch-ink">My diary</strong> — important things planned for the times I'm usually at my best.</>,
-              <><strong className="text-launch-ink">My reminders</strong> — shaped around what slips and what already helps me.</>,
-              <><strong className="text-launch-ink">My snapshot and 3-week YES plan</strong> — free, mine to keep.</>,
+              <><strong className="text-launch-ink">Nothing important slips.</strong> What I need to do after a conversation or appointment is captured, planned and followed through until it's done.</>,
+              <><strong className="text-launch-ink">My best hours, protected.</strong> Important things land when my mind is usually clearest, with reminders shaped around what I forget and breaks built in.</>,
+              <><strong className="text-launch-ink">Free to keep: my snapshot and first 3 weeks.</strong> A personal picture of my brain-health habits and a simple plan to start, step by step.</>,
             ].map((line, i) => (
               <li key={i} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
                 <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">{i + 1}</span>
