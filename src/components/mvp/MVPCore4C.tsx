@@ -308,36 +308,38 @@ export function MVPCore4C() {
             >
               <HelpCircle className="h-5 w-5" />
             </Button>
-            {!user && (
-              <Button
-                onClick={handleStartHere}
-                variant="action"
-                className="min-h-14 rounded-md px-3 font-worksans text-base font-bold md:px-5"
-              >
-                Join Now
-              </Button>
+            {user ? (
+              <>
+                <Button onClick={handlePrimary} variant="action" className="min-h-14 whitespace-normal rounded-md px-3 text-base font-bold md:px-5">
+                  {primaryLabel}
+                </Button>
+                <Button
+                  onClick={handleAuthAction}
+                  variant="ghost"
+                  className="min-h-14 px-2 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-4"
+                >
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={() => navigate('/launch/signin')}
+                  variant="ghost"
+                  className="min-h-14 px-3 font-worksans text-base font-bold text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
+                >
+                  <User className="hidden h-4 w-4 sm:block" aria-hidden="true" />
+                  Log In
+                </Button>
+                <Button
+                  onClick={() => navigate('/launch/register')}
+                  variant="action"
+                  className="min-h-14 rounded-md px-3 font-worksans text-base font-bold md:px-5"
+                >
+                  Get Started
+                </Button>
+              </>
             )}
-            {user && (
-              <Button onClick={handlePrimary} variant="action" className="min-h-14 whitespace-normal rounded-md px-3 text-base font-bold md:px-5">
-                {primaryLabel}
-              </Button>
-            )}
-            {showFounding && (
-              <Button
-                onClick={handleFoundingAction}
-                className="hidden min-h-14 rounded-md bg-launch-teal px-4 font-worksans text-sm font-bold text-primary-foreground hover:bg-launch-ink lg:inline-flex lg:px-5"
-              >
-                Founding Member
-              </Button>
-            )}
-            <Button
-              onClick={handleAuthAction}
-              variant="ghost"
-              className="min-h-14 px-2 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
-            >
-              <User className="hidden h-4 w-4 sm:block" aria-hidden="true" />
-              <span className={entryState === 'returning' ? 'font-bold' : ''}>{user ? 'Sign out' : 'Sign in'}</span>
-            </Button>
           </div>
         </div>
       </nav>
