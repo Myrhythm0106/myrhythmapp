@@ -2409,6 +2409,33 @@ export type Database = {
         }
         Relationships: []
       }
+      recording_month_usage: {
+        Row: {
+          created_at: string
+          month_start: string
+          recording_count: number
+          updated_at: string
+          used_seconds: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          month_start: string
+          recording_count?: number
+          updated_at?: string
+          used_seconds?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          month_start?: string
+          recording_count?: number
+          updated_at?: string
+          used_seconds?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       recording_usage_tracking: {
         Row: {
           comment_count: number
@@ -3779,6 +3806,7 @@ export type Database = {
           open_steps: number
         }[]
       }
+      my_recording_balance: { Args: never; Returns: Json }
       notify_circle_of_step_completion: {
         Args: { p_action_id: string }
         Returns: Json
@@ -3793,6 +3821,7 @@ export type Database = {
         Returns: string
       }
       queue_audio_removal_notices: { Args: never; Returns: number }
+      recording_limits_for_user: { Args: { p_user: string }; Returns: Json }
       redeem_access_code: { Args: { p_code: string }; Returns: Json }
       research_aggregate: {
         Args: { _days?: number; _metric: string }
