@@ -52,14 +52,15 @@ function seedFromSnapshot(): AnswerMap {
 function partPreview(part: string, a: AnswerMap): string | null {
   const p = (id: string) => a[id]?.primary ?? '';
   if (part === 'Y') {
-    if (p('memorySlips') === 'appointments') return "I'll remind you the evening before appointments, and again on the day.";
-    if (p('memorySlips') === 'what-was-said') return 'Memory Bridge will turn conversations into a short written note you can check later.';
-    if (p('memorySlips') === 'half-done') return "I'll gently bring back tasks you started, so they don't get lost.";
-    return "I'll keep reminders simple and well timed.";
+    if (p('memorySlips') === 'appointments') return "Remembered: I'll remind you the evening before appointments, and again on the day.";
+    if (p('memorySlips') === 'what-was-said') return 'Remembered: conversations become a short written note you can check any time.';
+    if (p('memorySlips') === 'half-done') return "Remembered: I'll gently bring back tasks you started, so they don't get lost.";
+    return 'Remembered: what matters is kept, so you don’t have to hold it all.';
   }
   if (part === 'E') {
-    if (p('habitSleep') === 'under-6') return "After a poor night, I'll suggest a lighter day first.";
-    return "I'll pace your day with breaks that suit your energy.";
+    if (p('mindsetSlip') === 'harsh') return 'Resilient: a slip is not a failure. It waits for you, and you pick it up when ready.';
+    if (p('habitSleep') === 'under-6') return "Resilient: after a poor night, I'll suggest a lighter day first.";
+    return 'Resilient: if a day goes wrong, nothing is lost.';
   }
   return null;
 }
@@ -122,26 +123,22 @@ function loadProgress(): StoredProgress | null {
 
 /** Benefit-only helper lines — never scoring or scheduling rules. */
 const QUESTION_HELPS: Record<string, string> = {
-  habitSleep: 'Helps me avoid planning demanding things after a poor night.',
-  habitMove: 'Helps me fit movement into my day at a time that suits me.',
-  habitFuel: 'Helps me plan steady energy through the day.',
-  habitProtect: 'Helps me keep my plans realistic and kind to me.',
-  habitExposure: 'Helps me spot small everyday changes that make days easier.',
-  habitCalm: 'Helps me place calm moments where they matter most.',
-  habitLearnConnect: 'Helps me keep time for people and learning in my week.',
-  habitPurpose: 'Helps me keep what matters most to me in my plan.',
-  planningRhythm: "This is when I'll suggest my most important tasks.",
-  rhythmDetail: 'Sets how long my planned blocks and breaks are.',
-  planningSupport: 'Decides who, if anyone, I can choose to share with.',
-  planningGoal: 'Becomes the first focus in my diary this week.',
-  memorySlips: 'Decides what I remind you about first.',
-  memoryMethod: 'Lets MyRhythm work with what already helps you.',
-  memoryRecall: 'Decides how soon after a conversation I offer a written note.',
-  dayStart: 'Sets the start and end of your day on the calendar.',
-  energyDip: "I'll keep these times lighter.",
-  reminderStyle: 'Sets how your reminders arrive.',
-  reminderLead: 'Sets when your reminders arrive.',
-  circleHelp: 'Only suggestions — you still choose what anyone can see.',
+  memorySlips: 'Sets up: what MyRhythm guards first.',
+  memoryRecall: 'Sets up: how MyRhythm captures conversations for me.',
+  findAgain: 'Sets up: how easy it is to find things again.',
+  habitSleep: 'Sets up: lighter plans after a poor night.',
+  habitCalm: 'Sets up: pauses where I need them most.',
+  mindsetSlip: 'Sets up: how MyRhythm talks to me when something slips.',
+  planningRhythm: 'Sets up: when my important things go in my day.',
+  energyDip: 'Sets up: which times stay light.',
+  startHard: 'Sets up: how my first step is shown to me.',
+  reminderStop: 'Sets up: how my reminders work.',
+  planningGoal: 'Sets up: my first focus this week.',
+  dayStart: 'Sets up: the start and end of my day on the calendar.',
+  reminderStyle: 'Sets up: how my reminders arrive.',
+  reminderLead: 'Sets up: when my reminders arrive.',
+  planningSupport: 'Nobody sees anything unless I say so.',
+  circleHelp: 'Only suggestions. I still choose what anyone can see.',
 };
 
 export default function LaunchAssessment() {
@@ -822,6 +819,15 @@ export default function LaunchAssessment() {
                 </div>
               );
             })}
+
+            {(() => {
+              const reply = question.options.find((o) => o.value === current.primary)?.reply;
+              return reply ? (
+                <p role="status" aria-live="polite" className="rounded-2xl border-l-4 border-launch-teal bg-launch-teal/10 px-4 py-3 text-base font-semibold text-launch-teal">
+                  {reply}
+                </p>
+              ) : null;
+            })()}
 
             {/* Escape hatch: "None of these fit me" */}
             <button

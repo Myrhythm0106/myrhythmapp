@@ -20,21 +20,21 @@ export const YES_LETTERS: readonly YesLetter[] = [
     week: 1,
     word: 'Your Starting Point',
     meaning: 'Know where my memory is today — what slips and what already helps.',
-    shapes: 'Shapes how and when I remind you.',
+    shapes: 'Remembered: what slips, and how MyRhythm keeps it.',
   },
   {
     id: 'E',
     week: 2,
     word: 'Everyday Energy',
     meaning: 'The everyday basics behind a steady brain: rest, movement, food and calm.',
-    shapes: 'Helps me pace your day around your energy.',
+    shapes: 'Resilient: my energy, my mood, and the voice in my head.',
   },
   {
     id: 'S',
     week: 3,
     word: 'Steady Rhythm',
     meaning: 'When my day starts, when I think best, and one thing that matters this week.',
-    shapes: 'Builds your daily rhythm on the calendar.',
+    shapes: 'Reliable: when I’m sharp, what stops me, and what I follow through.',
   },
 ] as const;
 

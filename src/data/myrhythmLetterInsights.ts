@@ -19,7 +19,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   mindset: {
     id: 'mindset',
     letter: 'M',
-    word: 'Mindset',
+    word: 'What matters to me',
     lens: 'Cognitive confidence & self-talk',
     short: 'How you speak to yourself about your brain right now.',
     bands: [
@@ -52,7 +52,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   yesReality: {
     id: 'yesReality',
     letter: 'Y',
-    word: 'Yes to Reality',
+    word: 'Your brain, your starting point',
     lens: 'Honest baseline of current state',
     short: 'How honestly you can meet where you actually are today.',
     bands: [
@@ -83,7 +83,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   rhythm: {
     id: 'rhythm',
     letter: 'R',
-    word: 'Rhythm',
+    word: 'Remember what matters',
     lens: 'Energy & cognitive peak window',
     short: 'When your brain is clearest — the window we plan around.',
     bands: [
@@ -113,7 +113,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   harnessSupport: {
     id: 'harnessSupport',
     letter: 'H',
-    word: 'Harness Support',
+    word: 'Help me begin',
     lens: 'Social scaffolding',
     short: 'Who is close enough to help when it counts.',
     bands: [
@@ -143,7 +143,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   yourVictories: {
     id: 'yourVictories',
     letter: 'Y',
-    word: 'Your Victories',
+    word: 'Your pace, your capacity',
     lens: 'Noticing progress that would otherwise vanish',
     short: 'How well you notice and hold onto wins — small ones count most.',
     bands: [
@@ -172,7 +172,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   transform: {
     id: 'transform',
     letter: 'T',
-    word: 'Transform',
+    word: 'Turn intention into follow-through',
     lens: 'Willingness to change one small thing',
     short: 'Your appetite for changing one small thing this week.',
     bands: [
@@ -201,7 +201,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   heal: {
     id: 'heal',
     letter: 'H',
-    word: 'Heal',
+    word: 'Help that works for me',
     lens: 'Recovery, rest, and repair',
     short: 'How well rest and recovery are protected in your week.',
     bands: [
@@ -230,7 +230,7 @@ const LETTER_INSIGHTS: Record<LetterId, LetterInsight> = {
   multiply: {
     id: 'multiply',
     letter: 'M',
-    word: 'Multiply',
+    word: 'My progress, my next choice',
     lens: 'Meaning, purpose, and giving forward',
     short: 'How much of your effort connects to something that matters to you.',
     bands: [

@@ -161,3 +161,96 @@ export function buildInitialCompass(action: string): Omit<CompassVersion, 'id' |
     },
   };
 }
+/* ---------- Slip line and Remembered · Reliable · Resilient (built only from answers) ---------- */
+
+type AnswerLike = Record<string, unknown>;
+const prim = (a: AnswerLike, id: string) => normalizeAnswer(a[id])?.primary ?? '';
+
+const SHARP_TIME: Record<string, string> = { morning: '09:30', afternoon: '14:30', evening: '18:30', varies: '10:00' };
+const SHARP_LABEL: Record<string, string> = { morning: 'my clearest hour', afternoon: 'my clearest hour', evening: 'my clearest hour', varies: 'a good time' };
+const DRAINED_LABEL: Record<string, string> = {
+  'mid-morning': 'mid-morning', 'after-lunch': 'after lunch', 'late-afternoon': 'late afternoon', evening: 'the evening',
+};
+const VOICE: Record<string, string> = {
+  harsh: '“Not again. What is wrong with me?”',
+  'give-up': '“Forget it. What’s the point?”',
+  others: '“Someone else will catch it.”',
+  kind: '“No harm done. I’ll sort it.”',
+};
+
+export interface SlipPoint { when: string; text: string }
+export interface SlipLine {
+  without: SlipPoint[];
+  innerVoice: string | null;
+  withMyRhythm: { word: 'Remembered' | 'Reliable' | 'Resilient'; text: string }[];
+  keepTime: string;
+}
+
+/** The personal "what usually happens" line, then the same with MyRhythm. */
+export function buildSlipLine(answers: AnswerLike): SlipLine {
+  const recall = prim(answers, 'memoryRecall');
+  const dip = prim(answers, 'energyDip');
+  const sharp = prim(answers, 'planningRhythm');
+  const voice = prim(answers, 'mindsetSlip');
+  const keepTime = SHARP_TIME[sharp] ?? '10:00';
+  const fade = recall === 'little' || recall === 'unsure'
+    ? 'It’s already fading.'
+    : recall === 'main-points'
+      ? 'The gist is there. The details have gone.'
+      : 'I still have most of it.';
+  const slipWhen = DRAINED_LABEL[dip] ? `Later this week, ${DRAINED_LABEL[dip]}` : 'Later this week';
+  return {
+    without: [
+      { when: 'Right now', text: '“I’ll remember.”' },
+      { when: 'Tonight', text: fade },
+      { when: slipWhen, text: 'It slips.' },
+    ],
+    innerVoice: voice && voice !== 'kind' ? VOICE[voice] : null,
+    withMyRhythm: [
+      { word: 'Remembered', text: 'Saved now, in my own words.' },
+      { word: 'Reliable', text: `Placed at ${keepTime} tomorrow, ${SHARP_LABEL[sharp] ?? 'a good time'}, with a reminder the evening before.` },
+      { word: 'Resilient', text: 'If I miss it, it waits for me. Nothing is lost, and nothing to beat myself up about.' },
+    ],
+    keepTime,
+  };
+}
+
+export type ThreeRLevel = 'Strong' | 'Building' | 'Needs support';
+export interface ThreeRItem { word: 'Remembered' | 'Reliable' | 'Resilient'; level: ThreeRLevel; reason: string }
+
+/** Three plain markers. Habits and patterns, never a score or diagnosis. */
+export function buildThreeR(answers: AnswerLike): ThreeRItem[] {
+  const recall = prim(answers, 'memoryRecall');
+  const find = prim(answers, 'findAgain');
+  const remembered: ThreeRLevel = recall === 'most' && find !== 'often'
+    ? 'Strong' : recall === 'little' || recall === 'unsure' || find === 'often' ? 'Needs support' : 'Building';
+
+  const stop = prim(answers, 'reminderStop');
+  const start = prim(answers, 'startHard');
+  const reliable: ThreeRLevel = stop === 'acts'
+    ? 'Strong' : stop === 'dismiss' || start === 'forget' || start === 'where-start' ? 'Needs support' : 'Building';
+
+  const sleep = prim(answers, 'habitSleep');
+  const calm = prim(answers, 'habitCalm');
+  const voice = prim(answers, 'mindsetSlip');
+  const resilient: ThreeRLevel = voice === 'kind' && calm !== 'spiral'
+    ? 'Strong' : voice === 'harsh' || voice === 'give-up' || calm === 'spiral' || sleep === 'under-6' ? 'Needs support' : 'Building';
+
+  const reason = {
+    Remembered: remembered === 'Strong' ? 'I keep most of what’s said. MyRhythm keeps a copy anyway.'
+      : remembered === 'Needs support' ? 'What’s said fades fast. MyRhythm will hold it for me.'
+      : 'I keep the gist. MyRhythm will keep the details.',
+    Reliable: reliable === 'Strong' ? 'I act on reminders. MyRhythm will keep them well timed.'
+      : reliable === 'Needs support' ? 'Good intentions get lost between the reminder and the doing. MyRhythm will close that gap.'
+      : 'Starting is the sticking point. MyRhythm will show one small first step.',
+    Resilient: resilient === 'Strong' ? 'I’m kind to myself when things slip. That’s a real strength.'
+      : resilient === 'Needs support' ? 'Slips hit hard right now. MyRhythm keeps my place, so a bad day isn’t a lost week.'
+      : 'I push through, then pay for it later. MyRhythm will build in breathing space.',
+  } as const;
+
+  return [
+    { word: 'Remembered', level: remembered, reason: reason.Remembered },
+    { word: 'Reliable', level: reliable, reason: reason.Reliable },
+    { word: 'Resilient', level: resilient, reason: reason.Resilient },
+  ];
+}
