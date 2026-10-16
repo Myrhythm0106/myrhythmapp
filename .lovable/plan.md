@@ -1,28 +1,19 @@
-# A clear ADHD path
+# Include ADHD alongside the other conditions
 
-## What people will see
-- **Starting choice:** a third visible option, "I live with ADHD or find focus hard to hold", with the description "ADHD, attention or focus that slips. Getting things out of your head and done, without the overwhelm." Work and study stay under "Work, study or another starting point", so the screen still shows only three main choices.
-- **Questions and free snapshot:** wording and examples written for ADHD. The tone is warm, never pathologising and never "fix your brain". Examples:
-  - Rhythm: "Focus often comes in bursts. Knowing when yours arrive lets you protect them."
-  - Your victories: "Finished things vanish fast with ADHD. Catching them builds real momentum."
-  - Harness support: "A body-double or gentle nudge can turn starting into doing."
-  - Heal: "Rest and sleep steady attention more than willpower ever will."
-  - Plus lines for the other four letters, written in the same style.
-- **Home and app wording:** ADHD users get their own short description and examples, rather than borrowing the "busy professional" wording.
-- **Disclaimer:** the existing "does not diagnose or treat" wording stays visible. ADHD is described as a way of working, never as a condition the app manages.
+## What changes
+ADHD is named in the existing lists, just like dementia. There is no separate ADHD choice or section.
+
+- **Starting choice, first card:** "Brain injury, stroke, dementia, long COVID, MS, ADHD — finding your rhythm again, one steady step at a time."
+- **Supporting someone card:** stays as it is. It already covers "brain change", which now includes ADHD through the first card.
+- **App description of this group:** "brain injury, stroke, dementia, long COVID, MS, ADHD" in the longer and short descriptions.
 
 ## What stays the same
-- The questions, scoring, free snapshot and membership. Only the wording changes.
-- People who already chose "work" or "study" keep their choice.
+- Still three main choices, the same questions, scoring, free snapshot and membership.
+- The "does not diagnose or treat" wording stays.
 
 ## Check
-- Choose ADHD → reach the questions → open the snapshot, and confirm the ADHD wording appears.
-- Check on phone (320px and 393px) and at your current screen size.
-- Search the app to confirm no external programme or practitioner is named.
+- Check the starting-choice screen on phone (320px) and at your current size, and confirm the text wraps neatly.
 
 ## Technical details
-- `usePersona.ts`: add a `focus` persona, map `'adhd'` to it instead of `productivity`, and add its label, plural, description and short line.
-- `copy.ts` and `snapshotTeasers.ts`: add a `focus` entry for every Record keyed by Persona; TypeScript will flag any we miss.
-- `LaunchUserType.tsx`: insert an `adhd` card as the third item in `userTypes` (icon `Zap` or `Sparkles`), and change the visible slice from `index < 2` to `index < 3`.
-- Search for other `Record<Persona` uses and switch statements, and add `focus` to each.
-- Save the ADHD audience wording rule to memory (brand/third-problem-ideal-brain already covers ADHD as an audience).
+- `src/pages/launch/LaunchUserType.tsx`: update the `brain-injury` definition.
+- `src/launch/persona/usePersona.ts`: add ADHD to the `recovery` entries in `PERSONA_DEFINITION` and `PERSONA_DEFINITION_SHORT`. The existing `'adhd'` mapping stays unchanged.
