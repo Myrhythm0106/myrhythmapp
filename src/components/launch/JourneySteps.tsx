@@ -20,7 +20,8 @@ interface Props {
 
 export function JourneySteps({ current, canSaveLater, className }: Props) {
   const navigate = useNavigate();
-  const next = current < JOURNEY_STEPS.length ? JOURNEY_STEPS[current] : undefined;
+  const steps: ReadonlyArray<{ label: string; time: string }> = JOURNEY_STEPS;
+  const next = steps[current];
   return (
     <nav aria-label="Get Started progress" className={cn('w-full max-w-xl mx-auto', className)}>
       <ol className="grid grid-cols-4 gap-1.5">
