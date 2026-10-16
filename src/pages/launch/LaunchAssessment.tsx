@@ -270,7 +270,7 @@ export default function LaunchAssessment() {
             Welcome, {displayName}
           </h1>
           <p className="text-launch-ink/70 text-center mb-8">
-            About 6 minutes. My answers set MyRhythm up around me — not the other way round.
+            This takes about 6 minutes. I answer a few questions, and MyRhythm fits itself around me.
           </p>
 
           <ol className="space-y-3 mb-6">
