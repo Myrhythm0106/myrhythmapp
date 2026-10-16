@@ -50,14 +50,14 @@ const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
 ];
 
 const LETTER_WORDS: Record<LetterId, string> = {
-  mindset: 'Mindset',
-  yesReality: 'Yes to Reality',
-  rhythm: 'Rhythm',
-  harnessSupport: 'Harness Support',
-  yourVictories: 'My Victories',
-  transform: 'Transform',
-  heal: 'Heal',
-  multiply: 'Multiply',
+  mindset: 'What matters to me',
+  yesReality: 'Your brain, your starting point',
+  rhythm: 'Remember what matters',
+  harnessSupport: 'Help me begin',
+  yourVictories: 'Your pace, your capacity',
+  transform: 'Turn intention into follow-through',
+  heal: 'Help that works for me',
+  multiply: 'My progress, my next choice',
 };
 
 const MEMBERSHIP_ADDS = [
