@@ -16,3 +16,4 @@
 - Superseded page versions live in `src/pages/_archive/` (unrouted); old URLs redirect to current /launch pages — why: keep one live flow without losing earlier work.
 - The launch assessment uses one versioned shared bank with every question tagged `tier` (quick = YES parts, full = MYRHYTHM letters); `?mode=full` runs the Full Picture on top of saved Quick answers and scores count answered items only; why: one bank keeps the free snapshot, history and calendar inputs consistent across both depths.
 - Welcome starting style and explicit walkthrough progress use one user-scoped device-local store, shared by welcome, the existing map and LaunchLayout; why: support can be switched without changing assessment depth, membership or inferring completion from saved rows.
+- Snapshot report priority areas are derived only from saved answers in `src/launch/compass/priorityAreas.ts` (tested); why: one ranking source keeps report, offer line and future Home focus consistent.
