@@ -55,10 +55,8 @@ export function ConsultingReport({ answers, onChosen }: Props) {
         <ul className="mt-6 grid gap-3 md:grid-cols-3">
           {summary.findings.map((f) => (
             <li key={f.word} className="rounded-2xl border border-launch-gold/30 bg-launch-cream p-4">
-              <div className="flex items-baseline justify-between gap-2">
-                <p className="font-display text-xl text-launch-ink">{f.word}</p>
-                <p className={`text-sm font-bold ${tone(f.level)}`}>{f.level}</p>
-              </div>
+              <p className="font-display text-xl text-launch-ink">{f.word}</p>
+              <p className={`text-sm font-bold ${tone(f.level)}`}>{f.level}</p>
               <p className="mt-2 text-base leading-relaxed text-launch-ink">{f.reason}</p>
             </li>
           ))}
@@ -109,7 +107,7 @@ export function ConsultingReport({ answers, onChosen }: Props) {
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <Button variant={on ? 'default' : 'outline'} onClick={() => toggle(a.id)} aria-pressed={on}
-                      disabled={!on && chosen.length >= 3} className="min-h-[56px] flex-1 text-base">
+                      disabled={!on && chosen.length >= 3} className={`min-h-[56px] flex-1 text-base ${on ? 'bg-launch-teal text-primary-foreground hover:bg-launch-teal/90' : 'border-launch-ink/40 text-launch-ink hover:bg-launch-cream hover:text-launch-ink'}`}>
                       {on ? <><Check />Chosen</> : 'Work on this'}
                     </Button>
                     <Button variant="ghost" size="icon" aria-label={`Move ${a.title} up`} onClick={() => move(i, -1)} disabled={i === 0} className="h-14 w-14"><ArrowUp /></Button>
@@ -126,7 +124,7 @@ export function ConsultingReport({ answers, onChosen }: Props) {
           <Button variant="action" className="min-h-[56px] flex-1 text-base" disabled={!chosen.length} onClick={() => confirm()}>
             {confirmed ? <><Check />My priorities are set</> : `Set my ${chosen.length || ''} priorit${chosen.length === 1 ? 'y' : 'ies'}`}
           </Button>
-          <Button variant="outline" className="min-h-[56px] flex-1 text-base" onClick={acceptRecommended}>Use the recommended top 3</Button>
+          <Button variant="outline" className="min-h-[56px] flex-1 text-base border-launch-ink/40 text-launch-ink hover:bg-launch-cream hover:text-launch-ink" onClick={acceptRecommended}>Use the recommended top 3</Button>
         </div>
       </section>
 
