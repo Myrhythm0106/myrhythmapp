@@ -1,53 +1,69 @@
-# Make My Snapshot the "oh wow, I need this" moment
+# My Snapshot as a consulting-grade report
 
-## What people see today (and why it doesn't sell)
-The snapshot page opens with a **score out of 100** and eight letter bars. Then come several report blocks: the compass read, the 3-week plan, the four-part picture and the best window. It looks smart, but it **describes** me. It doesn't **do** anything for me. A score also feels like a test, which is the wrong feeling for this audience.
-
-The "catch one real thing" part we built last time isn't shown on this page yet, and it's the strongest moment we have.
-
-## The new order: show it, then prove it, then offer it
-Each step answers the one question in the person's head.
+## The idea
+The report should read like a short report a top consulting firm would hand you: one clear summary up front, evidence underneath, ranked recommendations, and then a decision that's yours to make. Every line comes from the person's own answers. The free report gives a real "wow". Membership unlocks the full plan behind it.
 
 ```text
-1. "Do you get me?"      -> It knows me
-2. "Can you help?"       -> It proves it, right now
-3. "What else?"          -> My picture, in my words
-4. "Is it worth paying?" -> The honest choice
+1. Executive summary        (one screen, the "wow")
+2. My priority areas        (ranked, I choose)
+3. The detail behind it     (one card per area, from my answers)
+4. Prove it now             (catch one real thing)
+5. What's free / what unlocks (honest choice, max 3 options)
 ```
 
-### 1. It knows me (first screen, no scrolling)
-- A headline built from my own answers, e.g. *"I lose what was said after appointments, and I'm sharpest 9 to 11."*
-- Three short lines that mirror my day back to me: what slips, when I'm clearest, and what I tell myself when it goes wrong (the mindset answer).
-- One line to finish: *"That's not a weakness. It's a pattern, and patterns can be supported."*
-- No number up top.
+## 1. Executive summary (first screen, no scrolling)
+- **Headline finding** in my own words, built from my answers. For example: *"I'm losing what's agreed after appointments, and slips are costing me confidence. My clearest hours are 9 to 11."*
+- **Three key findings**, one each for Remembered, Reliable and Resilient. Each has a level (Strong / Building / Needs support) and a one-line "because I said...".
+- **The biggest opportunity:** one sentence on where support will make the most difference first.
+- **"What this could change for me in 3 weeks":** three concrete outcomes, written without medical claims.
+- A short confidence note: *"Based on 11 answers. The Full Picture adds 20 more for a sharper read."*
 
-### 2. It proves it, right now (CatchOneThing)
-- *"What can't I afford to forget this week?"* I type one real thing.
-- Side by side: **what usually happens to it** (my own slip pattern and inner voice) vs **the same thing with MyRhythm** (captured, planned in my sharp time, followed through).
-- One button: **"Keep this for me, tomorrow at 9:30."** A calm tick confirms it's saved. This is the "oh wow" moment: the app has already helped once, before I've paid.
+## 2. My priority areas, ranked (we recommend, I decide)
+- MyRhythm scores 6 to 8 areas from the answers (for example: remembering conversations, starting tasks, energy dips, sleep and rest, stress and inner voice, staying organised, support from others, meaning and progress).
+- They're shown as a ranked list: **#1 Recommended first**, #2, #3, and so on. Each area shows:
+  - the impact on my day (High / Medium / Low)
+  - how easy a quick win is
+  - "why this is ranked here", linked to my answers
+- **I choose:** I tap up to 3 areas to work on. I can accept the recommended order or reorder it. My choice becomes my first focus on Home and shapes the 3-week plan.
+- A 2x2 "impact vs effort" grid (quick wins, big moves, later, maybe) gives the consulting look. It's simple, labelled and readable on a phone.
 
-### 3. My picture, in my words
-- **Remembered · Reliable · Resilient** cards, each with a level (Strong / Building / Needs support) and one reason taken from my answers.
-- The eight MYRHYTHM letters move under a "See my full picture" disclosure. The score sits inside it and is labelled "a starting point, not a test".
-- My best window and 3-week plan stay, but each is trimmed to one short card.
+## 3. The detail behind it (expandable, one card per area)
+For each of the top areas:
+- **What I told MyRhythm:** my answers, quoted back.
+- **What this usually means day to day:** general, non-clinical.
+- **What MyRhythm will do:** two or three specific actions (capture, plan in my clear hours, reminders, Support Circle).
+- **Locked for members:** the full week-by-week plan for this area, shown as a blurred preview with a clear "included with membership" label. It's visible but not a trap.
 
-### 4. The honest choice (max 3 options)
-- **Keep going free:** my snapshot, the item I just saved, and my first 3 weeks.
-- **Become a Founding Member (£10/mo for life):** *"MyRhythm keeps catching things like this, every day, in my best hours, with my Support Circle if I want."* The line names the item they just saved.
+The eight MYRHYTHM letters and the score move into a "My full picture" appendix, labelled "a starting point, not a test".
+
+## 4. Prove it now
+The existing "What can't I afford to forget this week?" step, linked to my #1 area. I save one real item into my clearest time tomorrow with one tap.
+
+## 5. The honest choice (3 options)
+- **Keep going free:** this report, my chosen priorities, the item I saved and my first 3 weeks.
+- **Become a Founding Member (£10/mo for life):** the full plan for my chosen priorities, daily follow-through and Support Circle. The offer names my #1 area.
 - **Go to Home.**
 
 ## Guardrails
-- First-person voice, plain words, no diagnosis or medical claims, and no practitioner names.
-- Nothing is saved without a tap. Free is stated clearly.
-- Large tap targets, max 3 choices per screen.
+- First-person voice, plain words and short sentences, even though the structure is consulting-style.
+- No diagnosis, no medical claims, no practitioner names. "Not a test or a diagnosis" stays visible.
+- Recommendations are suggestions. The person always decides, and nothing is saved without a tap.
+- Large tap targets, max 3 primary choices per screen, and the priority choice is capped at 3.
 
 ## Technical
+- New `src/launch/compass/priorityAreas.ts`:
+  - maps answers to areas with impact and effort scores, a reason line and quoted answers
+  - provides `rankAreas(answers)` and `buildExecutiveSummary(answers)`
+  - tests assert concrete rankings for sample answer sets
+- New components in `src/components/launch/report/`:
+  - `ExecutiveSummary`
+  - `PriorityRanking` (choose up to 3, reorder)
+  - `ImpactEffortGrid`
+  - `AreaDetailCard` (with a locked member preview)
+- Save chosen priorities to device-local storage per user, and read them on Home for "first focus". Cloud sync waits for the pending database approval.
 - `src/pages/launch/LaunchWelcome.tsx`:
-  - Reorder the sections.
-  - Add a "mirror" first block built from saved answers using `buildSlipLine` and `buildThreeR` (plus a new `buildMirror` helper in `myCompass.ts`, with tests).
-  - Mount `CatchOneThing` second.
-  - Move the score and letter bars into a collapsible "full picture" section.
-  - Tighten `LivingCompassReport`, `YesPlanCard` and the window block.
-  - Rewrite the offer line to name the saved item.
-- Fix the calendar save in `CatchOneThing` if it fails, and show an error when it does.
-- Verify signed in, end to end: finish the questions, see the mirror, save one item, confirm it appears in the Calendar. Check phones at 320px and 393px plus the 834px tablet.
+  - reorder into the five sections above
+  - mount `CatchOneThing` in section 4
+  - move the score and letter bars into the appendix
+  - make the offer line use the #1 chosen area
+- Verify signed in, end to end: answer the questions, read the summary, choose priorities, save one item, see it on Calendar and Home. Check 320px, 393px and the 834px tablet.
