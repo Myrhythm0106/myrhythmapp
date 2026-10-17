@@ -20,6 +20,10 @@ import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
 import type { LetterId } from '@/data/launchAssessmentBanks';
 import { COGNITIVE_PILLARS, type PillarId } from '@/launch/framework/cognitiveCapital';
 import type { ProductivityWindow } from '@/launch/assessment/productivityWindow';
+import { ChevronDown } from 'lucide-react';
+import { ConsultingReport } from '@/components/launch/report/ConsultingReport';
+import { CatchOneThing } from '@/components/launch/assessment/CatchOneThing';
+import { areaTitle, readChosenPriorities, type AreaId } from '@/launch/compass/priorityAreas';
 
 
 // Emerald Prestige palette — page-scoped
@@ -78,6 +82,8 @@ export default function LaunchWelcome() {
   const navigate = useNavigate();
   const { persona, rawType } = usePersona();
   const [bhs, setBhs] = useState<BHSnapshot | null>(null);
+  const [answers, setAnswers] = useState<Record<string, unknown> | null>(null);
+  const [chosen, setChosen] = useState<AreaId[]>(() => readChosenPriorities());
   const [displayTotal, setDisplayTotal] = useState(0);
   const [foundingIntent] = useState(() => localStorage.getItem('myrhythm_intent') === 'founding');
 
@@ -88,6 +94,8 @@ export default function LaunchWelcome() {
         const data = JSON.parse(saved);
         const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
         if (score && typeof score.total === 'number') {
+          const a = data?.assessmentResults?.answers;
+          if (a && typeof a === 'object' && Object.keys(a).length) setAnswers(a);
           setBhs({
             total: score.total,
             letters: score.letters || {},
@@ -167,7 +175,9 @@ export default function LaunchWelcome() {
   const lowestEntry = lowestIdx >= 0 ? LETTER_ORDER[lowestIdx] : null;
   const lowestLetter = lowestEntry ? { ...lowestEntry, word: LETTER_WORDS[lowestEntry.id] } : null;
   const bestWindow = bhs?.productivityWindow ?? null;
-  const offerLine = lowestLetter
+  const offerLine = chosen.length
+    ? `Membership turns my report into a full plan for ${areaTitle(chosen[0]).toLowerCase()}${chosen.length > 1 ? ` and my other ${chosen.length - 1 === 1 ? 'priority' : 'priorities'}` : ''}, with daily follow-through${bestWindow ? ` in my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''}.`
+    : lowestLetter
     ? `Membership turns this snapshot into a plan that strengthens my ${lowestLetter.word.toLowerCase()}${
         bestWindow ? ` — and holds my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''
       }.`
@@ -223,6 +233,14 @@ export default function LaunchWelcome() {
             <MemoryFirstChip />
           </div>
 
+          {answers && <ConsultingReport answers={answers} onChosen={setChosen} />}
+          {answers && <CatchOneThing answers={answers} />}
+
+          <details className="group border-b border-[#064e3b]/5" open={!answers}>
+            <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 md:px-12 text-lg font-semibold text-launch-ink">
+              <span>My full picture <span className="block text-sm font-normal text-launch-ink/70">All 8 MYRHYTHM areas and my score. A starting point, not a test.</span></span>
+              <ChevronDown className="h-5 w-5 shrink-0 transition-transform group-open:rotate-180" />
+            </summary>
           {/* Hero Snapshot — DARK */}
           <div className="relative overflow-hidden p-8 md:p-12" style={{ backgroundColor: INK }}>
             {/* Topographic contour lines */}
@@ -406,6 +424,8 @@ export default function LaunchWelcome() {
                </div>
              </div>
            )}
+
+          </details>
 
            {/* Main body — magazine two-column */}
            <div className="grid grid-cols-1 md:grid-cols-12">
