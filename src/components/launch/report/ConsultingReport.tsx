@@ -57,14 +57,14 @@ export function ConsultingReport({ answers, onChosen }: Props) {
   return (
     <div className="bg-launch-ivory">
       {/* 1. Executive summary */}
-      <section aria-labelledby="exec-title" className="bg-launch-ink px-5 py-8 md:px-12 md:py-12">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-launch-gold">My snapshot · Executive summary</p>
-        <h2 id="exec-title" className="mt-3 max-w-3xl font-display text-2xl font-semibold leading-tight text-launch-cream md:text-4xl">
+      <section aria-labelledby="exec-title" className="bg-launch-cream px-5 py-8 md:px-12 md:py-12">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-launch-gold">Executive summary</p>
+        <h2 id="exec-title" className="mt-3 max-w-3xl font-display text-2xl font-semibold leading-tight text-launch-ink md:text-4xl">
           {summary.headline}
         </h2>
         <ul className="mt-6 grid gap-3 md:grid-cols-3">
           {summary.findings.map((f) => (
-            <li key={f.word} className="rounded-2xl border border-launch-gold/30 bg-launch-cream p-4">
+            <li key={f.word} className="rounded-2xl border border-launch-gold/40 bg-launch-ivory p-4">
               <p className="font-display text-xl text-launch-ink">{f.word}</p>
               <p className={`text-sm font-bold ${tone(f.level)}`}>{f.level}</p>
               <p className="mt-2 text-base leading-relaxed text-launch-ink">{f.reason}</p>
@@ -72,20 +72,20 @@ export function ConsultingReport({ answers, onChosen }: Props) {
           ))}
         </ul>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border-l-4 border-launch-gold bg-launch-cream/10 p-4">
+          <div className="rounded-2xl border-l-4 border-launch-gold bg-launch-ivory p-4">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-launch-gold">Biggest opportunity</p>
-            <p className="mt-2 text-base font-semibold leading-relaxed text-launch-cream">{summary.opportunity}</p>
+            <p className="mt-2 text-base font-semibold leading-relaxed text-launch-ink">{summary.opportunity}</p>
           </div>
-          <div className="rounded-2xl border-l-4 border-launch-teal bg-launch-cream/10 p-4">
+          <div className="rounded-2xl border-l-4 border-launch-teal bg-launch-ivory p-4">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-launch-gold">What could change in 3 weeks</p>
             <ul className="mt-2 space-y-1.5">
               {summary.outcomes.map((o) => (
-                <li key={o} className="flex gap-2 text-base text-launch-cream"><Check className="mt-1 h-4 w-4 shrink-0 text-launch-gold" />{o}</li>
+                <li key={o} className="flex gap-2 text-base text-launch-ink"><Check className="mt-1 h-4 w-4 shrink-0 text-launch-teal" />{o}</li>
               ))}
             </ul>
           </div>
         </div>
-        <p className="mt-5 text-sm text-launch-cream/70">
+        <p className="mt-5 text-sm text-launch-ink/70">
           Based on {summary.answered} answers. The Full Picture adds more for a sharper read. This describes everyday patterns. It is not a test or a diagnosis.
         </p>
       </section>
