@@ -222,25 +222,17 @@ export default function LaunchWelcome() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="w-full bg-white shadow-2xl border border-[#064e3b]/10 flex flex-col overflow-hidden"
+          className="w-full bg-white shadow-2xl border border-launch-ink/10 flex flex-col overflow-hidden"
         >
           {/* Chip row */}
-          <div className="p-6 flex flex-wrap gap-3 items-center bg-[#f5f0e0]/50 border-b border-[#064e3b]/5">
-            <span className="px-3 py-1 text-[10px] tracking-[0.2em] font-bold uppercase border border-[#064e3b] text-[#064e3b]">
+          <div className="p-6 flex flex-wrap gap-3 items-center bg-launch-cream/50 border-b border-launch-ink/5">
+            <span className="px-3 py-1 text-[10px] tracking-[0.2em] font-bold uppercase border border-launch-ink text-launch-ink">
               Welcome to MyRhythm
             </span>
             <EditionBadge variant="chip" />
             <MemoryFirstChip />
           </div>
 
-          {answers && <ConsultingReport answers={answers} onChosen={setChosen} />}
-          {answers && <CatchOneThing answers={answers} />}
-
-          <details className="group border-b border-[#064e3b]/5" open={!answers}>
-            <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 md:px-12 text-lg font-semibold text-launch-ink">
-              <span>My full picture <span className="block text-sm font-normal text-launch-ink/70">All 8 MYRHYTHM areas and my score. A starting point, not a test.</span></span>
-              <ChevronDown className="h-5 w-5 shrink-0 transition-transform group-open:rotate-180" />
-            </summary>
           {/* Hero Snapshot — DARK */}
           <div className="relative overflow-hidden p-8 md:p-12" style={{ backgroundColor: INK }}>
             {/* Topographic contour lines */}
@@ -261,7 +253,7 @@ export default function LaunchWelcome() {
             <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div className="md:max-w-xs">
                 <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-3" style={{ color: GOLD }}>
-                  My starting MYRHYTHM snapshot
+                  My MYRHYTHM snapshot
                 </p>
                 <div className="flex items-baseline gap-2">
                   <span
@@ -350,16 +342,24 @@ export default function LaunchWelcome() {
               className="relative z-10 mt-10 text-[10px] uppercase tracking-widest pt-6 border-t italic"
               style={{ color: `${CREAM}55`, borderColor: `${CREAM}1a` }}
             >
-              A snapshot only — not a clinical score. We'll track how this shifts as I build my rhythm.
+              A snapshot only — not a test or a diagnosis. We'll track how this shifts as I build my rhythm.
             </p>
           </div>
+          {answers && <ConsultingReport answers={answers} onChosen={setChosen} />}
+          {answers && <CatchOneThing answers={answers} />}
+
+          <details className="group border-b border-launch-ink/5" open={!answers}>
+            <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 md:px-12 text-lg font-semibold text-launch-ink">
+              <span>My full picture <span className="block text-sm font-normal text-launch-ink/70">My four-part picture, best window and letter-by-letter read.</span></span>
+              <ChevronDown className="h-5 w-5 shrink-0 transition-transform group-open:rotate-180" />
+            </summary>
 
           {bhs && <LivingCompassReport />}
           {bhs && <YesPlanCard />}
 
            {bhs && (
-             <div className="grid grid-cols-1 md:grid-cols-2 border-b border-[#064e3b]/5">
-               <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-[#064e3b]/5">
+             <div className="grid grid-cols-1 md:grid-cols-2 border-b border-launch-ink/5">
+               <div className="p-8 md:p-10 border-b md:border-b-0 md:border-r border-launch-ink/5">
                  <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-4" style={{ color: GOLD }}>
                    My four-part picture
                  </p>
@@ -371,7 +371,7 @@ export default function LaunchWelcome() {
                          <div className="flex justify-between gap-3 text-xs font-semibold mb-1" style={{ color: INK }}>
                            <span>{pillar.shortLabel}</span><span>{Math.round((value / 3) * 100)}%</span>
                          </div>
-                         <div className="h-2 bg-[#064e3b]/10 overflow-hidden">
+                         <div className="h-2 bg-launch-ink/10 overflow-hidden">
                            <div className="h-full" style={{ width: `${(value / 3) * 100}%`, backgroundColor: GOLD }} />
                          </div>
                        </div>
@@ -430,7 +430,7 @@ export default function LaunchWelcome() {
            {/* Main body — magazine two-column */}
            <div className="grid grid-cols-1 md:grid-cols-12">
             {/* Left: message + CTA */}
-            <div className="md:col-span-7 p-8 md:p-12 border-b md:border-b-0 md:border-r border-[#064e3b]/5">
+            <div className="md:col-span-7 p-8 md:p-12 border-b md:border-b-0 md:border-r border-launch-ink/5">
               <motion.h1
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -548,7 +548,7 @@ export default function LaunchWelcome() {
           </div>
 
           {/* Footer strip */}
-          <div className="px-8 md:px-12 py-8 bg-white border-t border-[#064e3b]/5">
+          <div className="px-8 md:px-12 py-8 bg-white border-t border-launch-ink/5">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               <p
                 className="text-[10px] uppercase tracking-[0.15em] max-w-xl leading-loose"
