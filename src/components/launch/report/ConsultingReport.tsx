@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp, Check, ChevronDown, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+
+const DETAIL_KEY = 'myrhythm_report_detail_open_v1';
 import {
   buildExecutiveSummary, rankAreas, readChosenPriorities, saveChosenPriorities,
   type AreaId, type PriorityArea,
@@ -22,6 +25,13 @@ export function ConsultingReport({ answers, onChosen }: Props) {
   });
   const [order, setOrder] = useState<PriorityArea[]>(ranked);
   const [confirmed, setConfirmed] = useState(() => readChosenPriorities().length > 0);
+  const [detailOpen, setDetailOpen] = useState(() => {
+    try { return localStorage.getItem(DETAIL_KEY) === '1'; } catch { return false; }
+  });
+  const setDetail = (v: boolean) => {
+    setDetailOpen(v);
+    try { localStorage.setItem(DETAIL_KEY, v ? '1' : '0'); } catch { /* ignore */ }
+  };
 
   const toggle = (id: AreaId) => {
     setConfirmed(false);
@@ -80,6 +90,16 @@ export function ConsultingReport({ answers, onChosen }: Props) {
         </p>
       </section>
 
+      <Collapsible open={detailOpen} onOpenChange={setDetail}>
+        <div className="border-b border-launch-gold/30 px-5 py-5 md:px-12">
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="min-h-[56px] w-full justify-between text-base border-launch-ink/40 text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
+              {detailOpen ? 'Hide the detail' : 'See the detail behind my summary'}
+              <ChevronDown className={`h-5 w-5 transition-transform ${detailOpen ? 'rotate-180' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
       {/* 2. Priority areas */}
       <section aria-labelledby="prio-title" className="border-b border-launch-gold/30 px-5 py-8 md:px-12 md:py-10">
         <Eyebrow>My priority areas</Eyebrow>
@@ -133,9 +153,11 @@ export function ConsultingReport({ answers, onChosen }: Props) {
         <Eyebrow>The detail behind it</Eyebrow>
         <h2 id="detail-title" className="mt-1 font-display text-2xl text-launch-ink md:text-3xl">{chosen.length ? 'My chosen areas' : 'My top 3 areas'}</h2>
         <div className="mt-5 space-y-3">
-          {detailAreas.map((a, i) => <AreaDetailCard key={a.id} area={a} defaultOpen={i === 0} />)}
+          {detailAreas.map((a) => <AreaDetailCard key={a.id} area={a} />)}
         </div>
       </section>
+      </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
