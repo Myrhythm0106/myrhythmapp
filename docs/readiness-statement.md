@@ -1,6 +1,6 @@
 # MyRhythm — Honest readiness statement
 
-_Last reviewed with the build described below._
+_Last reviewed 19 Oct 2026. Rating: 6.5/10 for public use, 8/10 for a briefed founders group once the gate items in `app-proof-checklist.md` (phone test, two-account test, pending database approvals, wording read-through, signed-in walkthrough) are done. Briefing: `founders-tester-briefing.md`._
 
 ## The plain answer
 
