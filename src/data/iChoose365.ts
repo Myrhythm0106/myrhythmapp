@@ -1888,7 +1888,7 @@ export const I_CHOOSE_365: IChooseEntry[] = [
  },
  {
   "day": 315,
-  "statement": "#IChoose to return without shame.",
+  "statement": "#IChoose to return without shame, one step at a time.",
   "bringItIn": "I focus on the importance of simply returning.",
   "pause": "What am I learning about myself right now?"
  },
