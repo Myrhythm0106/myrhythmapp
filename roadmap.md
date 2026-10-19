@@ -1,5 +1,10 @@
 # MyRhythm — task roadmap
 
+## Gentler days and ongoing check-ins (19 Oct 2026)
+- [ ] Add reversible gentler-day support on Home without changing appointments.
+- [ ] Add optional 30-, 60-, 90-day reflections with saved responses and postponement.
+- [ ] Test date rules, user isolation and visible interactions; report authentication limitations.
+
 ## Front door: Log In or Get Started (16 Oct 2026)
 - [x] `/launch/landingpage` is the only start page; old addresses redirect there.
 - [x] Banner shows Log In and Get Started only; signed-in shows Continue + Sign out.
