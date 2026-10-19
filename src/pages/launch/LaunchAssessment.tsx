@@ -19,7 +19,7 @@ import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
-import { YES_BY_ID, markLetterComplete } from '@/launch/framework/yes';
+import { markLetterComplete } from '@/launch/framework/yes';
 import {
   getAssessmentBank,
   resolveHasSupport,
