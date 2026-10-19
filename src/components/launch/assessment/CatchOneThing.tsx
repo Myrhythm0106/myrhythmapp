@@ -108,10 +108,34 @@ export function CatchOneThing({ answers }: Props) {
         </article>
       </div>
 
-      {!kept && (
-        <Button variant="action" className="mt-5 w-full min-h-[56px] text-base" disabled={!text.trim() || saving} onClick={keep}>
+      {!kept && !confirming && (
+        <Button variant="action" className="mt-5 w-full min-h-[56px] text-base" disabled={!text.trim() || saving} onClick={start}>
           <ShieldCheck />Keep this for me, tomorrow at {slip.keepTime}
         </Button>
+      )}
+      {!kept && confirming && (
+        <div className="mt-5 rounded-2xl border-2 border-launch-teal/50 bg-launch-ivory p-4">
+          <p className="text-base font-semibold text-launch-ink">
+            {rule.offerTimes ? 'Which time tomorrow works for me?' : `Shall I put it in my day tomorrow at ${time}?`}
+          </p>
+          {rule.offerTimes && (
+            <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Time tomorrow">
+              {timeChoices.map((t) => (
+                <Button key={t} type="button" role="radio" aria-checked={time === t} variant="outline" onClick={() => setTime(t)}
+                  className={`min-h-[56px] text-base ${time === t ? 'border-launch-teal bg-launch-teal/10 text-launch-ink' : 'border-launch-ink/30 text-launch-ink'}`}>
+                  {t}
+                </Button>
+              ))}
+            </div>
+          )}
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <Button variant="action" className="min-h-[56px] flex-1 text-base" disabled={saving} onClick={keep}>Yes, keep it at {time}</Button>
+            <Button variant="outline" className="min-h-[56px] flex-1 text-base border-launch-ink/30 text-launch-ink" onClick={() => setConfirming(false)}>Not yet</Button>
+          </div>
+        </div>
+      )}
+      {kept && rule.undo && savedId && (
+        <Button variant="outline" className="mt-3 min-h-[56px] text-base border-launch-ink/30 text-launch-ink" onClick={undo}>Undo</Button>
       )}
 
       <h3 className="mt-8 text-lg font-semibold text-launch-ink">My picture right now</h3>

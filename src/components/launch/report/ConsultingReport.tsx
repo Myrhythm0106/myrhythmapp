@@ -90,6 +90,30 @@ export function ConsultingReport({ answers, onChosen }: Props) {
         </p>
       </section>
 
+      {/* Calm step 2: my top 3, already ranked — keep or change */}
+      <section aria-labelledby="top3-title" className="border-b border-launch-gold/30 px-5 py-8 md:px-12">
+        <Eyebrow>My top 3 to start with</Eyebrow>
+        <h2 id="top3-title" className="mt-1 font-display text-2xl text-launch-ink md:text-3xl">
+          {confirmed ? 'My priorities are set. I can change them any time.' : 'MyRhythm recommends these. I decide.'}
+        </h2>
+        <ol className="mt-4 space-y-2">
+          {(chosen.length ? order.filter((a) => chosen.includes(a.id)) : ranked.slice(0, 3)).map((a, i) => (
+            <li key={a.id} className="flex items-baseline gap-3 rounded-2xl border border-launch-gold/40 bg-launch-ivory p-4">
+              <span className="font-display text-xl font-bold text-launch-gold">{i + 1}</span>
+              <span className="text-lg font-semibold text-launch-ink">{a.title}</span>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <Button variant="action" className="min-h-[56px] flex-1 text-base" disabled={confirmed}
+            onClick={() => (chosen.length ? confirm() : acceptRecommended())}>
+            {confirmed ? <><Check />Kept</> : 'Keep these'}
+          </Button>
+          <Button variant="outline" className="min-h-[56px] flex-1 text-base border-launch-ink/40 text-launch-ink hover:bg-launch-cream hover:text-launch-ink"
+            onClick={() => setDetail(true)}>Change</Button>
+        </div>
+      </section>
+
       <Collapsible open={detailOpen} onOpenChange={setDetail}>
         <div className="border-b border-launch-gold/30 px-5 py-5 md:px-12">
           <CollapsibleTrigger asChild>
