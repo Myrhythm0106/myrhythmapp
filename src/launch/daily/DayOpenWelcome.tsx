@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { getDailyStatement } from '@/data/iChooseStatements';
+import { getDailyEntry } from '@/data/iChoose365';
 import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
 import { cn } from '@/lib/utils';
 import watercolourBrain from '@/assets/watercolour-brain.png';
@@ -24,16 +24,16 @@ function bucket(): 'morning' | 'afternoon' | 'evening' {
 
 const OPENERS: Record<string, { hello: string; line: string }> = {
   morning: {
-    hello: 'A new day is mine',
-    line: "Nothing from yesterday gets to decide today. I set the pace, I set the tone.",
+    hello: 'Good morning',
+    line: 'Today is mine to shape. Whatever it holds, I meet it my way — one clear step at a time, with MyRhythm holding the rest.',
   },
   afternoon: {
-    hello: 'The rest of today is mine',
-    line: "However this morning went, I still hold the pen. One clear step forward is enough.",
+    hello: 'Good afternoon',
+    line: 'The rest of today is still mine. I choose where my energy goes, and every step I take counts.',
   },
   evening: {
-    hello: 'This evening is mine',
-    line: "I get to close today well — gently, on my terms, with something to be proud of.",
+    hello: 'Good evening',
+    line: 'This evening is mine. I can close today kindly, proud of what I carried and what I chose.',
   },
 };
 
@@ -109,7 +109,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
   const [vision, setVision] = useState('');
   const key = useMemo(() => todayKey(), []);
   const opener = OPENERS[bucket()];
-  const statement = useMemo(() => getDailyStatement(), []);
+  const entry = useMemo(() => getDailyEntry(), []);
   const today = useMemo(() => new Date(), []);
   const { events } = useLaunchCalendarEvents(today, today);
   const { setIsOpen } = useDayOpenWelcomeOpen();
@@ -120,7 +120,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
       // snapshot: open Home as asked, no surprise overlay. The day stays
       // unmarked so the welcome still greets a later visit.
       const params = new URLSearchParams(window.location.search);
-      const arrivedOnPurpose = params.get('from') === 'landing' || params.get('welcome') === '1';
+      const arrivedOnPurpose = params.get('welcome') === '1';
       if (!arrivedOnPurpose && !localStorage.getItem(key)) setOpen(true);
     } catch {
       /* storage blocked — skip the overlay rather than trapping the user */
@@ -221,12 +221,18 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
 
               <motion.div {...rise(0.28)} className="mt-8 flex gap-4">
                 <span className="day-open-rule w-[3px] shrink-0 rounded-full" aria-hidden="true" />
-                <p className="font-hind text-lg font-medium leading-snug sm:text-xl day-open-ivory">
-                  {statement}
-                </p>
+                <div>
+                  <p className="font-hind text-xs font-semibold uppercase tracking-[0.22em] day-open-ivory-60">Today I choose</p>
+                  <p className="font-hind mt-1 text-xl font-semibold leading-snug sm:text-2xl day-open-ivory">{entry.statement}</p>
+                  <p className="font-hind mt-2 text-base leading-relaxed day-open-ivory-80">{entry.bringItIn}</p>
+                  <p className="font-hind mt-2 text-xs day-open-ivory-45">Inspired by #IChoose 365 by Annabel Aaron</p>
+                </div>
               </motion.div>
 
               <motion.div {...rise(0.34)} className="mt-9">
+                <RevealRow label="A moment to pause">
+                  <p className="font-hind text-base leading-relaxed day-open-ivory-80">{entry.pause}</p>
+                </RevealRow>
                 {vision && (
                   <RevealRow label="My vision">
                     <p className="font-hind text-base leading-relaxed day-open-ivory-80">{vision}</p>
