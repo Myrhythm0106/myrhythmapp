@@ -1,20 +1,25 @@
-# A more meaningful daily welcome, with your own #IChoose statements
+# A more meaningful daily welcome, using your #IChoose 365 book
 
 ## What changes
-The once-a-day welcome stays, but it becomes a short, empowering moment that belongs to you:
+The welcome appears on your **first visit each day**, including straight after signing in. It becomes a short, empowering moment that is clearly yours:
 
-1. **An empowering welcome to today.** A warm greeting that changes with the time of day, for example "Good morning, Annabel. Today is mine to shape." It's followed by one present-tense line about choice and control. The rest stays the same: in-app "I/my" voice, no medical claims.
-2. **Today's #IChoose statement, in your words.** This is the centrepiece, large and clear, with a small "From Annabel's #IChoose" credit. It comes only from your own statements. The current made-up ones are removed once yours are in.
-3. **Start my day.** One large button closes the welcome and opens Home.
-4. **Calmer content.** "Today's shape" and "My vision" stay as small optional drop-downs, so there are never more than 3 things on the screen.
-5. **First entry of the day.** The welcome shows on the first visit each day, including straight after signing in. After "Start my day" it doesn't show again until tomorrow.
+1. **An empowering welcome to today.** A greeting that changes with the time of day, such as "Good morning, Annabel. Today is mine to shape."
+2. **Today's #IChoose, from your book.** Each day of the year shows that day's entry from *#IChoose 365*, word for word:
+   - **The statement**, large and clear, e.g. "Today, I choose to hear my voice."
+   - **A simple invitation** underneath, e.g. "I can trust myself enough to hear what I am trying to say."
+   - **Today's pause** as an optional drop-down, with its short reflection and question, e.g. "What do I already know about myself that I can trust?"
+   - A small credit, "From #IChoose 365 by Annabel Aaron".
+3. **Start my day.** One large button closes the welcome and opens Home. It won't show again until tomorrow.
+4. **Calm screen.** "Today's shape" and "My vision" stay as small optional drop-downs, so there are never more than 3 things to act on.
+5. **Your words only.** The made-up statements are removed.
 
-## What I need from you
-annabelaaron.com currently shows "This domain isn't connected to a site", so I can't read your blog. Please paste your #IChoose statements into the chat, ideally 30 or more so each lasts a month without repeating. Until then the welcome keeps today's wording, and nothing new is invented in your name.
+## Notes for you
+- The day of the book matches the day of the year: 1 January is Day 1, and Day 366 in a leap year repeats Day 365.
+- Some entries mention God, for example "my identity is found in God". I'll show every entry exactly as written. If you would rather keep faith entries out of the app, tell me before you approve.
+- The written-reflection lines from the book stay in the book. The app shows the words, not blank lines.
 
 ## Technical notes
-- Replace the pool in `src/data/iChooseStatements.ts` with your exact text, attributed in a source comment. The day-of-year rotation stays.
-- Rework the copy and layout in `src/launch/daily/DayOpenWelcome.tsx` (greeting, choice line, statement with credit, Start my day). The existing once-a-day key and the rule for arriving on purpose stay the same.
-- Show the welcome on the first app entry each day (any `/launch` signed-in page, including after sign-in), not just Home. It is suppressed only during the questions flow.
-- Add a test that the daily statement always comes from the pool and is the same throughout one day.
-- Save to memory: the #IChoose statements must be Annabel's own words from her blog.
+- Extract all 365 days from the PDF (statement, invitation, pause title, pause text, question) into `src/data/iChoose365.ts`. Check that there are exactly 365 entries, with none missing or garbled. `getDailyEntry(date)` picks the entry by day of year.
+- Rework `src/launch/daily/DayOpenWelcome.tsx`: show on the first signed-in entry of the day on any `/launch` page except the questions flow. Keep the existing once-a-day key. Lay out the greeting, statement, invitation, pause drop-down and Start my day.
+- Add tests: 365 entries, each with a statement starting "Today, I choose"; 1 January is Day 1; the entry stays the same throughout one day.
+- Save to memory: #IChoose content comes only from Annabel's *#IChoose 365*, quoted verbatim.
