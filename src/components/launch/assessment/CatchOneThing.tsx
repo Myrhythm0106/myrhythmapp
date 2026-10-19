@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { buildSlipLine, buildThreeR } from '@/launch/compass/myCompass';
+import { placementRule, readControlStyle } from '@/launch/calendar/controlStyle';
 
 const KEPT_KEY = 'myrhythm_first_kept_item_v1';
 
@@ -24,25 +25,40 @@ export function CatchOneThing({ answers }: Props) {
     try { return localStorage.getItem(KEPT_KEY); } catch { return null; }
   });
   const [saving, setSaving] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [time, setTime] = useState(slip.keepTime);
+  const [savedId, setSavedId] = useState<string | null>(null);
+  const rule = placementRule(readControlStyle(user?.id));
   const tomorrow = addDays(new Date(), 1);
+  const timeChoices = Array.from(new Set([slip.keepTime, '09:30', '14:00'])).slice(0, 3);
 
   const keep = async () => {
     const title = text.trim();
     if (!title) return;
     setSaving(true);
     if (user) {
-      await supabase.from('calendar_events').insert({
-        user_id: user.id, title, time: slip.keepTime, type: 'task',
+      const { data } = await supabase.from('calendar_events').insert({
+        user_id: user.id, title, time, type: 'task',
         description: 'Caught in my first MyRhythm snapshot', date: format(tomorrow, 'yyyy-MM-dd'),
         status: 'pending', source: 'manual', requires_acceptance: false, is_system_generated: false,
         watchers: [], reminder_level: 'steady', reminder_offsets_minutes: [720, 30],
         recurrence_pattern: 'none', recurrence_interval: 1, recurrence_end_date: null,
-      } as never);
+      } as never).select('id').single();
+      setSavedId((data as { id?: string } | null)?.id ?? null);
     }
     try { localStorage.setItem(KEPT_KEY, title); } catch {/* noop */}
     setKept(title);
+    setConfirming(false);
     setSaving(false);
   };
+
+  const undo = async () => {
+    if (savedId) await supabase.from('calendar_events').delete().eq('id', savedId);
+    try { localStorage.removeItem(KEPT_KEY); } catch {/* noop */}
+    setSavedId(null); setKept(null);
+  };
+
+  const start = () => (rule.confirmFirst ? setConfirming(true) : keep());
 
   const levelTone = (l: string) => l === 'Strong' ? 'text-launch-teal' : l === 'Building' ? 'text-launch-ink' : 'text-launch-ember';
 
