@@ -4,6 +4,7 @@ import { format, isToday } from 'date-fns';
 import { Clock, Check, ArrowRight, CalendarPlus, Loader2 } from 'lucide-react';
 import { useLaunchCalendarEvents, type LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 import { cn } from '@/lib/utils';
+import { areaTitle, readChosenPriorities } from '@/launch/compass/priorityAreas';
 
 /**
  * NextActionStrip
@@ -12,6 +13,20 @@ import { cn } from '@/lib/utils';
  * "Done" and "Move to tomorrow" inline. No action here costs more than one tap.
  */
 export function NextActionStrip() {
+  const top = readChosenPriorities()[0];
+  return (
+    <div className="space-y-2">
+      {top && areaTitle(top) && (
+        <p className="text-base text-launch-ink">
+          <span className="font-semibold">My focus:</span> {areaTitle(top)}
+        </p>
+      )}
+      <NextActionCard />
+    </div>
+  );
+}
+
+function NextActionCard() {
   const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
   const { events, loading, updateStatus, carryOver } = useLaunchCalendarEvents(today, today);

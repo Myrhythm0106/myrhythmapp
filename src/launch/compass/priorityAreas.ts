@@ -168,4 +168,4 @@ export function saveChosenPriorities(ids: AreaId[]) {
 export function readChosenPriorities(): AreaId[] {
   try { return JSON.parse(localStorage.getItem(CHOSEN_KEY) ?? '[]'); } catch { return []; }
 }
-export const areaTitle = (id: AreaId) => DEFS[id].title;
+export const areaTitle = (id: AreaId) => DEFS[id]?.title ?? "";
