@@ -7,6 +7,7 @@ import { ArrowRight, ArrowLeft, Check, Plus, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { RhythmDetailStep } from '@/components/launch/assessment/RhythmDetailStep';
+import { DayStripStep } from '@/components/launch/assessment/DayStripStep';
 import { useAuth } from '@/hooks/useAuth';
 import { deriveProductivityWindow } from '@/launch/assessment/productivityWindow';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
@@ -18,7 +19,7 @@ import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
-import { YES_BY_ID, markLetterComplete } from '@/launch/framework/yes';
+import { markLetterComplete } from '@/launch/framework/yes';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -125,11 +126,12 @@ function loadProgress(): StoredProgress | null {
 const QUESTION_HELPS: Record<string, string> = {
   memorySlips: 'Sets up: what MyRhythm guards first.',
   memoryRecall: 'Sets up: how MyRhythm captures conversations for me.',
-  findAgain: 'Sets up: how easy it is to find things again.',
+  findAgain: 'Sets up: how MyRhythm keeps what was agreed, ready to show.',
+  controlStyle: 'Sets up: how much MyRhythm asks before placing a step.',
   habitSleep: 'Sets up: lighter plans after a poor night.',
   habitCalm: 'Sets up: pauses where I need them most.',
   mindsetSlip: 'Sets up: how MyRhythm talks to me when something slips.',
-  planningRhythm: 'Sets up: when my important things go in my day.',
+  planningRhythm: 'Sets up: when important things go in my day, and which times stay light.',
   energyDip: 'Sets up: which times stay light.',
   startHard: 'Sets up: how my first step is shown to me.',
   reminderStop: 'Sets up: how my reminders work.',
@@ -148,6 +150,11 @@ export default function LaunchAssessment() {
   const [persona, setPersona] = useState<PersonaKey | null>(initial?.persona ?? null);
   const [currentQuestion, setCurrentQuestion] = useState<number>(initial?.currentQuestion ?? 0);
   const [answers, setAnswers] = useState<AnswerMap>(initial?.answers ?? {});
+  useEffect(() => {
+    const v = answers.controlStyle?.primary;
+    if (!v) return;
+    try { localStorage.setItem(`myrhythm_control_style_v1:${user?.id ?? 'signed-out'}`, v); } catch {/* noop */}
+  }, [answers.controlStyle?.primary, user?.id]);
   const [freeform, setFreeform] = useState<FreeformMap>(initial?.freeform ?? {});
   const [eventRecency, setEventRecency] = useState<RecencyValue | null>(initial?.eventRecency ?? null);
   const [phase, setPhase] = useState<'recency' | 'questions'>('questions');
@@ -482,6 +489,16 @@ export default function LaunchAssessment() {
     ? Boolean(rhythmDetailValues.focusLength && rhythmDetailValues.energyDrain)
     : !!current.primary;
 
+  /** Day-strip: first tap is the main answer, later taps also fit. */
+  const toggleStrip = (row: 'planningRhythm' | 'energyDip', value: string) => {
+    setAnswers((prev) => {
+      const ex = prev[row] ?? { primary: '', alsoFits: [] };
+      const all = [ex.primary, ...ex.alsoFits].filter(Boolean);
+      const next = all.includes(value) ? all.filter((v) => v !== value) : [...all, value];
+      return { ...prev, [row]: { primary: next[0] ?? '', alsoFits: next.slice(1) } };
+    });
+  };
+
   const setRhythmDetail = (rowId: string, value: string) => {
     setAnswers((prev) => {
       const existing = prev.rhythmDetail ?? { primary: '', alsoFits: [] };
@@ -500,8 +517,9 @@ export default function LaunchAssessment() {
       markLetterComplete(question.slot);
       if (nextQ) toast.success(`${question.word} done — saved. Stop here or carry on.`, { duration: 2400 });
     }
-    if (!IS_FULL_MODE && question.yes && nextQ && nextQ.yes !== question.yes) {
-      const preview = partPreview(question.yes, answers);
+    const previewPart = question.promise === 'Captures it' ? 'Y' : question.promise === 'Resilient' ? 'E' : question.promise === 'Follows it through' ? 'S' : null;
+    if (!IS_FULL_MODE && previewPart && nextQ && nextQ.promise !== question.promise) {
+      const preview = partPreview(previewPart, answers);
       if (preview) toast(preview, { duration: 3200 });
     }
     if (!isLast) {
@@ -683,15 +701,13 @@ export default function LaunchAssessment() {
         <p className="text-sm font-semibold text-launch-moss text-center mb-4">
           {IS_FULL_MODE
             ? `The full picture · ${question.word}`
-            : question.yes
-              ? `Part ${['Y', 'E', 'S'].indexOf(question.yes) + 1} of 3 · ${question.yes} — ${YES_BY_ID[question.yes].word}`
-              : ''}
+            : question.promise ?? ''}
           {' · '}Question {currentQuestion + 1} of {questions.length}
         </p>
 
         <div className="flex items-center justify-center mb-4">
           <span className="text-sm font-semibold text-launch-ink/75">
-            {!IS_FULL_MODE && question.yes ? YES_BY_ID[question.yes].shapes : question.word}
+            {!IS_FULL_MODE ? 'Captures it · Plans it · Keeps it · Follows it through · You stay in control' : question.word}
           </span>
         </div>
 
@@ -707,13 +723,21 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
-          {question.multiSelect
+          {question.kind === 'day-strip'
+            ? 'Tap as many as fit.'
+            : question.multiSelect
             ? 'Choose your main answer with the circle. Then use + Also fits for any others that fit too.'
             : 'Choose the answer that fits best today.'}{' '}
           You can change it later.
         </p>
 
-        {question.kind === 'rhythm-detail' ? (
+        {question.kind === 'day-strip' ? (
+          <DayStripStep
+            sharp={answers.planningRhythm ?? { primary: '', alsoFits: [] }}
+            empty={answers.energyDip ?? { primary: '', alsoFits: [] }}
+            onToggle={toggleStrip}
+          />
+        ) : question.kind === 'rhythm-detail' ? (
           <RhythmDetailStep
             rows={question.rows ?? []}
             values={rhythmDetailValues}
