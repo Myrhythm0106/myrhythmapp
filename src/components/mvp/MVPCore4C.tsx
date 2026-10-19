@@ -270,8 +270,8 @@ export function MVPCore4C() {
 
   const primaryLabel =
     entryState === 'returning' ? 'Log In'
-    : entryState === 'needsQuestions' ? 'Continue where I stopped'
-    : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to my day'
+    : entryState === 'needsQuestions' ? 'Continue where you stopped'
+    : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to your day'
     : 'Get Started';
   const showFounding = entryState === 'new' || entryState === 'returning' || entryState === 'hasSnapshot';
   const firstName =
