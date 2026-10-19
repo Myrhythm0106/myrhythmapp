@@ -16,7 +16,7 @@ export function NextActionStrip() {
   const top = readChosenPriorities()[0];
   return (
     <div className="space-y-2">
-      {top && (
+      {top && areaTitle(top) && (
         <p className="text-base text-launch-ink">
           <span className="font-semibold">My focus:</span> {areaTitle(top)}
         </p>
