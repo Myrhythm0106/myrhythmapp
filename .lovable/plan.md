@@ -1,16 +1,20 @@
-# Make the daily welcome optional
+# A more meaningful daily welcome, with your own #IChoose statements
 
-## What you saw
-"The rest of today is mine, Annabel" is the daily welcome. It fills the whole screen the first time you open Home each day, and that includes straight after signing in. You never asked for it, so it felt like the wrong page.
+## What changes
+The once-a-day welcome stays, but it becomes a short, empowering moment that belongs to you:
 
-## The change
-- The welcome is **off by default**. Signing in takes you straight to Home.
-- Settings gets a new switch, **"Show a welcome at the start of my day"**, with one plain line explaining what it does.
-- With the switch on, the welcome works as it does now: once a day, and one tap on "Start my day" closes it.
-- The choice is saved for each person on this device.
+1. **An empowering welcome to today.** A warm greeting that changes with the time of day, for example "Good morning, Annabel. Today is mine to shape." It's followed by one present-tense line about choice and control. The rest stays the same: in-app "I/my" voice, no medical claims.
+2. **Today's #IChoose statement, in your words.** This is the centrepiece, large and clear, with a small "From Annabel's #IChoose" credit. It comes only from your own statements. The current made-up ones are removed once yours are in.
+3. **Start my day.** One large button closes the welcome and opens Home.
+4. **Calmer content.** "Today's shape" and "My vision" stay as small optional drop-downs, so there are never more than 3 things on the screen.
+5. **Better timing.** The welcome still appears once a day. It is skipped on the very first sign-in, so a brand-new person goes straight to their questions or to Home.
+
+## What I need from you
+annabelaaron.com currently shows "This domain isn't connected to a site", so I can't read your blog. Please paste your #IChoose statements into the chat, ideally 30 or more so each lasts a month without repeating. Until then the welcome keeps today's wording, and nothing new is invented in your name.
 
 ## Technical notes
-- New small store `src/launch/daily/dayOpenPreference.ts` with `isDayOpenEnabled(userId)` and `setDayOpenEnabled(userId, on)`. It uses localStorage key `myrhythm_day_open_enabled_v1:<userId>` and defaults to false. It gets a test confirming the welcome is off by default and on after the switch is turned on.
-- `DayOpenWelcome.tsx` opens only when `isDayOpenEnabled(user.id)` is true. The existing rules for once a day and arriving on purpose stay the same.
-- `LaunchSettings.tsx` gets the new switch next to the existing switches.
-- Add a rule to the project memory: the daily welcome is optional and off by default.
+- Replace the pool in `src/data/iChooseStatements.ts` with your exact text, attributed in a source comment. The day-of-year rotation stays.
+- Rework the copy and layout in `src/launch/daily/DayOpenWelcome.tsx` (greeting, choice line, statement with credit, Start my day). The existing once-a-day key and the rule for arriving on purpose stay the same.
+- Skip the welcome when the first-session state shows a new account.
+- Add a test that the daily statement always comes from the pool and is the same throughout one day.
+- Save to memory: the #IChoose statements must be Annabel's own words from her blog.
