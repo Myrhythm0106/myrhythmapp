@@ -17,7 +17,6 @@ import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
-import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { HomeFullPictureCard } from './HomeFullPictureCard';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 import { useAuth } from '@/hooks/useAuth';
@@ -55,9 +54,6 @@ export function QuietHome() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-      {/* Warm, once-a-day welcome to the new day */}
-      <DayOpenWelcome name={greetName} />
-
       {/* Greeting strip */}
       <motion.div
         initial={{ opacity: 0 }}
