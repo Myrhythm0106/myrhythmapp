@@ -48,17 +48,17 @@ const chapters: Chapter[] = [
   {
     number: '01',
     marker: 'THE MOMENT',
-    title: 'The conversation stays with me.',
+    title: 'The conversation stays with you.',
     promise: 'Record a conversation or upload a report',
     description:
-      'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view—without asking me to remember everything at once.',
+      'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view—without asking you to remember everything at once.',
     image: emotionalLandscapeImg,
     alt: 'A person reviewing notes outdoors after an important conversation',
-    detailTitle: 'What I can expect',
+    detailTitle: 'What you can expect',
     details: [
-      'I can record a conversation or upload a report.',
-      'I review the write-up before anything reaches my diary.',
-      'I choose whether to keep the audio, the write-up, the actions, or all three.',
+      'You can record a conversation or upload a report.',
+      'You review the write-up before anything reaches your diary.',
+      'You choose whether to keep the audio, the write-up, the actions, or all three.',
     ],
     align: 'left',
     accent: 'ember',
@@ -67,16 +67,16 @@ const chapters: Chapter[] = [
     number: '02',
     marker: 'THE DECISION',
     title: 'The meaning becomes a next step.',
-    promise: 'Check my next steps',
+    promise: 'Check your next steps',
     description:
-      'Names, decisions and actions are organised into a professional summary. I stay in control: I can edit the wording, owner, priority and dates before I accept it.',
+      'Names, decisions and actions are organised into a professional summary. You stay in control: you can edit the wording, owner, priority and dates before you accept it.',
     image: organizedActionImg,
     alt: 'A Black professional with a natural Afro reviewing clear next steps at her desk',
     detailTitle: 'Why checking matters',
     details: [
       'Each action keeps a simple note of which conversation it came from.',
       'Priority, start date and finish date remain changeable.',
-      'Nothing is treated as agreed until I have reviewed it.',
+      'Nothing is treated as agreed until you have reviewed it.',
     ],
     align: 'right',
     accent: 'teal',
@@ -84,16 +84,16 @@ const chapters: Chapter[] = [
   {
     number: '03',
     marker: 'THE TIME',
-    title: 'The plan enters my real life.',
-    promise: 'Place it into my schedule',
+    title: 'The plan enters your real life.',
+    promise: 'Place it into your schedule',
     description:
-      'A next step becomes useful when it has a place in the day. MyRhythm helps me choose a realistic time, add the right level of reminder and send it to my calendar.',
+      'A next step becomes useful when it has a place in the day. MyRhythm helps you choose a realistic time, add the right level of reminder and send it to your calendar.',
     image: preciousMomentsImg,
     alt: 'A Black couple sharing a calm moment at home with time protected for what matters',
     detailTitle: 'Designed for real schedules',
     details: [
-      'Suggestions can reflect my energy and brain-health rhythm.',
-      'I can always choose a different time when life or another person requires it.',
+      'Suggestions can reflect your energy and brain-health rhythm.',
+      'You can always choose a different time when life or another person requires it.',
       'Google Calendar, Outlook, Apple Calendar and standard calendar files are supported.',
     ],
     align: 'left',
@@ -103,16 +103,16 @@ const chapters: Chapter[] = [
     number: '04',
     marker: 'THE PERSON',
     title: 'The right person can stay connected.',
-    promise: 'Loop in someone I trust—if I choose',
+    promise: 'Loop in someone you trust — if you choose',
     description:
-      'A family member, friend or professional can receive only the action or update I choose to share. Support remains permission-based, practical and personal.',
+      'A family member, friend or professional can receive only the action or update you choose to share. Support remains permission-based, practical and personal.',
     image: strengthTogetherImg,
     alt: 'A small group of trusted people connecting in warm evening light',
-    detailTitle: 'My choice stays central',
+    detailTitle: 'Your choice stays central',
     details: [
-      'I choose who is invited and what they can see.',
-      'A supporter can encourage follow-through without receiving my whole account.',
-      'My diary keeps each action connected to the conversation it came from.',
+      'You choose who is invited and what they can see.',
+      'A supporter can encourage follow-through without receiving your whole account.',
+      'Your diary keeps each action connected to the conversation it came from.',
     ],
     signature: 'No one walks alone.',
     align: 'right',
@@ -382,7 +382,7 @@ export function MVPCore4C() {
               </p>
               <div ref={heroCtaRef} className="mt-6 md:mt-9">
                 {entryState === 'returning' && (
-                  <p className="mb-3 font-instrument text-2xl text-launch-ink-deep">Welcome back.</p>
+                  <p className="mb-3 font-instrument text-2xl text-launch-ink-deep">Welcome back. Here is where you left off.</p>
                 )}
                 <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                   <Button
@@ -407,7 +407,7 @@ export function MVPCore4C() {
                 {entryState === 'new' && (
                   <>
                     <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                      Get Started: 4 short steps — account, about me, a few questions (about 5 minutes), your free snapshot. Stop and come back any time. Founding Member is £10/month for life · limited to 500 places.
+                      Get Started: 4 short steps — account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time. Founding Member is £10/month for life · limited to 500 places.
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
                       Already registered?{' '}
@@ -445,7 +445,7 @@ export function MVPCore4C() {
                 Nothing important should disappear between remembering and doing.
               </h2>
               <p className="mx-auto mt-6 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/70">
-                The 4C loop quietly carries each moment through Capture, Commit, Calibrate and Celebrate—without making my day feel like a system to manage.
+                The 4C loop quietly carries each moment through Capture, Commit, Calibrate and Celebrate—without making your day feel like a system to manage.
               </p>
             </header>
 
@@ -464,7 +464,7 @@ export function MVPCore4C() {
                   One thread. From the original conversation, through follow-through, to the day it's done.
                 </h2>
                 <p className="mt-6 font-worksans text-lg leading-8 text-launch-ink-deep/70">
-                  I can return to the original conversation, see what I agreed, know when it is due, decide who can help, and see each step through to done. The record stays coherent even when the audio does not.
+                  You can return to the original conversation, see what you agreed, know when it is due, decide who can help, and see each step through to done. The record stays coherent even when the audio does not.
                 </p>
               </div>
 
@@ -472,9 +472,9 @@ export function MVPCore4C() {
                 <div className="absolute bottom-6 left-5 top-6 w-px bg-launch-gold" aria-hidden="true" />
                 {[
                   { icon: Mic2, label: 'Record a conversation or upload a report', colour: 'bg-launch-ember' },
-                  { icon: FileText, label: 'Check my next steps', colour: 'bg-launch-teal' },
-                  { icon: CalendarCheck, label: 'Place them into my real schedule', colour: 'bg-launch-gold' },
-                  { icon: Users, label: 'Loop in someone I trust—if I choose', colour: 'bg-launch-teal' },
+                  { icon: FileText, label: 'Check your next steps', colour: 'bg-launch-teal' },
+                  { icon: CalendarCheck, label: 'Place them into your real schedule', colour: 'bg-launch-gold' },
+                  { icon: Users, label: 'Loop in someone you trust — if you choose', colour: 'bg-launch-teal' },
                   { icon: Link2, label: 'Return to the original conversation at any time', colour: 'bg-launch-ink' },
                   { icon: CheckCircle2, label: 'Follow through—and mark it complete', colour: 'bg-launch-gold' },
                 ].map((item) => {
@@ -508,8 +508,8 @@ export function MVPCore4C() {
             <div className="grid gap-px overflow-hidden rounded-md border border-primary-foreground/15 bg-primary-foreground/15 sm:grid-cols-3">
               {[
                 { icon: Clock3, title: 'Less to hold', text: 'Important details have somewhere reliable to live.' },
-                { icon: LockKeyhole, title: 'My control', text: 'I review, edit, share and retain on my terms.' },
-                { icon: Brain, title: 'My rhythm', text: 'Timing guidance adapts, but never takes away my choice.' },
+                { icon: LockKeyhole, title: 'Your control', text: 'You review, edit, share and retain on your terms.' },
+                { icon: Brain, title: 'Your rhythm', text: 'Timing guidance adapts, but never takes away your choice.' },
               ].map((item) => {
                 const Icon = item.icon;
                 return (
@@ -528,7 +528,7 @@ export function MVPCore4C() {
           <div className="mx-auto max-w-3xl px-5 md:px-8">
             <EditionBadge variant="inline" />
             <h2 className="mt-6 font-instrument text-4xl leading-tight text-launch-ink-deep md:text-6xl">
-              I do not need to hold the whole plan in my head.
+              You do not need to hold the whole plan in your head.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/70">
               Founding Members help shape a simpler standard for turning important moments into meaningful follow-through.
