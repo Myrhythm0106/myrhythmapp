@@ -20,6 +20,8 @@ import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { HomeFullPictureCard } from './HomeFullPictureCard';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
+import { useAuth } from '@/hooks/useAuth';
+import { LaunchDailySupport, useLaunchDailySupport } from './LaunchDailySupport';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -36,8 +38,8 @@ export function QuietHome() {
   const { isPause } = useStage();
   const firstSession = useFirstSession();
   const starting = useLaunchStartingStyle();
-
-  if (isPause) return <QuietHomePause />;
+  const { user } = useAuth();
+  const dailySupport = useLaunchDailySupport(user?.id);
 
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
@@ -48,6 +50,8 @@ export function QuietHome() {
 
   // Day one: one clear next move instead of a dozen empty panels.
   const settlingIn = starting.style === null && !firstSession.loading && firstSession.isNewAccount;
+
+  if (isPause) return <QuietHomePause />;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -80,19 +84,19 @@ export function QuietHome() {
       </motion.div>
 
       {/* What I learned about your best hours — said out loud */}
-      <RhythmLine />
+      {!dailySupport.gentle && <RhythmLine />}
 
       {/* The guided first session */}
       {starting.style === null && <FirstSessionCard state={firstSession} />}
 
       {/* One MYRHYTHM letter every few days during the YES weeks */}
-      {!settlingIn && <HomeFullPictureCard />}
+      {!settlingIn && !dailySupport.gentle && <HomeFullPictureCard />}
 
       {/* Returning Home: one priority and two familiar places. */}
       {!settlingIn && (
         <section aria-labelledby="home-now-title" className="space-y-4">
           <h2 id="home-now-title" className="font-display text-2xl text-launch-ink">
-            What needs my attention now
+            {dailySupport.gentle ? 'One step is enough for now' : 'What needs my attention now'}
           </h2>
           <NextActionStrip />
           <div className="grid gap-3 sm:grid-cols-2">
@@ -117,6 +121,8 @@ export function QuietHome() {
           </div>
         </section>
       )}
+
+      {!settlingIn && user?.id && !(isCaregiver && subject === 'supporting') && <LaunchDailySupport {...dailySupport} />}
 
       {/* Footer signature */}
       <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">
