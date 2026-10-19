@@ -14,6 +14,9 @@ import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAppReady } from '@/hooks/useAppReady';
 import { LaunchGuidedStart } from './LaunchGuidedStart';
+import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
+import { useDisplayName } from '@/launch/profile/useDisplayName';
+import { useAuth } from '@/hooks/useAuth';
 
 
 
@@ -58,6 +61,8 @@ export function LaunchLayout({
   const { isCaregiver } = usePersona();
   const appReady = useAppReady();
   const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
+  const { user } = useAuth();
+  const greetName = useDisplayName('');
   const isSelfContained = SELF_CONTAINED_PATHS.has(location.pathname);
 
   const showBack =
@@ -73,6 +78,7 @@ export function LaunchLayout({
 
   return (
     <SubjectProvider>
+      {user && !isOnboardingPath && <DayOpenWelcome name={greetName} />}
       <div className={cn(
         "launch-theme flex flex-col pb-safe px-safe",
         isSelfContained
