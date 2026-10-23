@@ -85,3 +85,5 @@ The two-way connected-account route below stays optional and can follow later:
 - [ ] **Any box unticked → founding seats stay closed. The unticked items get the next fortnight's two app blocks. Nothing else changes.**
 
 Signed off by: ______________  Date: ______
+
+> Run these tests in the order set out in `founder-testing-plan.md`.
