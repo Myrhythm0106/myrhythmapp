@@ -31,7 +31,23 @@ What I'll build:
 - A short "Use MyRhythm from your watch" guide in Help, for iPhone and Android.
 - Add a watch test (Test 9) to the testing plan and the PDF.
 
-Later phases (not in this plan): a one-tap Apple Shortcut, then a true native watch app.
+## 3. Watch and phone together: effortless for a tired or injured brain
+The standard: **record in one tap, then MyRhythm does the thinking.** No settings to choose, no forms, nothing to remember.
+
+- **One tap to record on either device.** On the phone, the home-screen "Record" shortcut and the Memory Bridge record button start straight away. On the watch, use the built-in recorder.
+- **No decisions after recording.** Watch and phone recordings both process automatically with sensible defaults: write-up, next steps and an email summary. Changing options is possible but never required.
+- **It recognises watch recordings.** Files from the watch are labelled "From my watch", given a title such as "Conversation, Tue 2:15pm", and processed with no questions asked.
+- **One calm confirmation screen.** "I found 3 next steps. Put them in my day?", with **Yes, place them** and **Let me check first**. Steps go where your saved control choice says, and every placement can be undone.
+- **Gentle progress, never silence.** Plain status updates ("Saved. Writing it up. Next steps ready."), with a notification when it's done, so nobody has to wait watching the screen.
+- **Nothing is ever lost.** If the phone is offline or the app is closed, the recording waits and processes once you're back. A failure says what happened and offers one retry button.
+- **Reminders reach the wrist.** Scheduled steps go to the phone calendar with alerts, so the watch shows them too. No extra setup.
+- **Brain-injury guardrails:** big targets, short words, at most 3 choices per screen, no red error walls, no time pressure, and a gentle-day setting that limits the confirmation to 1 step.
+
+## 4. Tests added once this is built
+- **Test 9, watch to day:** record on the watch, share or upload it, and check it's written up, emailed, and its steps are offered and placed within 5 minutes, with at most 3 taps on the phone.
+- **Test 10, phone one-tap:** start from the home-screen Record shortcut, record, and confirm "Yes, place them". Pass: at most 3 taps in total, and no screen asks a question you don't understand.
+
+Later phases (not in this plan): a one-tap Apple Shortcut on the watch, then a true native watch app with a record button on the wrist.
 
 ## Technical details
 - PDF built from `docs/founder-testing-plan.md` and saved to `/mnt/documents/MyRhythm-Founder-Testing-Plan.pdf`, with a copy in `public/downloads/` for the in-app link.
