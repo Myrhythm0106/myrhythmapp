@@ -16,6 +16,15 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 - Back Tap, the home-screen shortcut and watch voice memos all lead to the same place.
 - The first time, a short card asks "Set up one-tap recording?" and walks through it in 3 steps. It's never shown again once done.
 
+### Never relying on memory to press record
+- **Already built:** a prompt to record when you open the app during an appointment, automatic stop after quiet time, and saving as it goes, with a rescue offer next time.
+- **New, a nudge before each appointment:** a notification on phone and watch 5 minutes before any appointment or meeting ("GP at 2pm. Tap to record."). One tap starts recording.
+- **New, the calendar entry carries the link:** steps and appointments sent to the phone calendar include a "Tap to record with MyRhythm" link plus an alert, so the watch reminds you as well.
+- **New, "Did I miss one?":** an evening note when an appointment passed with no recording, offering a 30-second voice note that still becomes next steps.
+- **New, a supporter can prompt:** a Support Circle member with permission sends "Shall I start recording?". The owner still taps yes.
+- **New, warm habit lines** after each saved conversation. No streaks and no guilt.
+- **Guardrail:** never record without a visible tap. No hidden or always-on listening.
+
 ### 2. MyRhythm thinks: no forms
 - Recordings are named, written up and turned into steps automatically.
 - A calm progress line ("Saved · Writing it up · Your next steps are ready"), with no spinning wheel to watch.
