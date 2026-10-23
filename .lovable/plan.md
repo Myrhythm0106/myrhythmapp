@@ -28,6 +28,17 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 - A second button: **Share** (owners and Support Circle, ticked already, permission-safe).
 - On a gentler day, it shows only the first step.
 
+### Three kinds of step, clearly labelled
+| Kind | What it means | Default | Choice |
+|---|---|---|---|
+| **Agreed** | Said out loud in the conversation, with the quote shown | Ticked | Untick to drop |
+| **Implied** | Clearly expected but not said, with a one-line reason | Not ticked | **Keep** / **No thanks** |
+| **Ideas** | Helpful extras linked to the topic, at most 3 | Not ticked | **Add** / **No thanks** |
+- A **Keep all** shortcut covers everything, and any choice can be changed afterwards.
+- Only accepted steps reach the diary, the email or sharing.
+- It learns your taste: if you turn down ideas often, fewer are offered. Settings has "Show ideas: on / off".
+- Ideas never give medical advice. Health items are worded as "Ask your care team about…".
+
 ## Brain-friendly rules every screen must pass
 At most 3 choices, 56px buttons, 16px+ text, plain words in first person, no red error walls, no time pressure, nothing to remember, always undoable, no medical claims.
 
