@@ -1,7 +1,12 @@
 # One calm route: from conversation to my day
 
 ## The problem (our north star)
-After an appointment, discharge or important conversation, people with brain injury, stroke, ADHD, dementia or burnout lose what was said, the steps slip, and confidence wears away. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them.
+After a discharge, an appointment, a **work meeting** or any important conversation, people with brain injury, stroke, ADHD, dementia or burnout lose what was said. Steps slip, **commitments to family, colleagues and employers are missed**, and confidence wears away, so **getting back to work and staying there** feels out of reach. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them, so they can **show up, keep their word and take back their working life**.
+
+Three life moments it serves:
+- **Home from hospital:** discharge and follow-up conversations turn into a plan that keeps going.
+- **Back to work:** return-to-work meetings, team meetings and one-to-ones turn into clear actions, owners and deadlines, with energy-aware timing.
+- **Keeping my word:** every commitment (to my boss, my family, myself) is captured, scheduled, reminded and visibly done.
 
 ## The design: three moments, one decision
 ```text
