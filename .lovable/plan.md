@@ -1,5 +1,8 @@
 # Downloadable test plan + Smartwatch capture (phase 1)
 
+## 0. New core principle: friction-free
+Saved as a permanent rule for MyRhythm, applying to every feature and not just the watch: **every flow must be friction-free.** That means the fewest possible taps, no unnecessary questions, sensible defaults, nothing to remember, one calm confirmation at most, always undoable, and never a dead end. Any new screen that adds a step must justify it or remove it. Test 10 checks this.
+
 ## 1. Downloadable test plan (made accurate first)
 - **Before the PDF, correct the test wording so it matches the real app:**
   - Test 1 step 8: replace "Prove it now" with the real section, "What can't I afford to forget this week?".
