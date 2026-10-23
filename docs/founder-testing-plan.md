@@ -12,6 +12,7 @@ Do the tests in order. If a test fails, stop, tell me exactly what happened (wit
 | Days 5–6 | Test 5 (wording read-through) | 45 min |
 | Days 7–10 | Test 6 (10-conversation accuracy check) | 10 × 5 min |
 | Day 11 | Test 7 (calendar handoff) + Test 8 (fresh-eyes friend) | 40 min |
+| Day 11 | Test 9 (watch) + Test 10 (friction-free) | 20 min |
 | Day 12 | Gate decision, then invite the first 5 testers | 15 min |
 
 ## The exact tests
@@ -31,7 +32,7 @@ Pass: I confirm both changes are applied.
 5. Check: the snapshot opens with your MYRHYTHM score at the top, then the summary.
 6. Tap "See the detail behind my summary". Check it opens. Tap again to close it.
 7. Tap Keep these on your top 3.
-8. In "Prove it now", save one real thing (for example "Call the GP Thursday").
+8. In "What can't I afford to forget this week?", save one real thing (for example "Call the GP Thursday").
 9. Go to Home. Check: "My focus" shows your #1 area, and your saved item appears.
 10. Close the app, reopen it, and check the item is still there.
 Pass: every check is true, nothing freezes, and no screen confuses you.
@@ -41,7 +42,7 @@ Pass: every check is true, nothing freezes, and no screen confuses you.
 **Test 2 — iPhone long recording**
 1. On an iPhone, sign in and open Memory Bridge.
 2. Tap record. Play a podcast or TV programme near the phone for at least 2 hours. The screen may lock.
-3. Stop, then tap Save & Extract Actions.
+3. Tap Stop and save, then Save and find my next steps.
 4. Check: the length is right (within 1 minute), a write-up exists, and next steps are listed.
 5. Fully close the app, reopen it, and check the recording and steps are still there.
 Pass: all four checks are true. Note the phone model and iOS version.
@@ -65,7 +66,7 @@ Pass: the supporter never sees anything you didn't share. Any leak is a hard fai
 - [ ] PASS  - [ ] FAIL   Date: ______   Notes: ______________
 
 **Test 5 — Wording read-through**
-1. I'll send you 30 #IChoose statements (one per month) and every 3-week plan line from the snapshot.
+1. Open the review list (MyRhythm-Wording-Review.pdf) with 30 #IChoose statements and every 3-week plan line from the snapshot.
 2. Mark each one Keep, Change (with your wording) or Remove.
 Pass: every line is marked, and I apply your changes.
 
@@ -92,6 +93,23 @@ Pass: all three land with the right date and time.
 2. Watch silently while they do it. Don't help.
 3. Write down every pause, every question they ask, and every "oh".
 Pass: they reach their snapshot and save one thing without your help.
+
+- [ ] PASS  - [ ] FAIL   Date: ______   Notes: ______________
+
+**Test 9 — Watch to my day**
+1. Record a 2-minute conversation on the watch (Voice Memos or Recorder). Stop.
+2. Get it to the phone and upload it in Memory Bridge (see Help → Use MyRhythm from my watch).
+3. Check: it is named automatically ("From my watch or phone · day, time"), written up, and next steps are offered.
+4. Put them in your day.
+Pass: done within 5 minutes, no typing, and nothing placed without your yes.
+
+- [ ] PASS  - [ ] FAIL   Date: ______   Notes: ______________
+
+**Test 10 — Friction-free check**
+1. Start a recording from the phone's home-screen Record shortcut, or three taps on the back of an iPhone (Settings → Tap to record).
+2. Record, tap Stop and save, then put the steps in your day.
+3. Count every tap and every question.
+Pass: no screen asks something you don't understand, and nothing feels like an extra step.
 
 - [ ] PASS  - [ ] FAIL   Date: ______   Notes: ______________
 

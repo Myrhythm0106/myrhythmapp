@@ -185,6 +185,43 @@ export default function LaunchHelp() {
         </div>
       </div>
 
+      {/* Use MyRhythm from my watch */}
+      <LaunchCard className="mb-6">
+        <h3 className="font-semibold text-launch-ink mb-1">Use MyRhythm from my watch</h3>
+        <p className="text-sm text-launch-ink/70 mb-3">One tap to record on my wrist. MyRhythm does the thinking.</p>
+        <div className="space-y-3 text-sm text-launch-ink/85">
+          <div>
+            <p className="font-medium text-launch-ink">Apple Watch</p>
+            <ol className="list-decimal ml-5 space-y-1">
+              <li>Open <strong>Voice Memos</strong> on my watch and tap record. Tap again to stop.</li>
+              <li>On my iPhone, open Voice Memos, tap the recording, then <strong>Share → Save to Files</strong>.</li>
+              <li>In MyRhythm, open Memory Bridge and choose <strong>Upload</strong>. It is named and written up for me.</li>
+            </ol>
+          </div>
+          <div>
+            <p className="font-medium text-launch-ink">Android watch</p>
+            <ol className="list-decimal ml-5 space-y-1">
+              <li>Open <strong>Recorder</strong> on my watch and tap record. Tap again to stop.</li>
+              <li>On my phone, open Memory Bridge and choose <strong>Upload</strong>, then pick the recording.</li>
+            </ol>
+          </div>
+          <p className="text-launch-ink/60">Nothing goes into my diary until I say yes.</p>
+        </div>
+      </LaunchCard>
+
+      {/* Founder testing plan */}
+      <LaunchCard className="mb-6">
+        <h3 className="font-semibold text-launch-ink mb-1">Testing plan</h3>
+        <p className="text-sm text-launch-ink/70 mb-3">The step-by-step checklist for founder testing.</p>
+        <a
+          href="/downloads/MyRhythm-Founder-Testing-Plan.pdf"
+          download="MyRhythm-Founder-Testing-Plan.pdf"
+          className="inline-flex min-h-14 w-full items-center justify-center rounded-xl bg-brand-orange-500 px-5 font-semibold text-primary-foreground"
+        >
+          Download testing plan (PDF)
+        </a>
+      </LaunchCard>
+
       {/* Still Need Help */}
       <LaunchCard variant="featured" className="mb-24">
         <div className="text-center">

@@ -40,7 +40,7 @@ import { MicLevelMeter } from '@/components/memoryBridge/MicLevelMeter';
 import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
-import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
+import { uploadRecordingFile, isSupportedRecordingFile, friendlyUploadTitle } from '@/utils/uploadRecordingFile';
 import { CaptureHub } from '@/components/memoryBridge/CaptureHub';
 import { OutputModeChooser } from '@/components/memoryBridge/OutputModeChooser';
 import { TranscriptView } from '@/components/memoryBridge/TranscriptView';
@@ -613,7 +613,7 @@ export default function LaunchMemoryBridge() {
       return;
     }
 
-    const title = recordingTitle || file.name.replace(/\.[^.]+$/, '');
+    const title = recordingTitle || friendlyUploadTitle(file);
     setIsUploading(true);
     setIsExtracting(true);
     try {
