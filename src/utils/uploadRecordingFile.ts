@@ -16,7 +16,21 @@ const ACCEPTED_PREFIXES = ['audio/', 'video/'];
 export function isSupportedRecordingFile(file: File): boolean {
   if (ACCEPTED_PREFIXES.some(p => (file.type || '').startsWith(p))) return true;
   // Some phones hand over an empty MIME type — fall back to the extension.
-  return /\.(m4a|mp3|wav|aac|ogg|webm|mp4|mov|caf|flac)$/i.test(file.name);
+  return /\.(m4a|mp3|wav|aac|ogg|opus|amr|3gp|webm|mp4|mov|caf|flac)$/i.test(file.name);
+}
+
+/** Watch and phone voice-memo apps give files names like "New Recording 12.m4a" or "Recording_20261023.amr". */
+export function looksLikeVoiceMemo(name: string): boolean {
+  return /(^new recording|^recording|^voice|^rec[_ -]|\.amr$|\.3gp$|\.caf$)/i.test(name.trim());
+}
+
+/** Plain-words title so nobody has to type one: "From my watch · Fri 23 Oct, 2:15pm". */
+export function friendlyUploadTitle(file: File, now: Date = new Date()): string {
+  const when = new Date(file.lastModified || now.getTime());
+  const day = when.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  const time = when.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
+  if (looksLikeVoiceMemo(file.name)) return `From my watch or phone · ${day}, ${time}`;
+  return file.name.replace(/\.[^.]+$/, '');
 }
 
 function extensionFor(file: File): string {
