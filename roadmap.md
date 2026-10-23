@@ -1,5 +1,16 @@
 # MyRhythm — task roadmap
 
+## Testing plan + watch capture, friction-free (23 Oct 2026)
+- [x] Friction-free saved as a core principle.
+- [x] Test wording corrected; Tests 9 (watch) and 10 (friction-free) added; PDF in Files and downloadable from Help.
+- [x] Wording review PDF (30 #IChoose + 3-week plan lines) for Test 5.
+- [x] Memory Bridge upload accepts watch/phone voice memos (.m4a/.aac/.amr/.3gp/.opus/.caf) and names them automatically (tested).
+- [x] "Use MyRhythm from my watch" guide in Help.
+- [ ] Android "Share → MyRhythm": needs an offline service worker to receive shared files; deferred until approved, Upload covers it meanwhile.
+- [ ] "Send to MyRhythm" Apple Shortcut with personal upload token: needs a new secure upload endpoint and database approval.
+- [ ] Automatic summary email (key summary + actions table + Excel attached) and per-owner / Support Circle sending: needs email sender check and a processing-complete trigger.
+- [ ] Single "Put them in my day?" confirmation after watch uploads (existing Next Step Summary already schedules and exports Excel).
+
 ## Gentler days and ongoing check-ins (19 Oct 2026)
 - [x] Add reversible gentler-day support on Home without changing appointments.
 - [x] Add optional 30-, 60-, 90-day reflections from explicit opt-in with device-local saved responses and postponement.
