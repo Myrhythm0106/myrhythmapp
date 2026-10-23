@@ -37,3 +37,5 @@ clinicians relying on it, or for paying customers.
 "This is an early Founding Edition. Everything you capture is real and yours, but treat it
 as a companion, not the only copy. Tell me the moment something feels confusing — that's the
 point of you being here."
+
+> Exact test steps and timeline: `founder-testing-plan.md`.
