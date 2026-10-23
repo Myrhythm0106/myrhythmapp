@@ -3,6 +3,24 @@
 ## 0. New core principle: friction-free
 Saved as a permanent rule for MyRhythm, applying to every feature and not just the watch: **every flow must be friction-free.** That means the fewest possible taps, no unnecessary questions, sensible defaults, nothing to remember, one calm confirmation at most, always undoable, and never a dead end. Any new screen that adds a step must justify it or remove it. Test 10 checks this.
 
+## 0b. The output of every conversation (watch or phone)
+Every recording produces one elegant **Conversation Summary**, shown in the app and sent by email:
+
+1. **Key summary:** 3 to 5 plain-language points about what was discussed and decided, with the date, who was there and its reference code.
+2. **Actions table, laid out like a clean spreadsheet:**
+
+| # | Action | Owner | Start | Due | Priority | Status | Schedule |
+|---|---|---|---|---|---|---|---|
+
+   - Owner, dates and priority can be edited straight in the table.
+   - **Download as Excel (.xlsx)**, nicely formatted in MyRhythm colours with a frozen header and the same columns, ready to filter.
+3. **Schedule into my diary:** "Put them in my day" places every action in one tap, following the saved control choice, or you can schedule each row on its own. Undo is always there.
+4. **Send to owners and Support Circle:**
+   - Each owner gets an email with only their actions and an Add to calendar link.
+   - Support Circle members get the summary only if their permission allows. Nothing outside their permission is ever sent.
+   - One "Send" button, with checkboxes already ticked for the people who should get it.
+5. **The email itself** carries the key summary, the actions table built into the email (not just an attachment), the Excel file attached, and "Add to my calendar" links.
+
 ## 1. Downloadable test plan (made accurate first)
 - **Before the PDF, correct the test wording so it matches the real app:**
   - Test 1 step 8: replace "Prove it now" with the real section, "What can't I afford to forget this week?".
