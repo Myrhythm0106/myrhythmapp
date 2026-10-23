@@ -51,6 +51,8 @@ Pass: all four checks are true. Note the phone model and iOS version.
 **Test 3 — Android long recording**
 Same as Test 2, on an Android phone in Chrome.
 
+- [ ] PASS  - [ ] FAIL   Date: ______   Notes: ______________
+
 **Test 4 — Two-account Support Circle**
 1. Create a second account with a different email (or use the tester account).
 2. From your account, invite the second account to watch **one** capture only.
