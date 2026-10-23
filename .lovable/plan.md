@@ -47,11 +47,20 @@ The standard: **record in one tap, then MyRhythm does the thinking.** No setting
 - **Test 9, watch to day:** record on the watch, share or upload it, and check it's written up, emailed, and its steps are offered and placed within 5 minutes, with at most 3 taps on the phone.
 - **Test 10, phone one-tap:** start from the home-screen Record shortcut, record, and confirm "Yes, place them". Pass: at most 3 taps in total, and no screen asks a question you don't understand.
 
-Later phases (not in this plan): a one-tap Apple Shortcut on the watch, then a true native watch app with a record button on the wrist.
+## 5. Friction-free target (the rule every screen is checked against)
+- **Watch:** 1 tap to start recording and 1 tap to stop. Nothing else on the wrist.
+- **Getting it to MyRhythm:**
+  - **iPhone:** a ready-made **"Send to MyRhythm" Apple Shortcut**, built in this phase. It runs from the watch or the phone's Share sheet and sends the recording straight in, with no Files step and no upload screen. Setup is one tap from a link in Help.
+  - **Android:** Share, then MyRhythm, and it starts processing by itself.
+- **After that:** zero taps until the single "Put them in my day?" confirmation. Anyone who chose "just place them" in the questions gets their steps placed automatically, with Undo.
+- **Never asked twice:** sign-in is remembered on the phone, and default options are never shown unless asked for.
+
+Later phase (not in this plan): a true native watch app with a record button on the wrist and no phone step at all.
 
 ## Technical details
 - PDF built from `docs/founder-testing-plan.md` and saved to `/mnt/documents/MyRhythm-Founder-Testing-Plan.pdf`, with a copy in `public/downloads/` for the in-app link.
 - Add `share_target` (POST, multipart, `audio/*`) to `public/manifest.webmanifest`. A small route will receive the shared file and hand it to the existing upload path. This needs an installed web app on Android.
 - Widen the accepted audio types in the existing upload helper. Processing stays in the existing process-meeting-audio path.
 - The summary email uses the existing send-email function, triggered when processing completes. The setting is stored per user.
+- Apple Shortcut: it posts the audio to a new authenticated upload endpoint using a personal upload token from Settings, and the token can be revoked.
 - Add the tasks to roadmap.md.
