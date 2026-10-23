@@ -1,6 +1,8 @@
 # One calm route: from conversation to my day
 
 ## The problem (our north star)
+**The follow-through gap.** People don't fail because they don't care or don't understand. They fail between "we agreed" and "it got done". MyRhythm exists to close that gap. **Follow-through is the product.** Recording, summaries, steps, reminders and the Support Circle are how it happens.
+
 After hospital, an appointment, a family plan or a **work meeting**, people with brain injury, stroke, ADHD, dementia or burnout lose what was said. Steps slip, **promises to family, colleagues and employers are missed**, and confidence wears away, so **being there for family and getting back to work** feels out of reach. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them, so they can **show up, keep their word and take back their life, at home and at work**.
 
 The journey it supports, in order:
