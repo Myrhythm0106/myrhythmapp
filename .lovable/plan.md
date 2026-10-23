@@ -1,9 +1,15 @@
 # Downloadable test plan + Smartwatch capture (phase 1)
 
-## 1. Downloadable test plan
-- Turn the founder testing plan into a printable **PDF in MyRhythm colours**, with tick boxes, date lines and notes space. Save it to your Files so you can download it straight from chat.
+## 1. Downloadable test plan (made accurate first)
+- **Before the PDF, correct the test wording so it matches the real app:**
+  - Test 1 step 8: replace "Prove it now" with the real section, "What can't I afford to forget this week?".
+  - Test 2 step 3: use the real name of the save-and-extract button in Memory Bridge.
+  - Test 5: produce the review list (30 #IChoose statements plus every 3-week plan line) as its own downloadable file, so the test can actually be done.
+  - Test 0 stays as it is. You approve the two database changes in chat.
+- Turn the corrected plan into a printable **PDF in MyRhythm colours**, with tick boxes, date lines and notes space. Save it to your Files so you can download it straight from chat.
 - Check every page as an image before handing it over.
-- Also add a **Download testing plan** link in the app, on the Help page for signed-in users, so the same PDF can be downloaded from the app.
+- Also add a **Download testing plan** link in the app, on the Help page for signed-in users.
+- The watch test (Test 9) is added only once the watch route below is built, and the PDF is then reissued as version 2.
 
 ## 2. Smartwatch capture, phase 1 (watch voice memo into MyRhythm)
 Works with Apple Watch and most Android watches, with no store app needed.
