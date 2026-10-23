@@ -1,12 +1,13 @@
 # One calm route: from conversation to my day
 
 ## The problem (our north star)
-After a discharge, an appointment, a **work meeting** or any important conversation, people with brain injury, stroke, ADHD, dementia or burnout lose what was said. Steps slip, **commitments to family, colleagues and employers are missed**, and confidence wears away, so **getting back to work and staying there** feels out of reach. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them, so they can **show up, keep their word and take back their working life**.
+After hospital, an appointment, a family plan or a **work meeting**, people with brain injury, stroke, ADHD, dementia or burnout lose what was said. Steps slip, **promises to family, colleagues and employers are missed**, and confidence wears away, so **being there for family and getting back to work** feels out of reach. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them, so they can **show up, keep their word and take back their life, at home and at work**.
 
-Three life moments it serves:
-- **Home from hospital:** discharge and follow-up conversations turn into a plan that keeps going.
-- **Back to work:** return-to-work meetings, team meetings and one-to-ones turn into clear actions, owners and deadlines, with energy-aware timing.
-- **Keeping my word:** every commitment (to my boss, my family, myself) is captured, scheduled, reminded and visibly done.
+The journey it supports, in order:
+1. **Home from hospital:** discharge and follow-up conversations become a plan that keeps going after the care stops.
+2. **Back with my family:** school runs, birthdays, appointments for others, and the promises made at the kitchen table are kept, so I'm someone my family can count on again.
+3. **Back to work:** return-to-work meetings, team meetings and one-to-ones become clear actions, owners and deadlines, timed around my energy.
+4. **Keeping my word, every day:** every commitment, to my family, my colleagues and myself, is captured, scheduled, reminded and visibly done.
 
 ## The design: three moments, one decision
 ```text
@@ -58,7 +59,8 @@ At most 3 choices, 56px buttons, 16px+ text, plain words in first person, no red
 
 ## Also in this plan
 - Publish the current version to myrhythmapp.com (the security check is clear), so you can test the upload on your phone today.
-- Update the landing page problem statement to the north-star wording above (in "you" voice).
+- Update the landing page problem statement to the north-star wording above, in "you" voice, showing the four-step journey: home from hospital, back with your family, back to work, keeping your word.
+- Family and work steps: the before-appointment nudge also covers family plans and work meetings, and steps involving a named family member or colleague keep that person as owner, so they can be shared.
 - Add the "Capture → thinks → one yes" check to Test 10.
 
 ## Technical details
