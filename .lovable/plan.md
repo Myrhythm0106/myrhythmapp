@@ -66,6 +66,21 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 - **On Home:** a warm line such as "Sarah is cheering you on today" when there's a new note. Otherwise it's hidden, so it never adds clutter.
 - **On the landing page:** "No one walks alone." is a signature line in the journey, in teal, beside the Support Circle.
 - **Guardrail:** sharing is always the person's choice. Nothing is shared beyond the permissions they set.
+- **The person can switch it off:** Settings has "Show my circle on my screens: On / Off". When it's off, the circle strip, chips and Home line are hidden and nothing is shared automatically. The Support Circle itself stays intact and can be switched back on any time.
+
+## Professional, empowering wording on every screen
+- Calm, confident, adult language. Never childish, never clinical, never pitying.
+- First person in the app ("My next steps", "I'm ready"), "you" on the landing page.
+- Strengths-led: "Saved, and ready when I am", never "You forgot". "Let's try that again", never "Error".
+- One wording pass across Memory Bridge, the Conversation Summary, Home, Support Circle and Settings, using the same terms everywhere: next steps, my day, my circle.
+
+## Priority order: ready for you to use and test with your circle first
+1. **Publish** the current version, so you can use it on your phone today.
+2. **Support Circle first:** the "My circle" strip with the off switch, sharing a Conversation Summary with your circle, "With: name" chips and encouragement hearts.
+3. **Conversation Summary:** key summary, steps table, three kinds of step, "Put these in my day", Excel download.
+4. **Recording reminders** and the before-meeting nudge.
+5. **Landing page North Point** wording.
+6. **Re-publish**, and update the testing plan PDF (version 2) with a **Test 11: Support Circle in real life**. Invite one real person, share a summary, they send encouragement, you switch the circle view off and on, and check they only ever see what you shared.
 
 ## Brain-friendly rules every screen must pass
 At most 3 choices, 56px buttons, 16px+ text, plain words in first person, no red error walls, no time pressure, nothing to remember, always undoable, no medical claims.
