@@ -220,6 +220,13 @@ export default function LaunchHelp() {
         >
           Download testing plan (PDF)
         </a>
+        <a
+          href="/downloads/MyRhythm-How-To-Get-Set-Up.pdf"
+          download="MyRhythm-How-To-Get-Set-Up.pdf"
+          className="mt-3 inline-flex min-h-14 w-full items-center justify-center rounded-xl border border-launch-gold/50 bg-launch-ivory px-5 font-semibold text-launch-ink-deep"
+        >
+          Download How to Get Set Up (PDF)
+        </a>
       </LaunchCard>
 
       {/* Still Need Help */}
