@@ -14,6 +14,24 @@ No jargon, no unexplained labels, no slogans standing in for instructions.
 - Then a choice appears with unexplained labels: "**YES** Quick Start" and "all eight **MYRHYTHM letters**". Two options and no clear "just start".
 - The page before it, "What brings you to MyRhythm?", has a "Personalize Your Experience" badge and no line saying why it's asked or what comes next.
 
+## New: a calm welcome straight after registering
+The first thing after creating an account, shown once:
+```text
+You're in, Annabel. Welcome to MyRhythm.
+
+Here's what happens next. It takes about 10 minutes, and I can stop any time.
+  1  A few quick questions about my day    (about 6 minutes)
+  2  My free personal snapshot             (ready straight away)
+  3  My first small step, saved to my day  (1 minute)
+
+  [ Guide me through it ]                 <- main button, recommended
+  I'd rather look around first            <- quiet link
+```
+- **Guide me** (the default): a slim "My guided start · 1 of 3" strip leads the way, one step at a time. It says what to do and what comes next, then gets out of the way when the step is done. No pop-ups, no arrows and no cartoon tips.
+- **Look around first:** goes to Home. A small "Pick up my guided start" link stays on Home until it's finished, so nobody is lost.
+- Tone: warm and adult, like a good personal assistant. "Here's what happens next", never "Yay!" or "Great job!".
+- Never shown again once chosen. It can be found later in Help as "Show me around again".
+
 ## The new screen before the questions
 ```text
 Step 3 of 4 · My questions
