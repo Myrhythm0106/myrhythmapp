@@ -3,7 +3,12 @@
 ## The problem (our north star)
 **Remembering, so follow-through can happen, and my vision becomes real.** People care deeply and mean every word. But after a brain injury, stroke, ADHD, dementia or burnout, what was said doesn't always stay. Plans drift, and with them goes trust in myself. My **confidence is knocked**. I start to feel **unreliable** to the people who count on me, **alone** in carrying it, and that **life feels unfair**, because I never stopped caring, I just couldn't hold on to it all. Without remembering, there's nothing to follow through on. MyRhythm remembers for them, then supports carrying each step through to done. **MyRhythm remembers, so I can follow through. My confidence returns, people can count on me again, and step by step I build the life I choose. And I never do it alone.**
 
-**From vision to today:** My Vision (the life I want at home, with family and at work) breaks into practical goals, then this week's priorities, then today's small steps. Every captured conversation can link a step to the vision it serves, so ordinary days visibly move me towards the life I chose.
+**What matters to me, a little at a time.** This isn't goal setting. It's a gentle reminder of *why* the small steps matter.
+- **One question, asked kindly and only when I'm ready:** "What would I love to get back to?" Examples include "Taking the kids to school", "Being back at work three days a week" and "Cooking Sunday lunch again". One line is enough, and it can be skipped.
+- **Targets from my care team belong here too.** "Walk 10 minutes a day (from my physio)" or "Drive again by spring (neurologist)" can be added straight from a recorded appointment, labelled with who set them, so I can show progress at my next visit.
+- **MyRhythm does the breaking down.** It suggests one small step for this week. I can say yes, swap it, or not now. No charts, deadlines or scores.
+- **Ordinary days quietly connect.** A step linked to what matters shows a soft line: "This helps me get back to: school runs."
+- **Wording guardrails:** "what matters to me", "getting back to" and "small step", never "goals", "targets missed" or "behind". On a gentler day, this is hidden.
 
 After hospital, an appointment, a family plan or a **work meeting**, people with brain injury, stroke, ADHD, dementia or burnout lose what was said. Steps slip, **promises to family, colleagues and employers are missed**, and confidence wears away, so **being there for family and getting back to work** feels out of reach. Today's tools assume a brain that remembers to open, type, sort and follow up. MyRhythm does those jobs for them, so they can **show up, keep their word and take back their life, at home and at work**.
 
