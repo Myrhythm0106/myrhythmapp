@@ -1,5 +1,8 @@
 # Get MyRhythm onto my phone and start using it today
 
+## Deliverable: "How to Get Set Up" guide (printable PDF)
+A step-by-step guide covering Steps 2 to 5 below. Each step has a tick box, what I should see when it works, and "If it doesn't" help. It also has a notes line per step and a final "Set-up passed" box. It uses MyRhythm's colours and is easy to follow on paper or on the phone. It's saved to Files and downloadable from Help.
+
 ## Step 1: I publish the latest version (done for you on approval)
 Today's changes (the new welcome, the simpler question screen, and watch and phone uploads) are only in the preview so far. Publishing puts them live at **myrhythmapp.com**. The security check is already clear.
 
