@@ -83,6 +83,9 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 6. **Re-publish**, and update the testing plan PDF (version 2) with a **Test 11: Support Circle in real life**. Invite one real person, share a summary, they send encouragement, you switch the circle view off and on, and check they only ever see what you shared.
 
 ## Brain-friendly rules every screen must pass
+At most 3 choices, 56px buttons, 16px+ text, plain words in first person, no red error walls, no time pressure, nothing to remember, always undoable, no medical claims.
+
+## Also in this plan
 - Publish the current version to myrhythmapp.com (the security check is clear), so you can test the upload on your phone today.
 - Update the landing page problem statement to the north-star wording above, in "you" voice, showing the four-step journey: home from hospital, back with your family, back to work, keeping your word.
 - Family and work steps: the before-appointment nudge also covers family plans and work meetings, and steps involving a named family member or colleague keep that person as owner, so they can be shared.
