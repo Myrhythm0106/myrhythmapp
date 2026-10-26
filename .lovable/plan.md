@@ -24,13 +24,14 @@ Here's what happens next. It takes about 10 minutes, and I can stop any time.
   2  My free personal snapshot             (ready straight away)
   3  My first small step, saved to my day  (1 minute)
 
-  [ Guide me through it ]                 <- main button, recommended
-  I'd rather look around first            <- quiet link
+  [ Guide me ]            [ Let me explore ]
+  Recommended for my first visit · I can switch any time
 ```
-- **Guide me** (the default): a slim "My guided start · 1 of 3" strip leads the way, one step at a time. It says what to do and what comes next, then gets out of the way when the step is done. No pop-ups, no arrows and no cartoon tips.
-- **Look around first:** goes to Home. A small "Pick up my guided start" link stays on Home until it's finished, so nobody is lost.
+- **Guide me:** a slim "My guided start · 1 of 3" strip leads the way, one step at a time. It says what to do and what comes next, then gets out of the way when the step is done. No pop-ups, no arrows and no cartoon tips.
+- **Let me explore:** goes to Home, with everything open to look around.
+- **Switch at any point:** the guide strip has a quiet "Let me explore" link, and the menu, Home and Settings carry "Guide me", which picks up exactly where I left off. One tap either way, and nothing is lost.
 - Tone: warm and adult, like a good personal assistant. "Here's what happens next", never "Yay!" or "Great job!".
-- Never shown again once chosen. It can be found later in Help as "Show me around again".
+- The welcome itself shows once. After that, the switch is always there.
 
 ## The new screen before the questions
 ```text
