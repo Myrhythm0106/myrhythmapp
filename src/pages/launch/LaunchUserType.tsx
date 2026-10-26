@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { setResumePoint } from '@/launch/onboarding/resumePoint';
+import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
+import { useAuth } from '@/hooks/useAuth';
+import { LaunchFirstWelcome } from '@/components/launch/LaunchFirstWelcome';
 
 const userTypes = [
   {
