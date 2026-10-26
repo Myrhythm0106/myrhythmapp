@@ -43,7 +43,8 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 - **New, a nudge before each appointment:** a notification on phone and watch 5 minutes before any appointment or meeting ("GP at 2pm. Tap to record."). One tap starts recording.
 - **New, the calendar entry carries the link:** steps and appointments sent to the phone calendar include a "Tap to record with MyRhythm" link plus an alert, so the watch reminds you as well.
 - **New, "Did I miss one?":** an evening note when an appointment passed with no recording, offering a 30-second voice note that still becomes next steps.
-- **New, a supporter can prompt:** a Support Circle member with permission sends "Shall I start recording?". The owner still taps yes.
+- **Recording on my behalf (exists, to be verified):** with the "Record meetings on my behalf" permission (off by default), a supporter records on their own phone. It lands in my Memory Bridge for me to review and accept, labelled "Recorded by Sarah, on behalf of Annabel".
+- **New, a supporter can start it on my phone:** a member with permission taps "Start recording for Annabel". My phone shows a large "Sarah would like to start recording. Start now?" One tap from me starts it, and either of us can stop it. It never starts without my tap.
 - **New, warm habit lines** after each saved conversation. No streaks and no guilt.
 - **Guardrail:** never record without a visible tap. No hidden or always-on listening.
 
@@ -90,7 +91,7 @@ tap to record   ->   summary + next steps     ->   "Put these in my day?"
 3. **Conversation Summary:** key summary, steps table, three kinds of step, "Put these in my day", Excel download.
 4. **Recording reminders** and the before-meeting nudge.
 5. **Landing page North Point** wording.
-6. **Re-publish**, and update the testing plan PDF (version 2) with a **Test 11: Support Circle in real life**. Invite one real person, share a summary, they send encouragement, you switch the circle view off and on, and check they only ever see what you shared.
+6. **Re-publish**, and update the testing plan PDF (version 2) with a **Test 11: Support Circle in real life**. Invite one real person, share a summary, they send encouragement, you switch the circle view off and on, and check they only ever see what you shared. They also record a short conversation on your behalf and start one on your phone, so you can check both land in your Memory Bridge, correctly labelled, and only after your yes.
 
 ## Brain-friendly rules every screen must pass
 At most 3 choices, 56px buttons, 16px+ text, plain words in first person, no red error walls, no time pressure, nothing to remember, always undoable, no medical claims.
