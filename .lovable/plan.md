@@ -13,6 +13,16 @@ The journey it supports, in order:
 3. **Back to work:** return-to-work meetings, team meetings and one-to-ones become clear actions, owners and deadlines, timed around my energy.
 4. **Keeping my word, every day:** every commitment, to my family, my colleagues and myself, is captured, scheduled, reminded and visibly done.
 
+**Built for brain injury. Made for anyone carrying too much.** One short line, then three small chips, not new sections:
+- **Stress and overwhelm:** when life is full and things slip through.
+- **ADHD and focus:** when intentions are strong but the day pulls me off course.
+- **Carers and family:** when I'm remembering for two.
+
+How it stays uncluttered:
+- On the landing page, it's a single line with three chips under the journey. Tapping a chip opens one sentence and one example, then closes again.
+- In the app, the starting-point choice already tailors the wording. No extra screens.
+- The journey stays the brain-injury story (our trigger). The chips simply say "this works for you too".
+
 **No one walks alone.** My Support Circle (family, friends, colleagues, carers) is part of every step, on my terms. They see only what I choose, and they can cheer me on, take on a step, or gently prompt me. Remembering and follow-through are shared, never a burden I carry by myself.
 
 ## The design: three moments, one decision
