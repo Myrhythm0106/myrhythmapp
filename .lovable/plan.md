@@ -6,8 +6,8 @@
 - **Magic link / reset email:** this is the real fault. The email server that sends sign-in emails is **rejecting its own login** (error 535, "authentication credentials invalid"). So no reset or magic-link email can be sent. That's why you're locked out.
 
 ## Fix
-1. **Repair sign-in emails.** Move sign-in emails (reset password, magic link, confirm email) off the broken mail server and onto MyRhythm's built-in email sending from your own domain, with MyRhythm-branded wording. Send a test reset to annabelaaron@gmail.com and confirm it arrives.
-2. **Get you back in today.** Once emails work, you tap "Forgot password", set a new one, and sign in on your phone.
+1. **Repair sign-in emails.** An old outside mail-server login is set up for sign-in emails, and its password no longer works. Move sign-in emails (reset password, magic link, confirm email) onto MyRhythm's built-in sending from **myrhythmapp.com**, with MyRhythm-branded wording. This needs one step from you: a setup card to confirm the domain (about 2 minutes). Until the domain checks finish, emails go from the standard sender, so they still arrive.
+2. **Get you back in today.** Once emails work, I send a reset to annabelaaron@gmail.com, you tap the link on your phone, set a new password and sign in.
 3. **Clear message on repeat sign-up.** If an email already has an account, show: "You already have an account with this email. Sign in, or reset your password." with both buttons. No more silent "check your email".
 4. **Clear message on wrong password.** "That password doesn't match. Reset it in one tap." with a reset button right there, instead of a small error.
 5. **"Not signed in" on My account:** offer one big Sign in button there, not a dead end.
