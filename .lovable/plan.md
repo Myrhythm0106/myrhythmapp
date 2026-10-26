@@ -1,7 +1,7 @@
 # One calm route: from conversation to my day
 
 ## The problem (our north star)
-**Remembering, so follow-through can happen, and my vision becomes real.** People care deeply and mean every word. But after a brain injury, stroke, ADHD, dementia or burnout, what was said doesn't always stay. Without remembering, there's nothing to follow through on. MyRhythm remembers for them, then supports carrying each step through to done. **Remembering is the problem we solve; follow-through is what it gives back; a life I choose is where it leads. And no one walks alone.**
+**Remembering, so follow-through can happen, and my vision becomes real.** People care deeply and mean every word. But after a brain injury, stroke, ADHD, dementia or burnout, what was said doesn't always stay. Plans drift, and with them goes trust in myself. My **confidence is knocked**. I start to feel **unreliable** to the people who count on me, **alone** in carrying it, and that **life feels unfair**, because I never stopped caring, I just couldn't hold on to it all. Without remembering, there's nothing to follow through on. MyRhythm remembers for them, then supports carrying each step through to done. **Remembering is the problem we solve; follow-through is what it gives back: confidence restored, reliable again, never alone, and a life I choose. No one walks alone.**
 
 **From vision to today:** My Vision (the life I want at home, with family and at work) breaks into practical goals, then this week's priorities, then today's small steps. Every captured conversation can link a step to the vision it serves, so ordinary days visibly move me towards the life I chose.
 
