@@ -270,66 +270,57 @@ export default function LaunchAssessment() {
     return (
       <LaunchLayout>
         <div className="max-w-md mx-auto w-full px-4 md:px-8 py-10 pb-24">
-          <h1 className="text-3xl font-bold text-launch-ink font-display mb-3 text-center">
-            Welcome, {displayName}. MyRhythm remembers, so I don't have to.
+          <p className="text-base text-launch-ink/70 mb-2">Welcome, {displayName}.</p>
+          <p className="text-sm font-semibold text-launch-teal mb-1">Step 3 of 4 · My questions</p>
+          <h1 className="text-3xl font-bold text-launch-ink font-display mb-3">
+            A few quick questions about my day
           </h1>
-          <p className="text-launch-ink/70 text-center mb-8">
-            This takes about 6 minutes. My answers set MyRhythm up around me.
+          <p className="text-base text-launch-ink-deep leading-relaxed mb-8">
+            I answer 11 simple questions. MyRhythm uses them to set up my reminders, my day and a free personal snapshot.
           </p>
 
-          <ol className="space-y-3 mb-4">
-            {[
-              { word: 'Remembered.', when: 'When I forget what was said:', text: 'I record it, and MyRhythm keeps every word and pulls out every next step.' },
-              { word: 'Reliable.', when: 'When things slip:', text: "each step gets a time in my day and a reminder, and MyRhythm follows it through with me until it's done. Every finished step builds my confidence." },
-              { word: 'Resilient.', when: 'When a day goes wrong:', text: 'nothing is lost. MyRhythm picks up where I left off, and I decide what happens next.' },
-            ].map((item, i) => (
-              <li key={i} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
-                <span className="w-8 h-8 rounded-full bg-launch-ember text-white flex items-center justify-center font-semibold flex-shrink-0">{i + 1}</span>
-                <div className="min-w-0">
-                  <p className="text-xl font-bold text-launch-ink font-display leading-tight">{item.word}</p>
-                  <p className="mt-1 text-base text-launch-ink/80 leading-relaxed">
-                    <em className="text-launch-ink/65">{item.when}</em> {item.text}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <p className="text-base font-bold text-launch-teal text-center mb-8">
-            My snapshot and first 3 weeks are free and mine to keep.
-          </p>
-          <p className="text-sm font-semibold text-launch-ink text-center mb-3">How would I like to start?</p>
-          <div className="space-y-3">
-            <button
-              type="button"
-              onClick={() => { try { localStorage.removeItem(WANTS_FULL_KEY); } catch {/* noop */} setShowWelcome(false); }}
-              className="w-full text-left rounded-2xl border-2 border-launch-ember bg-launch-ember/10 p-4 min-h-[56px]"
-            >
-              <span className="flex items-center justify-between gap-2">
-                <span className="font-semibold text-launch-ink">YES Quick Start · about 6 minutes</span>
-                <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">Recommended</span>
-              </span>
-              <span className="block text-sm text-launch-ink/70 mt-1">This is enough to set up my diary, reminders and free snapshot. I can add more later, two minutes at a time.</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => { try { localStorage.setItem(WANTS_FULL_KEY, '1'); } catch {/* noop */} setShowWelcome(false); }}
-              className="w-full text-left rounded-2xl border-2 border-launch-gold/40 bg-launch-ivory p-4 min-h-[56px] hover:border-launch-moss"
-            >
-              <span className="font-semibold text-launch-ink">The full picture · about 20 minutes</span>
-              <span className="block text-sm text-launch-ink/70 mt-1">YES first, then all eight MYRHYTHM letters for smarter planning, memory support and Support Circle ideas. I can stop and come back.</span>
-            </button>
-          </div>
-          <p className="text-sm text-launch-ink/60 text-center mt-4">No right or wrong answers. I can change anything later.</p>
+          <button
+            type="button"
+            onClick={() => { try { localStorage.removeItem(WANTS_FULL_KEY); } catch {/* noop */} setShowWelcome(false); }}
+            className="w-full min-h-[56px] rounded-2xl bg-brand-orange-500 px-5 text-lg font-semibold text-primary-foreground hover:bg-brand-orange-600"
+          >
+            Start my questions
+          </button>
+          <p className="text-sm text-launch-ink/70 text-center mt-3">About 6 minutes · I can stop and come back any time · No right or wrong answers</p>
 
+          <details className="mt-8 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
+            <summary className="min-h-[44px] cursor-pointer text-base font-semibold text-launch-ink">Why it helps</summary>
+            <ol className="mt-3 space-y-3">
+              {[
+                { word: 'Remembered.', when: 'When I forget what was said:', text: 'I record it, and MyRhythm keeps every word and pulls out every next step.' },
+                { word: 'Reliable.', when: 'When things slip:', text: "each step gets a time in my day and a reminder, and MyRhythm supports me in carrying it through to done." },
+                { word: 'Resilient.', when: 'When a day goes wrong:', text: 'nothing is lost. MyRhythm picks up where I left off, and I decide what happens next.' },
+              ].map((item) => (
+                <li key={item.word}>
+                  <p className="font-bold text-launch-ink">{item.word}</p>
+                  <p className="text-base text-launch-ink/80 leading-relaxed"><em className="text-launch-ink/65">{item.when}</em> {item.text}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-3 text-base font-semibold text-launch-teal">My snapshot and first 3 weeks are free and mine to keep.</p>
+          </details>
+
+          <button
+            type="button"
+            onClick={() => { try { localStorage.setItem(WANTS_FULL_KEY, '1'); } catch {/* noop */} setShowWelcome(false); }}
+            className="mt-4 w-full min-h-[56px] text-base text-launch-ink-deep underline underline-offset-4"
+          >
+            I'd like to answer more (about 20 minutes)
+          </button>
           <button
             type="button"
             onClick={() => {
               deferAssessment();
               navigate('/launch/home', { replace: true });
             }}
-            className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
+            className="w-full min-h-[56px] text-base text-launch-ink/70 underline underline-offset-4"
           >
-            Not now — go to Home
+            Not now, take me to Home
           </button>
         </div>
       </LaunchLayout>
