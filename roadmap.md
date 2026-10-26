@@ -135,3 +135,10 @@
 - [ ] Support Circle levels See / Support / Step in: helper page + two-account test
 
 - [x] Post-questions report: catch one real thing + slip line + Remembered/Reliable/Resilient
+
+## Clarity pass (26 Oct 2026)
+- [x] "You're in" welcome after registering, with Guide me / Let me explore (switch any time from the menu)
+- [x] Screen before the questions: plain title, one "Start my questions" button, jargon removed
+- [x] "What brings you to MyRhythm?" step label and skip wording
+- [ ] Check every screen against the clarity rule
+- [ ] Carry on with the approved plan: publish, Support Circle, Conversation Summary, reminders, North Point landing wording
