@@ -73,6 +73,23 @@ export default function LaunchUserType() {
     navigate('/launch/assessment?first=1');
   };
 
+  const { style, chooseStyle } = useLaunchStartingStyle();
+  const { user } = useAuth();
+  const firstName = ((user?.user_metadata as { name?: string } | undefined)?.name ?? '').split(' ')[0];
+
+  if (!afterSnapshot && user && style === null) {
+    return (
+      <div className="h-full min-h-0 overflow-y-auto bg-launch-cream-light pt-safe pb-safe px-safe">
+        <LaunchFirstWelcome
+          name={firstName}
+          onChoose={(next) => {
+            chooseStyle(next);
+            if (next === 'explore') navigate('/launch/home');
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full min-h-0 bg-launch-cream-light flex flex-col pt-safe pb-safe px-safe">
