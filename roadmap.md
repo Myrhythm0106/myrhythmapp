@@ -142,3 +142,10 @@
 - [x] "What brings you to MyRhythm?" step label and skip wording
 - [ ] Check every screen against the clarity rule
 - [ ] Carry on with the approved plan: publish, Support Circle, Conversation Summary, reminders, North Point landing wording
+
+## Sign-in fix (3 Nov 2026)
+- [x] Clear "already have an account" message with Log in / Reset my password
+- [x] Wrong password shows one-tap reset; friendlier sign-in link errors
+- [x] Profile shows a Log in button when signed out
+- [ ] Repair sign-in emails (mail server login rejected) — waiting on user to set up myrhythmapp.com email sending
+- [ ] Answer: can people register and benefit straight away?
