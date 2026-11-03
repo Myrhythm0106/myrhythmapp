@@ -29,11 +29,34 @@ export default function LaunchSignIn() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showResendOption, setShowResendOption] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  const sendReset = async () => {
+    if (!email || !email.includes('@')) {
+      setErrors({ email: 'Enter your email first, then tap reset.' });
+      return;
+    }
+    setIsResending(true);
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+    setIsResending(false);
+    if (error) {
+      toast.error("I couldn't send the reset email just now", {
+        description: 'Please try again in a few minutes.',
+      });
+      return;
+    }
+    setResetSent(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setShowResendOption(false);
+    setWrongPassword(false);
 
     // Validate inputs
     const result = signInSchema.safeParse({ email, password });
@@ -55,6 +78,8 @@ export default function LaunchSignIn() {
         if (error.message?.toLowerCase().includes('confirm') || 
             error.message?.toLowerCase().includes('verify')) {
           setShowResendOption(true);
+        } else if (/invalid login credentials/i.test(error.message || '')) {
+          setWrongPassword(true);
         }
         return;
       }
@@ -183,6 +208,27 @@ export default function LaunchSignIn() {
                   )}
                 </Button>
 
+                {wrongPassword && (
+                  <div role="status" className="p-4 rounded-lg border border-launch-gold/40 bg-launch-gold/10 space-y-3">
+                    <p className="text-base font-semibold text-launch-ink">That password doesn't match.</p>
+                    <p className="text-sm text-launch-ink/75">
+                      {resetSent
+                        ? `I've sent a reset link to ${email}. Open it on this phone to choose a new password. Check spam if it isn't there in a few minutes.`
+                        : 'Try again, or reset it in one tap.'}
+                    </p>
+                    {!resetSent && (
+                      <Button
+                        type="button"
+                        onClick={sendReset}
+                        disabled={isResending}
+                        className="w-full min-h-14 bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white"
+                      >
+                        {isResending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Reset my password'}
+                      </Button>
+                    )}
+                  </div>
+                )}
+
                 {/* Resend verification option */}
                 {showResendOption && (
                   <div className="mt-4 p-4 bg-launch-ember/10 rounded-lg border border-launch-ember/30">
@@ -228,9 +274,11 @@ export default function LaunchSignIn() {
                         options: { emailRedirectTo: `${window.location.origin}${redirectTo}` }
                       });
                       if (error) throw error;
-                      toast.success('Magic link sent! Check your email.');
+                      toast.success('Sign-in link sent. Open the email on this phone and tap the link.');
                     } catch (e: any) {
-                      toast.error(e?.message || 'Failed to send magic link.');
+                      toast.error("I couldn't send the sign-in link just now", {
+                        description: 'Please try again in a few minutes, or log in with your password.',
+                      });
                     }
                   }}
                   className="w-full border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 hover:text-launch-ink"

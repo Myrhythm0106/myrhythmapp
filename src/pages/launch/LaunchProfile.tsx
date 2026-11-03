@@ -81,6 +81,17 @@ export default function LaunchProfile() {
           </div>
           <button className="text-sm text-launch-ember font-medium">Edit</button>
         </div>
+        {!user && (
+          <div className="mt-5 space-y-3">
+            <p className="text-sm text-launch-ink/75">You're not logged in on this phone yet. Log in to see your account.</p>
+            <button
+              onClick={() => navigate('/launch/signin', { state: { from: '/launch/profile' } })}
+              className="w-full min-h-14 rounded-xl bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white text-base font-bold"
+            >
+              Log in
+            </button>
+          </div>
+        )}
       </LaunchCard>
 
 

@@ -46,6 +46,23 @@ export default function LaunchRegister() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [existingAccount, setExistingAccount] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  const sendReset = async () => {
+    setIsResending(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+    setIsResending(false);
+    if (error) {
+      toast.error("I couldn't send the reset email just now", {
+        description: 'Please try again in a few minutes.',
+      });
+      return;
+    }
+    setResetSent(true);
+  };
 
   // Prefill email captured on the landing hero, then clear it.
   React.useEffect(() => {
@@ -91,9 +108,12 @@ export default function LaunchRegister() {
         },
       });
 
+      // An existing email comes back with no error but an empty identities
+      // list — treat that as "already registered", never a silent success.
       const alreadyRegistered =
-        !!error &&
-        /already registered|already been registered|user already exists/i.test(error.message || '');
+        (!!error &&
+          /already registered|already been registered|user already exists/i.test(error.message || '')) ||
+        (!error && !!data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0);
 
       if (error && !alreadyRegistered) {
         toast.error(error.message || "We couldn't create your account", {
@@ -114,10 +134,7 @@ export default function LaunchRegister() {
 
         if (!session) {
           if (alreadyRegistered) {
-            toast.error('That email already has an account', {
-              description: 'Please sign in with your password to continue.',
-            });
-            navigate('/launch/signin');
+            setExistingAccount(true);
             return;
           }
           if (/confirm/i.test(signInError?.message || '')) {
@@ -381,6 +398,37 @@ export default function LaunchRegister() {
                     <p className="text-sm text-launch-ember">{errors.password}</p>
                   )}
                 </div>
+
+                {existingAccount && (
+                  <div role="status" className="p-4 rounded-lg border border-launch-gold/40 bg-launch-gold/10 space-y-3">
+                    <p className="text-base font-semibold text-launch-ink">
+                      You already have an account with this email.
+                    </p>
+                    <p className="text-sm text-launch-ink/75">
+                      {resetSent
+                        ? `I've sent a reset link to ${email}. Open it on this phone to choose a new password. Check spam if it isn't there in a few minutes.`
+                        : 'Log in, or reset your password if you can’t remember it.'}
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={() => navigate('/launch/signin')}
+                      className="w-full min-h-14 bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white"
+                    >
+                      Log in
+                    </Button>
+                    {!resetSent && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={sendReset}
+                        disabled={isResending}
+                        className="w-full min-h-14 border-launch-gold/40 text-launch-ink"
+                      >
+                        {isResending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Reset my password'}
+                      </Button>
+                    )}
+                  </div>
+                )}
 
                 <Button
                   type="submit"
