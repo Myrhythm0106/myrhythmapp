@@ -399,6 +399,37 @@ export default function LaunchRegister() {
                   )}
                 </div>
 
+                {existingAccount && (
+                  <div role="status" className="p-4 rounded-lg border border-launch-gold/40 bg-launch-gold/10 space-y-3">
+                    <p className="text-base font-semibold text-launch-ink">
+                      You already have an account with this email.
+                    </p>
+                    <p className="text-sm text-launch-ink/75">
+                      {resetSent
+                        ? `I've sent a reset link to ${email}. Open it on this phone to choose a new password. Check spam if it isn't there in a few minutes.`
+                        : 'Log in, or reset your password if you can’t remember it.'}
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={() => navigate('/launch/signin')}
+                      className="w-full min-h-14 bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white"
+                    >
+                      Log in
+                    </Button>
+                    {!resetSent && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={sendReset}
+                        disabled={isResending}
+                        className="w-full min-h-14 border-launch-gold/40 text-launch-ink"
+                      >
+                        {isResending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Reset my password'}
+                      </Button>
+                    )}
+                  </div>
+                )}
+
                 <Button
                   type="submit"
                   className="w-full bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white py-6"
