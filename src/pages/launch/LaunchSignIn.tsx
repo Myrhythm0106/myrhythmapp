@@ -29,11 +29,34 @@ export default function LaunchSignIn() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showResendOption, setShowResendOption] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  const sendReset = async () => {
+    if (!email || !email.includes('@')) {
+      setErrors({ email: 'Enter your email first, then tap reset.' });
+      return;
+    }
+    setIsResending(true);
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+    setIsResending(false);
+    if (error) {
+      toast.error("I couldn't send the reset email just now", {
+        description: 'Please try again in a few minutes.',
+      });
+      return;
+    }
+    setResetSent(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setShowResendOption(false);
+    setWrongPassword(false);
 
     // Validate inputs
     const result = signInSchema.safeParse({ email, password });
@@ -55,6 +78,8 @@ export default function LaunchSignIn() {
         if (error.message?.toLowerCase().includes('confirm') || 
             error.message?.toLowerCase().includes('verify')) {
           setShowResendOption(true);
+        } else if (/invalid login credentials/i.test(error.message || '')) {
+          setWrongPassword(true);
         }
         return;
       }
