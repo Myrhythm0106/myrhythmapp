@@ -298,6 +298,7 @@ export function MVPCore4C() {
             </span>
           </Button>
           <div className="flex items-center gap-1 md:gap-2">
+            {user && (
             <Button
               onClick={() => navigate('/help/getting-started')}
               variant="ghost"
@@ -308,6 +309,7 @@ export function MVPCore4C() {
             >
               <HelpCircle className="h-5 w-5" />
             </Button>
+            )}
             {user ? (
               <>
                 <Button onClick={handlePrimary} variant="action" className="min-h-14 whitespace-normal rounded-md px-3 text-base font-bold md:px-5">
@@ -580,8 +582,11 @@ export function MVPCore4C() {
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <p>MyRhythm supports planning, memory and follow-through. It does not diagnose or treat any condition.</p>
           <div className="flex flex-wrap items-center gap-4">
-            <Button variant="link" onClick={() => navigate('/privacy')} className="min-h-11 px-0 text-launch-ink-deep/65">Privacy</Button>
-            <Button variant="link" onClick={() => navigate('/launch/science')} className="min-h-11 px-0 text-launch-ink-deep/65">Evidence</Button>
+            <Button variant="link" onClick={() => navigate('/privacy-policy')} className="min-h-11 px-0 text-launch-ink-deep/65">Privacy</Button>
+            {/* Evidence lives inside the app, so only signed-in people see the link. */}
+            {user && (
+              <Button variant="link" onClick={() => navigate('/launch/science')} className="min-h-11 px-0 text-launch-ink-deep/65">Evidence</Button>
+            )}
           </div>
         </div>
       </footer>
