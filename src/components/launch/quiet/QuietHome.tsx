@@ -6,17 +6,16 @@ import { Button } from '@/components/ui/button';
 import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { useFirstSession } from '@/launch/onboarding/useFirstSession';
 import { FirstSessionCard } from './FirstSessionCard';
-import { RhythmLine } from './RhythmLine';
+import { TopThreeToday } from './TopThreeToday';
+import { format } from 'date-fns';
 import { NextActionStrip } from './NextActionStrip';
 import { TierSwitcherPill } from './TierSwitcherPill';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
 import { useSubject } from '@/launch/persona/SubjectContext';
 import { useStage } from '@/launch/stage/useStage';
-import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
-import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 import { HomeFullPictureCard } from './HomeFullPictureCard';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 import { useAuth } from '@/hooks/useAuth';
@@ -53,69 +52,50 @@ export function QuietHome() {
   if (isPause) return <QuietHomePause />;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-      {/* Greeting strip */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.28em] text-launch-ink/55">
-            {greeting}
-          </p>
-          <p className="font-archivo mt-1 text-xl uppercase tracking-tight text-launch-ink sm:text-2xl">
-            {greetName}
-          </p>
-          <p className="font-hind text-xs text-launch-ink/60 mt-1">{copy.subgreeting}</p>
-
-          <div className="mt-1.5 flex flex-wrap items-center gap-2">
-            <StagePicker />
-            <MyRhythmGHomeChip />
-          </div>
-        </div>
-        <span className="text-xs px-2 py-1 rounded-full bg-launch-ivory border border-launch-gold/30 text-launch-ink capitalize">
-          {isCaregiver && subject === 'supporting' ? 'Co-pilot view' : fixtures.tier}
-        </span>
-      </motion.div>
-
-      {/* What I learned about your best hours — said out loud */}
-      {!dailySupport.gentle && <RhythmLine />}
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      {/* Calm briefing header */}
+      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-2">
+        <p className="font-worksans text-sm text-launch-ink/55">{format(new Date(), 'EEEE, d MMMM')}</p>
+        <h1 className="mt-1 font-instrument text-4xl leading-tight text-launch-ink sm:text-5xl">
+          {greeting}{greetName ? `, ${greetName}` : ''}.
+        </h1>
+        {isCaregiver && subject === 'supporting' && (
+          <p className="mt-2 text-sm text-launch-ink/60">Supporting {supportedName}</p>
+        )}
+      </motion.header>
 
       {/* The guided first session */}
       {starting.style === null && <FirstSessionCard state={firstSession} />}
 
-      {/* One MYRHYTHM letter every few days during the YES weeks */}
-      {!settlingIn && !dailySupport.gentle && <HomeFullPictureCard />}
-
-      {/* Returning Home: one priority and two familiar places. */}
       {!settlingIn && (
-        <section aria-labelledby="home-now-title" className="space-y-4">
-          <h2 id="home-now-title" className="font-display text-2xl text-launch-ink">
-            {dailySupport.gentle ? 'One step is enough for now' : 'What needs my attention now'}
-          </h2>
-          <NextActionStrip />
+        <>
+          <TopThreeToday />
+
+          <section aria-labelledby="home-now-title" className="space-y-3">
+            <h2 id="home-now-title" className="font-instrument text-2xl text-launch-ink">
+              {dailySupport.gentle ? 'One step is enough for now' : "What's next"}
+            </h2>
+            <NextActionStrip />
+          </section>
+
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-[72px] justify-start border-launch-gold/40 bg-launch-ivory px-5 text-base text-launch-ink"
-              onClick={() => navigate('/launch/memory?record=1')}
-            >
-              <Mic className="h-5 w-5 text-launch-ember" />
-              Record something
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-[72px] justify-start border-launch-gold/40 bg-launch-ivory px-5 text-base text-launch-ink"
-              onClick={() => navigate('/launch/calendar')}
-            >
-              <CalendarDays className="h-5 w-5 text-launch-teal" />
-              See my day
-            </Button>
+            {[
+              { icon: Mic, label: 'Record a conversation', hint: 'One tap. I keep every word.', to: '/launch/memory?record=1', tone: 'text-launch-ember' },
+              { icon: CalendarDays, label: 'See my day', hint: 'Everything lined up for today.', to: '/launch/calendar', tone: 'text-launch-teal' },
+            ].map(({ icon: Icon, label, hint, to, tone }) => (
+              <button key={to} type="button" onClick={() => navigate(to)}
+                className="group flex min-h-[88px] items-center gap-4 rounded-3xl border border-launch-gold/25 bg-launch-ivory/80 px-5 text-left shadow-[0_16px_40px_-30px_hsl(var(--launch-ink-deep)/0.4)] backdrop-blur-xl transition hover:border-launch-gold/50">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-launch-cream"><Icon className={`h-5 w-5 ${tone}`} /></span>
+                <span>
+                  <span className="block text-base font-semibold text-launch-ink">{label}</span>
+                  <span className="block text-sm text-launch-ink/60">{hint}</span>
+                </span>
+              </button>
+            ))}
           </div>
-        </section>
+
+          {!dailySupport.gentle && <HomeFullPictureCard />}
+        </>
       )}
 
       {!settlingIn && user?.id && !(isCaregiver && subject === 'supporting') && <LaunchDailySupport {...dailySupport} />}
