@@ -21,8 +21,9 @@ These follow recognised memory-support practice (cue at the moment, prepare ahea
 - Delivered through the app, email, and the phone calendar file (.ics alarms), so the phone's own alerts fire even when the app is closed.
 - Strong stays the suggested default for appointments; plain wording and large buttons.
 
-## 3. Invite people by email when creating a meeting or reminder
-- In "Add to diary", type an email, tap Add, then Save. Each person gets a proper invitation with **Add to calendar** (.ics) and **Accept / Decline** links.
+## 3. Invite people when creating a meeting or reminder
+- Invite Support Circle members with one tap: their names appear first, so there is no typing. Anyone else can be added by email.
+- In "Add to diary", tap a Support Circle name or type an email and tap Add, then Save. Each person gets a proper invitation with **Add to calendar** (.ics) and **Accept / Decline** links.
 - Replies show beside the item (Accepted, Declined, No reply).
 - When you change or delete the item, invitees get an update or cancellation, with one calm confirmation first.
 - Works the same from conversation actions ("Add to diary + invite").
@@ -32,4 +33,5 @@ These follow recognised memory-support practice (cue at the moment, prepare ahea
 - Add a transcript PDF export (client-side jsPDF) on the current Memory Bridge record view, with an emailed copy through `send-email`.
 - Extend `send-scheduled-reminders`/`send-action-reminders` with prep, at-time and single follow-up stages. Add a `reminder_status` (done/snoozed/missed) on events, a circle-copy flag, and VALARMs in .ics.
 - Email delivery depends on the sender domain being set up; this was the earlier sign-in email issue and must be confirmed first.
+- Support Circle invitees are matched to their member email and get the same invitation, plus an in-app notice if they have an account.
 - Tests: reminder stage schedule (prep, at-time, one follow-up only), invite limit of 5, and valid emails only.
