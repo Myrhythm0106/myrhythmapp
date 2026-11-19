@@ -28,6 +28,29 @@ Home shows only what matters for staying on track today, chosen from what I've s
 - **Two actions only:** Record and See my day.
 - **More for today (folded):** opens to show promises waiting for a time, my best focus time, and anything a Support Circle member has suggested. It only appears when there is something inside, and it remembers whether I left it open or closed.
 
+## Two ways to view: Dashboard or List (my choice, remembered)
+A quiet switch at the top, **Dashboard | List**, lets me choose. It is remembered on this device and can be changed any time.
+
+**Dashboard (consultancy-style executive view, the default):**
+```text
+ MY PRIORITIES TODAY                          On track  [====--] 1 of 3
+ +---------------------+ +---------------------+ +---------------------+
+ | HEALTH       10:30  | | WORK         14:00  | | FAMILY       16:30  |
+ | Call Dr Patel       | | Send report to Sam  | | Pick up the kids    |
+ | * On track      >   | | * Due soon      >   | | * Later         >   |
+ +---------------------+ +---------------------+ +---------------------+
+ NEXT  Team check-in · 11:00 · in 57 min                              >
+ THIS WEEK  12 planned · 7 done · 2 waiting for a time   (thin bar)   >
+```
+- Three priority cards, each with a small category kicker, the time, and a status dot with a word (On track, Due soon, Overdue).
+- One "status summary" line for today and one for the week, like a client status report: thin bars, small figures, no clutter.
+- Muted palette with gold hairlines, sharp type, generous white space and clear hierarchy.
+
+**List (simple and calm):**
+- The same three priorities and Next as plain rows (time, title, small label, tick), with nothing else on the surface.
+
+Both views use the same data, tap into the same detail sheet, and keep the same "More for today" fold.
+
 ## Tap to see the detail, change it, save it
 - Tapping a priority or Next opens a calm sheet that slides up (from the side on a computer) showing the item as it was created:
   - **Diary item:** title, date, time, notes, who's involved, reminders, "Keep private".
@@ -52,6 +75,7 @@ The view-only version for permitted members uses the same calm layout (prioritie
 The batch undo, put-back and guest-invite plan is saved and comes back next, once Home is right.
 
 ## Technical details
+- `HomeViewToggle` (Dashboard | List) is stored per user on the device; the `HomePriorityCards` and `HomePriorityList` renderers share one data source. `HomeStatusLine` covers today and this week (counts from the week's events and unscheduled `extracted_actions`).
 - Replace `HomeBriefingBand`, `HomeUpNext` and `HomeAtAGlance` with `HomePriorities` (restyled `TopThreeToday` rows with a category label from the event type or linked action category), `HomeNextLine` and `HomeMoreToday` (a disclosure whose open state is stored per user on the device).
 - New `PriorityDetailSheet` (shadcn Sheet; side on desktop, bottom on mobile). It loads the `calendar_events` row and, when `extracted_action_id` is set, the `extracted_actions` row. Saves go through the existing `useLaunchCalendarEvents` update/reschedule helpers and an `extracted_actions` update; Undo restores the previous values.
 - Home and the sheet share one `useLaunchCalendarEvents(today)` instance passed down, so a save refreshes Home immediately.
