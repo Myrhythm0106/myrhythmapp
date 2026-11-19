@@ -891,3 +891,17 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   .prestige * { animation: none !important; transition-duration: 1ms !important; }
 }
+
+/* Executive Home briefing */
+.launch-theme {
+  --launch-shadow-elevated: 0 30px 60px -36px hsl(var(--launch-ink-deep) / 0.45), 0 2px 6px -2px hsl(var(--launch-ink-deep) / 0.08);
+  --launch-briefing: linear-gradient(135deg, hsl(var(--launch-ink-deep)) 0%, hsl(160 60% 18%) 55%, hsl(var(--launch-ink)) 100%);
+}
+.launch-theme .exec-band { background: var(--launch-briefing); color: hsl(var(--launch-ivory)); }
+.launch-theme .exec-card { background-color: hsl(var(--launch-ivory)); border: 1px solid hsl(var(--launch-gold) / 0.28); box-shadow: var(--launch-shadow-elevated); }
+.launch-theme .gold-hair { border-color: hsl(var(--launch-gold) / 0.45); }
+.launch-theme .text-on-band { color: hsl(var(--launch-ivory)); }
+.launch-theme .text-on-band-muted { color: hsl(var(--launch-ivory) / 0.68); }
+.launch-theme .text-launch-gold { color: hsl(var(--launch-gold)); }
+.launch-theme .bg-launch-gold { background-color: hsl(var(--launch-gold)); }
+.launch-theme .bg-launch-ember { background-color: hsl(var(--launch-ember)); }

@@ -6,11 +6,23 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { HomeBriefingBand } from '@/components/launch/quiet/HomeBriefingBand';
+import { HomeUpNext } from '@/components/launch/quiet/HomeUpNext';
+import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 
 type Shared = { owner_id: string; owner_name: string; level: 'busy' | 'see' | 'help' };
 type Item = { id: string; time: string | null; end_time: string | null; title: string; status: string; is_busy_only: boolean; added_by_name: string | null; awaiting_confirmation: boolean };
 
 const LEVEL_LABEL: Record<Shared['level'], string> = { busy: 'Busy or free', see: 'Can see the day', help: 'Can help with the day' };
+
+/** Shape shared items for the read-only dashboard parts; private items stay "Busy". */
+function asEvents(items: Item[], day: Date): LaunchCalendarEvent[] {
+  return items.filter(i => i.time).map(i => ({
+    id: i.id, title: i.is_busy_only ? 'Busy' : i.title, time: (i.time ?? '').slice(0, 5), end_time: i.end_time,
+    type: 'task', date: day, source: 'manual', requiresAcceptance: i.awaiting_confirmation,
+    status: (['done', 'cancelled', 'carried'].includes(i.status) ? i.status : 'pending') as LaunchCalendarEvent['status'],
+  }));
+}
 
 /** Diaries that people have chosen to share with me as part of their Support Circle. */
 export default function LaunchCircleDiary() {
@@ -54,7 +66,7 @@ export default function LaunchCircleDiary() {
   return (
     <LaunchLayout>
       <LaunchPageHeader fallbackPath="/launch/support" />
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-6 pb-24">
+      <div className="mx-auto max-w-5xl space-y-6 px-4 py-6 pb-24">
         <header>
           <h1 className="font-instrument text-4xl text-launch-ink">Diaries shared with me</h1>
           <p className="mt-1 text-base text-launch-ink/65">Only what each person has chosen to share. They can change it any time.</p>
@@ -77,6 +89,13 @@ export default function LaunchCircleDiary() {
                     {s.owner_name}
                   </button>
                 ))}
+              </div>
+            )}
+
+            {active && active.level !== 'busy' && isToday(day) && (
+              <div className="grid gap-4">
+                <HomeBriefingBand readOnly greeting={`${first}'s day`} events={asEvents(items, day)} supporting={first} />
+                <HomeUpNext readOnly events={asEvents(items, day)} />
               </div>
             )}
 

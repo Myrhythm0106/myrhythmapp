@@ -8,6 +8,14 @@ import { useLaunchCalendarEvents, type LaunchCalendarEvent } from '@/hooks/useLa
 import { useLaunchPriorityHighlights } from '@/hooks/useLaunchFocusDisplay';
 import { pickTopThree, pinKey, loadPins, savePins, MAX_TOP } from '@/launch/today/topThree';
 import { cn } from '@/lib/utils';
+import { suggestSlots, suggestTimesEnabled, savedPeakHours } from '@/launch/scheduling/suggestSlots';
+
+/** Overdue = ember, within the hour = gold, otherwise on track = teal. */
+function statusTone(time?: string) {
+  const [h, m] = (time || '23:59').split(':').map(Number);
+  const diff = h * 60 + (m || 0) - (new Date().getHours() * 60 + new Date().getMinutes());
+  return diff < 0 ? 'bg-launch-ember' : diff <= 60 ? 'bg-launch-gold' : 'bg-launch-teal';
+}
 
 /** Today's top 3, taken from my diary. Ticking here ticks the diary too. */
 export function TopThreeToday({ onPicked }: { onPicked?: (ids: string[]) => void }) {
@@ -55,8 +63,13 @@ export function TopThreeToday({ onPicked }: { onPicked?: (ids: string[]) => void
   const add = async () => {
     const title = draft.trim();
     if (!title) return;
+    const slot = suggestTimesEnabled(user?.id)
+      ? suggestSlots({ busy: events.map(e => ({ date: format(e.date, 'yyyy-MM-dd'), time: e.time, end_time: e.end_time, status: e.status })), peakHours: savedPeakHours(user?.id) ?? undefined, maxDaily: 12, days: 1, count: 1 })[0]
+      : undefined;
     const h = Math.min(new Date().getHours() + 1, 23);
-    await addEvent({ title, time: `${String(h).padStart(2, '0')}:00`, type: 'task', date: today, reminder_level: 'off' });
+    const time = slot?.time ?? `${String(h).padStart(2, '0')}:00`;
+    await addEvent({ title, time, type: 'task', date: today, reminder_level: 'off' });
+    toast(`Added to my diary at ${time}${slot?.atPeak ? ' · my best focus time' : ''}`);
     setDraft('');
     void fetchEvents();
   };
@@ -64,10 +77,15 @@ export function TopThreeToday({ onPicked }: { onPicked?: (ids: string[]) => void
   const openSlots = Math.max(0, MAX_TOP - top.filter(t => t.status === 'pending').length - doneCount);
 
   return (
-    <section aria-labelledby="top3-title" className="rounded-3xl border border-launch-gold/25 bg-launch-ivory/80 p-6 shadow-[0_20px_50px_-30px_hsl(var(--launch-ink-deep)/0.35)] backdrop-blur-xl">
+    <section aria-labelledby="top3-title" className="exec-card h-full rounded-3xl p-6">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="top3-title" className="font-instrument text-2xl text-launch-ink">My top 3 today</h2>
-        {top.length > 0 && <span className="text-sm text-launch-ink/60">{doneCount} of {top.length} done · from my diary</span>}
+        <h2 id="top3-title" className="font-worksans text-xs font-semibold uppercase tracking-[0.24em] text-launch-moss">My top 3 today</h2>
+        {top.length > 0 && (
+          <span className="flex items-center gap-2 text-sm text-launch-ink/65">
+            <span className="flex gap-1" aria-hidden="true">{top.map(t => <span key={t.id} className={cn('h-1.5 w-6 rounded-full', t.status === 'done' ? 'bg-launch-teal' : 'bg-launch-gold/30')} />)}</span>
+            {doneCount} of {top.length} done
+          </span>
+        )}
       </div>
 
       {loading && events.length === 0 ? (
@@ -90,11 +108,15 @@ export function TopThreeToday({ onPicked }: { onPicked?: (ids: string[]) => void
                   onClick={() => void toggle(e)}
                   className={cn('flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors',
                     e.status === 'done' ? 'border-launch-teal bg-launch-teal text-primary-foreground' : 'border-launch-gold/50 text-launch-ink/50 hover:border-launch-teal')}>
-                  {e.status === 'done' ? <Check className="h-5 w-5" /> : <span className="text-sm font-semibold">{i + 1}</span>}
+                  {e.status === 'done' ? <Check className="h-5 w-5" /> : <span className="font-instrument text-xl text-launch-ink">{String(i + 1).padStart(2, '0')}</span>}
                 </button>
                 <button type="button" onClick={() => navigate(`/launch/calendar?view=day&date=${format(today, 'yyyy-MM-dd')}`)}
-                  className={cn('flex-1 text-left text-base text-launch-ink', e.status === 'done' && 'text-launch-ink/45 line-through')}>
-                  <span className="mr-2 tabular-nums text-launch-ink/55">{e.time?.slice(0, 5)}</span>{e.title}
+                  className={cn('flex flex-1 items-center justify-between gap-3 text-left text-lg text-launch-ink-deep', e.status === 'done' && 'text-launch-ink/45 line-through')}>
+                  <span className="flex items-center gap-2">
+                    {e.status === 'pending' && <span aria-hidden="true" className={cn('h-2 w-2 shrink-0 rounded-full', statusTone(e.time))} />}
+                    {e.title}
+                  </span>
+                  <span className="shrink-0 tabular-nums text-sm text-launch-moss">{e.time?.slice(0, 5)}</span>
                 </button>
                 {e.status === 'pending' && others.length > 0 && (
                   <button type="button" aria-label={`Swap "${e.title}"`} onClick={() => setSwapFor(swapFor === e.id ? null : e.id)}

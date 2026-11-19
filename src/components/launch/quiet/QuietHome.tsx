@@ -1,14 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { useFirstSession } from '@/launch/onboarding/useFirstSession';
 import { FirstSessionCard } from './FirstSessionCard';
 import { TopThreeToday } from './TopThreeToday';
-import { format } from 'date-fns';
-import { NextActionStrip } from './NextActionStrip';
+import { HomeBriefingBand } from './HomeBriefingBand';
+import { HomeUpNext } from './HomeUpNext';
+import { HomeAtAGlance } from './HomeAtAGlance';
+import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
+import { supabase } from '@/integrations/supabase/client';
+import { diaryLevel } from '@/launch/circle/diaryAccess';
 import { TierSwitcherPill } from './TierSwitcherPill';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
@@ -39,6 +42,14 @@ export function QuietHome() {
   const { user } = useAuth();
   const dailySupport = useLaunchDailySupport(user?.id);
   const [topIds, setTopIds] = React.useState<string[]>([]);
+  const today = React.useMemo(() => new Date(), []);
+  const { events, updateStatus } = useLaunchCalendarEvents(today, today);
+  const [sharedWith, setSharedWith] = React.useState(0);
+  React.useEffect(() => {
+    if (!user?.id) return;
+    supabase.from('support_circle_members').select('permissions').eq('user_id', user.id).eq('status', 'active')
+      .then(({ data }) => setSharedWith((data ?? []).filter(r => diaryLevel(r.permissions as Record<string, unknown>) !== 'none').length));
+  }, [user?.id]);
 
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
@@ -52,54 +63,35 @@ export function QuietHome() {
 
   if (isPause) return <QuietHomePause />;
 
+  const supportingView = isCaregiver && subject === 'supporting';
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-      {/* Calm briefing header */}
-      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-2">
-        <p className="font-worksans text-sm text-launch-ink/55">{format(new Date(), 'EEEE, d MMMM')}</p>
-        <h1 className="mt-1 font-instrument text-4xl leading-tight text-launch-ink sm:text-5xl">
-          {greeting}{greetName ? `, ${greetName}` : ''}.
-        </h1>
-        {isCaregiver && subject === 'supporting' && (
-          <p className="mt-2 text-sm text-launch-ink/60">Supporting {supportedName}</p>
-        )}
-      </motion.header>
+    <div className="mx-auto max-w-6xl space-y-5 px-4 py-6 sm:py-8">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+        <HomeBriefingBand greeting={greeting} name={greetName} events={events} sharedWith={sharedWith}
+          supporting={supportingView ? supportedName : undefined} />
+      </motion.div>
 
       {/* The guided first session */}
       {starting.style === null && <FirstSessionCard state={firstSession} />}
 
       {!settlingIn && (
         <>
-          <TopThreeToday onPicked={setTopIds} />
-
-          <section aria-labelledby="home-now-title" className="space-y-3">
-            <h2 id="home-now-title" className="font-instrument text-2xl text-launch-ink">
-              {dailySupport.gentle ? 'One step is enough for now' : "What's next"}
-            </h2>
-            <NextActionStrip excludeIds={topIds} />
-          </section>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { icon: Mic, label: 'Record a conversation', hint: 'One tap. I keep every word.', to: '/launch/memory?record=1', tone: 'text-launch-ember' },
-              { icon: CalendarDays, label: 'See my day', hint: 'Everything lined up for today.', to: '/launch/calendar', tone: 'text-launch-teal' },
-            ].map(({ icon: Icon, label, hint, to, tone }) => (
-              <button key={to} type="button" onClick={() => navigate(to)}
-                className="group flex min-h-[88px] items-center gap-4 rounded-3xl border border-launch-gold/25 bg-launch-ivory/80 px-5 text-left shadow-[0_16px_40px_-30px_hsl(var(--launch-ink-deep)/0.4)] backdrop-blur-xl transition hover:border-launch-gold/50">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-launch-cream"><Icon className={`h-5 w-5 ${tone}`} /></span>
-                <span>
-                  <span className="block text-base font-semibold text-launch-ink">{label}</span>
-                  <span className="block text-sm text-launch-ink/60">{hint}</span>
-                </span>
-              </button>
-            ))}
+          <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+            <TopThreeToday onPicked={setTopIds} />
+            <HomeUpNext events={events} excludeIds={topIds} onDone={(id, st) => updateStatus(id, st)} />
           </div>
 
+          <HomeAtAGlance doneToday={events.filter(e => e.status === 'done').length} />
+
+          {dailySupport.gentle && (
+            <p className="text-center font-instrument text-xl text-launch-ink">One step is enough for now.</p>
+          )}
           {!dailySupport.gentle && <HomeFullPictureCard />}
         </>
       )}
 
-      {!settlingIn && user?.id && !(isCaregiver && subject === 'supporting') && <LaunchDailySupport {...dailySupport} />}
+      {!settlingIn && user?.id && !supportingView && <LaunchDailySupport {...dailySupport} />}
 
       {/* Footer signature */}
       <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">

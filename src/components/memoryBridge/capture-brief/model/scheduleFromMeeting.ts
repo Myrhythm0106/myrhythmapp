@@ -6,6 +6,7 @@ import { ensureDefaultLadder } from '@/utils/reminderLadder';
 import { ADHOC_PREFIX } from './commitActions';
 import type { BriefAction, PersonPick } from './types';
 import { smartScheduler } from '@/utils/smartScheduler';
+import { suggestSlots, suggestTimesEnabled, savedPeakHours, type BusyItem } from '@/launch/scheduling/suggestSlots';
 
 /** Edits agreed by me in the review step, applied instead of the stored values. */
 export interface ActionOverride {
@@ -72,6 +73,17 @@ export async function scheduleExtractedActions(
     people: [],
   };
 
+  // Best-time suggestions: my answers' peak hours + free gaps in my diary.
+  const useBestTime = suggestTimesEnabled(userId);
+  const busy: BusyItem[] = [];
+  if (useBestTime) {
+    const from = todayISO();
+    const to = new Date(Date.now() + 8 * 864e5).toISOString().slice(0, 10);
+    const { data: ev } = await supabase.from('calendar_events')
+      .select('date,time,end_time,status').eq('user_id', userId).gte('date', from).lte('date', to);
+    for (const e of (ev || []) as any[]) if (e.date && e.time) busy.push({ date: e.date, time: String(e.time).slice(0, 5), end_time: e.end_time, status: e.status });
+  }
+
   for (const row of actions as any[]) {
     if (row.calendar_event_id) {
       summary.scheduled++;
@@ -96,6 +108,14 @@ export async function scheduleExtractedActions(
     // Slot: what I agreed in review > explicit schedule > proposed > AI suggestion > tomorrow 09:00
     let date: string = ov?.date || row.scheduled_date || row.proposed_date || '';
     let time: string = ov?.time || row.scheduled_time || row.proposed_time || '';
+    if (!date && useBestTime) {
+      const slot = suggestSlots({ busy, peakHours: savedPeakHours(userId) ?? undefined, count: 1 })[0];
+      if (slot) {
+        date = slot.date;
+        time = slot.time;
+        busy.push({ date, time });
+      }
+    }
     if (!date) {
       try {
         const suggestions = await smartScheduler.generateSmartSuggestions(

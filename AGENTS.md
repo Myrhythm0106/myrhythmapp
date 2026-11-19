@@ -20,3 +20,4 @@
 - Snapshot report priority areas are derived only from saved answers in `src/launch/compass/priorityAreas.ts` (tested); why: one ranking source keeps report, offer line and future Home focus consistent.
 - Support Circle diary sharing goes only through security-definer RPCs (my_shared_diaries, circle_diary, circle_add_diary_item) gated by the per-member permissions.diary level, with private items masked as Busy; why: members never get direct row access to someone else's calendar_events.
 - Signed-out access is decided app-wide by `SignedInOnly` around the router, using the allowlist in `src/launch/access/publicPaths.ts` (tested); why: one gate guarantees nobody sees past the landing page without signing in, including older unrouted-looking pages.
+- Suggested diary times come only from `src/launch/scheduling/suggestSlots.ts` (tested), fed by saved assessment peak hours and existing events; why: one rule set for Home and conversation steps, never double-booking.

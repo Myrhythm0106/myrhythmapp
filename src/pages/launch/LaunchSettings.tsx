@@ -44,6 +44,7 @@ import { usePlanningDay } from '@/hooks/usePlanningScope';
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
 import { useAuth } from '@/hooks/useAuth';
+import { setSuggestTimesEnabled } from '@/launch/scheduling/suggestSlots';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -195,12 +196,12 @@ export default function LaunchSettings() {
                   <Sparkles className="h-3.5 w-3.5 text-orange-600" /> SMART scheduling
                 </Label>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Suggest dates and times using calendar, energy and preferences. You can always override.
+                  Suggest times for my steps from my best time of day and the free gaps in my diary. I can always change them.
                 </p>
               </div>
               <Switch
                 checked={schedulingPrefs.smartSchedulingEnabled}
-                onCheckedChange={(v) => updateScheduling({ smartSchedulingEnabled: v })}
+                onCheckedChange={(v) => { updateScheduling({ smartSchedulingEnabled: v }); setSuggestTimesEnabled(user?.id, v); }}
               />
             </div>
 

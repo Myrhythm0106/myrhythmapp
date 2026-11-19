@@ -155,3 +155,6 @@
 - [x] Top 3 filled from today's diary (starred → from conversations → by time)
 - [x] Support Circle diary sharing: per-person Off / Busy or free / See my day / Help with my day, private items, suggestions confirmed by me
 - [ ] Two-account real test of diary sharing (needs a second signed-in person)
+- [x] Executive Home dashboard (briefing band, numbered top 3, Up next, At a glance)
+- [x] Support Circle view-only dashboard on "Diaries shared with me" (by diary permission)
+- [x] Suggested times for actions from my best time of day + free diary gaps
