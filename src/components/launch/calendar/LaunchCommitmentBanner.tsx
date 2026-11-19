@@ -214,7 +214,7 @@ export function LaunchCommitmentBanner({
   }
 
   return (
-    <section aria-labelledby={`${detailsId}-title`} className={cn('bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream px-5 py-6 sm:p-7 border-t-2 border-launch-gold', className)}>
+    <section aria-labelledby={`${detailsId}-title`} className={cn('rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream px-5 py-6 sm:p-7 border-t-2 border-launch-gold', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
         <Compass className="h-6 w-6 shrink-0 text-launch-gold" />

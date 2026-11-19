@@ -143,19 +143,7 @@ export function LaunchDayView({
         focusTitle={undefined}
       />
 
-      <LaunchCommitmentBanner 
-        scope="day" 
-        date={date} 
-        inheritedVision={inheritedVision}
-        inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
-      />
-
-      <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
-        <h2 className="text-xl font-semibold font-display">My Daily Rhythm</h2>
-        {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
-      </div>
-      <LaunchYesWeekCard date={date} onAdd={onAddYesAction} />
-      <p className="text-base text-launch-ink">My schedule</p>
+      <h2 className="text-xl font-semibold font-display text-launch-ink">My schedule today</h2>
 
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
@@ -333,6 +321,18 @@ export function LaunchDayView({
           ))}
         </div>
       )}
+      <LaunchCommitmentBanner 
+        scope="day" 
+        date={date} 
+        inheritedVision={inheritedVision}
+        inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
+      />
+
+      <div className="flex items-center justify-between gap-3 pt-2 text-launch-ink">
+        <h2 className="text-xl font-semibold font-display">My Daily Rhythm</h2>
+        {priorityCount > 0 && <span className="text-base">{priorityCount} highlighted</span>}
+      </div>
+      <LaunchYesWeekCard date={date} onAdd={onAddYesAction} />
     </div>
   );
 }

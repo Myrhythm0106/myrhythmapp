@@ -160,3 +160,11 @@
 - [x] Suggested times for actions from my best time of day + free diary gaps
 - [x] Home redesign: priorities (Dashboard/List), Next line, week strip, yesterday/tomorrow, tap-to-edit sheet, calendar views + Vision
 - [ ] Batch undo / put back / guest invite window (paused, plan saved)
+
+## Flow plan (approved 19 Nov 2026)
+- [x] Curved My Vision in ACTion box; today's schedule directly under Today
+- [ ] Signed-in walkthrough of the first-time journey; trim screens over 3 choices
+- [ ] Skippable 3-step Set up screen after welcome (phone shortcut, Google/Outlook, invite one person)
+- [ ] Trial/payment offer at end of setup with "Not now"
+- [ ] Record first on Home; "Record this" on diary items at start time
+- [ ] Every recording saves write-up, full transcript, key points, actions; email/share

@@ -286,9 +286,6 @@ export default function LaunchCalendar() {
           />
         )}
 
-        <SendMyWeekBar events={events} from={selectedDate} />
-
-        <LaunchSyncBar />
 
 
         <LaunchCard className="bg-launch-ivory border-launch-gold/30 min-h-[24rem] p-4 md:p-6">
@@ -342,6 +339,10 @@ export default function LaunchCalendar() {
           />
         )}
       </LaunchCard>
+
+        <SendMyWeekBar events={events} from={selectedDate} />
+
+        <LaunchSyncBar />
       </div>
 
       <LaunchReminderSheet
