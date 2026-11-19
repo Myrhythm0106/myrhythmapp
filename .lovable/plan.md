@@ -5,6 +5,11 @@
 - The same Undo all also appears in a toast, so it is never more than one tap away.
 - Undo removes the diary entries, puts every step back to "waiting for a time", and clears the reminders that were created. Nothing else changes: the conversation, the reference codes and the summary all stay.
 
+## Do and undo, both ways
+- After **Undo all**, the panel changes to **"5 steps taken out · Put them back"**. One tap restores the same times. If a slot has been taken in the meantime, that step moves to the next best free slot and the message says so.
+- Doing and undoing can be repeated as often as I like. Each step only ever has one diary entry, so there are never duplicates.
+- Invites follow the same 2-minute window every time I put steps back, so people are not sent repeated emails.
+
 ## What if other people are invited (Support Circle or external guests)?
 **1. Invites wait 2 minutes before sending.**
 - When a batch includes people, their invitations wait for a short undo window. The panel shows "Invites send in 1:45" with two buttons, **Send now** and **Undo all**.
@@ -25,11 +30,11 @@
 - If a cancellation email fails, I see "Couldn't reach jo@... — I'll keep trying" rather than silence.
 
 ## Checks
-- Tests for the undo rules: within the window nobody is notified; after the window, cancellation goes only to people actually invited; watchers get a notice only; the steps go back to waiting.
+- Tests for the do/undo/redo rules (no duplicates; redo keeps the original times, or the next free slot if taken) and the undo rules: within the window nobody is notified; after the window, cancellation goes only to people actually invited; watchers get a notice only; the steps go back to waiting.
 - An end-to-end run with a test account and one external guest email.
 
 ## Technical details
-- New `src/launch/scheduling/batchUndo.ts`: a pure function `planUndo(batch, now)` that decides delete-only vs cancel-and-notify for each person (tested), plus `undoBatch(batchId)`, which deletes `calendar_events`, `event_reminders` and `event_invitations` rows and resets `extracted_actions` (reusing the `undoCommit` logic).
+- New `src/launch/scheduling/batchUndo.ts`: a pure function `planUndo(batch, now)` that decides delete-only vs cancel-and-notify for each person (tested), plus `redoBatch(batchId)` (re-runs the batch from saved times via `suggestSlots` when a slot is taken), and `undoBatch(batchId)`, which deletes `calendar_events`, `event_reminders` and `event_invitations` rows and resets `extracted_actions` (reusing the `undoCommit` logic).
 - `scheduleExtractedActions` returns a `batchId` and stops sending invites immediately. Invitation sends are queued as `event_invitations` rows with `send_after = now() + 2 min` and `status = 'queued'`.
 - The `send-event-invitation` edge function gains a `mode: 'invite' | 'cancel'` (cancel sends an ICS file with METHOD:CANCEL plus a short email) and a sweep for queued rows past `send_after`. The client calls it on Send now or when the window ends; a scheduled sweep covers people who closed the app.
 - Migration: add `send_after timestamptz`, `status text default 'sent'`, `batch_id uuid` and `cancelled_at timestamptz` to `event_invitations`; add `batch_id uuid` to `calendar_events`. Existing RLS (owner-only) stays as it is, and no new tables are needed.
