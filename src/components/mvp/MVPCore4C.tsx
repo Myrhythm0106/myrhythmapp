@@ -367,18 +367,15 @@ export function MVPCore4C() {
               <p className="mt-5 font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal md:mt-8">
                 From what was said to what happens next
               </p>
-              <h1 className="mt-4 font-instrument text-[2.6rem] leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.75rem]">
-                The app that keeps your plans and actions going after your appointment or conversation ends.
+              <h1 className="mt-4 font-instrument text-[2.6rem] leading-[0.98] text-launch-ink-deep sm:text-6xl md:mt-5 md:text-7xl lg:text-[5.25rem]">
+                The companion that turns conversations into follow-through.
               </h1>
-              <p className="mt-4 font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
-                Your Pocket PA. <span className="text-launch-teal">It remembers</span>, so you don't have to.
+              <p className="mt-4 max-w-2xl font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
+                Like having a discreet executive assistant at every appointment, meeting, and family conversation — so nothing important slips, and people can count on you <span className="text-launch-teal">(again)</span>.
               </p>
-              <p className="mt-3 font-worksans text-base font-bold leading-7 text-launch-ink-deep md:mt-5 md:text-lg md:leading-8">
+              <p className="mt-3 font-worksans text-base font-bold italic leading-7 text-launch-ink-deep/85 md:mt-5 md:text-lg md:leading-8">
                 Captures it. Plans it. Keeps it. Follows it through.{" "}
                 <span className="text-launch-teal">You stay in control.</span>
-              </p>
-              <p className="mt-4 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/80 md:mt-7 md:text-xl">
-                MyRhythm turns conversations and reports into clear, traceable next steps, then helps those steps find a realistic place in your day.
               </p>
               <div ref={heroCtaRef} className="mt-6 md:mt-9">
                 {entryState === 'returning' && (
@@ -427,6 +424,25 @@ export function MVPCore4C() {
                     <button onClick={handleAuthAction} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Not you? Sign out</button>
                   </p>
                 )}
+                <div className="mt-8">
+                  <p className="font-worksans text-xs font-bold uppercase text-launch-teal">How MyRhythm carries it for you</p>
+                  <ol className="mt-3 grid gap-3 md:grid-cols-3">
+                    {[
+                      ['01 · Discreet capture', 'Listens with discretion', 'Tap once on your phone or watch when an appointment or conversation starts. Nothing records secretly; you stay in control.'],
+                      ['02 · Clear extraction', 'Pulls out what was promised', 'Agreed commitments, dates and who owns what, in a clean, searchable summary and spreadsheet.'],
+                      ['03 · Calm follow-through', 'Carries it to done', 'Suggests realistic times in your diary that match your energy, and loops in your Support Circle only if you choose.'],
+                    ].map(([tag, title, body]) => (
+                      <li key={tag} className="rounded-md border border-launch-gold/40 bg-launch-ivory/90 p-4 backdrop-blur">
+                        <p className="font-worksans text-xs font-bold uppercase text-launch-ink-deep/60">{tag}</p>
+                        <p className="mt-1 font-instrument text-xl text-launch-ink-deep">{title}</p>
+                        <p className="mt-1 font-worksans text-sm leading-6 text-launch-ink-deep/80">{body}</p>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-4 max-w-2xl font-worksans text-sm italic leading-6 text-launch-ink-deep/75">
+                    Essential for concussion, brain injury, stroke, ADHD and memory recovery. Loved by busy professionals, overwhelmed carers, and anyone who refuses to drop the ball.
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>
