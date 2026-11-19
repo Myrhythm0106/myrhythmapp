@@ -58,6 +58,12 @@ Both views use the same data, tap into the same detail sheet, and keep the same 
 - **Layer 4 (when I want everything):** "Open full calendar" goes to the month and week views.
 - Nothing calendar-related takes up the screen unless I open it.
 
+## Yesterday · Today · Tomorrow (remember and prepare)
+Home stays on today. Next to the date are two small arrows (on a phone I can also swipe): **< Yesterday | Today | Tomorrow >**. Nothing extra sits on the screen until I use them.
+- **Yesterday (remember):** what I did (ticked), what moved, and the conversations I recorded, with "Carry over" on anything left undone.
+- **Tomorrow (prepare):** what's booked, my first commitment, and "Get ready" items such as notes from a linked conversation. One tap adds a prep step to today.
+- A small "Back to today" brings me home. In the week strip, yesterday and tomorrow are softly marked either side of today, so the three days are visible together in one slim line.
+
 ## Calendar views and My Vision, one tap in
 - The week strip has a small, elegant view chooser: **Day · Week · Month · Year · Vision**. Each opens the full calendar straight in that view (the calendar already has Day, Week, Month and Year).
 - **Vision** opens My Vision in ACTion: the life I'm building, with the goals and this week's priorities that serve it. On Home, one quiet line shows "Serving my vision: <short vision line>" and only appears when I've written one.
