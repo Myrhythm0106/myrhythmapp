@@ -271,6 +271,8 @@ export default function LaunchCalendar() {
 
           <div className="mt-4">
             <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} />
+            <button type="button" onClick={() => navigate('/launch/vision-statement')}
+              className="min-h-[44px] rounded-full px-3 text-sm text-launch-ink/70 hover:bg-launch-cream hover:text-launch-ink">Vision</button>
           </div>
         </LaunchCard>
 

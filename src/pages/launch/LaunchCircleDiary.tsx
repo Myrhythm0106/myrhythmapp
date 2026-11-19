@@ -6,8 +6,9 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import { HomeBriefingBand } from '@/components/launch/quiet/HomeBriefingBand';
-import { HomeUpNext } from '@/components/launch/quiet/HomeUpNext';
+import { HomePriorities } from '@/components/launch/home/HomePriorities';
+import { HomeNextLine } from '@/components/launch/home/HomeNextLine';
+import { pickTopThree } from '@/launch/today/topThree';
 import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 
 type Shared = { owner_id: string; owner_name: string; level: 'busy' | 'see' | 'help' };
@@ -93,10 +94,13 @@ export default function LaunchCircleDiary() {
             )}
 
             {active && active.level !== 'busy' && isToday(day) && (
-              <div className="grid gap-4">
-                <HomeBriefingBand readOnly greeting={`${first}'s day`} events={asEvents(items, day)} supporting={first} />
-                <HomeUpNext readOnly events={asEvents(items, day)} />
-              </div>
+              <section className="space-y-4 rounded-3xl border border-launch-gold/25 bg-launch-ivory/85 p-5 sm:p-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-launch-moss">{first}'s priorities today · view only</p>
+                {pickTopThree(asEvents(items, day)).length === 0
+                  ? <p className="text-base text-launch-ink/70">Nothing left to do today.</p>
+                  : <HomePriorities readOnly mode="list" items={pickTopThree(asEvents(items, day))} />}
+                <HomeNextLine events={asEvents(items, day)} excludeIds={pickTopThree(asEvents(items, day)).map(e => e.id)} />
+              </section>
             )}
 
             {active && (

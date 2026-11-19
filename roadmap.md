@@ -158,3 +158,5 @@
 - [x] Executive Home dashboard (briefing band, numbered top 3, Up next, At a glance)
 - [x] Support Circle view-only dashboard on "Diaries shared with me" (by diary permission)
 - [x] Suggested times for actions from my best time of day + free diary gaps
+- [x] Home redesign: priorities (Dashboard/List), Next line, week strip, yesterday/tomorrow, tap-to-edit sheet, calendar views + Vision
+- [ ] Batch undo / put back / guest invite window (paused, plan saved)
