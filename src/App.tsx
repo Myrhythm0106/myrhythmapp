@@ -152,6 +152,7 @@ import { DayOpenWelcomeProvider } from "./launch/daily/DayOpenWelcomeContext";
 
 // MVP Prototype (parallel route tree)
 import { LaunchGuard } from "./components/launch/LaunchGuard";
+import { SignedInOnly } from "./launch/access/SignedInOnly";
 import { AssessmentFirstGate } from "./components/launch/AssessmentFirstGate";
 
 const queryClient = new QueryClient();
@@ -188,6 +189,7 @@ function App() {
 
                         <SetupProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
+                          <SignedInOnly>
                           <Routes>
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<ToLanding />} />
@@ -408,6 +410,7 @@ function App() {
                           <Route path="/founderplaybook" element={<Navigate to="/founder/playbook" replace />} />
                          <Route path="/founder-playbook" element={<Navigate to="/founder/playbook" replace />} />
                    </Routes>
+                          </SignedInOnly>
                         </Suspense>
                       </NavProvider>
                     </BrowserRouter>

@@ -4,7 +4,6 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { getDailyEntry } from '@/data/iChoose365';
 import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
 import { cn } from '@/lib/utils';
-import watercolourBrain from '@/assets/watercolour-brain.png';
 import { useDayOpenWelcomeOpen } from './DayOpenWelcomeContext';
 
 
@@ -101,7 +100,7 @@ function RevealRow({
 }
 
 /**
- * The first screen of the day. Ink ground, one teal signal, one decision.
+ * The first screen of the day. Ink ground, words only, one teal signal, one decision.
  * Everything beyond the opening beat stays folded away until asked for.
  */
 export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
@@ -175,28 +174,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
         >
           <div className="day-open-wash pointer-events-none absolute inset-0" />
 
-          <div className="relative grid w-full max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-[3fr_2fr] lg:gap-14">
-            {/* Artwork — right on desktop, above the words on mobile */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1, duration: 0.9, ease: 'easeOut' }}
-              className="relative order-first mx-auto flex w-full max-w-[220px] items-center justify-center lg:order-last lg:max-w-none"
-            >
-              <div className="day-open-glow pointer-events-none absolute inset-[-18%]" />
-              <motion.img
-                src={watercolourBrain}
-                alt=""
-                aria-hidden="true"
-                width={1024}
-                height={1024}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-full object-contain"
-              />
-            </motion.div>
-
-            {/* Words */}
+          <div className="relative w-full max-w-xl">
             <div className="text-left">
               <motion.div {...rise(0.1)}>
                 <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.32em] day-open-ivory-60">
@@ -207,7 +185,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
 
               <motion.h1
                 {...rise(0.16)}
-                className="font-archivo mt-6 text-4xl uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl day-open-ivory"
+                className="font-instrument mt-6 text-5xl leading-[1.05] sm:text-6xl day-open-ivory"
               >
                 {opener.hello}{name ? `, ${name}` : ''}.
               </motion.h1>
