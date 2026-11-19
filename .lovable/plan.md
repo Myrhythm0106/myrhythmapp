@@ -41,6 +41,14 @@ When I open Home, it should feel like the daily briefing my own chief of staff h
 - **Promises I made:** a tile that counts steps I agreed to in recorded conversations and opens them in one tap.
 - **Energy-aware hint:** "My best focus time is 10:00 to 12:00" when the diary shows space.
 
+## Suggested times for my actions (optional)
+- Each action from a conversation, and each top-3 item without a time, can show a **suggested slot**, for example "Suggested: Tue 10:30 · my best focus time". The suggestion uses the best time of day I gave in the questions and the free gaps in my diary.
+- One tap on **Put it there** adds it to my diary. **Another time** offers two more free slots, and **No time** leaves the action unscheduled. Nothing is placed without my tap.
+- **Keep all at suggested times** places every accepted action at once, with one undo.
+- Sensible rules: no more items per day than the daily limit I chose, a 15-minute gap around existing commitments, no overlaps, and items with a due date are suggested before that date.
+- A switch in Settings turns "Suggest times for me" on or off. It is on by default.
+- If I haven't answered the best-time question, suggestions use mid-morning and say so ("I can tune this. Tell me my best time").
+
 ## Support Circle view (with permission)
 - The dashboard can be shared with a Support Circle member. It uses the same per-person diary switch and levels as today (off by default, Busy/free, See my day, Help with my day).
 - A permitted member opens it from "Diaries shared with me". They see a read-only version: the briefing band ("Supporting Annabel"), the top 3, Up next and At a glance. Private items show only as "Busy".
@@ -60,4 +68,5 @@ How the top 3 is picked from the diary, ticking with undo, swapping, adding, the
 - Add tokens to `index.css`: `--launch-shadow-elevated`, a briefing gradient built from launch-ink-deep to launch-ink, and a gold hairline utility. Use no hard-coded colours.
 - No new tables. The circle dashboard reads through the existing security-definer RPCs (`circle_diary`, `my_shared_diaries`) and is gated by the diary level. Rows are never read directly.
 - New route `/launch/circle-diary/:ownerId/dashboard`, which reuses the dashboard parts in read-only mode.
-- Record "Executive dashboard + circle view" in roadmap.md.
+- Suggested slots: a pure tested function `suggestSlots(events, peakHours, maxDaily, dueDate?)` in `src/launch/scheduling/suggestSlots.ts`. It reuses the energy-peak mapping from `useAssessmentToScheduling`, and its tests cover peak-first choice, no overlaps, the daily limit and due-date order. It is used in Memory Bridge action results and in TopThreeToday. Accepting a slot uses the existing `addEvent`.
+- Record "Executive dashboard + circle view" and "Suggested times for actions" in roadmap.md.
