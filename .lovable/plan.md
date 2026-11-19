@@ -58,6 +58,12 @@ Both views use the same data, tap into the same detail sheet, and keep the same 
 - **Layer 4 (when I want everything):** "Open full calendar" goes to the month and week views.
 - Nothing calendar-related takes up the screen unless I open it.
 
+## Calendar views and My Vision, one tap in
+- The week strip has a small, elegant view chooser: **Day · Week · Month · Year · Vision**. Each opens the full calendar straight in that view (the calendar already has Day, Week, Month and Year).
+- **Vision** opens My Vision in ACTion: the life I'm building, with the goals and this week's priorities that serve it. On Home, one quiet line shows "Serving my vision: <short vision line>" and only appears when I've written one.
+- Inside the calendar, the same chooser sits at the top, so I can move between Day, Week, Month, Year and Vision without going back. Tapping any item opens the same detail sheet to edit and save.
+- The calendar views keep their current content. They get the same calm restyle (ivory, gold hairlines, serif headings) so it feels like one product.
+
 ## Calm screen rules (no overwhelm)
 - On first view, only the greeting, up to 3 priorities, Next, the week strip and two actions are visible.
 - Everything else is one tap away and folds back when I'm done. My choices are remembered.
@@ -88,6 +94,7 @@ The batch undo, put-back and guest-invite plan is saved and comes back next, onc
 
 ## Technical details
 - `HomeWeekStrip` and its inline `HomeDayAgenda` use `useLaunchCalendarEvents(weekStart, weekEnd)`; the expanded day is session state; "Open full calendar" links to /launch/calendar.
+- The view chooser links to `/launch/calendar?view=day|week|month|year`, and Vision links to the existing vision page; a shared `CalendarViewChooser` is used on Home and at the top of LaunchCalendar; visual restyle only, with no change to calendar logic.
 - `HomeViewToggle` (Dashboard | List) is stored per user on the device; the `HomePriorityCards` and `HomePriorityList` renderers share one data source. `HomeStatusLine` covers today and this week (counts from the week's events and unscheduled `extracted_actions`).
 - Replace `HomeBriefingBand`, `HomeUpNext` and `HomeAtAGlance` with `HomePriorities` (restyled `TopThreeToday` rows with a category label from the event type or linked action category), `HomeNextLine` and `HomeMoreToday` (a disclosure whose open state is stored per user on the device).
 - New `PriorityDetailSheet` (shadcn Sheet; side on desktop, bottom on mobile). It loads the `calendar_events` row and, when `extracted_action_id` is set, the `extracted_actions` row. Saves go through the existing `useLaunchCalendarEvents` update/reschedule helpers and an `extracted_actions` update; Undo restores the previous values.
