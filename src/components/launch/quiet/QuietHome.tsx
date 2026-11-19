@@ -38,6 +38,7 @@ export function QuietHome() {
   const starting = useLaunchStartingStyle();
   const { user } = useAuth();
   const dailySupport = useLaunchDailySupport(user?.id);
+  const [topIds, setTopIds] = React.useState<string[]>([]);
 
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
@@ -69,13 +70,13 @@ export function QuietHome() {
 
       {!settlingIn && (
         <>
-          <TopThreeToday />
+          <TopThreeToday onPicked={setTopIds} />
 
           <section aria-labelledby="home-now-title" className="space-y-3">
             <h2 id="home-now-title" className="font-instrument text-2xl text-launch-ink">
               {dailySupport.gentle ? 'One step is enough for now' : "What's next"}
             </h2>
-            <NextActionStrip />
+            <NextActionStrip excludeIds={topIds} />
           </section>
 
           <div className="grid gap-3 sm:grid-cols-2">

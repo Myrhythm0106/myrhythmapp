@@ -12,7 +12,7 @@ import { areaTitle, readChosenPriorities } from '@/launch/compass/priorityAreas'
  * The single most important thing on Home: what's next today, with
  * "Done" and "Move to tomorrow" inline. No action here costs more than one tap.
  */
-export function NextActionStrip() {
+export function NextActionStrip({ excludeIds = [] }: { excludeIds?: string[] } = {}) {
   const top = readChosenPriorities()[0];
   return (
     <div className="space-y-2">
@@ -21,12 +21,12 @@ export function NextActionStrip() {
           <span className="font-semibold">My focus:</span> {areaTitle(top)}
         </p>
       )}
-      <NextActionCard />
+      <NextActionCard excludeIds={excludeIds} />
     </div>
   );
 }
 
-function NextActionCard() {
+function NextActionCard({ excludeIds = [] }: { excludeIds?: string[] }) {
   const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
   const { events, loading, updateStatus, carryOver } = useLaunchCalendarEvents(today, today);
@@ -35,19 +35,21 @@ function NextActionCard() {
   const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
 
   const next: LaunchCalendarEvent | undefined = useMemo(() => {
-    const pending = events.filter(e => e.status === 'pending' && isToday(e.date));
+    const pending = events.filter(e => e.status === 'pending' && isToday(e.date) && !excludeIds.includes(e.id));
     const upcoming = pending.find(e => {
       const [h, m] = (e.time || '00:00').split(':').map(Number);
       return h * 60 + m >= nowMinutes;
     });
     return upcoming ?? pending[0];
-  }, [events, nowMinutes]);
+  }, [events, nowMinutes, excludeIds]);
 
   if (loading && events.length === 0) {
     return (
       <div className="rounded-3xl border border-launch-gold/30 bg-launch-ivory p-5 h-[104px] animate-pulse" />
     );
   }
+
+  if (!next && excludeIds.length > 0) return null;
 
   if (!next) {
     return (

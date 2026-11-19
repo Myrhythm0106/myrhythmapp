@@ -1,24 +1,30 @@
-export interface TopItem { id: string; text: string; done: boolean }
+import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
+
 export const MAX_TOP = 3;
 
-export function dayKey(userId: string | undefined, d = new Date()): string {
+type Ev = Pick<LaunchCalendarEvent, 'id' | 'time' | 'status' | 'source'> & { extractedActionId?: string | null };
+
+const mins = (t: string) => { const [h, m] = (t || '00:00').split(':').map(Number); return h * 60 + (m || 0); };
+const rank = (e: Ev, starred: string[]) =>
+  starred.includes(e.id) ? 0 : (e.source === 'memory_bridge' || e.extractedActionId) ? 1 : 2;
+
+/** Today's top 3 from the diary: starred, then from conversations, then by time. Only pending items. */
+export function pickTopThree<T extends Ev>(events: T[], starredIds: string[] = [], pinned: string[] = []): T[] {
+  const open = events.filter(e => e.status === 'pending');
+  const byPin = pinned.map(id => open.find(e => e.id === id)).filter(Boolean) as T[];
+  const rest = open
+    .filter(e => !byPin.includes(e))
+    .sort((a, b) => rank(a, starredIds) - rank(b, starredIds) || mins(a.time) - mins(b.time));
+  return [...byPin, ...rest].slice(0, MAX_TOP);
+}
+
+export function pinKey(userId: string | undefined, d = new Date()) {
   const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  return `myrhythm.top3.${userId ?? 'guest'}.${iso}`;
+  return `myrhythm.top3pins.${userId ?? 'guest'}.${iso}`;
 }
-
-export function loadTop(key: string): TopItem[] {
-  try {
-    const v = JSON.parse(localStorage.getItem(key) || '[]');
-    return Array.isArray(v) ? v.slice(0, MAX_TOP) : [];
-  } catch { return []; }
+export function loadPins(key: string): string[] {
+  try { const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []; } catch { return []; }
 }
-
-export function saveTop(key: string, items: TopItem[]) {
-  try { localStorage.setItem(key, JSON.stringify(items.slice(0, MAX_TOP))); } catch { /* noop */ }
-}
-
-export function addTop(items: TopItem[], text: string): TopItem[] {
-  const t = text.trim();
-  if (!t || items.length >= MAX_TOP) return items;
-  return [...items, { id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, text: t, done: false }];
+export function savePins(key: string, ids: string[]) {
+  try { localStorage.setItem(key, JSON.stringify(ids.slice(0, MAX_TOP))); } catch { /* noop */ }
 }
