@@ -362,6 +362,8 @@ export type Database = {
       }
       calendar_events: {
         Row: {
+          added_by_name: string | null
+          added_by_user: string | null
           carried_from: string | null
           category: string | null
           created_at: string
@@ -373,6 +375,7 @@ export type Database = {
           ics_sequence: number
           ics_uid: string | null
           id: string
+          is_private: boolean
           is_system_generated: boolean
           last_push_error: string | null
           outlook_event_id: string | null
@@ -393,6 +396,8 @@ export type Database = {
           watchers: string[] | null
         }
         Insert: {
+          added_by_name?: string | null
+          added_by_user?: string | null
           carried_from?: string | null
           category?: string | null
           created_at?: string
@@ -404,6 +409,7 @@ export type Database = {
           ics_sequence?: number
           ics_uid?: string | null
           id?: string
+          is_private?: boolean
           is_system_generated?: boolean
           last_push_error?: string | null
           outlook_event_id?: string | null
@@ -424,6 +430,8 @@ export type Database = {
           watchers?: string[] | null
         }
         Update: {
+          added_by_name?: string | null
+          added_by_user?: string | null
           carried_from?: string | null
           category?: string | null
           created_at?: string
@@ -435,6 +443,7 @@ export type Database = {
           ics_sequence?: number
           ics_uid?: string | null
           id?: string
+          is_private?: boolean
           is_system_generated?: boolean
           last_push_error?: string | null
           outlook_event_id?: string | null
@@ -3704,6 +3713,30 @@ export type Database = {
         Returns: boolean
       }
       check_user_status: { Args: { p_email: string }; Returns: Json }
+      circle_add_diary_item: {
+        Args: {
+          p_date: string
+          p_owner: string
+          p_time: string
+          p_title: string
+        }
+        Returns: string
+      }
+      circle_diary: {
+        Args: { p_from: string; p_owner: string; p_to: string }
+        Returns: {
+          added_by_name: string
+          awaiting_confirmation: boolean
+          date: string
+          end_time: string
+          id: string
+          is_busy_only: boolean
+          status: string
+          time: string
+          title: string
+        }[]
+      }
+      circle_diary_level: { Args: { p_owner: string }; Returns: string }
       clean_expired_oauth_states: { Args: never; Returns: undefined }
       cleanup_expired_invitations: { Args: never; Returns: number }
       cleanup_expired_verification_tokens: { Args: never; Returns: number }
@@ -3807,6 +3840,14 @@ export type Database = {
         }[]
       }
       my_recording_balance: { Args: never; Returns: Json }
+      my_shared_diaries: {
+        Args: never
+        Returns: {
+          level: string
+          owner_id: string
+          owner_name: string
+        }[]
+      }
       notify_circle_of_step_completion: {
         Args: { p_action_id: string }
         Returns: Json
