@@ -51,6 +51,18 @@ A quiet switch at the top, **Dashboard | List**, lets me choose. It is remembere
 
 Both views use the same data, tap into the same detail sheet, and keep the same "More for today" fold.
 
+## Calendar, revealed in layers
+- **Layer 1 (always visible, one slim line):** a 7-day week strip under the priorities. It shows Mon to Sun with a small dot for each day that has commitments, and today highlighted.
+- **Layer 2 (tap a day):** that day's agenda expands in place as a short timeline: times, titles, and free gaps shown as quiet spaces. Tap again to fold it.
+- **Layer 3 (tap an item):** opens the same detail sheet to view, edit and save.
+- **Layer 4 (when I want everything):** "Open full calendar" goes to the month and week views.
+- Nothing calendar-related takes up the screen unless I open it.
+
+## Calm screen rules (no overwhelm)
+- On first view, only the greeting, up to 3 priorities, Next, the week strip and two actions are visible.
+- Everything else is one tap away and folds back when I'm done. My choices are remembered.
+- One focal point per section, plenty of space, and no more than about 7 visible items above the fold.
+
 ## Tap to see the detail, change it, save it
 - Tapping a priority or Next opens a calm sheet that slides up (from the side on a computer) showing the item as it was created:
   - **Diary item:** title, date, time, notes, who's involved, reminders, "Keep private".
@@ -75,6 +87,7 @@ The view-only version for permitted members uses the same calm layout (prioritie
 The batch undo, put-back and guest-invite plan is saved and comes back next, once Home is right.
 
 ## Technical details
+- `HomeWeekStrip` and its inline `HomeDayAgenda` use `useLaunchCalendarEvents(weekStart, weekEnd)`; the expanded day is session state; "Open full calendar" links to /launch/calendar.
 - `HomeViewToggle` (Dashboard | List) is stored per user on the device; the `HomePriorityCards` and `HomePriorityList` renderers share one data source. `HomeStatusLine` covers today and this week (counts from the week's events and unscheduled `extracted_actions`).
 - Replace `HomeBriefingBand`, `HomeUpNext` and `HomeAtAGlance` with `HomePriorities` (restyled `TopThreeToday` rows with a category label from the event type or linked action category), `HomeNextLine` and `HomeMoreToday` (a disclosure whose open state is stored per user on the device).
 - New `PriorityDetailSheet` (shadcn Sheet; side on desktop, bottom on mobile). It loads the `calendar_events` row and, when `extracted_action_id` is set, the `extracted_actions` row. Saves go through the existing `useLaunchCalendarEvents` update/reschedule helpers and an `extracted_actions` update; Undo restores the previous values.
