@@ -1,41 +1,59 @@
-# Undo a batch of scheduled steps, safely with other people involved
+# Home: my priorities, calm on the surface, detail on tap
 
-## What I get
-- After "Put my steps in my diary" (on the next-steps page, and wherever the batch runs), a calm panel appears: **"5 steps added to my diary · 3 people will be invited"** with a large **Undo all** button. Each step is listed with its time and a small Undo on its own line.
-- The same Undo all also appears in a toast, so it is never more than one tap away.
-- Undo removes the diary entries, puts every step back to "waiting for a time", and clears the reminders that were created. Nothing else changes: the conversation, the reference codes and the summary all stay.
+## The idea
+Home shows only what matters for staying on track today, chosen from what I've said matters to me. Everything else stays folded away until I ask for it. Tapping any item opens it in its original form (the diary entry, or the step from my conversation), where I can change it and save, and Home updates straight away.
 
-## Do and undo, both ways
-- After **Undo all**, the panel changes to **"5 steps taken out · Put them back"**. One tap restores the same times. If a slot has been taken in the meantime, that step moves to the next best free slot and the message says so.
-- Doing and undoing can be repeated as often as I like. Each step only ever has one diary entry, so there are never duplicates.
-- Invites follow the same 2-minute window every time I put steps back, so people are not sent repeated emails.
+## What I see first (one screen, no scrolling on a phone)
 
-## What if other people are invited (Support Circle or external guests)?
-**1. Invites wait 2 minutes before sending.**
-- When a batch includes people, their invitations wait for a short undo window. The panel shows "Invites send in 1:45" with two buttons, **Send now** and **Undo all**.
-- If I undo inside the window, nobody ever hears about it. There is no awkward "sorry, ignore that" email.
-- If I leave the app, the invites still go out on time, so nothing is lost.
+```text
+ Thursday 19 November
+ Good morning, Annabel.
+ "Today I choose ..." (one quiet line)
 
-**2. If I undo after invites have gone out:**
-- One calm question: **"Let the 3 people know it's off?"** with Yes, let them know (the default) and No, I'll tell them myself.
-- Yes sends a short, professional cancellation, for example "Annabel has taken 'Send report to Sam' off her diary for Tue 10:30." It includes a calendar cancel, so the item disappears from their diary too.
-- Support Circle members who were only watching get a quiet one-line notice, never an alarm.
+ MY PRIORITIES TODAY                       1 of 3 done
+ ------------------------------------------------------
+ (o) Call Dr Patel                 10:30   Health    >
+ ( ) Send report to Sam            14:00   Work      >
+ ( ) Pick up the kids              16:30   Family    >
 
-**3. Who is external is always visible.**
-- In the batch panel, external guests are marked "Guest" next to Support Circle names, so I can see exactly who will get an email before it goes.
+ NEXT: Team check-in · 11:00 · in 57 min           >
 
-## Edge cases handled
-- Undo works for the whole batch, or for one step at a time.
-- If I edited a step after it was scheduled, Undo all still removes it, and the toast tells me.
-- If a cancellation email fails, I see "Couldn't reach jo@... — I'll keep trying" rather than silence.
+ [ Record a conversation ]     [ See my day ]
+
+ v More for today (3)          <- folded by default
+```
+
+- **My priorities today:** up to 3, picked automatically from my diary. Items I've starred come first, then my priority areas from my questions and steps from my conversations. Each row is one line with a gentle label (Health, Work, Family, Home) and a tick.
+- **Next:** a single line with a quiet countdown. It is not a big card.
+- **Two actions only:** Record and See my day.
+- **More for today (folded):** opens to show promises waiting for a time, my best focus time, and anything a Support Circle member has suggested. It only appears when there is something inside, and it remembers whether I left it open or closed.
+
+## Tap to see the detail, change it, save it
+- Tapping a priority or Next opens a calm sheet that slides up (from the side on a computer) showing the item as it was created:
+  - **Diary item:** title, date, time, notes, who's involved, reminders, "Keep private".
+  - **Step from a conversation:** the step in my words, who owns it, the due date, and "Where this came from" (the original words and reference code, folded by default).
+- Every field can be edited in place. **Save** updates the original record and Home refreshes immediately, with a quiet "Saved" and Undo. **Cancel** leaves everything as it was.
+- Only the essentials show at first. "More details" reveals the rest (reminders, people, source) when I want it.
+
+## Look and feel
+- Warm ivory page, one soft glass card, fine gold hairlines, a serif greeting and calm sans-serif text. It feels elegant and professional, not a dark slab and not dense.
+- No big numbers, countdown cards or tile grids. At most 3 priorities, 2 actions and 1 folded section, and every tap target is at least 56px.
+- It reads naturally in "I/my" wording and never sounds clinical or like a test.
+
+## Support Circle
+The view-only version for permitted members uses the same calm layout (priorities and Next only, private items shown as "Busy", no editing).
 
 ## Checks
-- Tests for the do/undo/redo rules (no duplicates; redo keeps the original times, or the next free slot if taken) and the undo rules: within the window nobody is notified; after the window, cancellation goes only to people actually invited; watchers get a notice only; the steps go back to waiting.
-- An end-to-end run with a test account and one external guest email.
+- Screenshots at desktop and phone sizes, signed in with sample diary items and a conversation step.
+- Edit a priority in the sheet, save it, and confirm Home and the diary both show the change; then Undo.
+- The existing top-3 tests still pass, plus a new test that edits save back to the original record.
+
+## Paused (not lost)
+The batch undo, put-back and guest-invite plan is saved and comes back next, once Home is right.
 
 ## Technical details
-- New `src/launch/scheduling/batchUndo.ts`: a pure function `planUndo(batch, now)` that decides delete-only vs cancel-and-notify for each person (tested), plus `redoBatch(batchId)` (re-runs the batch from saved times via `suggestSlots` when a slot is taken), and `undoBatch(batchId)`, which deletes `calendar_events`, `event_reminders` and `event_invitations` rows and resets `extracted_actions` (reusing the `undoCommit` logic).
-- `scheduleExtractedActions` returns a `batchId` and stops sending invites immediately. Invitation sends are queued as `event_invitations` rows with `send_after = now() + 2 min` and `status = 'queued'`.
-- The `send-event-invitation` edge function gains a `mode: 'invite' | 'cancel'` (cancel sends an ICS file with METHOD:CANCEL plus a short email) and a sweep for queued rows past `send_after`. The client calls it on Send now or when the window ends; a scheduled sweep covers people who closed the app.
-- Migration: add `send_after timestamptz`, `status text default 'sent'`, `batch_id uuid` and `cancelled_at timestamptz` to `event_invitations`; add `batch_id uuid` to `calendar_events`. Existing RLS (owner-only) stays as it is, and no new tables are needed.
-- New presentation part `BatchScheduledPanel` used on the next-steps page (LaunchCommit) and in Memory Bridge results.
+- Replace `HomeBriefingBand`, `HomeUpNext` and `HomeAtAGlance` with `HomePriorities` (restyled `TopThreeToday` rows with a category label from the event type or linked action category), `HomeNextLine` and `HomeMoreToday` (a disclosure whose open state is stored per user on the device).
+- New `PriorityDetailSheet` (shadcn Sheet; side on desktop, bottom on mobile). It loads the `calendar_events` row and, when `extracted_action_id` is set, the `extracted_actions` row. Saves go through the existing `useLaunchCalendarEvents` update/reschedule helpers and an `extracted_actions` update; Undo restores the previous values.
+- Home and the sheet share one `useLaunchCalendarEvents(today)` instance passed down, so a save refreshes Home immediately.
+- Keep the `suggestSlots` logic and the circle diary data path unchanged. Remove the unused dashboard CSS tokens.
+- Record the rule in AGENTS.md: Home shows at most 3 priorities plus Next, with details edited in one shared sheet against the original record.
