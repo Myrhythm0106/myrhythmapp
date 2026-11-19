@@ -27,7 +27,7 @@ Landing → Create account → Short questions (6 min) → My snapshot (free val
 Everything else (Vision, full calendar views, assessment, settings, help) lives in the You-Are-Here dial — there when wanted, never in the way.
 
 ### Every recording, guaranteed minimum
-Write-up always saved → key points → agreed actions (plus optional "implied" and "ideas" to accept/decline) → one-tap: add to diary, email, share with circle. Audio saving is optional.
+Write-up always saved → full meeting/conversation fully recorded as a transcript → key points → agreed actions (plus optional "implied" and "ideas" to accept/decline) → one-tap: add to diary, email, share with circle. Audio saving is optional.
 
 ## Part 3 — The MVP (what makes it worth £15/month)
 The MVP is **"Remember the conversation, and follow it through."**
