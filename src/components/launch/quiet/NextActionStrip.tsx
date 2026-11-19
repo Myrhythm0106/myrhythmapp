@@ -35,7 +35,7 @@ function NextActionCard({ excludeIds = [] }: { excludeIds?: string[] }) {
   const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
 
   const next: LaunchCalendarEvent | undefined = useMemo(() => {
-    const pending = events.filter(e => e.status === 'pending' && isToday(e.date) && !excludeIds.includes(e.id));
+    const pending = events.filter(e => e.status === 'pending' && isToday(e.date) && !e.requiresAcceptance && !excludeIds.includes(e.id));
     const upcoming = pending.find(e => {
       const [h, m] = (e.time || '00:00').split(':').map(Number);
       return h * 60 + m >= nowMinutes;

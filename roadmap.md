@@ -149,3 +149,9 @@
 - [x] Profile shows a Log in button when signed out
 - [ ] Repair sign-in emails (mail server login rejected) — waiting on user to set up myrhythmapp.com email sending
 - [ ] Answer: can people register and benefit straight away?
+
+## Home & Support Circle diary (19 Nov 2026)
+- [x] Home redesigned as a calm briefing with My top 3 today
+- [x] Top 3 filled from today's diary (starred → from conversations → by time)
+- [x] Support Circle diary sharing: per-person Off / Busy or free / See my day / Help with my day, private items, suggestions confirmed by me
+- [ ] Two-account real test of diary sharing (needs a second signed-in person)

@@ -15,6 +15,7 @@ export { default as LaunchCompass } from './LaunchCompass';
 export { default as LaunchBrainGames } from './LaunchBrainGames';
 export { default as LaunchGratitude } from './LaunchGratitude';
 export { default as LaunchSupportCircle } from './LaunchSupportCircle';
+export { default as LaunchCircleDiary } from './LaunchCircleDiary';
 export { default as LaunchFeatureStore } from './LaunchFeatureStore';
 export { default as LaunchProfile } from './LaunchProfile';
 export { default as LaunchSettings } from './LaunchSettings';

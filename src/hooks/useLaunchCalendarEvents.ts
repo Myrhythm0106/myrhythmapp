@@ -23,6 +23,11 @@ export interface LaunchCalendarEvent {
   sourceState?: 'available' | 'downloaded' | 'retired';
   /** The capture the event traces back to */
   sourceRecordingId?: string | null;
+  /** Hidden from the Support Circle (shown to them only as Busy) */
+  isPrivate?: boolean;
+  /** Suggested by a Support Circle member and waiting for my yes */
+  requiresAcceptance?: boolean;
+  addedByName?: string | null;
 }
 
 type Row = {
@@ -37,6 +42,9 @@ type Row = {
   carried_from: string | null;
   description: string | null;
   extracted_action_id: string | null;
+  is_private?: boolean | null;
+  requires_acceptance?: boolean | null;
+  added_by_name?: string | null;
   extracted_actions?: {
     reference_code: string | null;
     meeting_recording_id: string | null;
@@ -66,6 +74,9 @@ function rowToEvent(r: Row): LaunchCalendarEvent {
     sourceState:
       (state as LaunchCalendarEvent['sourceState']) || 'available',
     sourceRecordingId: linked?.meeting_recording_id ?? null,
+    isPrivate: !!r.is_private,
+    requiresAcceptance: !!r.requires_acceptance,
+    addedByName: r.added_by_name ?? null,
   };
 }
 
@@ -84,7 +95,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     setLoading(true);
     const { data, error } = await supabase
       .from('calendar_events')
-      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id, extracted_actions:extracted_action_id (reference_code, meeting_recording_id, meeting_recordings:meeting_recording_id (source_state))')
+      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id, is_private, requires_acceptance, added_by_name, extracted_actions:extracted_action_id (reference_code, meeting_recording_id, meeting_recordings:meeting_recording_id (source_state))')
       .eq('user_id', user.id)
       .gte('date', startStr)
       .lte('date', endStr)
@@ -211,5 +222,29 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     [fetchEvents]
   );
 
-  return { events, loading, fetchEvents, addEvent, updateStatus, carryOver, reschedule };
+  const setPrivate = useCallback(
+    async (eventId: string, isPrivate: boolean) => {
+      const { error } = await supabase.from('calendar_events').update({ is_private: isPrivate }).eq('id', eventId);
+      if (error) { toast.error('Could not update that item'); return; }
+      toast(isPrivate ? 'Private. My circle sees only "Busy".' : 'Visible to people I share my diary with.');
+      fetchEvents();
+    },
+    [fetchEvents]
+  );
+
+  /** Accept or decline an item suggested by someone in my Support Circle. */
+  const decideCircleItem = useCallback(
+    async (eventId: string, accept: boolean) => {
+      const { error } = await supabase
+        .from('calendar_events')
+        .update(accept ? { requires_acceptance: false } : { status: 'cancelled', requires_acceptance: false })
+        .eq('id', eventId);
+      if (error) { toast.error('Could not update that item'); return; }
+      toast(accept ? 'Added to my day' : 'Declined. Nothing changes in my day.');
+      fetchEvents();
+    },
+    [fetchEvents]
+  );
+
+  return { events, loading, fetchEvents, addEvent, updateStatus, carryOver, reschedule, setPrivate, decideCircleItem };
 }

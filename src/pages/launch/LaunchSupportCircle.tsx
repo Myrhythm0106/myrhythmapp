@@ -15,6 +15,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { SimpleInviteForm } from '@/components/support-circle/SimpleInviteForm';
+import { DiaryAccessControl } from '@/components/support-circle/DiaryAccessControl';
+import { Link } from 'react-router-dom';
 
 const roleMeta: Record<string, { label: string; Icon: React.ElementType; badge: string }> = {
   viewer:    { label: 'Viewer',    Icon: User,          badge: 'bg-gray-100 text-gray-700' },
@@ -90,6 +92,9 @@ export default function LaunchSupportCircle() {
 
 
         <TabsContent value="team" className="space-y-3">
+          <Link to="/launch/circle-diary" className="flex min-h-[56px] items-center justify-between rounded-2xl border border-launch-gold/30 bg-launch-ivory/80 px-4 text-base font-semibold text-launch-ink hover:bg-launch-cream">
+            Diaries shared with me <span aria-hidden="true">→</span>
+          </Link>
           {isLoading ? (
             <LaunchCard variant="glass" className="p-8 text-center">
               <Loader2 className="h-6 w-6 animate-spin mx-auto text-brand-emerald-600 mb-2" />
@@ -170,7 +175,7 @@ export default function LaunchSupportCircle() {
                       const meta = roleMeta[m.role] ?? roleMeta.viewer;
                       const RoleIcon = meta.Icon;
                       const perms = Object.entries(m.permissions || {})
-                        .filter(([, v]) => !!v)
+                        .filter(([k, v]) => !!v && k !== 'diary' && k !== 'calendar')
                         .map(([k]) => k);
                       return (
                         <LaunchCard key={m.id} variant="glass" className="p-4">
@@ -209,6 +214,7 @@ export default function LaunchSupportCircle() {
                               {removingId === m.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Remove'}
                             </Button>
                           </div>
+                          <DiaryAccessControl memberId={m.id} memberName={m.member_name || 'them'} permissions={(m.permissions ?? null) as Record<string, unknown> | null} onSaved={() => typeof loadSupportCircle === 'function' && loadSupportCircle()} />
                         </LaunchCard>
                       );
                     })}

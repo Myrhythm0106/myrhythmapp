@@ -16,6 +16,9 @@ describe('top 3 from the diary', () => {
     const out = pickTopThree([ev('d', '09:00', { status: 'done' }), ev('x', '09:00', { status: 'cancelled' }), ev('m', '09:00', { status: 'carried' }), ev('ok', '10:00')]);
     expect(out.map(e => e.id)).toEqual(['ok']);
   });
+  it('leaves out circle suggestions I have not confirmed', () => {
+    expect(pickTopThree([ev('s', '09:00', { requiresAcceptance: true }), ev('ok', '10:00')]).map(e => e.id)).toEqual(['ok']);
+  });
   it('swapped-in choices start fresh each day', () => {
     expect(pinKey('u', new Date(2026, 10, 19))).not.toBe(pinKey('u', new Date(2026, 10, 20)));
   });

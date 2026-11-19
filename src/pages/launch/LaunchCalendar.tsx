@@ -117,7 +117,7 @@ export default function LaunchCalendar() {
     }
   }, [currentView, selectedDate]);
 
-  const { events, addEvent, updateStatus, carryOver, reschedule } = useLaunchCalendarEvents(
+  const { events, addEvent, updateStatus, carryOver, reschedule, setPrivate, decideCircleItem } = useLaunchCalendarEvents(
     rangeStart,
     rangeEnd
   );
@@ -304,6 +304,8 @@ export default function LaunchCalendar() {
             onEventCarryOver={handleEventCarryOver}
             onEventReschedule={handleEventReschedule}
             onEventOpenSource={handleOpenEventSource}
+            onEventPrivacy={(e, priv) => { if (e.id) void setPrivate(e.id, priv); }}
+            onCircleDecision={(e, ok) => { if (e.id) void decideCircleItem(e.id, ok); }}
             onAddYesAction={(a) => addEvent({ title: a.title, time: a.suggestedTime, type: 'task', description: 'From my YES plan', date: selectedDate })}
           />
         )}

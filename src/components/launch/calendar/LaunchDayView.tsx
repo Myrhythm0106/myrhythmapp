@@ -1,7 +1,7 @@
 import { LaunchYesWeekCard } from './LaunchYesWeekCard';
 import type { YesAction } from '@/launch/yes/yesActions';
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star } from 'lucide-react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star, Lock, Unlock, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLaunchPriorityHighlights } from '@/hooks/useLaunchFocusDisplay';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -33,6 +33,9 @@ interface Event {
   referenceCode?: string | null;
   sourceState?: SourceState;
   sourceRecordingId?: string | null;
+  isPrivate?: boolean;
+  requiresAcceptance?: boolean;
+  addedByName?: string | null;
 }
 
 
@@ -50,6 +53,8 @@ interface LaunchDayViewProps {
   onEventReschedule?: (eventIndex: number) => void;
   onEventOpenSource?: (event: Event) => void;
   onAddYesAction?: (action: YesAction) => void;
+  onEventPrivacy?: (event: Event, isPrivate: boolean) => void;
+  onCircleDecision?: (event: Event, accept: boolean) => void;
 }
 
 
@@ -67,7 +72,9 @@ export function LaunchDayView({
   onEventCarryOver,
   onEventReschedule,
   onEventOpenSource,
-  onAddYesAction
+  onAddYesAction,
+  onEventPrivacy,
+  onCircleDecision
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
@@ -216,6 +223,18 @@ export function LaunchDayView({
                     {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-gray-400" />}
                     {event.title}
                   </p>
+                  {event.requiresAcceptance && event.status === 'pending' && (
+                    <div className="mt-2 rounded-xl border border-launch-gold/40 bg-launch-cream-light p-3">
+                      <p className="flex items-center gap-1.5 text-sm text-launch-ink"><UserRound className="h-4 w-4" />Added by {event.addedByName || 'my Support Circle'}. Shall I keep it?</p>
+                      <div className="mt-2 flex gap-2">
+                        <Button size="sm" variant="action" className="min-h-11" onClick={() => onCircleDecision?.(event, true)}>Keep it</Button>
+                        <Button size="sm" variant="outline" className="min-h-11" onClick={() => onCircleDecision?.(event, false)}>No thanks</Button>
+                      </div>
+                    </div>
+                  )}
+                  {event.isPrivate && (
+                    <span className="mt-1 inline-flex items-center gap-1 text-sm text-launch-ink/60"><Lock className="h-3.5 w-3.5" />Private</span>
+                  )}
                   {event.id && isActive(event) && priorities.ids.includes(event.id) && (
                     <span className="inline-flex items-center gap-1 text-base text-launch-ink mt-1"><Star className="h-4 w-4 fill-current" />Priority</span>
                   )}
@@ -286,6 +305,12 @@ export function LaunchDayView({
                         <Calendar className="h-4 w-4 mr-2" />
                         Reschedule...
                       </DropdownMenuItem>
+                      {onEventPrivacy && event.id && (
+                        <DropdownMenuItem onClick={() => onEventPrivacy(event, !event.isPrivate)}>
+                          {event.isPrivate ? <Unlock className="h-4 w-4 mr-2" /> : <Lock className="h-4 w-4 mr-2" />}
+                          {event.isPrivate ? 'Show to my circle' : 'Keep private'}
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}

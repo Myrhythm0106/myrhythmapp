@@ -2,7 +2,7 @@ import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 
 export const MAX_TOP = 3;
 
-type Ev = Pick<LaunchCalendarEvent, 'id' | 'time' | 'status' | 'source'> & { extractedActionId?: string | null };
+type Ev = Pick<LaunchCalendarEvent, 'id' | 'time' | 'status' | 'source'> & { extractedActionId?: string | null; requiresAcceptance?: boolean };
 
 const mins = (t: string) => { const [h, m] = (t || '00:00').split(':').map(Number); return h * 60 + (m || 0); };
 const rank = (e: Ev, starred: string[]) =>
@@ -10,7 +10,7 @@ const rank = (e: Ev, starred: string[]) =>
 
 /** Today's top 3 from the diary: starred, then from conversations, then by time. Only pending items. */
 export function pickTopThree<T extends Ev>(events: T[], starredIds: string[] = [], pinned: string[] = []): T[] {
-  const open = events.filter(e => e.status === 'pending');
+  const open = events.filter(e => e.status === 'pending' && !e.requiresAcceptance);
   const byPin = pinned.map(id => open.find(e => e.id === id)).filter(Boolean) as T[];
   const rest = open
     .filter(e => !byPin.includes(e))

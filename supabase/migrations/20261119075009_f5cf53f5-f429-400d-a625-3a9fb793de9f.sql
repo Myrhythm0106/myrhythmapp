@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.circle_diary_level(uuid) FROM authenticated;

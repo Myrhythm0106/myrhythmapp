@@ -119,6 +119,7 @@ import {
   LaunchBrainGames,
   LaunchGratitude,
   LaunchSupportCircle,
+  LaunchCircleDiary,
   LaunchFeatureStore,
   LaunchProfile,
   LaunchSettings,
@@ -355,6 +356,7 @@ function App() {
                        <Route path="/launch/celebrate" element={<LaunchPrivate><LaunchGratitude /></LaunchPrivate>} />
                        <Route path="/launch/gratitude" element={<Navigate to="/launch/celebrate" replace />} />
                        <Route path="/launch/support" element={<LaunchPrivate><LaunchSupportCircle /></LaunchPrivate>} />
+                       <Route path="/launch/circle-diary" element={<LaunchPrivate><LaunchCircleDiary /></LaunchPrivate>} />
                        <Route path="/launch/store" element={<LaunchPrivate><LaunchFeatureStore /></LaunchPrivate>} />
                        <Route path="/launch/profile" element={<LaunchPrivate><LaunchProfile /></LaunchPrivate>} />
                        <Route path="/launch/settings" element={<LaunchPrivate><LaunchSettings /></LaunchPrivate>} />

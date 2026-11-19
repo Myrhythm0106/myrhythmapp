@@ -33,7 +33,7 @@ export function TopThreeToday({ onPicked }: { onPicked?: (ids: string[]) => void
 
   useEffect(() => { onPicked?.(top.map(e => e.id)); }, [top, onPicked]);
 
-  const others = events.filter(e => e.status === 'pending' && !top.some(t => t.id === e.id));
+  const others = events.filter(e => e.status === 'pending' && !e.requiresAcceptance && !top.some(t => t.id === e.id));
   const doneCount = top.filter(e => e.status === 'done').length;
 
   const toggle = async (e: LaunchCalendarEvent) => {
