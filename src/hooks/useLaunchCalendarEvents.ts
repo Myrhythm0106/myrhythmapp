@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { announceDiaryChange, onDiaryChange } from '@/launch/reminders/diarySync';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -90,9 +91,10 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
   const startStr = format(rangeStart, 'yyyy-MM-dd');
   const endStr = format(rangeEnd, 'yyyy-MM-dd');
 
-  const fetchEvents = useCallback(async () => {
+  const syncSource = useRef(`calendar-${Math.random().toString(36).slice(2)}`).current;
+  const fetchEvents = useCallback(async (silent = false) => {
     if (!user) return;
-    setLoading(true);
+    if (!silent) setLoading(true);
     const { data, error } = await supabase
       .from('calendar_events')
       .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id, is_private, requires_acceptance, added_by_name, extracted_actions:extracted_action_id (reference_code, meeting_recording_id, meeting_recordings:meeting_recording_id (source_state))')
@@ -115,6 +117,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
+  useEffect(() => onDiaryChange(syncSource, () => fetchEvents(true)), [fetchEvents, syncSource]);
+  /** Refresh this view and tell other open views (Home, reminder card) that the diary changed. */
+  const refresh = useCallback(() => { fetchEvents(); announceDiaryChange(syncSource); }, [fetchEvents, syncSource]);
 
   const sendInvites = async (
     eventId: string | undefined,
@@ -194,9 +199,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       }
       toast.success('Added to your calendar');
       void sendInvites(inserted?.id, input);
-      fetchEvents();
+      refresh();
     },
-    [user, fetchEvents]
+    [user, refresh]
   );
 
   const updateStatus = useCallback(
@@ -209,9 +214,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         toast.error('Could not update event');
         return;
       }
-      fetchEvents();
+      refresh();
     },
-    [fetchEvents]
+    [refresh]
   );
 
   const carryOver = useCallback(
@@ -236,9 +241,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       }
       await supabase.from('calendar_events').update({ status: 'carried' }).eq('id', event.id);
       toast.success('Moved to tomorrow');
-      fetchEvents();
+      refresh();
     },
-    [user, fetchEvents]
+    [user, refresh]
   );
 
   const reschedule = useCallback(
@@ -256,9 +261,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         return;
       }
       toast.success('Rescheduled');
-      fetchEvents();
+      refresh();
     },
-    [fetchEvents]
+    [refresh]
   );
 
   const setPrivate = useCallback(
@@ -266,9 +271,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       const { error } = await supabase.from('calendar_events').update({ is_private: isPrivate }).eq('id', eventId);
       if (error) { toast.error('Could not update that item'); return; }
       toast(isPrivate ? 'Private. My circle sees only "Busy".' : 'Visible to people I share my diary with.');
-      fetchEvents();
+      refresh();
     },
-    [fetchEvents]
+    [refresh]
   );
 
   /** Accept or decline an item suggested by someone in my Support Circle. */
@@ -280,9 +285,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         .eq('id', eventId);
       if (error) { toast.error('Could not update that item'); return; }
       toast(accept ? 'Added to my day' : 'Declined. Nothing changes in my day.');
-      fetchEvents();
+      refresh();
     },
-    [fetchEvents]
+    [refresh]
   );
 
   return { events, loading, fetchEvents, addEvent, updateStatus, carryOver, reschedule, setPrivate, decideCircleItem };

@@ -151,6 +151,8 @@ export function QuietHome() {
 
       {starting.style === null && <FirstSessionCard state={firstSession} />}
 
+      {settlingIn && offset === 0 && <StillOpenList />}
+
       {!settlingIn && offset !== 0 && (
         <div className="rounded-3xl border border-launch-gold/25 bg-launch-ivory/85 p-5 shadow-[0_20px_50px_-34px_hsl(var(--launch-ink-deep)/0.4)] backdrop-blur-xl sm:p-7">
           <HomeDayReview which={offset === -1 ? 'yesterday' : 'tomorrow'} date={focusDate}
@@ -174,6 +176,7 @@ export function QuietHome() {
             {top.length > 0 && <span className="text-sm text-launch-ink/60">{top.filter(t => t.status === 'done').length} of {top.length} done</span>}
           </div>
 
+          <StillOpenList />
           {top.length === 0 ? (
             <div>
               <p className="text-base text-launch-ink">Nothing in my diary yet today.</p>
@@ -183,8 +186,7 @@ export function QuietHome() {
               </button>
             </div>
           ) : (
-            <><StillOpenList />
-            <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} /></>
+            <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} />
           )}
 
           <HomeNextLine events={todays} excludeIds={topIds} onOpen={setOpenItem} />

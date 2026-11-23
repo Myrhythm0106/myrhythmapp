@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useReminderEngine } from './useReminderEngine';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
 
 const HEAD = { prep: 'Getting ready', due: "It's time", followup: 'Did this happen?' } as const;
 
@@ -16,15 +17,16 @@ export function ReminderCard() {
   const when = item.time ? item.time.slice(0, 5) : '';
   const answer = async (a: Parameters<typeof respond>[1], msg?: string) => {
     setSnoozing(false);
-    await respond(item, a);
-    if (msg) toast.success(msg);
+    const ok = await respond(item, a);
+    if (!ok) toast.error("Couldn't save that. Please try again.");
+    else if (msg) toast.success(msg);
   };
 
   return (
     <div role="alert" aria-live="polite" className="mx-auto max-w-3xl m-3 rounded-2xl border border-border bg-card/90 backdrop-blur p-4 shadow-lg">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{HEAD[stage]}{stage === 'prep' ? (item.date === new Date().toISOString().slice(0, 10) ? ' · today' : ' · tomorrow') : ''}</p>
+          <p className="text-sm font-medium text-muted-foreground">{HEAD[stage]}{stage === 'prep' ? (item.date === format(new Date(), 'yyyy-MM-dd') ? ' · today' : ' · tomorrow') : ''}</p>
           <p className="text-lg font-semibold text-foreground">{item.title}{when && ` · ${when}`}</p>
           {people.length > 0 && <p className="text-base text-muted-foreground">With {people.join(', ')}</p>}
           {item.description && <p className="text-base text-muted-foreground mt-1">{item.description}</p>}
