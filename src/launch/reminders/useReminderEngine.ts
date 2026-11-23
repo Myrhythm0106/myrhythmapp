@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { answerPatch, stageFor, type ReminderAnswer, type ReminderStage, type StageEvent } from './reminderStages';
 import { announceDiaryChange, onDiaryChange } from './diarySync';
+import { closeLinkedAction } from './closeLinkedAction';
 
 export type { ReminderAnswer } from './reminderStages';
 
@@ -63,7 +64,11 @@ export function useReminderEngine() {
     return patch(id, { [col]: new Date().toISOString() });
   };
 
-  const respond = (item: ReminderItem, answer: ReminderAnswer) => patch(item.id, answerPatch(item, answer, new Date()));
+  const respond = async (item: ReminderItem, answer: ReminderAnswer) => {
+    const ok = await patch(item.id, answerPatch(item, answer, new Date()));
+    if (ok && (answer === 'done' || answer === 'let_go')) void closeLinkedAction(item.id, answer);
+    return ok;
+  };
 
   return { current, stillOpen, respond, markShown, reload: load };
 }
