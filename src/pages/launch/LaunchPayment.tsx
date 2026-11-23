@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
 import { setResumePoint, clearResumePoint } from '@/launch/onboarding/resumePoint';
+import { saveStartPlan } from '@/launch/onboarding/startPlan';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
@@ -49,6 +50,11 @@ export default function LaunchPayment() {
   const navigate = useNavigate();
   const location = useLocation();
   const cameFromReport = Boolean((location.state as { fromReport?: boolean } | null)?.fromReport);
+  const fromSetup = new URLSearchParams(location.search).get('from') === 'setup';
+  const startFreeInstead = () => {
+    saveStartPlan('trial');
+    navigate(localStorage.getItem('myrhythm_user_type') ? '/launch/assessment?first=1' : '/launch/user-type');
+  };
   const [snapshot, setSnapshot] = useState<{ total: number; windowStart?: string; windowEnd?: string } | null>(null);
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isLoading, setIsLoading] = useState(false);
@@ -180,6 +186,18 @@ export default function LaunchPayment() {
             <ArrowLeft className="h-4 w-4" />
             {cameFromReport ? 'Back to my report' : 'Back to MyRhythm'}
           </Button>
+
+          {fromSetup && (
+            <div className="mb-6 rounded-2xl border border-launch-gold/40 bg-launch-ivory px-5 py-4" role="status">
+              <p className="font-semibold text-launch-ink-deep">My account is ready. Next: secure my membership.</p>
+              <p className="mt-1 text-sm leading-6 text-launch-ink-deep/80">
+                After this I tell MyRhythm about me and answer a few questions. Changed my mind? I can start free for 7 days instead.
+              </p>
+              <Button variant="outline" className="mt-3 min-h-14 w-full sm:w-auto border-launch-gold/50" onClick={startFreeInstead}>
+                Start free for 7 days instead
+              </Button>
+            </div>
+          )}
 
           {cameFromReport && snapshot && (
             <div className="mb-8 rounded-2xl border border-launch-gold/40 bg-launch-ivory px-5 py-5">

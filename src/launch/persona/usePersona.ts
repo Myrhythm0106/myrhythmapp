@@ -55,6 +55,7 @@ export function mapToPersona(raw: string | null | undefined): Persona {
     case 'wellness':
     case 'cognitive-optimization':
     case 'adhd':
+    case 'everyday':
     case 'goal-achiever':
       return 'productivity';
     case 'student':

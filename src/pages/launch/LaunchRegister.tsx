@@ -12,6 +12,8 @@ import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
 import { supabase } from '@/integrations/supabase/client';
 import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
+import { readStartPlan, saveStartPlan, nextAfterAccount, type StartPlan } from '@/launch/onboarding/startPlan';
+import { cn } from '@/lib/utils';
 
 
 // Real Supabase signup is ON. A real session is required for checkout,
@@ -48,6 +50,8 @@ export default function LaunchRegister() {
   const [isResending, setIsResending] = useState(false);
   const [existingAccount, setExistingAccount] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [plan, setPlan] = useState<StartPlan>(() => (searchParams.get('plan') === 'member' ? 'member' : readStartPlan() ?? 'trial'));
+  const afterAccount = () => nextAfterAccount(plan, !!prefilledUserType);
 
   const sendReset = async () => {
     setIsResending(true);
@@ -96,15 +100,14 @@ export default function LaunchRegister() {
       if (prefilledUserType) {
         localStorage.setItem('myrhythm_user_type', prefilledUserType);
       }
+      saveStartPlan(plan);
 
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { name },
-          emailRedirectTo: `${window.location.origin}${
-            prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type'
-          }`,
+          emailRedirectTo: `${window.location.origin}${afterAccount()}`,
         },
       });
 
@@ -151,8 +154,8 @@ export default function LaunchRegister() {
         }
       }
 
-      toast.success("You're in — let's get you set up.");
-      navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type', { replace: true });
+      toast.success(plan === 'member' ? "You're in — next, my membership." : "You're in — my free 7 days have started.");
+      navigate(afterAccount(), { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
       toast.error(err?.message || 'Something went wrong', {
@@ -187,7 +190,8 @@ export default function LaunchRegister() {
       return;
     }
     if (prefilledUserType) localStorage.setItem('myrhythm_user_type', prefilledUserType);
-    navigate(prefilledUserType ? '/launch/assessment?first=1' : '/launch/user-type');
+    saveStartPlan(plan);
+    navigate(afterAccount());
   };
 
 
@@ -336,8 +340,46 @@ export default function LaunchRegister() {
             Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            Your email and a password, so your progress is saved. Membership is optional and comes later.
+            First, how would I like to start? Then my name, email and a password, so my progress is saved.
           </p>
+
+          <fieldset className="w-full max-w-md mb-5">
+            <legend className="mb-2 text-base font-semibold text-launch-ink-deep">How I'd like to start</legend>
+            <div className="grid gap-3" role="radiogroup">
+              {([
+                { id: 'trial' as const, title: 'Start free for 7 days', body: 'Set up now and use MyRhythm free for 7 days. No card, nothing to pay today.', tag: 'Recommended' },
+                { id: 'member' as const, title: 'Register fully as a member', body: 'Founding Member, £10 a month for life (500 places). I secure my place now, then set up. First 7 days still free.', tag: null },
+              ]).map((o) => {
+                const on = plan === o.id;
+                return (
+                  <button
+                    key={o.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    onClick={() => setPlan(o.id)}
+                    className={cn(
+                      'min-h-14 w-full rounded-2xl border-2 p-4 text-left transition-colors',
+                      on ? 'border-launch-teal bg-launch-teal/10' : 'border-launch-gold/30 bg-launch-ivory hover:border-launch-gold',
+                    )}
+                  >
+                    <span className="flex items-start gap-3">
+                      <span aria-hidden className={cn('mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2', on ? 'border-launch-teal' : 'border-launch-ink/30')}>
+                        {on && <span className="h-2.5 w-2.5 rounded-full bg-launch-teal" />}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-2 text-base font-semibold text-launch-ink-deep">
+                          {o.title}
+                          {o.tag && <span className="rounded-full bg-launch-gold/20 px-2 py-0.5 text-xs font-semibold text-launch-ink">{o.tag}</span>}
+                        </span>
+                        <span className="mt-1 block text-sm leading-relaxed text-launch-ink-deep/80">{o.body}</span>
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
             <CardContent className="p-6">
@@ -439,7 +481,7 @@ export default function LaunchRegister() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      Create my account
+                      {plan === 'member' ? 'Create my account and join' : 'Create my account — start free'}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
@@ -455,7 +497,7 @@ export default function LaunchRegister() {
                   </div>
                   <div className="flex items-center gap-1">
                     <CheckCircle className="h-4 w-4 text-launch-teal" />
-                    <span>Nothing is purchased here</span>
+                    <span>{plan === 'member' ? 'Payment is on the next step' : 'No card needed'}</span>
                   </div>
                 </div>
               </div>

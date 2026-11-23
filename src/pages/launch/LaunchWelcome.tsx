@@ -201,14 +201,20 @@ export default function LaunchWelcome() {
           >
             <p className="text-lg font-bold" style={SORA}>I'm in. My plan is active.</p>
             <p className="mt-1 text-sm opacity-80">
-              My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home.
+              {bhs
+                ? "My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home."
+                : 'My 7-day trial has started. Next: tell MyRhythm about me and answer a few short questions.'}
             </p>
             <button
-              onClick={() => continueHome()}
+              onClick={() => {
+                if (bhs) { continueHome(); return; }
+                const known = localStorage.getItem('myrhythm_user_type') || localStorage.getItem('myrhythm_starting_point_seen');
+                navigate(known ? '/launch/assessment?first=1' : '/launch/user-type');
+              }}
               className="mt-4 w-full md:w-auto min-h-[56px] px-8 rounded-xl font-semibold text-white"
               style={{ backgroundColor: INK }}
             >
-              Go to Home
+              {bhs ? 'Go to Home' : 'Continue my set-up'}
             </button>
           </div>
         </div>

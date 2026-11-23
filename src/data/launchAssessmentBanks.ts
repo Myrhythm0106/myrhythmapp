@@ -615,6 +615,7 @@ export function getAssessmentBank(persona: string | null | undefined): Assessmen
   if (!persona) return banks.general;
   const legacyMap: Record<string, PersonaKey> = {
     recovery: 'brain-injury', 'goal-achiever': 'executive', productivity: 'executive', wellness: 'brain-injury',
+    everyday: 'general',
   };
   const key = (persona in banks ? persona : legacyMap[persona]) as PersonaKey | undefined;
   return key && key in banks ? banks[key] : null;
