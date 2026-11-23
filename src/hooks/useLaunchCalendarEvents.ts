@@ -116,6 +116,44 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     fetchEvents();
   }, [fetchEvents]);
 
+  const sendInvites = async (
+    eventId: string | undefined,
+    input: { title: string; time: string; date: Date; description?: string; watchers?: string[] },
+  ) => {
+    const w = input.watchers ?? [];
+    const emails = w.filter((x) => x.startsWith('email:')).map((x) => ({ email: x.slice(6) }));
+    const circleIds = w.filter((x) => x.startsWith('circle:')).map((x) => x.slice(7));
+    let circle: { email: string; name?: string }[] = [];
+    if (circleIds.length) {
+      const { data } = await supabase
+        .from('support_circle_members')
+        .select('member_email, member_name')
+        .in('id', circleIds);
+      circle = (data ?? [])
+        .filter((m: any) => m.member_email)
+        .map((m: any) => ({ email: m.member_email, name: m.member_name ?? undefined }));
+    }
+    const invites = [...circle, ...emails];
+    if (!invites.length) return;
+    const { error } = await supabase.functions.invoke('send-event-invitation', {
+      body: {
+        eventId,
+        actionText: input.title,
+        startDate: format(input.date, 'yyyy-MM-dd'),
+        startTime: input.time,
+        context: input.description,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        invites,
+      },
+    });
+    if (error) {
+      console.error('send-event-invitation failed', error);
+      toast.error('Saved, but the invitations could not be sent. Please try again later.');
+    } else {
+      toast.success(`Invitation sent to ${invites.length} ${invites.length === 1 ? 'person' : 'people'}`);
+    }
+  };
+
   const addEvent = useCallback(
     async (input: {
       title: string;
@@ -131,7 +169,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       recurrence_end_date?: string | null;
     }) => {
       if (!user) return;
-      const { error } = await supabase.from('calendar_events').insert({
+      const { data: inserted, error } = await supabase.from('calendar_events').insert({
         user_id: user.id,
         title: input.title,
         time: input.time,
@@ -148,13 +186,14 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         recurrence_pattern: input.recurrence_pattern ?? 'none',
         recurrence_interval: input.recurrence_interval ?? 1,
         recurrence_end_date: input.recurrence_end_date ?? null,
-      } as any);
+      } as any).select('id').single();
       if (error) {
         console.error(error);
         toast.error('Could not add event');
         return;
       }
       toast.success('Added to your calendar');
+      void sendInvites(inserted?.id, input);
       fetchEvents();
     },
     [user, fetchEvents]

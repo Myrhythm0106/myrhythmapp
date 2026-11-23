@@ -168,3 +168,9 @@
 - [ ] Trial/payment offer at end of setup with "Not now"
 - [ ] Record first on Home; "Record this" on diary items at start time
 - [ ] Every recording saves write-up, full transcript, key points, actions; email/share
+
+## Transcripts, reminders, invites (approved plan)
+- [x] Diary invites: Support Circle members and email guests receive invitations on save
+- [x] Download transcript as a tidy PDF
+- [ ] Memory-friendly reminder stages (get-ready, at-time with Done/Snooze, one follow-up, end-of-day "Still open"); depends on the email sender domain being set up
+- [ ] Accept/Decline status beside diary items; update/cancel emails on edit/delete

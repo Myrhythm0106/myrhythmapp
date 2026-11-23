@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { runMeetingJob } from '@/lib/memoryBridge/outputMode';
 import { useAuth } from '@/hooks/useAuth';
+import { downloadTranscriptPdf } from '@/lib/memoryBridge/transcriptPdf';
 import { uniqueQuoteMatch } from '@/lib/memoryBridge/quoteMatch';
 import { readingPassages, PASSAGES_PER_SECTION } from '@/lib/memoryBridge/transcriptReading';
 
@@ -253,6 +254,7 @@ export function TranscriptView({ open, onClose, meetingId, title, onActionsUpdat
             </p>
           )}
           {audioUrl && <audio ref={audioRef} src={audioUrl} preload="none" />}
+          {!loading && !deleted && !loadFailed && utts.length > 0 && <Button variant="action" className="min-h-14 text-base" onClick={() => downloadTranscriptPdf(title, plainText)}>Download transcript</Button>}
           {!loading && !deleted && !loadFailed && <Button variant="ghost" className="min-h-14 text-base" aria-expanded={toolsOpen} onClick={() => setToolsOpen(!toolsOpen)}>Conversation tools</Button>}
           {toolsOpen && audioUrl && <audio src={audioUrl} controls preload="none" className="mt-3 w-full" />}
         </div>
