@@ -42,3 +42,20 @@ describe('closing the loop', () => {
     expect(await closeLinkedAction('e1', 'done', f.db, false)).toBeNull();
   });
 });
+
+describe('reopening', () => {
+  it('un-ticking reopens a done conversation step', async () => {
+    const updates: any[] = []; const rpcs: string[] = [];
+    const db: any = {
+      from: (t: string) => ({
+        select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: t === 'calendar_events' ? { extracted_action_id: 'a1' } : { status: 'done' } }) }) }),
+        update: (v: any) => ({ eq: async () => { updates.push(v); return { error: null }; } }),
+      }),
+      rpc: async (n: string) => { rpcs.push(n); return {}; },
+    };
+    const { reopenLinkedAction } = await import('./closeLinkedAction');
+    expect(await reopenLinkedAction('e1', db)).toBe(true);
+    expect(updates[0].status).toBe('pending');
+    expect(rpcs).toContain('withdraw_step_completion_notice');
+  });
+});

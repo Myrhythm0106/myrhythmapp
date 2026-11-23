@@ -1,3 +1,4 @@
+import { closeLinkedAction } from '@/launch/reminders/closeLinkedAction';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -103,7 +104,8 @@ export function SmartReminderToast() {
         : { error: new Error('missing') };
       if (error) { toast.error("Couldn't save that. Please try again."); return; }
       announceDiaryChange('reminder-toast');
-      toast.success('Done. Well followed through.');
+      const closed = await closeLinkedAction(eventId, 'done');
+      if (!closed) toast.success('Done. Well followed through.');
     } else if (activeNotification?.data?.action_id) {
       try {
         await supabase

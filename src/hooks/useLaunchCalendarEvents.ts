@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { announceDiaryChange, onDiaryChange } from '@/launch/reminders/diarySync';
-import { closeLinkedAction } from '@/launch/reminders/closeLinkedAction';
+import { closeLinkedAction, reopenLinkedAction } from '@/launch/reminders/closeLinkedAction';
 import { FRESH_REMINDERS } from '@/launch/reminders/reminderStages';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -218,6 +218,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       }
       refresh();
       if (status === 'done') void closeLinkedAction(eventId, 'done');
+      if (status === 'pending') void reopenLinkedAction(eventId);
     },
     [refresh]
   );

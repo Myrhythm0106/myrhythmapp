@@ -54,3 +54,15 @@ export async function closeLinkedAction(eventId: string, kind: CloseKind, db: Db
   if (notify) toast.success(message, { action: { label: 'Undo', onClick: () => { void undo().then(() => toast('Step reopened')); } } });
   return { actionId, told, undo, message };
 }
+
+/** Un-ticking a diary item reopens its conversation step and withdraws the notice, so both stay in step. */
+export async function reopenLinkedAction(eventId: string, db: Db = supabase) {
+  const { data: ev } = await db.from('calendar_events').select('extracted_action_id').eq('id', eventId).maybeSingle();
+  const actionId = (ev as { extracted_action_id?: string | null } | null)?.extracted_action_id;
+  if (!actionId) return false;
+  const { data: a } = await db.from('extracted_actions').select('status').eq('id', actionId).maybeSingle();
+  if ((a as { status?: string } | null)?.status !== 'done') return false;
+  await db.from('extracted_actions').update({ status: 'pending', completion_date: null, archived_at: null }).eq('id', actionId);
+  await db.rpc('withdraw_step_completion_notice', { p_action_id: actionId });
+  return true;
+}
