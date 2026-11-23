@@ -1,3 +1,4 @@
+import { StillOpenList } from '@/launch/reminders/StillOpenList';
 import React, { useEffect, useMemo, useState } from 'react';
 import { RhythmDayBands } from '@/components/launch/rhythm/RhythmDayBands';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -351,6 +352,7 @@ export default function LaunchCalendar() {
         onChanged={refreshReminders}
       />
 
+      {currentView === 'day' && <div className="mt-4"><StillOpenList /></div>}
       <LaunchAddEventModal
 
         isOpen={showAddModal}

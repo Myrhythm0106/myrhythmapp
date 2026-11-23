@@ -1,3 +1,4 @@
+import { ReminderCard } from '@/launch/reminders/ReminderCard';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -132,6 +133,8 @@ export function LaunchLayout({
           </header>
         )}
 
+
+        {!isOnboardingPath && <ReminderCard />}
 
         {/* Main Content */}
         {isSelfContained ? (

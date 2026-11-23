@@ -172,5 +172,6 @@
 ## Transcripts, reminders, invites (approved plan)
 - [x] Diary invites: Support Circle members and email guests receive invitations on save
 - [x] Download transcript as a tidy PDF
-- [ ] Memory-friendly reminder stages (get-ready, at-time with Done/Snooze, one follow-up, end-of-day "Still open"); depends on the email sender domain being set up
+- [x] Memory-friendly reminders in the app: get ready, Done/Snooze/Can't make it, one follow-up, Still open list
+- [ ] Email copies of get-ready and follow-up reminders (blocked: email sender domain not set up)
 - [ ] Accept/Decline status beside diary items; update/cancel emails on edit/delete

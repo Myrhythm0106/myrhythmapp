@@ -369,8 +369,10 @@ export type Database = {
           created_at: string
           date: string
           description: string | null
+          due_sent_at: string | null
           end_time: string | null
           extracted_action_id: string | null
+          followup_sent_at: string | null
           google_event_id: string | null
           ics_sequence: number
           ics_uid: string | null
@@ -379,6 +381,7 @@ export type Database = {
           is_system_generated: boolean
           last_push_error: string | null
           outlook_event_id: string | null
+          prep_sent_at: string | null
           pushed_to_google_at: string | null
           pushed_to_outlook_at: string | null
           recurrence_end_date: string | null
@@ -386,7 +389,10 @@ export type Database = {
           recurrence_pattern: string
           reminder_level: string
           reminder_offsets_minutes: number[]
+          reminder_status: string
           requires_acceptance: boolean
+          responded_at: string | null
+          snoozed_until: string | null
           source: string
           status: string
           time: string
@@ -403,8 +409,10 @@ export type Database = {
           created_at?: string
           date: string
           description?: string | null
+          due_sent_at?: string | null
           end_time?: string | null
           extracted_action_id?: string | null
+          followup_sent_at?: string | null
           google_event_id?: string | null
           ics_sequence?: number
           ics_uid?: string | null
@@ -413,6 +421,7 @@ export type Database = {
           is_system_generated?: boolean
           last_push_error?: string | null
           outlook_event_id?: string | null
+          prep_sent_at?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
           recurrence_end_date?: string | null
@@ -420,7 +429,10 @@ export type Database = {
           recurrence_pattern?: string
           reminder_level?: string
           reminder_offsets_minutes?: number[]
+          reminder_status?: string
           requires_acceptance?: boolean
+          responded_at?: string | null
+          snoozed_until?: string | null
           source?: string
           status?: string
           time: string
@@ -437,8 +449,10 @@ export type Database = {
           created_at?: string
           date?: string
           description?: string | null
+          due_sent_at?: string | null
           end_time?: string | null
           extracted_action_id?: string | null
+          followup_sent_at?: string | null
           google_event_id?: string | null
           ics_sequence?: number
           ics_uid?: string | null
@@ -447,6 +461,7 @@ export type Database = {
           is_system_generated?: boolean
           last_push_error?: string | null
           outlook_event_id?: string | null
+          prep_sent_at?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
           recurrence_end_date?: string | null
@@ -454,7 +469,10 @@ export type Database = {
           recurrence_pattern?: string
           reminder_level?: string
           reminder_offsets_minutes?: number[]
+          reminder_status?: string
           requires_acceptance?: boolean
+          responded_at?: string | null
+          snoozed_until?: string | null
           source?: string
           status?: string
           time?: string

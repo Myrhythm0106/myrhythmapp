@@ -24,6 +24,7 @@ import { getHomeMode, setHomeMode, type HomeMode } from '@/launch/today/homePref
 import { savedPeakHours } from '@/launch/scheduling/suggestSlots';
 import { getDailyEntry } from '@/data/iChoose365';
 import { supabase } from '@/integrations/supabase/client';
+import { StillOpenList } from '@/launch/reminders/StillOpenList';
 import { HomePriorities } from '../home/HomePriorities';
 import { HomeNextLine } from '../home/HomeNextLine';
 import { HomeStatusLine } from '../home/HomeStatusLine';
@@ -182,7 +183,8 @@ export function QuietHome() {
               </button>
             </div>
           ) : (
-            <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} />
+            <><StillOpenList />
+            <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} /></>
           )}
 
           <HomeNextLine events={todays} excludeIds={topIds} onOpen={setOpenItem} />
