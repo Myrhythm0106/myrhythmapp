@@ -56,8 +56,8 @@ export default function LaunchRegister() {
   const [plan, setPlan] = useState<StartPlan>(() => (searchParams.get('plan') === 'member' || cameToPay ? 'member' : readStartPlan() ?? 'trial'));
   // A deep link (e.g. back to the membership page) wins only when it matches the choice.
   const afterAccount = () => {
-    if (safeNext && (plan === 'member' || !cameToPay)) return plan === 'member' && cameToPay ? '/launch/payment?from=setup' : safeNext;
-    return nextAfterAccount(plan, !!prefilledUserType);
+    if (safeNext && !cameToPay) return safeNext;
+    return nextAfterAccount(plan);
   };
 
   const sendReset = async () => {
@@ -161,7 +161,7 @@ export default function LaunchRegister() {
         }
       }
 
-      toast.success(plan === 'member' ? "You're in — next, my membership." : "You're in — my free 7 days have started.");
+      toast.success(plan === 'member' ? "You're in — next, my membership." : "You're in — next, add my card for my free 7 days.");
       navigate(afterAccount(), { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
@@ -349,8 +349,8 @@ export default function LaunchRegister() {
             <legend className="mb-2 text-base font-semibold text-launch-ink-deep">How I'd like to start</legend>
             <div className="grid gap-3" role="radiogroup">
               {([
-                { id: 'trial' as const, title: 'Start free for 7 days', body: 'Set up now and use MyRhythm free for 7 days. No card, nothing to pay today.', tag: 'Recommended' },
-                { id: 'member' as const, title: 'Register fully as a member', body: 'Founding Member, £10 a month for life (500 places). I secure my place now, then set up. First 7 days still free.', tag: null },
+                { id: 'trial' as const, title: 'Start free for 7 days', body: 'Add my card, then set up. Nothing is charged for 7 days, and I can cancel before then.', tag: 'Recommended' },
+                { id: 'member' as const, title: 'Register fully as a member', body: 'Founding Member, £10 a month for life (500 places). My membership starts today, then I set up.', tag: null },
               ]).map((o) => {
                 const on = plan === o.id;
                 return (
@@ -499,7 +499,7 @@ export default function LaunchRegister() {
                   </div>
                   <div className="flex items-center gap-1">
                     <CheckCircle className="h-4 w-4 text-launch-teal" />
-                    <span>{plan === 'member' ? 'Payment is on the next step' : 'No card needed'}</span>
+                    <span>{plan === 'member' ? 'Payment is on the next step' : 'Card next · nothing charged for 7 days'}</span>
                   </div>
                 </div>
               </div>

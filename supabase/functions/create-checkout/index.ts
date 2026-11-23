@@ -61,7 +61,10 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Parse request body
-    const { plan, interval } = await req.json();
+    const { plan, interval, startTrial: startTrialRaw } = await req.json();
+    // Free 7 days (default): card at the start, nothing charged for 7 days.
+    // Registering fully: membership and first payment start today.
+    const startTrial = startTrialRaw !== false;
     if (!plan || !interval) throw new Error("Plan and interval are required");
     if (!['premium', 'reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
     if (!['month', 'year'].includes(interval)) throw new Error("Invalid interval");
@@ -84,7 +87,7 @@ serve(async (req) => {
       throw new Error(`Invalid plan or interval: ${plan}, ${interval}`);
     }
     let finalPricePence = basePricePence;
-    let metadata: any = { plan, interval, user_id: user.id };
+    let metadata: any = { plan, interval, user_id: user.id, start_trial: String(startTrial) };
 
     // Apply founding member discount if active
     if (isFoundingActive) {
@@ -137,20 +140,18 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      // Card-on-file 7-day trial for every plan/interval — auto-converts unless cancelled.
-      subscription_data: {
-        trial_period_days: 7,
-      },
+      // Card always collected. Free 7 days auto-convert unless cancelled.
+      ...(startTrial ? { subscription_data: { trial_period_days: 7 } } : {}),
       payment_method_collection: 'always',
-      success_url: `${origin}/launch/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
-      cancel_url: `${origin}/subscribe/cancel`,
+      success_url: `${origin}/launch/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=${startTrial ? '1' : '0'}`,
+      cancel_url: `${origin}/launch/payment?from=setup&start=${startTrial ? "trial" : "member"}`,
       metadata: metadata
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
-    // Save trial information to database for reminders (all plans get 7-day card-on-file trial).
-    {
+    // Save trial information to database for reminders (free 7 days only).
+    if (startTrial) {
       const supabaseService = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",

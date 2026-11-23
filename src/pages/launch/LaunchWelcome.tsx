@@ -168,6 +168,8 @@ export default function LaunchWelcome() {
         ],
       };
   const postCheckout = new URLSearchParams(window.location.search).get('postCheckout') === '1';
+  const startedToday = new URLSearchParams(window.location.search).get('trial') === '0';
+  const startedLine = startedToday ? 'My membership has started.' : 'My free 7 days have started — nothing is charged until they end.';
 
 
   const letterScores = bhs ? LETTER_ORDER.map((l) => bhs.letters[l.id] ?? 0) : [];
@@ -202,8 +204,8 @@ export default function LaunchWelcome() {
             <p className="text-lg font-bold" style={SORA}>I'm in. My plan is active.</p>
             <p className="mt-1 text-sm opacity-80">
               {bhs
-                ? "My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home."
-                : 'My 7-day trial has started. Next: tell MyRhythm about me and answer a few short questions.'}
+                ? `${startedLine} Everything below is my snapshot — when I'm ready, head to Home.`
+                : `${startedLine} Next: tell MyRhythm about me and answer a few short questions.`}
             </p>
             <button
               onClick={() => {

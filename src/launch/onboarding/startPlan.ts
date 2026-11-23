@@ -1,8 +1,9 @@
 /**
- * How someone chose to begin at Get Started:
- *  - 'trial'  : set up first and use MyRhythm free for 7 days; no payment today.
- *  - 'member' : register fully — secure membership straight after the account,
- *               then carry on with set-up.
+ * How someone chose to begin at Get Started. Both choices add a card straight
+ * after the account is created, then carry on with the same set-up:
+ *  - 'trial'  : free for 7 days — card at the start, nothing charged for 7 days,
+ *               cancel before then and nothing is paid.
+ *  - 'member' : register fully — membership starts today, first payment today.
  * Device-local; the account itself never depends on it.
  */
 export type StartPlan = 'trial' | 'member';
@@ -22,16 +23,34 @@ export function readStartPlan(): StartPlan | null {
 export function saveStartPlan(plan: StartPlan) {
   try {
     localStorage.setItem(KEY, plan);
-    if (plan === 'trial' && !localStorage.getItem('myrhythm_free_start_date')) {
-      localStorage.setItem('myrhythm_free_start_date', new Date().toISOString());
-    }
   } catch {/* noop */}
 }
 
-/** Where to go straight after the account is created. */
-export function nextAfterAccount(plan: StartPlan, hasUserType: boolean): string {
-  if (plan === 'member') return '/launch/payment?from=setup';
+/** Where to go straight after the account is created: the card step, for both choices. */
+export function nextAfterAccount(plan: StartPlan): string {
+  return `/launch/payment?from=setup&start=${plan}`;
+}
+
+/** Where set-up carries on once the card step is done. */
+export function nextAfterCard(hasUserType: boolean): string {
   return hasUserType ? '/launch/assessment?first=1' : '/launch/user-type';
+}
+
+/** Days before the first charge: 7 for the free start, 0 when registering fully. */
+export function daysBeforeFirstCharge(plan: StartPlan): number {
+  return plan === 'trial' ? FREE_TRIAL_DAYS : 0;
+}
+
+/** What the card step asks the payment provider for. A card is always collected. */
+export function checkoutRequest(plan: StartPlan, interval: 'month' | 'year') {
+  return { plan: 'premium' as const, interval, startTrial: plan === 'trial' };
+}
+
+/** Reads the choice from the card step's address, falling back to the saved one. */
+export function planFromSearch(search: string): StartPlan {
+  const v = new URLSearchParams(search).get('start');
+  if (v === 'trial' || v === 'member') return v;
+  return readStartPlan() ?? 'trial';
 }
 
 /** Whole days left of the free start, never below 0. */

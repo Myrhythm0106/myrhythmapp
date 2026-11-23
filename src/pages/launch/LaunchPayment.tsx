@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
 import { setResumePoint, clearResumePoint } from '@/launch/onboarding/resumePoint';
-import { saveStartPlan } from '@/launch/onboarding/startPlan';
+import { saveStartPlan, planFromSearch, checkoutRequest, type StartPlan } from '@/launch/onboarding/startPlan';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
@@ -51,9 +51,12 @@ export default function LaunchPayment() {
   const location = useLocation();
   const cameFromReport = Boolean((location.state as { fromReport?: boolean } | null)?.fromReport);
   const fromSetup = new URLSearchParams(location.search).get('from') === 'setup';
-  const startFreeInstead = () => {
-    saveStartPlan('trial');
-    navigate(localStorage.getItem('myrhythm_user_type') ? '/launch/assessment?first=1' : '/launch/user-type');
+  const [startPlan, setStartPlan] = useState<StartPlan>(() => planFromSearch(location.search));
+  const isTrial = startPlan === 'trial';
+  const switchStart = () => {
+    const next: StartPlan = isTrial ? 'member' : 'trial';
+    setStartPlan(next);
+    saveStartPlan(next);
   };
   const [snapshot, setSnapshot] = useState<{ total: number; windowStart?: string; windowEnd?: string } | null>(null);
   const [selectedPlan, setSelectedPlan] = useState('monthly');
@@ -146,7 +149,7 @@ export default function LaunchPayment() {
       const userType = localStorage.getItem('myrhythm_user_type') || 'wellness';
       const interval = selectedPlan === 'yearly' ? 'year' : 'month';
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { plan: 'premium', interval, userType },
+        body: { ...checkoutRequest(startPlan, interval), userType },
       });
       if (error) throw error;
       if (data?.url) {
@@ -189,12 +192,16 @@ export default function LaunchPayment() {
 
           {fromSetup && (
             <div className="mb-6 rounded-2xl border border-launch-gold/40 bg-launch-ivory px-5 py-4" role="status">
-              <p className="font-semibold text-launch-ink-deep">My account is ready. Next: secure my membership.</p>
-              <p className="mt-1 text-sm leading-6 text-launch-ink-deep/80">
-                After this I tell MyRhythm about me and answer a few questions. Changed my mind? I can start free for 7 days instead.
+              <p className="font-semibold text-launch-ink-deep">
+                {isTrial ? 'My account is ready. Next: add my card for my free 7 days.' : 'My account is ready. Next: secure my membership.'}
               </p>
-              <Button variant="outline" className="mt-3 min-h-14 w-full sm:w-auto border-launch-gold/50" onClick={startFreeInstead}>
-                Start free for 7 days instead
+              <p className="mt-1 text-sm leading-6 text-launch-ink-deep/80">
+                {isTrial
+                  ? 'Nothing is charged for 7 days. After this I tell MyRhythm about me and answer a few questions.'
+                  : 'My membership starts today. After this I tell MyRhythm about me and answer a few questions.'}
+              </p>
+              <Button variant="outline" className="mt-3 min-h-14 w-full sm:w-auto border-launch-gold/50" onClick={switchStart}>
+                {isTrial ? 'Join now instead' : 'Start free for 7 days instead'}
               </Button>
             </div>
           )}
@@ -296,8 +303,9 @@ export default function LaunchPayment() {
               Become a Founding Member.
             </h1>
             <p className="mt-5 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
-              £10 a month, for as long as I stay a member. My first 7 days are free — a card is needed to start,
-              nothing is charged for 7 days, and I can cancel any time from my account.
+              {isTrial
+                ? '£10 a month, for as long as I stay a member. My first 7 days are free — a card is needed to start, nothing is charged for 7 days, and I can cancel any time from my account.'
+                : '£10 a month, for as long as I stay a member. My membership starts today, and I can cancel any time from my account.'}
             </p>
           </motion.div>
 
@@ -410,7 +418,7 @@ export default function LaunchPayment() {
               <CardContent className="p-6">
                 <h3 className="font-semibold text-launch-ink mb-4 flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-launch-moss" />
-                  Everything included in your trial:
+                  {isTrial ? 'Everything included in my free 7 days:' : 'Everything included:'}
                 </h3>
                 <div className="grid md:grid-cols-2 gap-3">
                   {features.map((f, i) => (
@@ -486,7 +494,7 @@ export default function LaunchPayment() {
             ) : (
               <>
                 <CreditCard className="mr-2 h-5 w-5" />
-                Start my 7 free days
+                {isTrial ? 'Start my 7 free days' : 'Join now'}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </>
             )}
@@ -499,7 +507,7 @@ export default function LaunchPayment() {
             </div>
             <div className="flex items-center gap-1">
               <Check className="h-4 w-4 text-launch-moss" />
-              <span>No charge for 7 days</span>
+              <span>{isTrial ? 'No charge for 7 days' : 'Cancel any time'}</span>
             </div>
             <div className="flex items-center gap-1">
               <Check className="h-4 w-4 text-launch-moss" />
