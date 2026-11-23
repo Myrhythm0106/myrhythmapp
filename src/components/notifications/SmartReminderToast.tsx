@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSmartReminders } from '@/hooks/useSmartReminders';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { answerPatch } from '@/launch/reminders/reminderStages';
+import { announceDiaryChange } from '@/launch/reminders/diarySync';
 
 interface ReminderNotification {
   id: string;
@@ -75,13 +77,34 @@ export function SmartReminderToast() {
     setActiveNotification(null);
   };
 
+  const eventId = activeNotification?.data?.event_id;
+
   const handleSnooze = async (minutes: number) => {
-    toast.success(`Snoozed for ${minutes} minutes`);
+    if (eventId) {
+      // Same snooze as the in-app reminder card, saved on the diary item itself.
+      const { error } = await supabase.from('calendar_events').update({
+        reminder_status: 'snoozed', snoozed_until: new Date(Date.now() + minutes * 60_000).toISOString(),
+        due_sent_at: null, followup_sent_at: null,
+      }).eq('id', eventId);
+      if (error) { toast.error("Couldn't save that. Please try again."); return; }
+      announceDiaryChange('reminder-toast');
+    }
+    toast.success(`Reminding you in ${minutes} minutes`);
     handleDismiss();
   };
 
   const handleMarkDone = async () => {
-    if (activeNotification?.data?.action_id) {
+    if (eventId) {
+      // Done on a diary reminder ticks the diary item, exactly like Home and the reminder card.
+      const { data: row } = await supabase.from('calendar_events')
+        .select('date,time,prep_sent_at,due_sent_at,followup_sent_at').eq('id', eventId).maybeSingle();
+      const { error } = row
+        ? await supabase.from('calendar_events').update(answerPatch(row, 'done', new Date()) as never).eq('id', eventId)
+        : { error: new Error('missing') };
+      if (error) { toast.error("Couldn't save that. Please try again."); return; }
+      announceDiaryChange('reminder-toast');
+      toast.success('Done. Well followed through.');
+    } else if (activeNotification?.data?.action_id) {
       try {
         await supabase
           .from('daily_actions')
@@ -101,7 +124,7 @@ export function SmartReminderToast() {
 
   const handleViewDetails = () => {
     if (activeNotification?.data?.event_id) {
-      navigate('/calendar');
+      navigate('/launch/calendar?view=day');
     }
     handleDismiss();
   };

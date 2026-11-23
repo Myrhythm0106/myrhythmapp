@@ -17,6 +17,8 @@ export interface StageEvent {
 }
 
 export const FOLLOWUP_MINUTES = 30;
+/** Saved whenever an item's day or time changes, so reminders follow the new time. */
+export const FRESH_REMINDERS = { reminder_status: 'pending', snoozed_until: null, prep_sent_at: null, due_sent_at: null, followup_sent_at: null, responded_at: null } as const;
 export const STILL_OPEN_HOUR = 18;
 const CLOSED_REMINDER = ['done', 'let_go', 'cancelled'];
 /** Diary statuses that mean the item is finished or moved, wherever it was ticked. */

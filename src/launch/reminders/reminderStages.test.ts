@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { answerPatch, stageFor } from './reminderStages';
+import { answerPatch, FRESH_REMINDERS, stageFor } from './reminderStages';
 
 const ev = (o = {}) => ({ date: '2026-06-03', time: '10:00', reminder_level: 'strong' as const, ...o });
 const at = (d: string, t: string) => new Date(`${d}T${t}:00`);
@@ -72,5 +72,14 @@ describe('reminder fixes found in testing', () => {
     expect(p.prep_sent_at).not.toBeNull();
     expect(stageFor({ ...ev(), ...p } as never, at('2026-06-03', '18:31'))).toBe('none');
     expect(answerPatch(ev(), 'tomorrow', at('2026-06-03', '10:05')).prep_sent_at).toBeNull();
+  });
+});
+
+describe('moving an item to a new day or time', () => {
+  it('re-arms its reminders for the new time, even if the old one was answered', () => {
+    const answered = ev({ prep_sent_at: 'x', due_sent_at: 'x', followup_sent_at: 'x', reminder_status: 'let_go' });
+    const moved = { ...answered, ...FRESH_REMINDERS, date: '2026-06-05' };
+    expect(stageFor(moved, at('2026-06-04', '18:05'))).toBe('prep');
+    expect(stageFor({ ...moved, prep_sent_at: 'x' }, at('2026-06-05', '10:00'))).toBe('due');
   });
 });

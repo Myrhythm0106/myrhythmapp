@@ -36,10 +36,22 @@ Deno.serve(async (req) => {
         .eq("id", reminder.action_id)
         .maybeSingle();
 
+      // Its diary item answered Done / Let it go anywhere in the app also counts as finished.
+      const { data: diary } = await supabase
+        .from("calendar_events")
+        .select("status, reminder_status")
+        .eq("extracted_action_id", reminder.action_id);
+      const diaryClosed = (diary ?? []).some(
+        (e: { status: string | null; reminder_status: string | null }) =>
+          ["done", "completed", "cancelled"].includes(e.status ?? "") ||
+          ["done", "let_go", "cancelled"].includes(e.reminder_status ?? ""),
+      );
+
       // Skip anything already finished or archived — no nagging on done work.
       const finished =
         !action ||
         action.archived_at ||
+        diaryClosed ||
         ["done", "completed", "cancelled"].includes(action.status ?? "");
 
       if (!finished) {

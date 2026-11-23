@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { announceDiaryChange, onDiaryChange } from '@/launch/reminders/diarySync';
+import { FRESH_REMINDERS } from '@/launch/reminders/reminderStages';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -254,6 +255,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
           date: format(newDate, 'yyyy-MM-dd'),
           time: newTime,
           status: 'pending',
+          ...FRESH_REMINDERS,
         })
         .eq('id', eventId);
       if (error) {

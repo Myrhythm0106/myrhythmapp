@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { announceDiaryChange } from '@/launch/reminders/diarySync';
+import { FRESH_REMINDERS } from '@/launch/reminders/reminderStages';
 import { format } from 'date-fns';
 import { ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
@@ -43,8 +45,10 @@ export function PriorityDetailSheet({ event, onClose, onSaved }: { event: Launch
     if (!event || !form || !form.title.trim()) return;
     setSaving(true);
     const before = { title: event.title, date: format(event.date, 'yyyy-MM-dd'), time: event.time, description: event.description ?? null, is_private: !!event.isPrivate };
+    const moved = form.date !== before.date || form.time.slice(0, 5) !== (before.time ?? '').slice(0, 5);
     const { error } = await supabase.from('calendar_events').update({
       title: form.title.trim(), date: form.date, time: form.time, description: form.description || null, is_private: form.is_private,
+      ...(moved ? FRESH_REMINDERS : {}),
     }).eq('id', event.id);
     let actionBefore: ActionForm | null = null;
     if (!error && action && event.extractedActionId) {
@@ -57,14 +61,16 @@ export function PriorityDetailSheet({ event, onClose, onSaved }: { event: Launch
     }
     setSaving(false);
     if (error) { toast.error("I couldn't save that just now", { description: 'Nothing was changed. Please try again.' }); return; }
+    announceDiaryChange('priority-sheet');
     onSaved(); onClose();
     toast('Saved', {
       action: {
         label: 'Undo', onClick: async () => {
-          await supabase.from('calendar_events').update(before).eq('id', event.id);
+          await supabase.from('calendar_events').update(moved ? { ...before, ...FRESH_REMINDERS } : before).eq('id', event.id);
           if (actionBefore && event.extractedActionId) {
             await supabase.from('extracted_actions').update({ ...actionBefore, assigned_to: actionBefore.assigned_to || null, end_date: actionBefore.end_date || null }).eq('id', event.extractedActionId);
           }
+          announceDiaryChange('priority-sheet');
           onSaved();
         },
       },

@@ -18,7 +18,15 @@ interface ReminderWithEvent {
     date: string;
     time: string;
     description: string | null;
+    status: string | null;
+    reminder_status: string | null;
   };
+}
+
+/** Finished, moved, cancelled or let-go items never get another reminder. */
+function isClosed(e: { status: string | null; reminder_status: string | null }) {
+  return ["done", "completed", "carried", "cancelled"].includes(e.status ?? "") ||
+    ["done", "let_go", "cancelled"].includes(e.reminder_status ?? "");
 }
 
 interface UserProfile {
@@ -116,7 +124,9 @@ serve(async (req) => {
           title,
           date,
           time,
-          description
+          description,
+          status,
+          reminder_status
         )
       `)
       .eq("is_active", true)
@@ -145,6 +155,10 @@ serve(async (req) => {
         if (!reminder.calendar_events) {
           console.log(`⚠️ Reminder ${reminder.id} has no associated event, skipping`);
           continue;
+        }
+
+        if (isClosed(reminder.calendar_events)) {
+          continue; // Answered elsewhere in the app — no nagging on finished items
         }
 
         const { date, time, title } = reminder.calendar_events;
