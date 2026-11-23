@@ -58,6 +58,7 @@ export default function LaunchUserType() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const afterSnapshot = searchParams.get('after') === 'snapshot';
+  const fromSettings = searchParams.get('from') === 'settings';
   const [picked, setPicked] = React.useState(false);
 
   React.useEffect(() => {
@@ -71,7 +72,7 @@ export default function LaunchUserType() {
   const finishPersonalisation = () => {
     localStorage.setItem('myrhythm_make_it_yours_seen', '1');
     localStorage.removeItem('myrhythm_intent');
-    navigate('/launch/home?welcome=1');
+    navigate(fromSettings ? '/launch/settings' : '/launch/home?welcome=1');
   };
 
   // After choosing who it's for: a short welcome (once), then the questions.
@@ -119,7 +120,7 @@ export default function LaunchUserType() {
     <div className="h-full min-h-0 bg-launch-cream-light flex flex-col pt-safe pb-safe px-safe">
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain py-6 px-4 pb-10">
         <div className="max-w-4xl mx-auto">
-          <LaunchPageHeader fallbackPath="/launch/register" />
+          <LaunchPageHeader fallbackPath={fromSettings ? '/launch/settings' : '/launch/register'} />
           {!afterSnapshot && <JourneySteps current={2} canSaveLater className="mb-8" />}
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
@@ -169,7 +170,7 @@ export default function LaunchUserType() {
             onClick={notSure}
             className="min-h-14 whitespace-normal text-base text-launch-ink-deep underline underline-offset-4"
           >
-            {afterSnapshot ? 'Not now — go to Home' : "I'm not sure — carry on"}
+            {fromSettings ? 'Back to Settings' : afterSnapshot ? 'Not now — go to Home' : "I'm not sure — carry on"}
           </Button>
           <p className="text-base leading-relaxed text-launch-ink-deep">I can change this any time in Settings.</p>
         </div>

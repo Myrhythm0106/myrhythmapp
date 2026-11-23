@@ -406,7 +406,7 @@ export function MVPCore4C() {
                 {entryState === 'new' && (
                   <>
                     <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                      Get Started: 4 short steps — account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time. Founding Member is £10/month for life · limited to 500 places.
+                      Get Started: start free for 7 days with no card, or register fully as a Founding Member (£10/month for life · 500 places). Then 4 short steps — account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time.
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
                       Already registered?{' '}

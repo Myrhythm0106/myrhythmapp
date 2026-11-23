@@ -50,8 +50,15 @@ export default function LaunchRegister() {
   const [isResending, setIsResending] = useState(false);
   const [existingAccount, setExistingAccount] = useState(false);
   const [resetSent, setResetSent] = useState(false);
-  const [plan, setPlan] = useState<StartPlan>(() => (searchParams.get('plan') === 'member' ? 'member' : readStartPlan() ?? 'trial'));
-  const afterAccount = () => nextAfterAccount(plan, !!prefilledUserType);
+  const nextParam = searchParams.get('next');
+  const safeNext = nextParam && nextParam.startsWith('/launch/') ? nextParam : null;
+  const cameToPay = !!safeNext?.startsWith('/launch/payment');
+  const [plan, setPlan] = useState<StartPlan>(() => (searchParams.get('plan') === 'member' || cameToPay ? 'member' : readStartPlan() ?? 'trial'));
+  // A deep link (e.g. back to the membership page) wins only when it matches the choice.
+  const afterAccount = () => {
+    if (safeNext && (plan === 'member' || !cameToPay)) return plan === 'member' && cameToPay ? '/launch/payment?from=setup' : safeNext;
+    return nextAfterAccount(plan, !!prefilledUserType);
+  };
 
   const sendReset = async () => {
     setIsResending(true);
@@ -184,11 +191,6 @@ export default function LaunchRegister() {
   };
 
   const handleContinue = () => {
-    const next = searchParams.get('next');
-    if (next && next.startsWith('/launch/')) {
-      navigate(next);
-      return;
-    }
     if (prefilledUserType) localStorage.setItem('myrhythm_user_type', prefilledUserType);
     saveStartPlan(plan);
     navigate(afterAccount());

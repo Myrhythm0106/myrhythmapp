@@ -143,6 +143,23 @@ export default function LaunchSettings() {
           </button>
         </LaunchCard>
 
+        {/* What brings me to MyRhythm — the set-up choice, changeable any time */}
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
+          <button
+            onClick={() => navigate('/launch/user-type?after=snapshot&from=settings')}
+            className="w-full flex items-center gap-3 text-left min-h-[56px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-launch-gold/20 flex items-center justify-center">
+              <Sparkles className="h-5 w-5 text-launch-ink" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900">What brings me to MyRhythm</h3>
+              <p className="text-xs text-gray-500">Change the words and examples MyRhythm uses for me</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </button>
+        </LaunchCard>
+
         {/* Continuity summary */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
