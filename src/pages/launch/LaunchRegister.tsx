@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { z } from 'zod';
+import { registrationSchema, registrationError } from '@/launch/onboarding/registration';
 import { BackButton } from '@/components/ui/BackButton';
 import { supabase } from '@/integrations/supabase/client';
 import { resolveEntryRoute } from '@/launch/onboarding/entryRoute';
@@ -21,11 +21,6 @@ import { cn } from '@/lib/utils';
 // fake accounts locally.
 const BYPASS_REGISTRATION = false;
 
-const registerSchema = z.object({
-  name: z.string().trim().min(1, 'Please add your first name').max(50),
-  email: z.string().email('Please enter a valid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
 
 
 export default function LaunchRegister() {
@@ -90,7 +85,7 @@ export default function LaunchRegister() {
     setErrors({});
 
     // Validate inputs
-    const result = registerSchema.safeParse({ name, email, password });
+    const result = registrationSchema.safeParse({ name, email, password });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -110,10 +105,10 @@ export default function LaunchRegister() {
       saveStartPlan(plan);
 
       const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: result.data.email,
+        password: result.data.password,
         options: {
-          data: { name },
+          data: { name: result.data.name },
           emailRedirectTo: `${window.location.origin}${afterAccount()}`,
         },
       });
@@ -126,9 +121,7 @@ export default function LaunchRegister() {
         (!error && !!data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0);
 
       if (error && !alreadyRegistered) {
-        toast.error(error.message || "We couldn't create your account", {
-          description: 'Check your email and password, then try again. If it keeps failing, sign in instead.',
-        });
+        setErrors({ submit: registrationError(error.message) });
         return;
       }
 
@@ -137,8 +130,8 @@ export default function LaunchRegister() {
       let session = data?.session ?? null;
       if (!session) {
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: result.data.email,
+          password: result.data.password,
         });
         session = signInData?.session ?? null;
 
@@ -190,11 +183,6 @@ export default function LaunchRegister() {
     }
   };
 
-  const handleContinue = () => {
-    if (prefilledUserType) localStorage.setItem('myrhythm_user_type', prefilledUserType);
-    saveStartPlan(plan);
-    navigate(afterAccount());
-  };
 
 
   // Already signed in: never show an empty sign-up form.
@@ -290,17 +278,8 @@ export default function LaunchRegister() {
                   </div>
                 </div>
 
-                {/* Continue anyway button */}
-                <Button
-                  onClick={handleContinue}
-                  className="w-full bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white py-6"
-                >
-                  Continue to Setup
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-
-                <p className="text-xs text-launch-ink/50 text-center">
-                  You can verify your email later, but some features may be limited.
+                <p className="text-base text-launch-ink/70 text-center">
+                  Open the link to confirm my email, then add my card. My choice is saved.
                 </p>
               </CardContent>
             </Card>
@@ -330,19 +309,19 @@ export default function LaunchRegister() {
       </div>
       
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-8">
+      <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-8">
         <div className="flex flex-col items-center justify-center min-h-full">
           {/* Logo */}
-          <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-6 shadow-lg">
+          <div className="w-12 h-12 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-4 shadow-lg">
             <Brain className="h-8 w-8 text-white" />
           </div>
 
-          <JourneySteps current={1} className="mb-6" />
+          <JourneySteps current={1} className="mb-4" />
           <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
             Create my account
           </h1>
-          <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            My name, email and a password, so my progress is saved. Then straight in.
+          <p className="text-launch-ink/70 mb-5 text-center max-w-sm">
+            My details, then my card. Next, my first conversation.
           </p>
 
           <fieldset className="w-full max-w-md mb-5">
@@ -354,14 +333,15 @@ export default function LaunchRegister() {
               ]).map((o) => {
                 const on = plan === o.id;
                 return (
-                  <button
+                  <Button
                     key={o.id}
                     type="button"
+                    variant="ghost"
                     role="radio"
                     aria-checked={on}
                     onClick={() => setPlan(o.id)}
                     className={cn(
-                      'min-h-14 w-full rounded-2xl border-2 p-3 text-left transition-colors',
+                      'h-auto min-h-14 w-full whitespace-normal rounded-lg border-2 p-3 text-left transition-colors',
                       on ? 'border-launch-teal bg-launch-teal/10' : 'border-launch-gold/30 bg-launch-ivory hover:border-launch-gold',
                     )}
                   >
@@ -374,10 +354,10 @@ export default function LaunchRegister() {
                           {o.title}
                           {o.tag && <span className="rounded-full bg-launch-gold/20 px-2 py-0.5 text-xs font-semibold text-launch-ink">{o.tag}</span>}
                         </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-launch-ink-deep/80">{o.body}</span>
+                        <span className="mt-1 block text-base leading-relaxed text-launch-ink-deep/80">{o.body}</span>
                       </span>
                     </span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -394,7 +374,7 @@ export default function LaunchRegister() {
                     placeholder="e.g. Annabel Aaron" autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className={errors.name ? 'border-launch-ember' : ''}
+                    className={cn('h-14 text-base', errors.name && 'border-launch-ember')}
                     disabled={isLoading}
                   />
                   {errors.name && (
@@ -407,10 +387,12 @@ export default function LaunchRegister() {
                   <Input
                     id="email"
                     type="email"
+                    autoComplete="email"
+                    autoCapitalize="none"
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={errors.email ? 'border-launch-ember' : ''}
+                    className={cn('h-14 text-base', errors.email && 'border-launch-ember')}
                     disabled={isLoading}
                   />
                   {errors.email && (
@@ -424,20 +406,26 @@ export default function LaunchRegister() {
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className={errors.password ? 'border-launch-ember pr-10' : 'pr-10'}
+                      className={cn('h-14 pr-14 text-base', errors.password && 'border-launch-ember')}
                       disabled={isLoading}
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      title={showPassword ? 'Hide password' : 'Show password'}
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-launch-ink/40 hover:text-launch-ink/70"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 text-launch-ink/70"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
+                    </Button>
                   </div>
+                  <p className="text-base text-launch-ink/70">At least 8 characters.</p>
                   {errors.password && (
                     <p className="text-sm text-launch-ember">{errors.password}</p>
                   )}
@@ -474,9 +462,10 @@ export default function LaunchRegister() {
                   </div>
                 )}
 
+                {errors.submit && <p role="alert" className="text-base text-launch-ember">{errors.submit}</p>}
                 <Button
                   type="submit"
-                  className="w-full bg-launch-teal hover:bg-[hsl(var(--launch-teal)/0.88)] text-white py-6"
+                  className="w-full min-h-14 h-auto whitespace-normal bg-brand-orange-500 hover:bg-brand-orange-600 text-primary-foreground py-4"
                   disabled={isLoading}
                 >
                   {isLoading ? (

@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
 import { setResumePoint, clearResumePoint } from '@/launch/onboarding/resumePoint';
 import { saveStartPlan, planFromSearch, checkoutRequest, type StartPlan } from '@/launch/onboarding/startPlan';
+import { JourneySteps } from '@/components/launch/JourneySteps';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
@@ -70,7 +71,7 @@ export default function LaunchPayment() {
   // Remember the plan they picked so nothing is retyped after a sign-in detour.
   React.useEffect(() => {
     const remembered = localStorage.getItem('myrhythm_selected_plan');
-    if (remembered === 'monthly' || remembered === 'yearly') setSelectedPlan(remembered);
+    if (!fromSetup && (remembered === 'monthly' || remembered === 'yearly')) setSelectedPlan(remembered);
     setResumePoint('/launch/payment');
   }, []);
 
@@ -169,7 +170,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      setCheckoutError("Checkout couldn't start just now. Nothing was charged. You can try again, or skip payment entirely with an access code below.");
+      setCheckoutError("My card page couldn't open just now. Nothing was charged. I can try again without re-entering my details.");
     } finally {
       setIsLoading(false);
     }
@@ -184,6 +185,55 @@ export default function LaunchPayment() {
       toast.error('Copy failed, select and copy manually');
     }
   };
+
+  if (fromSetup) {
+    return (
+      <div className="h-full min-h-0 overflow-y-auto bg-launch-cream-light px-4 py-6 pt-safe pb-safe">
+        <main className="mx-auto w-full max-w-md space-y-6">
+          <JourneySteps current={2} />
+          <header className="space-y-3">
+            <h1 className="font-display text-3xl text-launch-ink-deep">Add my card</h1>
+            <p className="text-base leading-relaxed text-launch-ink-deep/80">
+              {isTrial ? 'My first 7 days are free. Nothing is charged today.' : 'My Founding Membership starts today.'}
+            </p>
+          </header>
+          <div className="border-y border-launch-gold/30 py-5 space-y-2">
+            <p className="text-lg font-semibold text-launch-ink-deep">
+              {selectedPlan === 'yearly' ? '£84 a year' : '£10 a month'}
+              {isTrial && <span className="block text-base font-normal">After my free 7 days.</span>}
+            </p>
+            <p className="text-base leading-relaxed text-launch-ink-deep/80">
+              {isTrial ? 'I can cancel before the 7 days end and pay nothing.' : 'I can cancel any time from my account.'}
+            </p>
+          </div>
+          {IS_TEST_MODE && <p role="status" className="text-base text-launch-ember">Test payments only. I use a Stripe test card, not a real card.</p>}
+          {checkoutError && <p role="alert" className="text-base text-launch-ember">{checkoutError}</p>}
+          <Button onClick={handleStartTrial} disabled={isLoading} className="w-full h-auto min-h-14 whitespace-normal bg-brand-orange-500 hover:bg-brand-orange-600 text-primary-foreground py-4">
+            {isLoading ? <><Loader2 className="h-5 w-5 animate-spin" /> Opening my card page</> : <><CreditCard className="h-5 w-5" />{checkoutError ? 'Try again' : 'Continue to my card'}<ArrowRight className="h-5 w-5" /></>}
+          </Button>
+          <p className="flex items-start gap-2 text-base text-launch-ink-deep/80"><Shield className="mt-1 h-5 w-5 shrink-0" />My card is handled securely by Stripe. Then straight to Home to record my first conversation.</p>
+          <Collapsible>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" className="min-h-11 h-auto w-full whitespace-normal justify-between text-launch-ink-deep">Other options or an access code<ChevronDown className="h-5 w-5" /></Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-4 pt-4">
+              <Button variant="outline" onClick={switchStart} className="min-h-14 h-auto w-full whitespace-normal border-launch-gold/50 text-launch-ink-deep">{isTrial ? 'Join today instead' : 'Start free for 7 days instead'}</Button>
+              <div className="grid grid-cols-2 gap-2">
+                {plans.map(option => <Button key={option.id} variant="outline" aria-pressed={selectedPlan === option.id} onClick={() => setSelectedPlan(option.id)} className="min-h-14 h-auto whitespace-normal border-launch-gold/50 text-launch-ink-deep">{option.price} / {option.interval}</Button>)}
+              </div>
+              <div id="access-code-panel" className="space-y-3">
+                <label htmlFor="setup-access-code" className="block text-base text-launch-ink-deep">My access code</label>
+                <Input id="setup-access-code" value={code} onChange={e => setCode(e.target.value.toUpperCase())} autoCapitalize="characters" className="h-14 text-base" onKeyDown={e => { if (e.key === 'Enter') handleRedeemCode(); }} />
+                <Button onClick={handleRedeemCode} disabled={isRedeeming || !code.trim()} variant="outline" className="min-h-14 w-full border-launch-gold/50 text-launch-ink-deep">{isRedeeming ? <Loader2 className="animate-spin" /> : 'Use my access code'}</Button>
+              </div>
+              <Button variant="ghost" onClick={() => navigate('/launch/landingpage')} className="min-h-11 w-full text-launch-ink-deep">Finish later</Button>
+              {IS_TEST_MODE && <p className="text-base text-launch-ink-deep/80">Test card: 4242 4242 4242 4242. Future expiry, any three-digit security code.</p>}
+            </CollapsibleContent>
+          </Collapsible>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full min-h-0 bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">

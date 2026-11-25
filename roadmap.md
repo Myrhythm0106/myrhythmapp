@@ -1,5 +1,10 @@
 # MyRhythm — task roadmap
 
+## Real sign-up, seven-day start (25 Nov 2026)
+- [ ] Complete real new-account → card → Home: the supplied address already exists (real signup returned 422); awaiting an unused email. No password changed. Checkout completion remains unverified.
+- [x] Removed repetitive card-step decisions; added larger fields, autofill, labelled password visibility, normalised email and persistent error recovery.
+- [x] Hosted public auth settings checked: email enabled, automatic confirmation enabled. Actual existing-account recovery shown; 24 onboarding/access tests passed; registration checked at 320/393/837px, real card controls checked in isolation, build OK.
+
 ## Testing plan + watch capture, friction-free (23 Oct 2026)
 - [x] Friction-free saved as a core principle.
 - [x] Test wording corrected; Tests 9 (watch) and 10 (friction-free) added; PDF in Files and downloadable from Help.
