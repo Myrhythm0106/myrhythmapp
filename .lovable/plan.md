@@ -11,6 +11,12 @@
 3. **Emails and pop-up messages**: same sweep for reminder emails, invitations and toast messages (for example "Done, your conversation step is closed...").
 4. **Check**: search the app for leftover em dashes and banned phrases, and view key screens on a phone-sized screen.
 
+## In tune with your blog (annabelaaron.com, Gifting Adversity)
+- Carry its warmth and hope into the app: honest, personal, steady, never dramatic. "Every new day is a gift" sits alongside #IChoose.
+- Draw on your values in the wording: resilience, personal growth, authenticity, community support, continuous learning.
+- Keep your story where it belongs: a short, optional "Why I built MyRhythm" note on the landing page and About card, written from your own words. Nothing is invented.
+- Everyday screens stay calm and practical. The blog's spirit shows in encouragement, daily #IChoose statements and wins, not in long passages.
+
 ## Not changed
 Layout, colours, buttons, flows, prices and the North Point wording.
 
