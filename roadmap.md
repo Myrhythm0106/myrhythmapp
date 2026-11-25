@@ -1,5 +1,9 @@
 # MyRhythm — task roadmap
 
+## Welcome clarity and pacing (25 Nov 2026)
+- [x] Clarify each induction step and provide Next without requiring an activity or changing the selected approach.
+- [x] Alternate emerald welcome backgrounds on steps 2, 4, 6 and 8; isolated real controls checked on phone, iPad and desktop across all nine steps, saved approach, Back/Next and completion; seven tests and build pass. Signed-in Home integration cannot be checked through the available session tool with the user-managed backend.
+
 ## Executive Home, induction, Stripe last (25 Nov 2026)
 - [x] Real sign-up tested on phone, iPad, desktop: account creation works, all reach "Add my card".
 - [x] Executive Home: dark briefing band with three figures, priorities, Next up, follow-through, Support Circle, Vision, Still open.

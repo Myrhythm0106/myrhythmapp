@@ -3,20 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { useInduction } from '@/launch/onboarding/useInduction';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
-import type { InductionStep } from '@/launch/onboarding/induction';
+import { INDUCTION_STEPS, type InductionStep } from '@/launch/onboarding/induction';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 type Step = { title: string; text: string; primary: string; to?: string; secondary?: string };
 const STEPS: Record<InductionStep, Step> = {
   welcome: { title: 'Welcome. Here is how MyRhythm helps me.', text: 'MyRhythm remembers, so I can follow through. I record what matters, choose my next steps, and they wait for me in my diary. This short welcome takes about two minutes, and I can leave it at any point.', primary: 'Show me' },
   who: { title: 'Who am I using MyRhythm for?', text: 'One tap tailors the wording and first suggestions. Myself, someone I care for, or a busy working life. Optional.', primary: 'Choose who it is for', to: '/launch/user-type?after=home', secondary: 'Not now' },
-  style: { title: 'How would I like to start?', text: 'Guide me shows one step at a time. Explore my way leaves everything open. I can switch whenever I like.', primary: 'Guide me', secondary: 'Explore my way' },
+  style: { title: 'How would I like to start?', text: 'I choose the approach that feels right. Guide me offers one practical step at a time. Explore my way lets me choose where to begin. Both keep all my pages available, and I can switch in the round menu at any time.', primary: 'Guide me', secondary: 'Explore my way' },
   record: { title: 'Capture my first conversation', text: 'An appointment, a meeting or a chat at home. One tap starts, one tap stops. If now is not the moment, a 20-second note to myself works just as well.', primary: 'Record now', to: '/launch/memory?record=1', secondary: 'Later' },
   nextSteps: { title: 'See my summary and next steps', text: 'MyRhythm writes up what was said and pulls out what was agreed. I keep the ones that matter and give one a time in my diary.', primary: 'Open my conversations', to: '/launch/memory', secondary: 'Next' },
   reminders: { title: 'Gentle reminders, until it is done', text: 'A get-ready prompt before each step, then Done, Snooze or Move. If something slips, it waits for me in Still open at the end of the day. No nagging.', primary: 'Got it' },
   circle: { title: 'Invite someone I trust', text: 'No one walks alone. A family member, friend or colleague can see what I choose to share, and nothing else. I can turn this off at any time.', primary: 'Invite someone', to: '/launch/support', secondary: 'Not now' },
   snapshot: { title: 'My free snapshot', text: 'Six minutes of questions about my energy and focus, so MyRhythm suggests times that suit me. Not a test, and never a diagnosis.', primary: 'Start my snapshot', to: '/launch/assessment?first=1', secondary: 'Later' },
-  done: { title: "I'm set up.", text: 'Tomorrow, Home shows my priorities and the next thing to do. Everything else is one tap away in the round menu. I can replay this welcome from Help.', primary: 'Go to my day' },
+  done: { title: 'My welcome is complete.', text: 'Home is my starting point: my priorities, my diary and the next thing to do. I can record a conversation whenever I am ready, invite someone I trust, or return to this welcome from Help.', primary: 'Go to my day' },
 };
 
 /** The single induction for new members. Never blocks the app. */
@@ -27,49 +28,63 @@ export function LaunchInduction() {
   if (ind.finished) return null;
   if (!ind.visible) {
     return (
-      <button type="button" onClick={ind.resume}
-        className="min-h-11 rounded-full border border-launch-gold/40 px-4 text-sm font-semibold text-launch-ink hover:bg-launch-cream">
+      <Button variant="ghost" type="button" onClick={ind.resume}
+        className="min-h-14 h-auto whitespace-normal rounded-full border border-launch-gold/40 px-4 text-sm font-semibold text-launch-ink hover:bg-launch-cream hover:text-launch-ink">
         Pick up my welcome · step {ind.step + 1} of {ind.total}
-      </button>
+      </Button>
     );
   }
   const s = STEPS[ind.stepId];
+  const emerald = [1, 3, 5, 7].includes(ind.step);
+  const nextId = INDUCTION_STEPS[ind.step + 1];
+  const nextStep = nextId ? STEPS[nextId] : undefined;
   const primary = () => {
-    if (ind.stepId === 'style') starting.chooseStyle('guided');
     ind.next();
     if (s.to) navigate(s.to);
   };
-  const secondary = () => {
-    if (ind.stepId === 'style') starting.chooseStyle('explore');
-    ind.next();
-  };
   return (
-    <section aria-label="My welcome" className="relative overflow-hidden rounded-3xl border border-launch-gold/40 bg-launch-ivory p-6 text-launch-ink-deep shadow-[0_30px_60px_-30px_hsl(var(--launch-ink-deep)/0.7)] sm:p-8">
+    <section aria-label="My welcome" className={cn('relative overflow-hidden rounded-3xl border border-launch-gold/40 p-6 shadow-[0_30px_60px_-30px_hsl(var(--launch-ink-deep)/0.7)] sm:p-8', emerald ? 'bg-launch-ink text-launch-ivory' : 'bg-launch-ivory text-launch-ink-deep')}>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-launch-ink-deep/70">My welcome · {ind.step + 1} of {ind.total}</p>
-        <button type="button" onClick={ind.skip} aria-label="Close my welcome for now"
-          className="flex h-11 w-11 items-center justify-center rounded-full text-launch-ink-deep/80 hover:bg-launch-ink-deep/10"><X className="h-5 w-5" /></button>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] opacity-80">My welcome · {ind.step + 1} of {ind.total}</p>
+        <Button variant="ghost" size="icon" type="button" onClick={ind.skip} aria-label="Close my welcome for now"
+          className={cn('h-14 w-14 shrink-0 rounded-full', emerald ? 'text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory' : 'text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep')}><X className="h-5 w-5" /></Button>
       </div>
       <div className="mt-2 flex gap-1.5" aria-hidden="true">
         {Array.from({ length: ind.total }).map((_, i) => (
           <span key={i} className={cn('h-1 flex-1 rounded-full', i <= ind.step ? 'bg-brand-orange-500' : 'bg-launch-gold/30')} />
         ))}
       </div>
-      <h2 className="mt-5 font-instrument text-3xl leading-tight sm:text-4xl">{s.title}</h2>
-      <p className="mt-3 max-w-2xl text-base leading-relaxed text-launch-ink-deep/85">{s.text}</p>
+      <h2 aria-live="polite" className="mt-5 font-instrument text-3xl leading-tight sm:text-4xl">{s.title}</h2>
+      <p className="mt-3 max-w-2xl text-base leading-relaxed">{s.text}</p>
+      {ind.stepId === 'style' && (
+        <div role="group" aria-label="My starting approach" className="mt-5 flex flex-wrap gap-3">
+          {(['guided', 'explore'] as const).map(style => (
+            <Button key={style} variant="ghost" aria-pressed={starting.style === style} onClick={() => starting.chooseStyle(style)}
+              className={cn('min-h-14 h-auto whitespace-normal rounded-2xl border px-5 font-semibold text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep', starting.style === style ? 'border-launch-ink-deep bg-launch-ink-deep/10' : 'border-launch-ink-deep/30')}>
+              {style === 'guided' ? 'Guide me' : 'Explore my way'}
+            </Button>
+          ))}
+        </div>
+      )}
+      <p className="mt-4 max-w-2xl text-base leading-relaxed opacity-85">
+        {ind.stepId === 'style' ? 'My choice saves here. Next takes me to my first recording, when I am ready.' :
+          nextStep ? `Next: ${nextStep.title} I can try this now or keep going without doing it yet.` : 'I return to Home. Nothing is recorded, scheduled or shared by finishing this welcome.'}
+      </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <button type="button" onClick={primary}
-          className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground hover:bg-brand-orange-600">
-          {s.primary}<ArrowRight className="h-5 w-5" />
-        </button>
-        {s.secondary && (
-          <button type="button" onClick={secondary}
-            className="min-h-[56px] rounded-2xl border border-launch-ink-deep/30 px-6 font-semibold hover:bg-launch-ink-deep/10">{s.secondary}</button>
+        {s.to && (
+          <Button variant="ghost" type="button" onClick={primary}
+            className={cn('min-h-14 h-auto whitespace-normal rounded-2xl border px-5 font-semibold', emerald ? 'border-launch-ivory/50 text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory' : 'border-launch-ink-deep/30 text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep')}>
+            {s.primary}
+          </Button>
         )}
+        <Button variant="ghost" type="button" onClick={ind.next}
+          className="min-h-14 h-auto whitespace-normal rounded-2xl bg-brand-orange-500 px-6 font-semibold text-launch-ink-deep hover:bg-brand-orange-600 hover:text-launch-ink-deep">
+          {ind.stepId === 'done' ? 'Go to my day' : 'Next'}<ArrowRight className="h-5 w-5" />
+        </Button>
         {ind.step > 0 && (
-          <button type="button" onClick={ind.back} className="inline-flex min-h-[56px] items-center gap-1 px-2 text-launch-ink-deep/80 hover:text-launch-ink-deep">
+          <Button variant="ghost" type="button" onClick={ind.back} className={cn('min-h-14 px-3', emerald ? 'text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory' : 'text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep')}>
             <ArrowLeft className="h-4 w-4" /> Back
-          </button>
+          </Button>
         )}
       </div>
     </section>

@@ -15,6 +15,9 @@ describe('induction', () => {
     expect(next(s).finished).toBe(true);
   });
   it('back never goes below the first step', () => { expect(back(FRESH).step).toBe(0); });
+  it('Next advances one step without completing the welcome or requiring an activity', () => {
+    expect(next({ step: 2, finished: false, dismissed: false })).toEqual({ step: 3, finished: false, dismissed: false });
+  });
   it('skip hides it but keeps my place, resume brings it back', () => {
     const s = skip({ step: 4, finished: false, dismissed: false });
     expect(shouldShow(s)).toBe(false);
