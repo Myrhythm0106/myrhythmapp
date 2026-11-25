@@ -261,23 +261,20 @@ export function MVPCore4C() {
     navigate(path, path === '/launch/payment' ? { state: { fromReport: true } } : undefined);
   };
 
-  const handleStartHere = async () => {
-    navigate(await resolveEntryRoute('start', user?.id));
+  const handlePrimary = () => {
+    navigate('/launch/register');
   };
 
-  const handlePrimary = () => {
-    if (entryState === 'returning') {
-      navigate('/launch/signin');
+  // Landing offers only Get Started or Log In. Signed-in people tapping Log In go straight in.
+  const handleLogIn = async () => {
+    if (user) {
+      navigate(await resolveEntryRoute('start', user.id));
       return;
     }
-    void handleStartHere();
+    navigate('/launch/signin');
   };
 
-  const primaryLabel =
-    entryState === 'returning' ? 'Log In'
-    : entryState === 'needsQuestions' ? 'Continue where you stopped'
-    : entryState === 'hasSnapshot' || entryState === 'member' ? 'Go to your day'
-    : 'Get Started';
+  const primaryLabel = 'Get Started';
   const showFounding = entryState === 'new' || entryState === 'returning' || entryState === 'hasSnapshot';
   const firstName =
     String((user?.user_metadata as { name?: string } | undefined)?.name ?? '').trim().split(/\s+/)[0] ||
@@ -315,23 +312,10 @@ export function MVPCore4C() {
               <HelpCircle className="h-5 w-5" />
             </Button>
             )}
-            {user ? (
-              <>
-                <Button onClick={handlePrimary} variant="action" className="min-h-14 whitespace-normal rounded-md px-3 text-base font-bold md:px-5">
-                  {primaryLabel}
-                </Button>
-                <Button
-                  onClick={handleAuthAction}
-                  variant="ghost"
-                  className="min-h-14 px-2 text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-4"
-                >
-                  Sign out
-                </Button>
-              </>
-            ) : (
+            {(
               <>
                 <Button
-                  onClick={() => navigate('/launch/signin')}
+                  onClick={handleLogIn}
                   variant="ghost"
                   className="min-h-14 px-3 font-worksans text-base font-bold text-launch-ink-deep hover:bg-launch-cream hover:text-launch-ink-deep md:px-5"
                 >
@@ -417,7 +401,7 @@ export function MVPCore4C() {
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
                       Already registered?{' '}
-                      <button onClick={() => navigate('/launch/signin')} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Log In</button>
+                      <button onClick={() => void handleLogIn()} className="min-h-11 font-bold text-launch-teal underline underline-offset-4">Log In</button>
                     </p>
                   </>
                 )}
