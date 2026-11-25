@@ -1,6 +1,6 @@
 ## Navigation architecture
 
-- Use LaunchNav plus one safe-area-aware circular You-Are-Here dial from LaunchLayout as the only app navigation system; keep first-time onboarding linear to reduce cognitive load.
+- Use LaunchNav bottom tabs (Home, Record, Diary, Circle, Vision: the everyday journey) plus one safe-area-aware circular You-Are-Here dial from LaunchLayout as the only app navigation system; keep first-time onboarding linear; why: the core journey is always one tap away, everything else is one dial away.
 - Account creation offers one start choice from `src/launch/onboarding/startPlan.ts` (tested): free 7 days (card at the start, first charge after the trial) or register fully (membership starts today) → card step → Who it's for (all audiences visible) → welcome → Questions → My snapshot; checkout honours the choice via `startTrial`; why: people choose when the first charge happens, and both paths share one set-up.
 - Keep an unselected starting point distinct from a recovery identity using the shared neutral assessment bank; why: skipping a choice must never imply brain injury.
 - `/launch/landingpage` is the single front door; `/`, `/start`, `/launch`, `/landing`, `/mvp` redirect there via `ToLanding` keeping query strings. Its banner offers only Log In (registered: trial or member) and Get Started (full registration); why: one obvious start, never lost.

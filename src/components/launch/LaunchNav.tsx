@@ -1,16 +1,16 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Mic, CheckSquare, Activity, Sparkles } from 'lucide-react';
+import { Home, Mic, CalendarDays, Users, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// The bottom bar is the 4C loop + Home. Everything else lives one tap away
-// on Home tiles or in the You-Are-Here dial.
+// Bottom tabs: the everyday journey (Home, Record, Diary, Circle, Vision).
+// Everything else lives in the You-Are-Here dial.
 const navItems = [
   { title: 'Home', url: '/launch/home', icon: Home },
   { title: 'Record', url: '/launch/memory', icon: Mic },
-  { title: 'Commit', url: '/launch/commit', icon: CheckSquare },
-  { title: 'Calibrate', url: '/launch/calibrate', icon: Activity },
-  { title: 'Celebrate', url: '/launch/celebrate', icon: Sparkles },
+  { title: 'Diary', url: '/launch/calendar', icon: CalendarDays },
+  { title: 'Circle', url: '/launch/support', icon: Users },
+  { title: 'Vision', url: '/launch/vision-statement', icon: Compass },
 ];
 
 export function LaunchNav() {
