@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Download, FileJson, Shield, FileText } from 'lucide-react';
@@ -79,7 +80,7 @@ export default function LaunchContinuity() {
   return (
     <LaunchLayout showHeader={true}>
       <div className="mb-6">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-600 mb-4">
+        <button onClick={() => navigate(popBack() ?? '/launch/home')} className="flex items-center gap-2 text-gray-600 mb-4">
           <ChevronLeft className="h-5 w-5" />
           Back
         </button>

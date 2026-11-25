@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -115,7 +116,7 @@ export default function LaunchWhatsNew() {
     <LaunchLayout showHeader={true}>
       <div className="mb-6">
         <button 
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(popBack() ?? '/launch/home')}
           className="flex items-center gap-2 text-gray-600 mb-4"
         >
           <ChevronLeft className="h-5 w-5" />

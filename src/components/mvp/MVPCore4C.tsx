@@ -172,9 +172,6 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
           <span className={`h-px w-9 ${markerColour}`} aria-hidden="true" />
           {chapter.marker}
         </p>
-        <p className="mb-4 hidden font-worksans text-sm font-semibold text-launch-teal sm:block">
-          {chapter.promise}
-        </p>
         <h2 className="font-instrument text-[2rem] leading-[1.1] text-launch-ink-deep [text-wrap:balance] sm:text-4xl md:text-5xl md:leading-[1.05]">
           {chapter.title}
         </h2>

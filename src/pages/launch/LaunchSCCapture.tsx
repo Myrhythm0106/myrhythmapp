@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -153,7 +154,7 @@ export default function LaunchSCCapture() {
       {/* Top bar */}
       <header className="flex items-center justify-between px-4 py-3 border-b border-stone-200/70 bg-white/80 backdrop-blur-sm">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(popBack() ?? '/launch/home')}
           className="flex items-center gap-1.5 text-sm text-stone-700 min-h-[44px] px-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           aria-label="Go back"
         >

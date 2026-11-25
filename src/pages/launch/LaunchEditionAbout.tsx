@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, CheckCircle2, Clock3, MessageCircle } from 'lucide-react';
@@ -41,7 +42,7 @@ export default function LaunchEditionAbout() {
     <LaunchLayout showHeader={true}>
       <div className="mb-6">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(popBack() ?? '/launch/home')}
           className="flex items-center gap-2 text-stone-600 mb-4 min-h-[44px]"
         >
           <ChevronLeft className="h-5 w-5" />

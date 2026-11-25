@@ -106,6 +106,8 @@ export default function LaunchPayment() {
     }
     if (!session) {
       setNeedsAuth(true);
+      toast.message('Please log in first, then you will come straight back here.');
+      navigate('/launch/signin', { state: { from: window.location.pathname + window.location.search } });
       return null;
     }
     setNeedsAuth(false);
@@ -153,7 +155,15 @@ export default function LaunchPayment() {
       });
       if (error) throw error;
       if (data?.url) {
-        window.location.href = data.url;
+        toast.message('Taking you to secure checkout...');
+        let framed = false;
+        try { framed = window.self !== window.top; } catch { framed = true; }
+        if (framed) {
+          const w = window.open(data.url, '_blank', 'noopener');
+          if (!w) window.location.href = data.url;
+        } else {
+          window.location.href = data.url;
+        }
       } else {
         throw new Error('No checkout URL returned');
       }

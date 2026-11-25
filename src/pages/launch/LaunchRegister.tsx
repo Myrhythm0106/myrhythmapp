@@ -387,11 +387,11 @@ export default function LaunchRegister() {
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">First name</Label>
+                  <Label htmlFor="name">Full name</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="e.g. Annabel" autoComplete="given-name"
+                    placeholder="e.g. Annabel Aaron" autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className={errors.name ? 'border-launch-ember' : ''}

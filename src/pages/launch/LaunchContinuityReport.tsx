@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -77,7 +78,7 @@ export default function LaunchContinuityReport() {
         {/* Back + controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(popBack() ?? '/launch/home')}
             className="flex items-center gap-2 text-sm font-medium transition-colors hover:opacity-80"
             style={{ color: `${INK}99` }}
           >

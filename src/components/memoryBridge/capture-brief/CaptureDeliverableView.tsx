@@ -1,3 +1,4 @@
+import { popBack } from '@/launch/access/appHistory';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -139,7 +140,7 @@ export function CaptureDeliverableView() {
       {/* Top bar */}
       <header className="sticky top-0 z-20 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="min-h-[44px]">
+          <Button variant="ghost" size="sm" onClick={() => navigate(popBack() ?? '/launch/home')} className="min-h-[44px]">
             <ArrowLeft className="h-4 w-4 md:mr-2" />
             <span className="hidden md:inline">Back</span>
           </Button>
