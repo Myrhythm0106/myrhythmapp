@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
-import { setResumePoint } from '@/launch/onboarding/resumePoint';
+import { clearResumePoint, setResumePoint } from '@/launch/onboarding/resumePoint';
 import { deferAssessment } from '@/launch/onboarding/nextDestination';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { markLetterComplete } from '@/launch/framework/yes';
@@ -581,6 +581,7 @@ export default function LaunchAssessment() {
         })
        );
        localStorage.removeItem(ACTIVE_KEY);
+       clearResumePoint();
        if (!IS_FULL_MODE) resetRhythmConsentForRetake();
 
        if (user?.id) {

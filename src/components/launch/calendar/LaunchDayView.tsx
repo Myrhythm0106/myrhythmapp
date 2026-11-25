@@ -1,7 +1,7 @@
 import { LaunchYesWeekCard } from './LaunchYesWeekCard';
 import type { YesAction } from '@/launch/yes/yesActions';
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star, Lock, Unlock, UserRound } from 'lucide-react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star, Lock, Unlock, UserRound, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLaunchPriorityHighlights } from '@/hooks/useLaunchFocusDisplay';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -19,6 +19,7 @@ import {
 import { toast } from 'sonner';
 import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
 import { SourceRefLine, type SourceState } from '@/components/traceability/SourceRefLine';
+import { useActionVisionLinks, VISION_AREAS, visionAreaLabel, type VisionArea } from '@/launch/vision/actionVision';
 
 interface Event {
   id?: string;
@@ -79,8 +80,16 @@ export function LaunchDayView({
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
   const priorities = useLaunchPriorityHighlights();
+  const actionVision = useActionVisionLinks();
+  const [visionHighlight, setVisionHighlight] = React.useState<'all' | VisionArea | null>(null);
   const isActive = (event: Event) => !event.status || event.status === 'pending';
   const priorityCount = sortedEvents.filter(event => event.id && isActive(event) && priorities.ids.includes(event.id)).length;
+  const eventVisionArea = (event: Event) => actionVision.areaFor(event.extractedActionId);
+  const linkedAreas = VISION_AREAS.filter(area => sortedEvents.some(event => eventVisionArea(event) === area.id));
+  const isVisionHighlighted = (event: Event) => {
+    const area = eventVisionArea(event);
+    return visionHighlight === 'all' ? Boolean(area) : visionHighlight === area;
+  };
 
 
   const getTypeColor = (type: string) => {
@@ -145,6 +154,26 @@ export function LaunchDayView({
 
       <h2 className="text-xl font-semibold font-display text-launch-ink">My schedule today</h2>
 
+      {linkedAreas.length > 0 && (
+        <div className="rounded-xl border border-launch-teal/20 bg-launch-teal/5 p-3">
+          <label className="flex flex-wrap items-center gap-2 text-sm font-semibold text-launch-ink">
+            <Compass className="h-4 w-4 text-launch-teal" aria-hidden="true" />
+            Highlight steps serving My Vision
+            <select
+              value={visionHighlight ?? ''}
+              onChange={event => setVisionHighlight((event.target.value || null) as 'all' | VisionArea | null)}
+              className="min-h-[44px] rounded-lg border border-launch-teal/25 bg-launch-ivory px-3 text-sm text-launch-ink"
+              aria-label="Highlight My Vision steps"
+            >
+              <option value="">No highlight</option>
+              <option value="all">All linked steps</option>
+              {linkedAreas.map(area => <option key={area.id} value={area.id}>{area.label}</option>)}
+            </select>
+          </label>
+          {visionHighlight && <p className="mt-1 text-xs text-launch-ink/60">Everyday appointments stay visible.</p>}
+        </div>
+      )}
+
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
           {sortedReminders.map((r) => (
@@ -186,7 +215,7 @@ export function LaunchDayView({
             <LaunchCard 
               key={event.id ?? i}
               variant="glass" 
-              className={cn("p-4", getStatusStyles(event.status), event.id && isActive(event) && priorities.ids.includes(event.id) && 'border-launch-gold bg-launch-gold/5')}
+              className={cn("p-4", getStatusStyles(event.status), event.id && isActive(event) && priorities.ids.includes(event.id) && 'border-launch-gold bg-launch-gold/5', isVisionHighlighted(event) && 'border-launch-teal bg-launch-teal/5 ring-1 ring-launch-teal/35')}
             >
               <div className="flex items-center gap-2 sm:gap-4">
                 <div className="text-center min-w-[50px]">
@@ -239,6 +268,11 @@ export function LaunchDayView({
                       </button>
                     )}
 
+                    {eventVisionArea(event) && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-launch-teal/10 px-2 py-0.5 text-xs font-semibold text-launch-teal">
+                        <Compass className="h-3 w-3" aria-hidden="true" />My Vision: {visionAreaLabel(eventVisionArea(event))}
+                      </span>
+                    )}
                     {event.referenceCode && (
                       <SourceRefLine
                         referenceCode={event.referenceCode}
@@ -272,7 +306,7 @@ export function LaunchDayView({
                 {event.status !== 'done' && event.status !== 'cancelled' && event.status !== 'carried' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                      <button aria-label={`Actions for ${event.title}`} className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 transition-colors hover:bg-gray-100">
                         <MoreVertical className="h-4 w-4 text-gray-400" />
                       </button>
                     </DropdownMenuTrigger>

@@ -68,6 +68,8 @@ import { enrichWithSchedulingSuggestions } from '@/components/memoryBridge/captu
 import { ExecutiveSummaryPanel, ExecutiveSummarySkeleton, ExecutiveSummaryError, MeetingSummaryModel } from './ExecutiveSummaryPanel';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
 import { useCompleteAction, CompletionResult } from '@/hooks/useCompleteAction';
+import { useActionVisionLinks, visionCompletionMessage } from '@/launch/vision/actionVision';
+import { ActionVisionLink } from '@/components/launch/vision/ActionVisionLink';
 
 
 
@@ -116,6 +118,7 @@ export function ActionsViewer({
 }: ActionsViewerProps) {
   const { user } = useAuth();
   const { completeAction, undoCompletion } = useCompleteAction();
+  const actionVision = useActionVisionLinks();
   const [celebration, setCelebration] = useState<CompletionResult | null>(null);
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -547,7 +550,8 @@ export function ActionsViewer({
       refreshLadders();
       setCelebration(result);
 
-      toast.success('Done — nicely closed off', {
+      const visionMessage = visionCompletionMessage(actionVision.areaFor(actionId));
+      toast.success(visionMessage ? `Done. ${visionMessage}` : 'Done, nicely closed off', {
         action: {
           label: 'Undo',
           onClick: async () => {
@@ -1089,6 +1093,7 @@ export function ActionsViewer({
                                       </div>
 
                                       <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
+                                      {action.id && <ActionVisionLink actionId={action.id} actionText={action.action_text} />}
 
                                       {/* SUCCESS CRITERIA - Emerald glass */}
                                       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-memory-emerald-50/90 to-memory-emerald-100/70 backdrop-blur-sm border border-memory-emerald-200/50 shadow-lg p-4">
@@ -1395,6 +1400,7 @@ export function ActionsViewer({
         isPersonalBest={celebration?.isPersonalBest}
         notifiedCount={celebration?.notified}
         doneThisWeek={celebration?.doneThisWeek}
+        visionMessage={celebration ? visionCompletionMessage(actionVision.areaFor(celebration.actionId)) : null}
       />
     </Dialog>
   );

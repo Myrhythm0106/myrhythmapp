@@ -24,6 +24,7 @@ import { SourceRefLine } from '@/components/traceability/SourceRefLine';
 import { WhosInvolvedCell, RaciSavePayload } from './WhosInvolvedCell';
 import { AddToCalendarMenu } from '@/components/launch/calendar/AddToCalendarMenu';
 import { calendarItemForAction } from '@/launch/calendar/actionToCalendarItem';
+import { ActionVisionLink } from '@/components/launch/vision/ActionVisionLink';
 
 import type { MeetingSummaryModel } from './ExecutiveSummaryPanel';
 import { exportActionsXlsx, exportActionsCsv } from './exporters/actionsXlsx';
@@ -633,6 +634,7 @@ const ActionCard = ({
       </div>
 
       <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
+      {action.id && <ActionVisionLink actionId={action.id} actionText={action.action_text} />}
 
       {/* Ivory success callout with orange rule */}
       <div className="mt-3 rounded-r-[8px] border-l-2 border-exhibit-accent bg-exhibit-surface px-3 py-2">
@@ -1221,6 +1223,7 @@ export function ActionsTableView({
                             ) : null}
 
                             <ActionOrigin meetingId={action.meeting_recording_id} actionId={action.id} quote={action.source_quote || action.transcript_excerpt} referenceCode={action.reference_code} />
+                            {action.id && <ActionVisionLink actionId={action.id} actionText={action.action_text} />}
                             {action.reference_code && (
                               <div className="mt-1.5 font-mono text-[10.5px] text-exhibit-soft">
                                 <SourceRefLine

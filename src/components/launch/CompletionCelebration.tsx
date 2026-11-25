@@ -15,6 +15,8 @@ interface CompletionCelebrationProps {
   notifiedCount?: number;
   /** Total finished in the last 7 days, used for the milestone line. */
   doneThisWeek?: number;
+  /** Optional connection the person confirmed for this action. */
+  visionMessage?: string | null;
 }
 
 function prefersReducedMotion() {
@@ -41,7 +43,8 @@ export function CompletionCelebration({
   streakCount,
   isPersonalBest,
   notifiedCount = 0,
-  doneThisWeek
+  doneThisWeek,
+  visionMessage,
 }: CompletionCelebrationProps) {
   const [note, setNote] = useState('');
   const [notified, setNotified] = useState(false);
@@ -95,6 +98,10 @@ export function CompletionCelebration({
           <p className="text-gray-600 mb-4">
             I completed: <span className="font-semibold text-brand-emerald-700">{actionTitle}</span>
           </p>
+
+          {visionMessage && (
+            <p className="mb-4 rounded-xl bg-white/75 px-4 py-3 text-sm font-semibold text-brand-emerald-700">{visionMessage}</p>
+          )}
 
           {milestone && (
             <p className="text-sm text-brand-emerald-700 mb-4">{milestone}</p>

@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, ListChecks, CalendarPlus, PartyPopper } from 'lucide-react';
 import type { FirstSessionState } from '@/launch/onboarding/useFirstSession';
+import { usePersona } from '@/launch/persona/usePersona';
+import { journeyCopyFor } from '@/launch/persona/journeyCopy';
 
 interface Step {
   key: keyof Pick<FirstSessionState, 'recorded' | 'reviewed' | 'scheduled' | 'completed'>;
@@ -53,9 +55,14 @@ const STEPS: Step[] = [
  */
 export function FirstSessionCard({ state }: { state: FirstSessionState }) {
   const navigate = useNavigate();
+  const { rawType } = usePersona();
+  const first = journeyCopyFor(rawType);
+  const steps = STEPS.map(step => step.key === 'recorded'
+    ? { ...step, title: first.firstTitle, hint: first.firstHint, cta: first.firstCta }
+    : step);
   if (state.loading || state.allDone) return null;
 
-  const activeIndex = STEPS.findIndex((s) => !state[s.key]);
+  const activeIndex = steps.findIndex((s) => !state[s.key]);
 
   return (
     <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
@@ -66,11 +73,11 @@ export function FirstSessionCard({ state }: { state: FirstSessionState }) {
         One small step at a time.
       </h3>
       <p className="mt-1 text-sm text-launch-ink/75">
-        Step {activeIndex + 1} of {STEPS.length}. I can leave and come back without losing my place.
+        Step {activeIndex + 1} of {steps.length}. I can leave and come back without losing my place.
       </p>
 
       <ol className="mt-4">
-        {STEPS.map((step, i) => {
+        {steps.map((step, i) => {
           if (i !== activeIndex) return null;
           const Icon = step.icon;
 

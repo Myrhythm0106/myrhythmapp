@@ -28,6 +28,7 @@ import preciousMomentsImg from '@/assets/precious-moments-black-couple.png';
 import organizedActionImg from '@/assets/organized-action-black-woman.png';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
+import { LANDING_AUDIENCES } from '@/launch/persona/journeyCopy';
 
 type Chapter = {
   number: string;
@@ -452,6 +453,23 @@ export function MVPCore4C() {
           <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 pb-5 text-launch-ink-deep/65" aria-hidden="true">
             <span className="font-worksans text-[10px] font-bold uppercase tracking-normal">Follow the thread</span>
             <ArrowDown className="h-5 w-5 animate-bounce motion-reduce:animate-none" />
+          </div>
+        </section>
+
+        <section aria-labelledby="audience-heading" className="border-b border-launch-gold/30 bg-launch-ivory py-14 md:py-18">
+          <div className="mx-auto max-w-6xl px-5 md:px-8">
+            <div className="max-w-2xl">
+              <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">Different lives, one connected journey</p>
+              <h2 id="audience-heading" className="mt-3 font-instrument text-4xl text-launch-ink-deep">This is for you if...</h2>
+            </div>
+            <ul className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
+              {LANDING_AUDIENCES.map((item, index) => (
+                <li key={item.fit} className="border-l-2 border-launch-gold/60 pl-4">
+                  <p className="font-worksans text-base font-bold text-launch-ink-deep"><span className="mr-2 text-launch-teal">0{index + 1}</span>{item.fit}.</p>
+                  <p className="mt-1 font-worksans text-base leading-7 text-launch-ink-deep/70">{item.benefit}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 

@@ -33,6 +33,10 @@ import { HomeDayReview } from '../home/HomeDayReview';
 import { HomeMoreToday, type MoreItem } from '../home/HomeMoreToday';
 import { PriorityDetailSheet } from '../home/PriorityDetailSheet';
 import { cn } from '@/lib/utils';
+import { getResumeStep } from '@/launch/onboarding/resumePoint';
+import { ResumeSetupCard } from './ResumeSetupCard';
+import { VisionInvitation } from '@/components/launch/vision/VisionInvitation';
+import { shouldOfferVision } from '@/launch/vision/actionVision';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -64,6 +68,7 @@ export function QuietHome() {
   const [openItem, setOpenItem] = React.useState<LaunchCalendarEvent | null>(null);
   const [justDone, setJustDone] = React.useState<string[]>([]);
   const [waiting, setWaiting] = React.useState(0);
+  const [resumeStep] = React.useState(() => getResumeStep());
 
   React.useEffect(() => {
     if (!user?.id) return;
@@ -113,7 +118,7 @@ export function QuietHome() {
   return (
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:py-10">
       <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <button type="button" aria-label="Yesterday" disabled={offset === -1} onClick={() => setOffset(offset === 1 ? 0 : -1)}
               className="flex h-11 w-11 items-center justify-center rounded-full text-launch-ink/60 hover:bg-launch-cream disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
@@ -149,7 +154,11 @@ export function QuietHome() {
         )}
       </motion.header>
 
-      {starting.style === null && <FirstSessionCard state={firstSession} />}
+      {resumeStep ? <ResumeSetupCard step={resumeStep} /> : starting.style === null && <FirstSessionCard state={firstSession} />}
+
+      {!settlingIn && offset === 0 && user?.id && shouldOfferVision(firstSession.recorded, vision, false) && (
+        <VisionInvitation userId={user.id} />
+      )}
 
       {settlingIn && offset === 0 && <StillOpenList />}
 

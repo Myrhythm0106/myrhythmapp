@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { clearActionReminders } from '@/utils/reminderLadder';
+import { getActionVisionArea, visionCompletionMessage } from '@/launch/vision/actionVision';
 
 /**
  * Closing the loop: when a diary item made from a conversation is finished
@@ -46,11 +47,21 @@ export async function closeLinkedAction(eventId: string, kind: CloseKind, db: Db
     if (kind === 'done') await db.rpc('withdraw_step_completion_notice', { p_action_id: actionId });
   };
 
-  const message = kind === 'let_go'
-    ? 'Your conversation step is closed too.'
+  let visionMessage: string | null = null;
+  if (kind === 'done') {
+    try {
+      const auth = (db as unknown as { auth?: { getUser?: () => Promise<{ data: { user: { id: string } | null } }> } }).auth;
+      const authUser = auth?.getUser ? (await auth.getUser()).data.user : null;
+      visionMessage = visionCompletionMessage(getActionVisionArea(authUser?.id, actionId));
+    } catch { /* a device-local vision label never blocks closing */ }
+  }
+
+  const closure = kind === 'let_go'
+    ? 'My conversation step is closed too.'
     : told > 0
-      ? 'Done, your conversation step is closed and your Support Circle has been told.'
-      : 'Done, your conversation step is closed.';
+      ? 'Done. My conversation step is closed and my Support Circle has been told.'
+      : 'Done. My conversation step is closed.';
+  const message = [closure, visionMessage].filter(Boolean).join(' ');
   if (notify) toast.success(message, { action: { label: 'Undo', onClick: () => { void undo().then(() => toast('Step reopened')); } } });
   return { actionId, told, undo, message };
 }

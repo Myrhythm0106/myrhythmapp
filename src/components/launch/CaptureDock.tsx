@@ -72,7 +72,7 @@ export function CaptureDock() {
            'fixed right-4 bottom-24 md:bottom-8 z-[80]',
            'h-16 w-16 rounded-full shadow-xl',
            'bg-brand-orange-500 hover:bg-brand-orange-600 active:scale-95',
-          'flex items-center justify-center transition-all',
+          'hidden md:flex items-center justify-center transition-all',
           'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-orange-300'
         )}
         style={{ marginBottom: 'env(safe-area-inset-bottom)' }}

@@ -175,3 +175,11 @@
 - [x] Memory-friendly reminders in the app: get ready, Done/Snooze/Can't make it, one follow-up, Still open list
 - [ ] Email copies of get-ready and follow-up reminders (blocked: email sender domain not set up)
 - [ ] Accept/Decline status beside diary items; update/cancel emails on edit/delete
+
+## One journey for everyone (25 Nov 2026)
+- [x] Resume unfinished set-up from Home without losing saved answers
+- [x] Show all five audiences on the landing page and tailor the first capture suggestion
+- [x] Offer optional My Vision after the first capture
+- [x] Link conversation actions to vision areas, highlight them in the diary, and name the area at Done
+- [x] Walk through the journey for all five audiences on a phone-sized screen
+- [x] 89 launch tests and 22 isolated phone browser checks passed; real provider sign-in remains unavailable to automation

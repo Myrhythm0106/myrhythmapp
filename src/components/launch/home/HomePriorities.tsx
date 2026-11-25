@@ -3,6 +3,7 @@ import { Check, ChevronRight } from 'lucide-react';
 import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 import { categoryFor, statusFor, type HomeMode } from '@/launch/today/homePrefs';
 import { cn } from '@/lib/utils';
+import { useActionVisionLinks, visionAreaLabel } from '@/launch/vision/actionVision';
 
 const STATUS = {
   overdue: { word: 'Overdue', dot: 'bg-launch-ember' },
@@ -33,6 +34,7 @@ function Tick({ e, onToggle, readOnly }: { e: LaunchCalendarEvent; onToggle?: Pr
 
 /** My top 3 today, as executive cards or calm rows. Tap opens the detail. */
 export function HomePriorities({ items, mode, readOnly, onToggle, onOpen }: Props) {
+  const visionLinks = useActionVisionLinks();
   if (items.length === 0) return null;
 
   if (mode === 'list') {
@@ -44,7 +46,10 @@ export function HomePriorities({ items, mode, readOnly, onToggle, onOpen }: Prop
             <button type="button" onClick={() => onOpen?.(e)} disabled={!onOpen}
               className="flex flex-1 items-center gap-3 py-2 text-left">
               <span className="w-12 shrink-0 tabular-nums text-sm text-launch-moss">{e.time?.slice(0, 5)}</span>
-              <span className={cn('flex-1 text-base text-launch-ink-deep', e.status === 'done' && 'text-launch-ink/45 line-through')}>{e.title}</span>
+              <span className="flex-1">
+                <span className={cn('block text-base text-launch-ink-deep', e.status === 'done' && 'text-launch-ink/45 line-through')}>{e.title}</span>
+                {visionLinks.areaFor(e.extractedActionId) && <span className="mt-0.5 block text-xs font-semibold text-launch-teal">My Vision: {visionAreaLabel(visionLinks.areaFor(e.extractedActionId))}</span>}
+              </span>
               <span className="hidden text-xs uppercase tracking-[0.16em] text-launch-moss sm:inline">{categoryFor(e)}</span>
               {onOpen && <ChevronRight className="h-4 w-4 text-launch-ink/35" />}
             </button>
@@ -69,6 +74,7 @@ export function HomePriorities({ items, mode, readOnly, onToggle, onOpen }: Prop
               <span className="tabular-nums text-sm text-launch-ink/60">{e.time?.slice(0, 5)}</span>
             </div>
             <p className={cn('mt-2 font-instrument text-xl leading-snug text-launch-ink-deep', done && 'text-launch-ink/45 line-through')}>{e.title}</p>
+            {visionLinks.areaFor(e.extractedActionId) && <p className="mt-2 text-xs font-semibold text-launch-teal">My Vision: {visionAreaLabel(visionLinks.areaFor(e.extractedActionId))}</p>}
             <div className="mt-3 flex items-center justify-between">
               <span className="flex items-center gap-2 text-sm text-launch-ink/70">
                 <span className={cn('h-2 w-2 rounded-full', done ? 'bg-launch-teal' : st.dot)} aria-hidden="true" />
