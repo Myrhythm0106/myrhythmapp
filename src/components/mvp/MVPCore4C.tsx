@@ -91,7 +91,7 @@ const chapters: Chapter[] = [
     description:
       'A next step becomes useful when it has a place in the day. MyRhythm helps you choose a realistic time, add the right level of reminder and send it to your calendar.',
     image: scheduleImg,
-    alt: 'A Black professional between meetings by an office window, calmly checking his diary on his phone',
+    alt: 'A Black professional at his desk adding a commitment to his calendar, phone beside him',
     detailTitle: 'Designed for real schedules',
     details: [
       'Suggestions can reflect your energy and brain-health rhythm.',
