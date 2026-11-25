@@ -49,7 +49,7 @@ const chapters: Chapter[] = [
   {
     number: '01',
     marker: 'THE MOMENT',
-    title: 'The conversation stays with you.',
+    title: 'Record a conversation or upload a report',
     promise: 'Record a conversation or upload a report',
     description:
       'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view, without asking you to remember everything at once.',
@@ -67,7 +67,7 @@ const chapters: Chapter[] = [
   {
     number: '02',
     marker: 'THE DECISION',
-    title: 'The meaning becomes a next step.',
+    title: 'Confirm next steps',
     promise: 'Check your next steps',
     description:
       'Names, decisions and actions are organised into a professional summary. You stay in control: you can edit the wording, owner, priority and dates before you accept it.',
@@ -85,7 +85,7 @@ const chapters: Chapter[] = [
   {
     number: '03',
     marker: 'THE TIME',
-    title: 'The plan enters your real life.',
+    title: 'Place it into your schedule',
     promise: 'Place it into your schedule',
     description:
       'A next step becomes useful when it has a place in the day. MyRhythm helps you choose a realistic time, add the right level of reminder and send it to your calendar.',
@@ -103,7 +103,7 @@ const chapters: Chapter[] = [
   {
     number: '04',
     marker: 'THE PERSON',
-    title: 'The right person can stay connected.',
+    title: 'Loop in someone you trust, to support your follow through',
     promise: 'Loop in someone you trust, if you choose',
     description:
       'A family member, friend or professional can receive only the action or update you choose to share. Support remains permission-based, practical and personal.',
