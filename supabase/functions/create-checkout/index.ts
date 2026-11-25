@@ -143,7 +143,7 @@ serve(async (req) => {
       // Card always collected. Free 7 days auto-convert unless cancelled.
       ...(startTrial ? { subscription_data: { trial_period_days: 7 } } : {}),
       payment_method_collection: 'always',
-      success_url: `${origin}/launch/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=${startTrial ? '1' : '0'}`,
+      success_url: `${origin}/launch/home?first=1&postCheckout=1&trial=${startTrial ? '1' : '0'}`,
       cancel_url: `${origin}/launch/payment?from=setup&start=${startTrial ? "trial" : "member"}`,
       metadata: metadata
     });

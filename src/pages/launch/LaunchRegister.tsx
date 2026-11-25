@@ -342,15 +342,15 @@ export default function LaunchRegister() {
             Create my account
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
-            First, how would I like to start? Then my name, email and a password, so my progress is saved.
+            My name, email and a password, so my progress is saved. Then straight in.
           </p>
 
           <fieldset className="w-full max-w-md mb-5">
             <legend className="mb-2 text-base font-semibold text-launch-ink-deep">How I'd like to start</legend>
-            <div className="grid gap-3" role="radiogroup">
+            <div className="grid grid-cols-2 gap-2" role="radiogroup">
               {([
-                { id: 'trial' as const, title: 'Start free for 7 days', body: 'Add my card, then set up. Nothing is charged for 7 days, and I can cancel before then.', tag: 'Recommended' },
-                { id: 'member' as const, title: 'Register fully as a member', body: 'Founding Member, £10 a month for life (500 places). My membership starts today, then I set up.', tag: null },
+                { id: 'trial' as const, title: 'Free for 7 days', body: 'Card needed, nothing charged for 7 days.', tag: null },
+                { id: 'member' as const, title: 'Join today', body: 'Founding Member, £10 a month for life.', tag: null },
               ]).map((o) => {
                 const on = plan === o.id;
                 return (
@@ -361,7 +361,7 @@ export default function LaunchRegister() {
                     aria-checked={on}
                     onClick={() => setPlan(o.id)}
                     className={cn(
-                      'min-h-14 w-full rounded-2xl border-2 p-4 text-left transition-colors',
+                      'min-h-14 w-full rounded-2xl border-2 p-3 text-left transition-colors',
                       on ? 'border-launch-teal bg-launch-teal/10' : 'border-launch-gold/30 bg-launch-ivory hover:border-launch-gold',
                     )}
                   >

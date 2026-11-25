@@ -5,14 +5,12 @@ import { cn } from '@/lib/utils';
 /** The Get Started path, shown on every registration step so nobody is ever lost. */
 export const JOURNEY_STEPS = [
   { label: 'Create account', time: 'about 1 minute' },
-  { label: 'About me', time: 'optional, under a minute' },
-  { label: 'Questions', time: 'about 5 minutes' },
-  { label: 'My snapshot', time: 'free' },
+  { label: 'Add my card', time: 'under a minute' },
 ] as const;
 
 interface Props {
   /** 1-based current step */
-  current: 1 | 2 | 3 | 4;
+  current: 1 | 2;
   /** Show "Save and finish later" (only once an account exists). */
   canSaveLater?: boolean;
   className?: string;
@@ -24,7 +22,7 @@ export function JourneySteps({ current, canSaveLater, className }: Props) {
   const next = steps[current];
   return (
     <nav aria-label="Get Started progress" className={cn('w-full max-w-xl mx-auto', className)}>
-      <ol className="grid grid-cols-4 gap-1.5">
+      <ol className="grid grid-cols-2 gap-1.5">
         {JOURNEY_STEPS.map((step, i) => {
           const n = i + 1;
           const done = n < current;
@@ -42,8 +40,8 @@ export function JourneySteps({ current, canSaveLater, className }: Props) {
         })}
       </ol>
       <p className="mt-3 text-center text-base text-launch-ink-deep" role="status">
-        <span className="font-semibold">Step {current} of 4 · {JOURNEY_STEPS[current - 1].label}</span>
-        {next ? <> · Next: {next.label.toLowerCase()} ({next.time})</> : <> · Then choose how to continue</>}
+        <span className="font-semibold">Step {current} of 2 · {JOURNEY_STEPS[current - 1].label}</span>
+        {next ? <> · Next: {next.label.toLowerCase()} ({next.time})</> : <> · Then straight into MyRhythm</>}
       </p>
       {canSaveLater && (
         <p className="mt-1 text-center">

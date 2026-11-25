@@ -133,7 +133,7 @@ export default function LaunchPayment() {
       }
       toast.success("You're in! Welcome, Founding Member.");
       clearResumePoint();
-      navigate('/launch/home?welcome=1');
+      navigate('/launch/home?first=1');
     } catch (err: any) {
       console.error('Redeem error:', err);
       toast.error(err.message || 'Could not redeem that code.');
@@ -423,6 +423,7 @@ export default function LaunchPayment() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className={fromSetup ? 'hidden' : undefined}
           >
             <Card className="bg-launch-ivory border border-launch-gold/30 shadow-xl mb-6">
               <CardContent className="p-6">

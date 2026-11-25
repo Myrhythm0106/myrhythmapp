@@ -35,6 +35,7 @@ import { PriorityDetailSheet } from '../home/PriorityDetailSheet';
 import { cn } from '@/lib/utils';
 import { getResumeStep } from '@/launch/onboarding/resumePoint';
 import { ResumeSetupCard } from './ResumeSetupCard';
+import { MakeItMine } from './MakeItMine';
 import { VisionInvitation } from '@/components/launch/vision/VisionInvitation';
 import { shouldOfferVision } from '@/launch/vision/actionVision';
 
@@ -58,6 +59,10 @@ export function QuietHome() {
   const vision = useLaunchSavedVision();
 
   const today = React.useMemo(() => new Date(), []);
+  React.useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('postCheckout') === '1') toast.success(q.get('trial') === '1' ? "I'm in. My 7 free days have started." : "I'm in. My membership is active.");
+  }, []);
   const rangeStart = React.useMemo(() => minDate([startOfWeek(today, { weekStartsOn: 1 }), addDays(today, -1)]), [today]);
   const rangeEnd = React.useMemo(() => maxDate([endOfWeek(today, { weekStartsOn: 1 }), addDays(today, 1)]), [today]);
   const { events, updateStatus, carryOver, addEvent, fetchEvents } = useLaunchCalendarEvents(rangeStart, rangeEnd);
@@ -154,7 +159,8 @@ export function QuietHome() {
         )}
       </motion.header>
 
-      {resumeStep ? <ResumeSetupCard step={resumeStep} /> : starting.style === null && <FirstSessionCard state={firstSession} />}
+      {resumeStep && firstSession.recorded ? <ResumeSetupCard step={resumeStep} /> : <FirstSessionCard state={firstSession} />}
+      {offset === 0 && <MakeItMine recorded={firstSession.recorded} />}
 
       {!settlingIn && offset === 0 && user?.id && shouldOfferVision(firstSession.recorded, vision, false) && (
         <VisionInvitation userId={user.id} />

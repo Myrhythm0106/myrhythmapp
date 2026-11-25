@@ -16,9 +16,8 @@ describe('start plan', () => {
     expect(checkoutRequest('member', 'year')).toEqual({ plan: 'premium', interval: 'year', startTrial: false });
     expect(daysBeforeFirstCharge('member')).toBe(0);
   });
-  it('after the card, set-up starts with choosing who MyRhythm is for', () => {
-    expect(nextAfterCard(false)).toBe('/launch/user-type');
-    expect(nextAfterCard(true)).toBe('/launch/assessment?first=1');
+  it('after the card, I go straight to Home to record my first conversation', () => {
+    expect(nextAfterCard()).toBe('/launch/home?first=1');
   });
   it('the card step reads the choice from its address', () => {
     expect(planFromSearch('?from=setup&start=member')).toBe('member');

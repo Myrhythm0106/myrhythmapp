@@ -32,8 +32,9 @@ export function nextAfterAccount(plan: StartPlan): string {
 }
 
 /** Where set-up carries on once the card step is done. */
-export function nextAfterCard(hasUserType: boolean): string {
-  return hasUserType ? '/launch/assessment?first=1' : '/launch/user-type';
+export function nextAfterCard(): string {
+  // Straight to Home and the first recording. Who it's for and the questions are optional, offered there.
+  return '/launch/home?first=1';
 }
 
 /** Days before the first charge: 7 for the free start, 0 when registering fully. */
