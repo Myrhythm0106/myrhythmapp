@@ -45,22 +45,22 @@ export function journeyCopyFor(rawType: string | null | undefined): JourneyCopy 
 export const LANDING_AUDIENCES = [
   {
     fit: 'You are rebuilding after a brain injury or brain change',
-    benefit: 'Keep appointments, care-team targets and everyday commitments together.',
+    benefit: 'I know how much slips when your brain is healing. MyRhythm holds your appointments, care-team targets and the promises you make, so you can follow through and trust yourself again.',
   },
   {
     fit: 'You support someone you care about',
-    benefit: 'Share only what you choose and make the day easier to hold together.',
+    benefit: 'Caring is a lot to carry. You see only what they choose to share, and you both know what was agreed and when it is done.',
   },
   {
     fit: 'You have too much to hold in your head',
-    benefit: 'Turn conversations, ideas and reminders into a clear next step.',
+    benefit: 'When everything feels urgent, nothing lands. Every conversation and commitment becomes one clear next step, watched through to done.',
   },
   {
     fit: 'You want to stay sharp at work',
-    benefit: 'Keep meetings, owners, deadlines and follow-through in one place.',
+    benefit: 'Meetings, owners and deadlines in one calm place, with gentle prompts until each commitment is finished. People can count on you, again.',
   },
   {
     fit: 'You are studying or learning',
-    benefit: 'Turn lectures and revision into notes, actions and dates.',
+    benefit: 'Lectures and revision become clear notes, actions and dates, so what you learn today is still with you tomorrow.',
   },
 ] as const;

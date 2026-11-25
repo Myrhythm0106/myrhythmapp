@@ -432,8 +432,8 @@ export function MVPCore4C() {
                   <ol className="mt-3 grid gap-3 md:grid-cols-3">
                     {[
                       ['01 · Discreet capture', 'Listens with discretion', 'Tap once on your phone or watch when an appointment or conversation starts. Nothing records secretly; you stay in control.'],
-                      ['02 · Clear extraction', 'Pulls out what was promised', 'Agreed commitments, dates and who owns what, in a clean, searchable summary and spreadsheet.'],
-                      ['03 · Calm follow-through', 'Carries it to done', 'Suggests realistic times in your diary that match your energy, and loops in your Support Circle only if you choose.'],
+                      ['02 · Clear extraction', 'Pulls out what was promised', 'Not just what was said: the commitments, dates and who owns what, in a clean, searchable summary and spreadsheet.'],
+                      ['03 · Calm follow-through', 'Carries it to done', 'Places each commitment in your diary at a time that suits your energy, prompts you gently until it is done, and lets your Support Circle know you followed through, only if you choose.'],
                     ].map(([tag, title, body]) => (
                       <li key={tag} className="rounded-md border border-launch-gold/40 bg-launch-ivory/90 p-4 backdrop-blur">
                         <p className="font-worksans text-xs font-bold uppercase text-launch-ink-deep/60">{tag}</p>
@@ -462,11 +462,20 @@ export function MVPCore4C() {
               <p className="font-worksans text-xs font-bold uppercase tracking-normal text-launch-teal">Different lives, one connected journey</p>
               <h2 id="audience-heading" className="mt-3 font-instrument text-4xl text-launch-ink-deep">This is for you if...</h2>
             </div>
-            <ul className="mt-8 grid gap-x-10 gap-y-6 md:grid-cols-2">
+            <p className="mt-3 max-w-2xl font-worksans text-base leading-7 text-launch-ink-deep/70">Tap the one that sounds like you.</p>
+            <ul className="mt-6 grid gap-3 md:grid-cols-2">
               {LANDING_AUDIENCES.map((item, index) => (
-                <li key={item.fit} className="border-l-2 border-launch-gold/60 pl-4">
-                  <p className="font-worksans text-base font-bold text-launch-ink-deep"><span className="mr-2 text-launch-teal">0{index + 1}</span>{item.fit}.</p>
-                  <p className="mt-1 font-worksans text-base leading-7 text-launch-ink-deep/70">{item.benefit}</p>
+                <li key={item.fit}>
+                  <Collapsible className="rounded-xl border border-launch-gold/40 bg-launch-ivory/90">
+                    <CollapsibleTrigger className="group flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left">
+                      <span className="font-worksans text-sm font-bold text-launch-teal">0{index + 1}</span>
+                      <span className="flex-1 font-worksans text-base font-bold text-launch-ink-deep">{item.fit}</span>
+                      <ChevronDown className="h-5 w-5 shrink-0 text-launch-ink-deep/60 transition-transform group-data-[state=open]:rotate-180" aria-hidden="true" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <p className="px-4 pb-4 pl-11 font-worksans text-base leading-7 text-launch-ink-deep/75">{item.benefit}</p>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </li>
               ))}
             </ul>
