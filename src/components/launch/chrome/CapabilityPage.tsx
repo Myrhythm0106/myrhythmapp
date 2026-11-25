@@ -132,7 +132,7 @@ export function CapabilityPage(props: CapabilityPageProps) {
         {topSlot && <div className="mb-8">{topSlot}</div>}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* LEFT — 8 cols */}
+          {/* LEFT, 8 cols */}
           <div className="lg:col-span-8 space-y-6">
             {/* Why it matters */}
             <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 p-6 md:p-8">
@@ -191,7 +191,7 @@ export function CapabilityPage(props: CapabilityPageProps) {
             </LaunchCard>
           </div>
 
-          {/* RIGHT — 4 cols */}
+          {/* RIGHT, 4 cols */}
           <aside className="lg:col-span-4 space-y-4">
             <div className="grid grid-cols-1 gap-3">
               {kpis.map((k) => (

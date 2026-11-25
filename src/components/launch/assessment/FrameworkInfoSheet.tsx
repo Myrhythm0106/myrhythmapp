@@ -15,7 +15,7 @@ import {
 } from '@/launch/framework/myrhythm';
 
 /**
- * The framework explainer — the single surface where MYRHYTHM's evidence basis is described.
+ * The framework explainer, the single surface where MYRHYTHM's evidence basis is described.
  * Content comes from the canonical definition in src/launch/framework/myrhythm.ts.
  * No named individual or third-party programme is cited in-app (see docs/framework-evidence.md).
  */

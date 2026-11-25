@@ -10,7 +10,7 @@ const VIEWS = [
   { key: 'vision', label: 'Vision', to: '/launch/vision-statement' },
 ] as const;
 
-/** Day · Week · Month · Year · Vision — one tap into the full view. */
+/** Day · Week · Month · Year · Vision, one tap into the full view. */
 export function CalendarViewChooser({ active, onPick, className }: { active?: string; onPick?: (key: string) => boolean | void; className?: string }) {
   const navigate = useNavigate();
   return (

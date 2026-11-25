@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { usePrivacyMode, type PrivacyMode } from "@/hooks/usePrivacyMode";
 
 /**
- * "How long shall I keep this?" — the person's retention preference.
+ * "How long shall I keep this?", the person's retention preference.
  * Deliberately framed as a helpful choice, not a legal barrier.
  */
 export function KeepForCard() {

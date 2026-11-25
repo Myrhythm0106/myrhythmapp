@@ -1,5 +1,5 @@
 // Provisions / repairs the permanent tester account.
-// Guarded by a shared secret header — not callable by app users.
+// Guarded by a shared secret header, not callable by app users.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {

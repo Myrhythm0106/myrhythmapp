@@ -1,5 +1,5 @@
 /**
- * YES — the first three weeks. Single source of truth for the three YES
+ * YES, the first three weeks. Single source of truth for the three YES
  * letters. YES is the brief start; MYRHYTHM (myrhythm.ts) is the full app.
  * Neutral, non-clinical wording. No practitioner or programme names.
  */
@@ -19,7 +19,7 @@ export const YES_LETTERS: readonly YesLetter[] = [
     id: 'Y',
     week: 1,
     word: 'Your Starting Point',
-    meaning: 'Know where my memory is today — what slips and what already helps.',
+    meaning: 'Know where my memory is today, what slips and what already helps.',
     shapes: 'Remembered: what slips, and how MyRhythm keeps it.',
   },
   {

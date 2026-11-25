@@ -122,7 +122,7 @@ export function FirstRunOverlay() {
               onClick={dismiss}
               className="text-xs text-stone-400 hover:text-stone-600 tracking-[0.15em] uppercase min-h-[44px]"
             >
-              Skip — I'll explore on my own
+              Skip, I'll explore on my own
             </button>
             <button
               onClick={() => setFeedbackOpen(true)}

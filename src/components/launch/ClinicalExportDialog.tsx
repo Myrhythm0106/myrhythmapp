@@ -124,7 +124,7 @@ export function ClinicalExportDialog({
           </div>
 
           <p className="text-[11px] text-stone-500 leading-relaxed">
-            CONFIDENTIAL — Prepared by you via MyRhythm. Not a clinical record.
+            CONFIDENTIAL, Prepared by you via MyRhythm. Not a clinical record.
             MyRhythm does not diagnose, treat, or cure any condition.
           </p>
         </div>

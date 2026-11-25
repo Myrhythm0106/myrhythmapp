@@ -161,7 +161,7 @@ serve(async (req) => {
     };
 
     if (mode === 'none' && !reextract) {
-      console.log('⏸️ Output mode "none" — saved without transcribing');
+      console.log('⏸️ Output mode "none", saved without transcribing');
       await markCompleted();
       return;
     }
@@ -260,7 +260,7 @@ serve(async (req) => {
         const uploadData = await uploadResponse.json();
         console.log('✅ Upload successful, URL received:', !!uploadData.upload_url);
         
-        // Names the person is likely to say — boosts accuracy for them.
+        // Names the person is likely to say, boosts accuracy for them.
         let keyTerms: string[] = [];
         try {
           const { data: circle } = await supabase
@@ -442,7 +442,7 @@ serve(async (req) => {
       .eq('id', meetingId);
 
     if (mode === 'transcript' && !reextract) {
-      console.log('📝 Transcript only — skipping action extraction');
+      console.log('📝 Transcript only, skipping action extraction');
       await markCompleted();
       return;
     }

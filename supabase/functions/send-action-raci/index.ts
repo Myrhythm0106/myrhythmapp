@@ -15,7 +15,7 @@ const BodySchema = z.object({
 const ROLE_LINES: Record<string, string> = {
   responsible: "This step is yours to do.",
   accountable: "You're the one who signs this step off.",
-  consulted: "You're asked first on this step — input welcome before it's done.",
+  consulted: "You're asked first on this step, input welcome before it's done.",
   informed: "We'll keep you in the loop on this step.",
 };
 
@@ -65,7 +65,7 @@ function actionHtml(action: any, senderName: string, role: string): string {
   if (action.reference_code) facts.push(`<strong>Reference:</strong> ${esc(action.reference_code)}`);
   rows.push(`<p style="margin:0;color:#444;font-size:14px;line-height:1.7;">${facts.join("<br/>")}</p>`);
   rows.push(
-    `<p style="margin:16px 0 0;color:#666;font-size:13px;">Sent by ${esc(senderName)} from MyRhythm — the app that keeps your plan going after the conversation ends.</p>`
+    `<p style="margin:16px 0 0;color:#666;font-size:13px;">Sent by ${esc(senderName)} from MyRhythm, the app that keeps your plan going after the conversation ends.</p>`
   );
   return rows.join("\n");
 }

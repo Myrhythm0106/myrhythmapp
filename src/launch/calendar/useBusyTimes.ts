@@ -19,7 +19,7 @@ function toMinutes(hhmm: string | null): number | null {
 /**
  * Busy times pulled in from a connected calendar (Google, Outlook, or a
  * subscribed link). Used to keep MyRhythm from offering a slot that is
- * already given away — advisory only, never blocking.
+ * already given away, advisory only, never blocking.
  */
 export function useBusyTimes(dateISO: string) {
   const [busy, setBusy] = useState<BusySlot[]>([]);

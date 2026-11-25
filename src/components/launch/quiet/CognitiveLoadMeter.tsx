@@ -11,7 +11,7 @@ export function CognitiveLoadMeter() {
   const tone = load < 35 ? 'bg-memory-emerald-500' : load < 65 ? 'bg-clarity-teal-500' : 'bg-brand-orange-500';
 
   return (
-    <TierGate required="plus" label="Cognitive Load Meter — unlock with Plus">
+    <TierGate required="plus" label="Cognitive Load Meter, available with Plus">
       <div className="rounded-3xl bg-white/80 backdrop-blur border border-brain-health-100 p-5">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -26,7 +26,7 @@ export function CognitiveLoadMeter() {
         <p className="text-xs text-brain-health-600 mt-2">You're at {load}% of your usual rhythm.</p>
         <BrainHealthLensChip
           className="mt-3"
-          text="Knowing your load helps you choose the next move that fits — not the one that drains you."
+          text="Knowing your load helps you choose the next move that fits, not the one that drains you."
         />
       </div>
     </TierGate>

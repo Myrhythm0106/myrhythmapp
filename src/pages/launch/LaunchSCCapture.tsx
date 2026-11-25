@@ -223,7 +223,7 @@ export default function LaunchSCCapture() {
       </div>
 
       <p className="text-center text-[11px] text-stone-400 pb-8 px-6 max-w-md mx-auto leading-relaxed">
-        MyRhythm does not diagnose or treat. Captures share what you noticed — they are not medical advice.
+        MyRhythm does not diagnose or treat. Captures share what you noticed, they are not medical advice.
       </p>
 
       <QueuedDrawer

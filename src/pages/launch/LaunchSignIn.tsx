@@ -84,12 +84,12 @@ export default function LaunchSignIn() {
         return;
       }
 
-      // Success — brain health questions first, or pick up where they stopped.
+      // Success, brain health questions first, or pick up where they stopped.
       const destination = await resolveNextDestination(
         (location.state as { from?: string } | null)?.from ?? null
       );
-      if (destination.startsWith('/launch/assessment')) toast.success('Welcome back — continuing at Step 3, Questions.');
-      else if (destination.startsWith('/launch/user-type')) toast.success('Welcome back — continuing at Step 2, About me.');
+      if (destination.startsWith('/launch/assessment')) toast.success('Welcome back, continuing at Step 3, Questions.');
+      else if (destination.startsWith('/launch/user-type')) toast.success('Welcome back, continuing at Step 2, About me.');
       navigate(destination, { replace: true });
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
@@ -123,7 +123,7 @@ export default function LaunchSignIn() {
 
   return (
     <div className="min-h-screen bg-launch-cream-light flex flex-col">
-      {/* Content Area — page scrolls naturally, no nested scroller */}
+      {/* Content Area, page scrolls naturally, no nested scroller */}
       <div className="flex-1 px-6 py-12">
         <div className="flex flex-col items-center justify-center min-h-full">
           {/* Logo */}
@@ -137,7 +137,7 @@ export default function LaunchSignIn() {
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
             {returningTo
               ? "Log in to continue where you were. I'll bring you straight back."
-              : 'For people already registered. I’ll take you to exactly where you stopped — or to your day.'}
+              : 'For people already registered. I’ll take you to exactly where you stopped, or to your day.'}
           </p>
 
           <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">

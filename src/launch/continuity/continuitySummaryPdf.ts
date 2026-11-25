@@ -21,7 +21,7 @@ export function buildContinuitySummaryPdf(data: ContinuitySummary): jsPDF {
   doc.setTextColor(STONE_900);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.text('MyRhythm — Continuity Summary', marginX, y);
+  doc.text('MyRhythm, Continuity Summary', marginX, y);
   y += 22;
 
   doc.setFont('helvetica', 'normal');
@@ -120,18 +120,18 @@ export function buildContinuitySummaryPdf(data: ContinuitySummary): jsPDF {
   if (data.supportCircle.length) {
     section('Support circle');
     data.supportCircle.forEach(m =>
-      para(`• ${m.name} — ${m.role}${data.includeContactDetails ? '' : ' (contact details withheld)'}`),
+      para(`• ${m.name}, ${m.role}${data.includeContactDetails ? '' : ' (contact details withheld)'}`),
     );
   }
 
-  // Footer (per Document Confidentiality Standard — 3pt)
+  // Footer (per Document Confidentiality Standard, 3pt)
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(3);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(STONE_500);
-    const footer = `CONFIDENTIAL — Prepared by user via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.  ·  ${EDITION_FOOTER}`;
+    const footer = `CONFIDENTIAL, Prepared by user via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.  ·  ${EDITION_FOOTER}`;
     doc.text(footer, pageWidth / 2, pageHeight - 12, { align: 'center' });
   }
 

@@ -122,7 +122,7 @@ function loadProgress(): StoredProgress | null {
   }
 }
 
-/** Benefit-only helper lines — never scoring or scheduling rules. */
+/** Benefit-only helper lines, never scoring or scheduling rules. */
 const QUESTION_HELPS: Record<string, string> = {
   memorySlips: 'Sets up: what MyRhythm guards first.',
   memoryRecall: 'Sets up: how MyRhythm captures conversations for me.',
@@ -192,7 +192,7 @@ export default function LaunchAssessment() {
     const bank = getAssessmentBank(stored ?? 'general');
     if (!bank) return;
     // If the stored user type no longer matches saved progress, start the
-    // matching bank clean — never carry another persona's answers over.
+    // matching bank clean, never carry another persona's answers over.
     if (!IS_FULL_MODE && initial?.persona && initial.persona !== bank.persona) {
       try {
         localStorage.removeItem(ACTIVE_KEY);
@@ -406,7 +406,7 @@ export default function LaunchAssessment() {
                 }}
                 className="mt-4 w-full min-h-[56px] text-sm text-launch-ink/60 underline underline-offset-4"
               >
-                Not now — go to Home
+                Not now, go to Home
               </button>
             )}
           </div>
@@ -445,7 +445,7 @@ export default function LaunchAssessment() {
       let alsoFits = existing.alsoFits.filter((v) => v !== value && v !== NONE_FITS_VALUE);
       if (existing.primary && existing.primary !== value && existing.primary !== NONE_FITS_VALUE) {
         if (!alsoFits.includes(existing.primary)) alsoFits = [existing.primary, ...alsoFits];
-        toast("Switched primary — your earlier pick is kept as 'also fits'.", { duration: 2200 });
+        toast("Switched primary, your earlier pick is kept as 'also fits'.", { duration: 2200 });
       }
       return { ...prev, [question.id]: { primary: value, alsoFits } };
     });
@@ -473,7 +473,7 @@ export default function LaunchAssessment() {
       }
       return { ...prev, [question.id]: { primary: value, alsoFits } };
     });
-    toast("Switched primary — your earlier pick is kept as 'also fits'.", { duration: 2200 });
+    toast("Switched primary, your earlier pick is kept as 'also fits'.", { duration: 2200 });
   };
 
   const canContinue = question.kind === 'rhythm-detail'
@@ -506,7 +506,7 @@ export default function LaunchAssessment() {
     const nextQ = questions[currentQuestion + 1];
     if (IS_FULL_MODE && question.slot && (!nextQ || nextQ.slot !== question.slot)) {
       markLetterComplete(question.slot);
-      if (nextQ) toast.success(`${question.word} done — saved. Stop here or carry on.`, { duration: 2400 });
+      if (nextQ) toast.success(`${question.word} done, saved. Stop here or carry on.`, { duration: 2400 });
     }
     const previewPart = question.promise === 'Captures it' ? 'Y' : question.promise === 'Resilient' ? 'E' : question.promise === 'Follows it through' ? 'S' : null;
     if (!IS_FULL_MODE && previewPart && nextQ && nextQ.promise !== question.promise) {
@@ -741,10 +741,10 @@ export default function LaunchAssessment() {
               const isAlso = current.alsoFits.includes(option.value);
               const dimmed = isNoneFits;
               const ariaLabel = isPrimary
-                ? `${option.label} — primary answer, tap to remove`
+                ? `${option.label}, primary answer, tap to remove`
                 : isAlso
-                  ? `${option.label} — also fits, selected as a secondary answer`
-                  : `${option.label} — tap to choose as your primary answer`;
+                  ? `${option.label}, also fits, selected as a secondary answer`
+                  : `${option.label}, tap to choose as your primary answer`;
               return (
                 <div
                   key={option.value}
@@ -808,7 +808,7 @@ export default function LaunchAssessment() {
                         type="button"
                         onClick={() => toggleAlso(option.value)}
                         aria-pressed={isAlso}
-                        aria-label={`${option.label} also fits — ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
+                        aria-label={`${option.label} also fits, ${isAlso ? 'tap to remove' : 'tap to add as a secondary answer'}`}
                         className={cn(
                           'shrink-0 inline-flex items-center gap-2 rounded-xl border-2 px-3 py-2 transition-colors min-h-[44px]',
                           isAlso
@@ -872,7 +872,7 @@ export default function LaunchAssessment() {
                   onChange={(e) =>
                     setFreeform((prev) => ({ ...prev, [question.id]: e.target.value.slice(0, 500) }))
                   }
-                  placeholder="Optional — tell us in your own words."
+                  placeholder="Optional, tell us in your own words."
                   className="min-h-[80px] bg-launch-ivory border-launch-gold/30 focus-visible:ring-launch-moss"
                 />
                 <p className="text-[11px] text-launch-ink/50 mt-1 text-right">

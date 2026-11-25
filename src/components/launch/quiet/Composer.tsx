@@ -13,7 +13,7 @@ export function Composer() {
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Note one thing — a thought, a feeling, a moment…"
+          placeholder="Note one thing, a thought, a feeling, a moment…"
           className="flex-1 bg-transparent outline-none px-3 py-3 text-sm text-brain-health-800 placeholder:text-brain-health-400"
         />
         <Button

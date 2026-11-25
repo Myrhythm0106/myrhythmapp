@@ -4,7 +4,7 @@ import { Check, CornerDownRight, Plus } from 'lucide-react';
 import type { LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 import { cn } from '@/lib/utils';
 
-/** Yesterday (remember) or tomorrow (prepare) — only when I ask for it. */
+/** Yesterday (remember) or tomorrow (prepare), only when I ask for it. */
 export function HomeDayReview({ which, date, events, onOpen, onCarry, onPrep }: {
   which: 'yesterday' | 'tomorrow'; date: Date; events: LaunchCalendarEvent[];
   onOpen: (e: LaunchCalendarEvent) => void; onCarry: (e: LaunchCalendarEvent) => void; onPrep: (e: LaunchCalendarEvent) => void;

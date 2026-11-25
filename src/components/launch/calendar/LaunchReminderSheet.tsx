@@ -40,7 +40,7 @@ export function LaunchReminderSheet({ reminder, onClose, onChanged }: Props) {
       return;
     }
     await clearActionReminders(reminder.actionId);
-    toast.success('Done — nudges cleared');
+    toast.success('Done, nudges cleared');
     setBusy(false);
     onChanged?.();
     onClose();

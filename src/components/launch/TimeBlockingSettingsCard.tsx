@@ -56,7 +56,7 @@ export function TimeBlockingSettingsCard() {
 
   const seedFromTemplate = async () => {
     const items = buildTemplate(seedingTpl);
-    if (items.length === 0) { toast('Blank template — add blocks manually.'); return; }
+    if (items.length === 0) { toast('Blank template, add blocks manually.'); return; }
     for (const it of items) { await create(it); }
     toast.success(`Seeded ${items.length} blocks. All editable.`);
     updatePrefs({ time_block_template: seedingTpl });
@@ -134,7 +134,7 @@ export function TimeBlockingSettingsCard() {
             </p>
           </div>
 
-          {/* Weekly grid — one column per day, blocks listed */}
+          {/* Weekly grid, one column per day, blocks listed */}
           <div className="grid grid-cols-1 sm:grid-cols-7 gap-2">
             {[1,2,3,4,5,6,0].map(d => (
               <div key={d} className="rounded-xl border border-gray-200 p-2 min-h-[140px] bg-white">

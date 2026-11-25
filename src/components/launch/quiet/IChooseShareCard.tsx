@@ -1,4 +1,4 @@
-// 9:16 share card renderer — pure canvas, no extra deps.
+// 9:16 share card renderer, pure canvas, no extra deps.
 // Generates 1080x1920 PNG, attempts native share, falls back to download.
 
 export async function generateAndShareIChoose(statement: string, supporterName?: string): Promise<void> {
@@ -28,7 +28,7 @@ export async function generateAndShareIChoose(statement: string, supporterName?:
   ctx.textAlign = 'center';
   ctx.fillText('MyRhythm', W / 2, 140);
 
-  // Statement — wrap text
+  // Statement, wrap text
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '700 84px Georgia, "Times New Roman", serif';
   ctx.textAlign = 'center';
@@ -70,7 +70,7 @@ export async function generateAndShareIChoose(statement: string, supporterName?:
   // Confidentiality footer (3pt-ish)
   ctx.font = '400 14px ui-sans-serif, system-ui, sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.fillText('Personal empowerment statement — not medical advice.', W / 2, H - 60);
+  ctx.fillText('Personal empowerment statement, not medical advice.', W / 2, H - 60);
 
   // Export
   const blob: Blob | null = await new Promise((res) => canvas.toBlob(res, 'image/png'));

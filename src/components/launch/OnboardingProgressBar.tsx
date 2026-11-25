@@ -11,7 +11,7 @@ import { LaunchStepLocator, type StepLocatorItem } from './LaunchStepLocator';
  *
  *   account → questions → snapshot → make it yours → home
  *
- * Mount once inside LaunchLayout — no per-page wiring needed.
+ * Mount once inside LaunchLayout, no per-page wiring needed.
  */
 const ONBOARDING_STEPS: StepLocatorItem[] = [
   { label: 'Account',     path: '/launch/register' },
@@ -29,11 +29,11 @@ const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/register':
     'Quick sign-up. Next: short questions that shape my diary.',
   '/launch/user-type':
-    'Optional — who MyRhythm is for. Next: my day.',
+    'Optional, who MyRhythm is for. Next: my day.',
   '/launch/assessment':
     'My answers shape my diary, reminders and breaks. Next: my free snapshot.',
   '/launch/welcome':
-    'My MYRHYTHM snapshot — I can keep it, choose one action, and continue to Home.',
+    'My MYRHYTHM snapshot, I can keep it, choose one action, and continue to Home.',
 };
 
 // Screens where the strip is mounted inside LaunchLayout's fixed-height

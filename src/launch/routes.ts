@@ -35,14 +35,14 @@ export interface LaunchRoute {
 }
 
 export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
-  // Inner ring — the Core 5 (4C loop + Home)
+  // Inner ring, the Core 5 (4C loop + Home)
   { path: '/launch/home',      label: 'Home',      icon: Home,        ring: 'inner', group: 'core-loop', description: 'My daily rhythm dashboard' },
   { path: '/launch/capture',   label: 'Capture',   icon: Mic,         ring: 'inner', group: 'core-loop', description: 'Voice-first quick capture' },
   { path: '/launch/commit',    label: 'Commit',    icon: CheckSquare, ring: 'inner', group: 'core-loop', description: 'Energy-matched next steps' },
   { path: '/launch/calibrate', label: 'Calibrate', icon: Activity,    ring: 'inner', group: 'core-loop', description: 'Energy & mood check-in' },
   { path: '/launch/celebrate', label: 'Celebrate', icon: Sparkles,    ring: 'inner', group: 'core-loop', description: 'Wins & gratitude' },
 
-  // Middle ring — key features
+  // Middle ring, key features
   { path: '/launch/calendar',        label: 'Calendar',       icon: Calendar, ring: 'middle', group: 'key-features', description: 'Day view & smart schedule' },
   { path: '/launch/memory',          label: 'Memory Bridge',  icon: Brain,    ring: 'middle', group: 'key-features', description: 'Record → next steps → share' },
   { path: '/launch/diary',           label: 'My Diary',       icon: BookOpen, ring: 'middle', group: 'key-features', description: 'Everything I have captured, in date order' },
@@ -53,7 +53,7 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   { path: '/launch/vision-statement',label: 'Vision',         icon: Target,   ring: 'middle', group: 'key-features', description: 'My north-star statement' },
   { path: '/launch/goals',           label: 'Goals',          icon: Flag,     ring: 'middle', group: 'key-features', description: 'Vision → Goals → Daily' },
 
-  // Outer ring — utilities & deep pages
+  // Outer ring, utilities & deep pages
   { path: '/launch/analytics',        label: 'Analytics',        icon: BarChart3, ring: 'outer', group: 'insights',  description: 'Trends & insights' },
   { path: '/launch/store',            label: 'Store',            icon: Store,     ring: 'outer', group: 'insights',  description: 'Add-on features' },
   { path: '/launch/profile',          label: 'Profile',          icon: User,      ring: 'outer', group: 'account',   description: 'My profile' },

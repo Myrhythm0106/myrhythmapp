@@ -159,7 +159,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      setCheckoutError("Checkout couldn't start just now. Nothing was charged. You can try again — or skip payment entirely with an access code below.");
+      setCheckoutError("Checkout couldn't start just now. Nothing was charged. You can try again, or skip payment entirely with an access code below.");
     } finally {
       setIsLoading(false);
     }
@@ -171,7 +171,7 @@ export default function LaunchPayment() {
       await navigator.clipboard.writeText(num.replace(/\s/g, ''));
       toast.success('Card number copied');
     } catch {
-      toast.error('Copy failed — select and copy manually');
+      toast.error('Copy failed, select and copy manually');
     }
   };
 
@@ -222,7 +222,7 @@ export default function LaunchPayment() {
               </p>
               <p className="mt-3 font-worksans text-sm leading-6 text-launch-ink-deep/75">
                 My snapshot stays mine, free. Membership adds the full plan, daily follow-through, and
-                Support Circle — completing what the snapshot started.
+                Support Circle, completing what the snapshot started.
               </p>
             </div>
           )}
@@ -234,7 +234,7 @@ export default function LaunchPayment() {
             >
               <p className="font-semibold text-launch-ink">Confirm your details to continue</p>
               <p className="mt-1 text-sm text-launch-ink/70">
-                My plan is saved. Sign in and I'll come straight back to this page — nothing to retype.
+                My plan is saved. Sign in and I'll come straight back to this page, nothing to retype.
               </p>
               <Button
                 className="mt-3 min-h-[56px] w-full"
@@ -285,7 +285,7 @@ export default function LaunchPayment() {
             >
               <FlaskConical className="h-5 w-5 text-launch-ember mt-0.5 flex-shrink-0" />
               <div className="text-sm text-launch-ink">
-                <p className="font-semibold">Test Mode — no real money moves</p>
+                <p className="font-semibold">Test Mode, no real money moves</p>
                 <p>Use an access code to skip payment, or use a Stripe test card below. Real cards will be declined.</p>
               </div>
             </motion.div>
@@ -304,7 +304,7 @@ export default function LaunchPayment() {
             </h1>
             <p className="mt-5 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
               {isTrial
-                ? '£10 a month, for as long as I stay a member. My first 7 days are free — a card is needed to start, nothing is charged for 7 days, and I can cancel any time from my account.'
+                ? '£10 a month, for as long as I stay a member. My first 7 days are free, a card is needed to start, nothing is charged for 7 days, and I can cancel any time from my account.'
                 : '£10 a month, for as long as I stay a member. My membership starts today, and I can cancel any time from my account.'}
             </p>
           </motion.div>
@@ -365,7 +365,7 @@ export default function LaunchPayment() {
                   <h3 className="font-semibold text-launch-ink">Have an access code?</h3>
                 </div>
                 <p className="text-sm text-launch-ink/70 mb-3">
-                  Skip payment and unlock full access as a Founding Member.
+                  Skip payment and get full access as a Founding Member.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Input
@@ -401,7 +401,7 @@ export default function LaunchPayment() {
                       </span>
                     </div>
                     <p className="text-sm text-launch-ink/70">
-                      {friendsFamilyConfig.tagline}. Invite-only — {friendsFamilyConfig.maxSeats} seats in total.
+                      {friendsFamilyConfig.tagline}. Invite-only, {friendsFamilyConfig.maxSeats} seats in total.
                     </p>
                   </div>
                 )}

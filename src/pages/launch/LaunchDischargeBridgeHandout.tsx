@@ -8,11 +8,11 @@ import { DISCLAIMER_TEXT } from '@/config/appDescription';
  * See docs/discharge-bridge-kit.md §3a and §5 for locked copy.
  *
  * A4 / US Letter, one page. Clinician-hand-out artefact.
- * Deliberately not wrapped in LaunchLayout — this route is meant to be printed.
+ * Deliberately not wrapped in LaunchLayout, this route is meant to be printed.
  */
 export default function LaunchDischargeBridgeHandout() {
   useEffect(() => {
-    document.title = 'MyRhythm — First 30 Days Home';
+    document.title = 'MyRhythm, First 30 Days Home';
   }, []);
 
   const bullets: { title: string; body: string }[] = [
@@ -85,7 +85,7 @@ export default function LaunchDischargeBridgeHandout() {
             aria-label="QR code to myrhythmapp.com/subscribe"
             className="w-24 h-24 border-2 border-stone-900 flex items-center justify-center"
           >
-            {/* Placeholder QR — replace with generated QR in v0.2 */}
+            {/* Placeholder QR, replace with generated QR in v0.2 */}
             <QrCode className="w-16 h-16 text-stone-900" strokeWidth={1.5} />
           </div>
         </div>

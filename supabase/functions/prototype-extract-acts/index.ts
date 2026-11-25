@@ -18,7 +18,7 @@ interface ExtractedAct {
   clinician?: string;
 }
 
-// Silent classifier — runs before the LLM call so we can inject the
+// Silent classifier, runs before the LLM call so we can inject the
 // right prompt addendum. The user never sees this happen.
 function classifyContext(transcript: string): { contextId: ContextId; confidence: number } {
   const t = transcript || '';

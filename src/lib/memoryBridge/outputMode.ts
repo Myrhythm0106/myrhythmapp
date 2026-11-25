@@ -6,9 +6,9 @@ export type OutputMode = 'both' | 'transcript' | 'actions' | 'none';
 
 export const OUTPUT_MODE_LABELS: Record<OutputMode, { title: string; hint: string }> = {
   both: { title: 'Transcript and actions', hint: 'Every word, plus my next steps' },
-  transcript: { title: 'Transcript only', hint: 'Every word — no actions' },
-  actions: { title: 'Actions only', hint: 'My next steps — transcript not kept' },
-  none: { title: 'Just save the recording', hint: 'Nothing written up — I can ask later' },
+  transcript: { title: 'Transcript only', hint: 'Every word, no actions' },
+  actions: { title: 'Actions only', hint: 'My next steps, transcript not kept' },
+  none: { title: 'Just save the recording', hint: 'Nothing written up, I can ask later' },
 };
 
 const KEY = 'myrhythm:output-mode:v1';
@@ -29,7 +29,7 @@ export function writeOutputMode(mode: OutputMode) {
   } catch { /* noop */ }
 }
 
-/** Remembered default — set once, changeable any time. */
+/** Remembered default, set once, changeable any time. */
 export function useOutputMode(): [OutputMode, (m: OutputMode) => void] {
   const [mode, setMode] = useState<OutputMode>(() => readOutputMode());
   useEffect(() => {
@@ -75,5 +75,5 @@ export async function runMeetingJob(
       return { success: false, error: row.processing_error || 'Processing failed' };
     }
   }
-  return { success: false, error: 'Still working — check back in a few minutes.' };
+  return { success: false, error: 'Still working, check back in a few minutes.' };
 }

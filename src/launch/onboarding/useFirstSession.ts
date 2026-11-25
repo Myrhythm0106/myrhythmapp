@@ -11,7 +11,7 @@ export interface FirstSessionState {
   scheduled: boolean;
   /** Has one step been ticked off? */
   completed: boolean;
-  /** All four done — the card retires itself. */
+  /** All four done, the card retires itself. */
   allDone: boolean;
   /** Nothing yet: Home shows the calm "start here" version. */
   isNewAccount: boolean;

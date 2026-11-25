@@ -52,7 +52,7 @@ export function RhythmCalendarConsent({ mainFocus }: { mainFocus?: string | null
 
   const addAppointment = () => {
     if (!draft.title.trim()) {
-      toast.error('Give it a name first — for example "Physio".');
+      toast.error('Give it a name first, for example "Physio".');
       return;
     }
     const today = new Date();
@@ -106,7 +106,7 @@ export function RhythmCalendarConsent({ mainFocus }: { mainFocus?: string | null
       <div className="rounded-xl border border-launch-teal/30 bg-launch-cream-light p-6 md:p-8">
         <h2 className="text-xl font-bold text-launch-ink-deep">May MyRhythm show this on my calendar?</h2>
         <p className="mt-2 text-base text-launch-ink-deep/80">
-          They appear as soft, labelled bands — never as appointments. Nothing is added without my yes.
+          They appear as soft, labelled bands, never as appointments. Nothing is added without my yes.
         </p>
         {consent.status === 'ask' || choosing ? (
           <>
@@ -151,7 +151,7 @@ export function RhythmCalendarConsent({ mainFocus }: { mainFocus?: string | null
       <div className="rounded-xl border border-launch-gold/40 bg-launch-ivory p-6 md:p-8">
         <h2 className="text-xl font-bold text-launch-ink-deep">My regular appointments</h2>
         <p className="mt-2 text-base text-launch-ink-deep/80">
-          Add things that repeat — physio, clinic, school run, a class. They're blocked out automatically so nothing is planned on top of them.
+          Add things that repeat, physio, clinic, school run, a class. They're blocked out automatically so nothing is planned on top of them.
         </p>
         {consent.appointments.length > 0 && (
           <ul className="mt-4 divide-y divide-launch-gold/20">

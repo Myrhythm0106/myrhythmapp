@@ -49,7 +49,7 @@ export default function LaunchContinuityReport() {
 
   const handleShare = async () => {
     if (!report) return;
-    const title = `MyRhythm — ${report.windowDays}-day continuity report`;
+    const title = `MyRhythm, ${report.windowDays}-day continuity report`;
     const text = `Follow-through rate: ${Math.round(report.followThroughRate * 100)}%. ${report.completedCount} of ${report.committedTotal} commitments carried through.`;
     try {
       if (navigator.share) {
@@ -190,7 +190,7 @@ export default function LaunchContinuityReport() {
                 className="relative z-10 mt-10 text-[10px] uppercase tracking-widest pt-6 border-t italic"
                 style={{ color: `${CREAM}55`, borderColor: `${CREAM}1a` }}
               >
-                A behaviour and quality-of-life snapshot — not a clinical score.
+                A behaviour and quality-of-life snapshot, not a clinical score.
               </p>
             </div>
 
@@ -209,7 +209,7 @@ export default function LaunchContinuityReport() {
 
                 <p className="text-lg leading-relaxed italic mb-8" style={{ color: MOSS }}>
                   {mode === 'personal'
-                    ? 'MyRhythm kept what you agreed close to your week — appointments, actions, energy, and the people around you.'
+                    ? 'MyRhythm kept what you agreed close to your week, appointments, actions, energy, and the people around you.'
                     : 'This report aligns with the shape of standard post-discharge follow-up documentation without producing a clinical score.'}
                 </p>
 
@@ -320,7 +320,7 @@ export default function LaunchContinuityReport() {
                   />
                 </div>
 
-                {/* Standards alignment panel — clinical mode or expanded */}
+                {/* Standards alignment panel, clinical mode or expanded */}
                 {(mode === 'clinical' || showStandards) && (
                   <div className="mt-10 pt-6 border-t" style={{ borderColor: `${INK}10` }}>
                     <button

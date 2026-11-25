@@ -19,7 +19,7 @@ export default function LaunchProfile() {
   const menuItems = [
     { 
       label: 'Feature Store', 
-      description: 'Unlock more features',
+      description: 'More of MyRhythm, when I want it',
       icon: Sparkles, 
       path: '/launch/store',
       badge: 'New'

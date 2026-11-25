@@ -31,7 +31,7 @@ function Tick({ e, onToggle, readOnly }: { e: LaunchCalendarEvent; onToggle?: Pr
   );
 }
 
-/** My top 3 today — as executive cards or calm rows. Tap opens the detail. */
+/** My top 3 today, as executive cards or calm rows. Tap opens the detail. */
 export function HomePriorities({ items, mode, readOnly, onToggle, onOpen }: Props) {
   if (items.length === 0) return null;
 

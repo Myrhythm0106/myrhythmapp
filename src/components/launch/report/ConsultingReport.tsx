@@ -90,7 +90,7 @@ export function ConsultingReport({ answers, onChosen }: Props) {
         </p>
       </section>
 
-      {/* Calm step 2: my top 3, already ranked — keep or change */}
+      {/* Calm step 2: my top 3, already ranked, keep or change */}
       <section aria-labelledby="top3-title" className="border-b border-launch-gold/30 px-5 py-8 md:px-12">
         <Eyebrow>My top 3 to start with</Eyebrow>
         <h2 id="top3-title" className="mt-1 font-display text-2xl text-launch-ink md:text-3xl">

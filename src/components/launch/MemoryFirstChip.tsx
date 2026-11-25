@@ -19,7 +19,7 @@ export function MemoryFirstChip() {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         onBlur={() => setOpen(false)}
-        aria-label="Memory-First Design — what this means"
+        aria-label="Memory-First Design, what this means"
         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200/70 bg-teal-50/60 text-[10px] tracking-[0.14em] uppercase font-medium text-teal-800 hover:bg-teal-50 transition-colors min-h-[28px]"
       >
         <span

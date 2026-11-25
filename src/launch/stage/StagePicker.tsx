@@ -40,7 +40,7 @@ export function StagePicker() {
         <SheetHeader>
           <SheetTitle>My rhythm, my pace</SheetTitle>
           <SheetDescription>
-            Move freely between stages. No targets, no countdowns — just a way to say where you are.
+            Move freely between stages. No targets, no countdowns, just a way to say where you are.
           </SheetDescription>
         </SheetHeader>
 

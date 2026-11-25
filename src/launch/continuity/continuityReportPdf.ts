@@ -146,7 +146,7 @@ export function buildContinuityReportPdf(data: ContinuityReport): jsPDF {
       para(`Met: ${data.goalsMet} · Partially met: ${data.goalsPartial} · Not met: ${data.goalsNotMet}`);
       data.goals.forEach(g => {
         const label = g.status === 'completed' ? 'Met' : g.status === 'partial' ? 'Partially met' : 'Not met';
-        para(`• ${g.title} — ${label} (${g.progress}%)`);
+        para(`• ${g.title}, ${label} (${g.progress}%)`);
       });
     } else {
       para(`${data.goalsMet} met · ${data.goalsPartial} partially met · ${data.goalsNotMet} still building`);
@@ -161,7 +161,7 @@ export function buildContinuityReportPdf(data: ContinuityReport): jsPDF {
     section('Support Circle involvement');
     para(`${data.supportCircleSize} people in the loop · ${data.actionsWithSupport} actions had someone alongside them.`);
     data.supportCircleMetrics.forEach(m => {
-      para(`• ${m.member.name} — involved in ${m.actionsInvolved} action(s), ${m.notesLeft} note(s)`);
+      para(`• ${m.member.name}, involved in ${m.actionsInvolved} action(s), ${m.notesLeft} note(s)`);
     });
   }
 
@@ -171,7 +171,7 @@ export function buildContinuityReportPdf(data: ContinuityReport): jsPDF {
     para(`${data.agreedItemsCompleted} completed · ${data.agreedItemsPartial} partial · ${data.agreedItemsNotMet} not yet met.`);
     data.agreedItems.forEach(i => {
       const label = i.status === 'completed' ? 'Carried through' : i.status === 'partial' ? 'Partially met' : 'Not yet met';
-      para(`• ${i.title} — ${label}`);
+      para(`• ${i.title}, ${label}`);
     });
   }
 
@@ -215,7 +215,7 @@ export function buildContinuityReportPdf(data: ContinuityReport): jsPDF {
     doc.setFontSize(3);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(STONE_500);
-    const footer = `CONFIDENTIAL — Prepared by user via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.  ·  ${EDITION_FOOTER}`;
+    const footer = `CONFIDENTIAL, Prepared by user via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.  ·  ${EDITION_FOOTER}`;
     doc.text(footer, pageWidth / 2, pageHeight - 12, { align: 'center' });
   }
 

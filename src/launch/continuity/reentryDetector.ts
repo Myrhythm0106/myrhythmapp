@@ -22,7 +22,7 @@ export function detectReentry({
     return {
       kind: 'anchor-missed',
       title: `Let's gently reschedule ${missedAnchorTitle}`,
-      body: 'No catching up needed — just pick a window that fits your energy today.',
+      body: 'No catching up needed, just pick a window that fits your energy today.',
       ctaLabel: 'Pick a new window',
       ctaHref: '/launch/calendar',
       daysSinceLastActivity,
@@ -42,7 +42,7 @@ export function detectReentry({
   if (daysSinceLastActivity < 5) {
     return {
       kind: 'soft',
-      title: 'Welcome back — start small',
+      title: 'Welcome back, start small',
       body: `It's been ${daysSinceLastActivity} days. One gentle step is enough today. Nothing to catch up on.`,
       ctaLabel: 'Choose one small thing',
       ctaHref: '/launch/commit',

@@ -1,6 +1,6 @@
-// MyRHYTHM-G — the daily growth-mindset lens over MYRHYTHM.
+// MyRHYTHM-G, the daily growth-mindset lens over MYRHYTHM.
 // 8 states, 1:1 with the MYRHYTHM letters. See mem://brand/myrhythm-g.
-// Canonical letters/words live in src/launch/framework/myrhythm.ts — each state below
+// Canonical letters/words live in src/launch/framework/myrhythm.ts, each state below
 // carries the framework `word` so the two can never drift apart.
 
 import { wordForGrowthKey } from '@/launch/framework/myrhythm';
@@ -28,12 +28,12 @@ export interface GrowthState {
 const RAW_STATES: Omit<GrowthState, 'word'>[] = [
   { key: 'M1', letter: 'M', name: 'Mindset set',            prompt: "I've decided this matters.",              tone: 'memory' },
   { key: 'Y1', letter: 'Y', name: 'Yes, begun',             prompt: "I've said yes and started.",              tone: 'sunrise-amber' },
-  { key: 'R',  letter: 'R', name: 'Rhythm wobble',          prompt: "My rhythm's off — I'm rethinking.",       tone: 'clarity' },
+  { key: 'R',  letter: 'R', name: 'Rhythm wobble',          prompt: "My rhythm's off, I'm rethinking.",       tone: 'clarity' },
   { key: 'H1', letter: 'H', name: 'Harnessing support',     prompt: "Leaning on my circle to keep going.",     tone: 'brain-health' },
-  { key: 'Y2', letter: 'Y', name: 'Yearning for a win',     prompt: "Feeling lost — I need one small win.",    tone: 'sunrise-amber' },
+  { key: 'Y2', letter: 'Y', name: 'Yearning for a win',     prompt: "Feeling lost, I need one small win.",    tone: 'sunrise-amber' },
   { key: 'T',  letter: 'T', name: 'Transforming',           prompt: "Turning what happened into what's next.", tone: 'beacon' },
-  { key: 'H2', letter: 'H', name: 'Healing through habit',  prompt: "Practising — repetition is doing the work.", tone: 'brain-health' },
-  { key: 'M2', letter: 'M', name: 'Mastered & multiplying', prompt: "I've got this — ready to pass it on.",    tone: 'memory' },
+  { key: 'H2', letter: 'H', name: 'Healing through habit',  prompt: "Practising, repetition is doing the work.", tone: 'brain-health' },
+  { key: 'M2', letter: 'M', name: 'Mastered & multiplying', prompt: "I've got this, ready to pass it on.",    tone: 'memory' },
 ];
 
 export const GROWTH_STATES: readonly GrowthState[] = RAW_STATES.map((s) => ({

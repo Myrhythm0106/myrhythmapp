@@ -18,7 +18,7 @@ export function feedUrlFor(token: string): string {
 
 /**
  * The private subscribe link. One link, pasted into Google, Outlook or Apple
- * Calendar once — every dated step then appears there and keeps itself current.
+ * Calendar once, every dated step then appears there and keeps itself current.
  */
 export function useCalendarFeed() {
   const { user } = useAuth();

@@ -28,7 +28,7 @@ function safeDate(...candidates: (string | null | undefined)[]): string {
 /**
  * One time-ordered trail of everything that has happened: conversations
  * captured, brain-health snapshots, and next steps finished. Reads what is
- * already stored — no new tables.
+ * already stored, no new tables.
  */
 export function useDiaryEntries() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
@@ -79,7 +79,7 @@ export function useDiaryEntries() {
             ? 'Write-up saved'
             : r.processing_status === 'processing'
             ? 'Still being written up'
-            : 'Summary kept — audio released',
+            : 'Summary kept, audio released',
           reference: (r.reference_code as string) ?? null,
           href: `/launch/memory/result/${r.id}`,
           searchText: [r.meeting_title, r.meeting_context, r.reference_code, r.transcript]

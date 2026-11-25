@@ -9,7 +9,7 @@ interface Props {
 }
 
 const STATUS_MAP: Record<CaptureStatus, { color: string; label: string }> = {
-  queued:   { color: 'bg-brain-health-300',     label: 'Queued — will sync when online' },
+  queued:   { color: 'bg-brain-health-300',     label: 'Queued, will sync when online' },
   awaiting: { color: 'bg-brand-orange-400',     label: 'Awaiting your review' },
   accepted: { color: 'bg-memory-emerald-500',   label: 'Accepted' },
   declined: { color: 'bg-brain-health-200 opacity-60', label: 'Declined' },

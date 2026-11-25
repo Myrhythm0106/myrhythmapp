@@ -76,7 +76,7 @@ export function ShareVisionBoard({
       
       ctx.font = '36px system-ui, sans-serif';
       ctx.fillStyle = '#6b7280';
-      ctx.fillText(`${year} — Year of ${yearlyTheme}`, 540, 200);
+      ctx.fillText(`${year}, Year of ${yearlyTheme}`, 540, 200);
 
       // Draw quadrant grid (2x2 + 1 full width)
       const cardWidth = 480;
@@ -103,7 +103,7 @@ export function ShareVisionBoard({
         ctx.roundRect(x, y, cardWidth, cardHeight, 24);
         ctx.fill();
 
-        // (Symbol mark omitted — sophisticated wordmark only)
+        // (Symbol mark omitted, sophisticated wordmark only)
         ctx.font = '56px system-ui, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText('', x + 30, y + 70);
@@ -238,7 +238,7 @@ export function ShareVisionBoard({
               <div className="text-center mb-3">
                 <Sparkles className="h-5 w-5 text-neural-purple-500 mx-auto mb-1" />
                 <h3 className="text-xs font-bold text-foreground">My Vision Board</h3>
-                <p className="text-[8px] text-muted-foreground">{year} — Year of {yearlyTheme}</p>
+                <p className="text-[8px] text-muted-foreground">{year}, Year of {yearlyTheme}</p>
               </div>
 
               {/* Mini 2x2 Grid */}

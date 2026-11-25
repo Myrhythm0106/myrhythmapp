@@ -17,7 +17,7 @@ const SECTIONS: EvidenceSection[] = [
     stat: "~50%",
     caption: "of a conversation can be lost within the first hour",
     frame:
-      "The forgetting curve is universal — every brain lets detail slip. Brain injury, fatigue, and cognitive overload steepen the curve. The cost isn't the forgetting itself; it's the names, promises and next steps that go with it.",
+      "The forgetting curve is universal, every brain lets detail slip. Brain injury, fatigue, and cognitive overload steepen the curve. The cost isn't the forgetting itself; it's the names, promises and next steps that go with it.",
     source: "Based on Ebbinghaus forgetting curve research and clinical reviews of post-injury memory [citation to be confirmed]",
     featureTitle: "Memory Bridge",
     featureBlurb:
@@ -29,11 +29,11 @@ const SECTIONS: EvidenceSection[] = [
     stat: "~35,000",
     caption: "small decisions the average adult makes in a day",
     frame:
-      "Every decision spends energy. After brain injury — or any season of high cognitive load — the energy budget is smaller and every choice costs more. So \"what next?\" can become the heaviest question on the list.",
+      "Every decision spends energy. After brain injury, or any season of high cognitive load, the energy budget is smaller and every choice costs more. So \"what next?\" can become the heaviest question on the list.",
     source: "Commonly cited decision-load research from Cornell and related studies [citation to be confirmed]",
     featureTitle: "Energy Check + Smart Schedule",
     featureBlurb:
-      "A quick Energy Check tunes the day to how you actually feel. Smart Schedule then surfaces just the next right thing — with built-in buffers and a gentle reshuffle when it's too much.",
+      "A quick Energy Check tunes the day to how you actually feel. Smart Schedule then surfaces just the next right thing, with built-in buffers and a gentle reshuffle when it's too much.",
     featureHref: "/launch/calendar",
   },
   {
@@ -41,7 +41,7 @@ const SECTIONS: EvidenceSection[] = [
     stat: "~92%",
     caption: "of personal goals are estimated to go uncompleted",
     frame:
-      "The will is there. The bridge between a vision and today's action is what's missing — for everyone, and especially when cognitive load is high. MyRhythm makes that bridge the everyday system, not a yearly resolution.",
+      "The will is there. The bridge between a vision and today's action is what's missing, for everyone, and especially when cognitive load is high. MyRhythm makes that bridge the everyday system, not a yearly resolution.",
     source: "Commonly cited goal-completion statistics (e.g. Statistic Brain) [citation to be confirmed]",
     featureTitle: "Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions",
     featureBlurb:

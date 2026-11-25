@@ -22,7 +22,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 
 
-// Onboarding steps — the dial stays hidden until the user reaches Home.
+// Onboarding steps, the dial stays hidden until the user reaches Home.
 const ONBOARDING_PATHS = new Set([
   '/launch/signin',
   '/launch/signup',
@@ -88,7 +88,7 @@ export function LaunchLayout({
         isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
       )}>
 
-        {/* Progress strip — mounted inside the fixed-height column on
+        {/* Progress strip, mounted inside the fixed-height column on
             self-contained screens so it never pushes the page past the
             viewport (App.tsx hides its global copy on these routes). */}
         {/* Get Started screens show JourneySteps instead of the old dot strip. */}
@@ -115,7 +115,7 @@ export function LaunchLayout({
               )}
 
               {/* Right cluster: wayfinder dial first, profile button at the
-                  far right — one aligned row, equal spacing. */}
+                  far right, one aligned row, equal spacing. */}
               <div className="flex items-center gap-2 sm:gap-3">
                 {showDial && (
                   <div className="shrink-0">
@@ -152,7 +152,7 @@ export function LaunchLayout({
         {/* Growth Footer */}
         {showFooter && <GrowthFooter />}
 
-        {/* Persistent capture — one tap from anywhere */}
+        {/* Persistent capture, one tap from anywhere */}
         {!isOnboardingPath && <CaptureDock />}
 
         {/* Bottom Navigation (Mobile) */}

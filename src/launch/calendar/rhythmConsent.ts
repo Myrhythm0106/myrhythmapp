@@ -1,5 +1,5 @@
 /**
- * "My rhythm on my calendar" — what the user agreed may appear, plus their
+ * "My rhythm on my calendar", what the user agreed may appear, plus their
  * regular appointments. Device-local; nothing shows without a yes.
  */
 import { readStoredProductivityWindow } from '@/launch/assessment/productivityWindow';
@@ -81,7 +81,7 @@ export interface RhythmBand {
   end: string;
 }
 
-/** What my answers suggest — shown on the snapshot, before any permission. */
+/** What my answers suggest, shown on the snapshot, before any permission. */
 export function suggestedRhythm() {
   const w = readStoredProductivityWindow();
   if (!w) return null;
@@ -118,7 +118,7 @@ function occursOn(a: RegularAppointment, date: Date): boolean {
   }
 }
 
-/** Bands for one day — only what the user has agreed to, plus their regular appointments. */
+/** Bands for one day, only what the user has agreed to, plus their regular appointments. */
 export function bandsForDate(date: Date): RhythmBand[] {
   const c = readRhythmConsent();
   const bands: RhythmBand[] = [];

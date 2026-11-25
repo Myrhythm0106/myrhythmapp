@@ -16,12 +16,12 @@ interface KeepForPromptProps {
   open: boolean;
   /** Called with the chosen mode after the choice has been saved. */
   onConfirm: (mode: PrivacyMode) => void;
-  /** Optional escape hatch — treated as "keep the current default". */
+  /** Optional escape hatch, treated as "keep the current default". */
   onDismiss?: () => void;
 }
 
 /**
- * "How long shall I keep this?" — asked once, after the person stops their
+ * "How long shall I keep this?", asked once, after the person stops their
  * first recording and before anything is saved, so the very first capture
  * carries the retention clock they actually chose.
  */
@@ -47,7 +47,7 @@ export function KeepForPrompt({ open, onConfirm, onDismiss }: KeepForPromptProps
             How long shall I keep this?
           </DialogTitle>
           <DialogDescription className="text-center">
-            Lovely — that's recorded. Before I save it, choose what happens to
+            Lovely, that's recorded. Before I save it, choose what happens to
             the audio afterwards. Your summary and reference codes always stay.
           </DialogDescription>
         </DialogHeader>
@@ -96,7 +96,7 @@ export function KeepForPrompt({ open, onConfirm, onDismiss }: KeepForPromptProps
             disabled={saving}
             className="w-full min-h-[56px]"
           >
-            That's my choice — save it
+            That's my choice, save it
           </Button>
         </DialogFooter>
       </DialogContent>

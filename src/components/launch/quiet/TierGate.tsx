@@ -28,7 +28,7 @@ export function TierGate({ required, children, className, label }: TierGateProps
             <Lock className="h-4 w-4 text-brand-teal-700" />
           </div>
           <p className="text-sm font-medium text-brain-health-800">
-            {label ?? `Unlock when you're ready`}
+            {label ?? `Available when I'm ready`}
           </p>
           <p className="text-xs text-brain-health-600 capitalize">Available on {required}</p>
         </div>

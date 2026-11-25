@@ -73,7 +73,7 @@ export default function LaunchDiary() {
       <LaunchHeroBand
         eyebrow="My Diary"
         title="Nothing gets lost"
-        subtitle="Every conversation I captured, every snapshot I took, every step I finished — kept in date order and searchable."
+        subtitle="Every conversation I captured, every snapshot I took, every step I finished, kept in date order and searchable."
       />
 
       <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
@@ -84,13 +84,13 @@ export default function LaunchDiary() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search my diary — a word, a name, or a reference like MB-260903-A1"
+            placeholder="Search my diary, a word, a name, or a reference like MB-260903-A1"
             aria-label="Search my diary"
             className="w-full min-h-[56px] pl-11 pr-4 rounded-2xl bg-launch-ivory border border-launch-gold/30 text-base text-launch-ink placeholder:text-launch-ink/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-launch-ember"
           />
         </div>
 
-        {/* Filters — three, no more */}
+        {/* Filters, three, no more */}
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
@@ -131,7 +131,7 @@ export default function LaunchDiary() {
             </h3>
             <p className="text-sm text-launch-ink/65">
               {entries.length === 0
-                ? 'Every conversation I capture, every brain health snapshot I take, and every next step I finish will appear here — in date order, with a reference I can trace back to where it came from.'
+                ? 'Every conversation I capture, every brain health snapshot I take, and every next step I finish will appear here, in date order, with a reference I can trace back to where it came from.'
                 : 'Try a different word, or clear the search to see everything.'}
             </p>
           </LaunchCard>

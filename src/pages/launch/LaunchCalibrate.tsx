@@ -18,17 +18,17 @@ export default function LaunchCalibrate() {
       capabilityKey="calibrate"
       eyebrow="Capability 03 · Calibrate"
       title="A quiet, honest read on how you're really doing."
-      lede="Calibrate turns short daily check-ins into a clear picture of mood, energy, and recovery — without judgement, without gamification."
+      lede="Calibrate turns short daily check-ins into a clear picture of mood, energy, and recovery, without judgement, without gamification."
       heroIcon={Activity}
       tone="purple"
       metaPills={[
-        { label: 'Overview page — go to Home to check in', tone: 'info' },
+        { label: 'Overview page, go to Home to check in', tone: 'info' },
         { label: '30-second check-in', tone: 'neutral' },
         { label: 'Pattern-aware', tone: 'success' },
       ]}
       whyParagraphs={[
         'Wellbeing rarely shifts in headlines; it drifts in patterns. Most tools either over-quantify or look away entirely.',
-        'Calibrate keeps the cadence light and the insight serious — surfacing the patterns that quietly shape your week, before they shape your year.',
+        'Calibrate keeps the cadence light and the insight serious, surfacing the patterns that quietly shape your week, before they shape your year.',
       ]}
       capabilities={[
         { icon: HeartPulse, label: 'Daily mood check-in', description: 'Three taps. No scoring, no streaks.' },

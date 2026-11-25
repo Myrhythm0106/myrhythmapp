@@ -31,7 +31,7 @@ export function PowerMovesSection({
   const getCelebrationMessage = () => {
     if (completionPercentage === 100) return "All power moves complete.";
     if (completionPercentage >= 75) return "Almost there.";
-    if (completionPercentage >= 50) return "Halfway through — steady pace.";
+    if (completionPercentage >= 50) return "Halfway through, steady pace.";
     if (completionPercentage > 0) return "Momentum is building.";
     return "Ready when you are.";
   };

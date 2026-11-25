@@ -10,7 +10,7 @@ interface Props {
   prompt: FivePrompt;
   value: string;
   onChange: (v: string) => void;
-  /** Only used by the 5th F prompt — Future/Faith/Fulfilment/Purpose */
+  /** Only used by the 5th F prompt, Future/Faith/Fulfilment/Purpose */
   label?: string;
   onLabelChange?: (label: string) => void;
 }
@@ -108,7 +108,7 @@ export function FivePromptCard({ prompt, value, onChange, label, onLabelChange }
               <Textarea
                 value={value}
                 onChange={(e) => onChange(e.target.value.slice(0, MAX))}
-                placeholder="Write a sentence or two — or tap a spark above and rewrite it in your own words."
+                placeholder="Write a sentence or two, or tap a spark above and rewrite it in your own words."
                 rows={3}
                 className="resize-none text-base leading-relaxed border-brain-health-200 focus-visible:ring-brand-teal-600/30 focus-visible:border-brand-teal-600"
               />

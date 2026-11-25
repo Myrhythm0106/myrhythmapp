@@ -26,7 +26,7 @@ import { CatchOneThing } from '@/components/launch/assessment/CatchOneThing';
 import { areaTitle, readChosenPriorities, type AreaId } from '@/launch/compass/priorityAreas';
 
 
-// Emerald Prestige palette — page-scoped
+// Emerald Prestige palette, page-scoped
 const INK = '#064e3b';      // deep emerald
 const MOSS = '#0d7a5f';     // mid emerald
 const GOLD = '#c9a84c';     // warm gold
@@ -65,9 +65,9 @@ const LETTER_WORDS: Record<LetterId, string> = {
 };
 
 const MEMBERSHIP_ADDS = [
-  'My full personalized plan — built from these answers',
-  'Daily follow-through — reminders and calendar invites',
-  'Support Circle — the people I choose, kept in the loop',
+  'My full personalised plan, built from these answers',
+  'Daily follow-through, reminders and calendar invites',
+  'Support Circle, the people I choose, kept in the loop',
   'My full diary and history, kept traceable',
 ];
 
@@ -169,7 +169,7 @@ export default function LaunchWelcome() {
       };
   const postCheckout = new URLSearchParams(window.location.search).get('postCheckout') === '1';
   const startedToday = new URLSearchParams(window.location.search).get('trial') === '0';
-  const startedLine = startedToday ? 'My membership has started.' : 'My free 7 days have started — nothing is charged until they end.';
+  const startedLine = startedToday ? 'My membership has started.' : 'My free 7 days have started, nothing is charged until they end.';
 
 
   const letterScores = bhs ? LETTER_ORDER.map((l) => bhs.letters[l.id] ?? 0) : [];
@@ -181,7 +181,7 @@ export default function LaunchWelcome() {
     ? `Membership turns my report into a full plan for ${areaTitle(chosen[0]).toLowerCase()}${chosen.length > 1 ? ` and my other ${chosen.length - 1 === 1 ? 'priority' : 'priorities'}` : ''}, with daily follow-through${bestWindow ? ` in my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''}.`
     : lowestLetter
     ? `Membership turns this snapshot into a plan that strengthens my ${lowestLetter.word.toLowerCase()}${
-        bestWindow ? ` — and holds my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''
+        bestWindow ? `, and holds my ${bestWindow.productiveStart}–${bestWindow.productiveEnd} window` : ''
       }.`
     : 'Membership turns this snapshot into a plan built around my day.';
 
@@ -204,7 +204,7 @@ export default function LaunchWelcome() {
             <p className="text-lg font-bold" style={SORA}>I'm in. My plan is active.</p>
             <p className="mt-1 text-sm opacity-80">
               {bhs
-                ? `${startedLine} Everything below is my snapshot — when I'm ready, head to Home.`
+                ? `${startedLine} Everything below is my snapshot, when I'm ready, head to Home.`
                 : `${startedLine} Next: tell MyRhythm about me and answer a few short questions.`}
             </p>
             <button
@@ -241,7 +241,7 @@ export default function LaunchWelcome() {
             <MemoryFirstChip />
           </div>
 
-          {/* Hero Snapshot — DARK */}
+          {/* Hero Snapshot, DARK */}
           <div className="relative overflow-hidden p-8 md:p-12" style={{ backgroundColor: INK }}>
             {/* Topographic contour lines */}
             <svg
@@ -350,7 +350,7 @@ export default function LaunchWelcome() {
               className="relative z-10 mt-10 text-[10px] uppercase tracking-widest pt-6 border-t italic"
               style={{ color: `${CREAM}55`, borderColor: `${CREAM}1a` }}
             >
-              A snapshot only — not a test or a diagnosis. We'll track how this shifts as I build my rhythm.
+              A snapshot only, not a test or a diagnosis. We'll track how this shifts as I build my rhythm.
             </p>
           </div>
           {answers && <ConsultingReport answers={answers} onChosen={setChosen} />}
@@ -387,7 +387,7 @@ export default function LaunchWelcome() {
                    })}
                  </div>
                  <p className="text-xs mt-5 leading-relaxed" style={{ color: `${INK}99` }}>
-                   This is a practical starting point for my day-to-day choices — not a diagnosis or a prediction.
+                   This is a practical starting point for my day-to-day choices, not a diagnosis or a prediction.
                  </p>
                </div>
                <div className="p-8 md:p-10" style={{ backgroundColor: `${CREAM}4d` }}>
@@ -435,7 +435,7 @@ export default function LaunchWelcome() {
 
           </details>
 
-           {/* Main body — magazine two-column */}
+           {/* Main body, magazine two-column */}
            <div className="grid grid-cols-1 md:grid-cols-12">
             {/* Left: message + CTA */}
             <div className="md:col-span-7 p-8 md:p-12 border-b md:border-b-0 md:border-r border-launch-ink/5">
@@ -455,7 +455,7 @@ export default function LaunchWelcome() {
                 We'll meet you wherever you are in your rhythm.
               </p>
 
-              {/* Founding Member offer — personalised to this snapshot */}
+              {/* Founding Member offer, personalised to this snapshot */}
               <div
                 className="mb-6 p-5 border-l-4 max-w-md"
                 style={{ borderColor: GOLD, backgroundColor: `${GOLD}0f` }}
@@ -472,7 +472,7 @@ export default function LaunchWelcome() {
                 </p>
                 {isFoundingMemberActive() && (
                   <p className="text-[11px] mt-2 italic" style={{ color: MOSS }}>
-                    Reg. £{foundingMemberConfig.regularPrice.monthly.toFixed(0)}/month — save £
+                    Reg. £{foundingMemberConfig.regularPrice.monthly.toFixed(0)}/month, save £
                     {(
                       foundingMemberConfig.regularPrice.monthly -
                       foundingMemberConfig.currentPrice.monthly
@@ -604,7 +604,7 @@ function getMessage(persona: Persona) {
       return {
         headline: 'My path forward starts now',
         subtitle:
-          "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. My support circle stays close to everything I do.",
+          "We've shaped MyRhythm around Pathfinders, people rebuilding cognitive ground after a neurological event. My support circle stays close to everything I do.",
         highlights: [
           'Support circle, front and centre',
           'Memory Bridge for clinical conversations',
@@ -615,7 +615,7 @@ function getMessage(persona: Persona) {
       return {
         headline: "You're not in this alone",
         subtitle:
-          "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting my own rhythm too.",
+          "We've shaped MyRhythm around Anchors, the people who hold the line for someone else, while protecting my own rhythm too.",
         highlights: [
           'Coordinate care without losing my day',
           'Capture appointments accurately, together',
@@ -626,7 +626,7 @@ function getMessage(persona: Persona) {
       return {
         headline: 'Clear, defended days',
         subtitle:
-          "We've shaped MyRhythm around Operators — high-output professionals protecting their best thinking. Vision down to the daily focus block, signal over noise.",
+          "We've shaped MyRhythm around Operators, high-output professionals protecting their best thinking. Vision down to the daily focus block, signal over noise.",
         highlights: [
           'Vision through quarter, week, and day',
           'Protect deep work on the calendar',
@@ -637,7 +637,7 @@ function getMessage(persona: Persona) {
       return {
         headline: 'Pace the term well',
         subtitle:
-          "We've shaped MyRhythm around Scholars — pacing study toward recall, not burnout. Lectures captured, revision paced.",
+          "We've shaped MyRhythm around Scholars, pacing study toward recall, not burnout. Lectures captured, revision paced.",
         highlights: [
           'Study blocks that respect your energy',
           'Capture lectures and revision notes',

@@ -87,7 +87,7 @@ export function BrainHealthySettingsCard() {
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-gray-900">Brain-Healthy Scheduling</h3>
-          <p className="text-xs text-gray-500">Defaults are set — adjust anything, any time, within safe ranges.</p>
+          <p className="text-xs text-gray-500">Defaults are set, adjust anything, any time, within safe ranges.</p>
         </div>
         <button
           type="button"
@@ -112,7 +112,7 @@ export function BrainHealthySettingsCard() {
         />
 
         <div className={prefs.brain_healthy_enabled ? '' : 'opacity-50 pointer-events-none'}>
-          {/* Focus cycle preset — grounds our defaults in Pomodoro / BRAC / DeskTime evidence */}
+          {/* Focus cycle preset, grounds our defaults in Pomodoro / BRAC / DeskTime evidence */}
           <div className="py-3 border-b border-gray-100">
             <div className="flex items-start justify-between gap-3 mb-2">
               <div>
@@ -159,7 +159,7 @@ export function BrainHealthySettingsCard() {
               </summary>
               <div className="mt-2 text-[11px] text-gray-600 space-y-1 leading-relaxed">
                 <p>• <strong>Pomodoro (Cirillo, 1987):</strong> 25/5 with a long break every 4 cycles is the most-studied focus rhythm.</p>
-                <p>• <strong>Ultradian BRAC (Kleitman):</strong> the brain naturally cycles ~90 min — our 120-min longer-break trigger sits just past that peak.</p>
+                <p>• <strong>Ultradian BRAC (Kleitman):</strong> the brain naturally cycles ~90 min, our 120-min longer-break trigger sits just past that peak.</p>
                 <p>• <strong>DeskTime, 2014:</strong> the top 10% of knowledge workers averaged 52 min on / 17 min off.</p>
                 <p>• <strong>Microsoft Human Factors Lab, 2021:</strong> 10-min gaps between back-to-back meetings measurably reduce cumulative stress markers.</p>
                 <p className="italic text-gray-500">Guidance, not medical advice. Adjust anything to fit you.</p>
@@ -217,7 +217,7 @@ export function BrainHealthySettingsCard() {
 
           <Row
             label="Daily meeting cap"
-            hint={prefs.no_daily_cap ? 'No cap set — MyRhythm won\'t warn about volume.' : 'You\'ll get a gentle heads-up when you cross this.'}
+            hint={prefs.no_daily_cap ? 'No cap set, MyRhythm won\'t warn about volume.' : 'You\'ll get a gentle heads-up when you cross this.'}
             defaultHint={`Default ${D.daily_meeting_cap} · range 1–20 or No cap`}
             control={
               <div className="flex flex-col items-end gap-2">

@@ -18,7 +18,7 @@ type Source = { reference_code: string | null; transcript_excerpt: string | null
 const field = 'min-h-[52px] w-full rounded-xl border border-launch-gold/35 bg-launch-cream-light px-3 text-base text-launch-ink-deep focus:outline-none focus:ring-2 focus:ring-launch-teal';
 const label = 'text-xs font-semibold uppercase tracking-[0.16em] text-launch-moss';
 
-/** The item in its original form. Edit, save, undo — Home refreshes straight away. */
+/** The item in its original form. Edit, save, undo, Home refreshes straight away. */
 export function PriorityDetailSheet({ event, onClose, onSaved }: { event: LaunchCalendarEvent | null; onClose: () => void; onSaved: () => void }) {
   const isMobile = useIsMobile();
   const [form, setForm] = useState<EventForm | null>(null);

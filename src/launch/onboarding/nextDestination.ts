@@ -41,7 +41,7 @@ export async function hasCompletedAssessment(): Promise<boolean> {
   }
 }
 
-/** "Not now" — respected for the rest of the day, Home keeps the reminder. */
+/** "Not now", respected for the rest of the day, Home keeps the reminder. */
 export function deferAssessment() {
   try {
     localStorage.setItem(DEFER_KEY, new Date().toDateString());

@@ -19,7 +19,7 @@ const tourSteps = [
     iconBg: 'bg-gradient-to-br from-brand-emerald-400 to-brand-teal-500',
     title: 'Welcome to MyRhythm!',
     description: "Let me show you around. This will only take a moment.",
-    tip: "Take your time — you can revisit this tour anytime."
+    tip: "Take your time, you can revisit this tour anytime."
   },
   {
     icon: Compass,
@@ -33,7 +33,7 @@ const tourSteps = [
     iconBg: 'bg-gradient-to-br from-blue-400 to-blue-600',
     title: "Today's Focus",
     description: "Set your Core Goal, Key Goal and Stretch Goal each day. Small wins add up!",
-    tip: "Start with just one thing — that's enough."
+    tip: "Start with just one thing, that's enough."
   },
   {
     icon: Mic,
@@ -46,7 +46,7 @@ const tourSteps = [
     icon: Users,
     iconBg: 'bg-gradient-to-br from-amber-400 to-amber-600',
     title: 'Support Circle',
-    description: "Your support circle is just a tap away. Friends, family, and professionals — all in one place.",
+    description: "Your support circle is just a tap away. Friends, family, and professionals, all in one place.",
     tip: "They can help you stay on track."
   },
   {
@@ -67,7 +67,7 @@ const tourSteps = [
     icon: Heart,
     iconBg: 'bg-gradient-to-br from-rose-400 to-rose-600',
     title: "You're Ready!",
-    description: "Start with what feels right. There's no pressure here — this is your journey.",
+    description: "Start with what feels right. There's no pressure here, this is your journey.",
     tip: "You've got this. We're here to help."
   }
 ];

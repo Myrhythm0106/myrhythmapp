@@ -60,7 +60,7 @@ export function buildYesActions(a: Answers = readSnapshotAnswers()): YesAction[]
 
   const e: YesAction[] = [
     p('habitSleep') === 'under-6' || p('habitSleep') === 'patchy'
-      ? { week: 2, yes: 'E', id: 'e-wind-down', title: 'Start winding down — screens off, lights low', suggestedTime: evening }
+      ? { week: 2, yes: 'E', id: 'e-wind-down', title: 'Start winding down, screens off, lights low', suggestedTime: evening }
       : { week: 2, yes: 'E', id: 'e-rest', title: 'Keep my usual wind-down time', suggestedTime: evening },
     p('habitMove') !== 'most-days'
       ? { week: 2, yes: 'E', id: 'e-walk', title: 'A short walk at a time that suits me', suggestedTime: avoidDip(best, dip) }

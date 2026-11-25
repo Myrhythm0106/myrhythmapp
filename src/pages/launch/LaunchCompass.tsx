@@ -55,12 +55,12 @@ export default function LaunchCompass() {
   };
 
   if (!latest || !draft) {
-    return <LaunchLayout><LaunchHeroBand eyebrow="My Compass" title="My view of me" subtitle="My answers, my focus and my next step — in my words." /><div className="max-w-3xl mx-auto px-4 py-6"><LaunchCard><p className="text-launch-ink/70 mb-4">Complete the short MYRHYTHM assessment to create my first Compass.</p><Button variant="secondary" onClick={() => navigate('/launch/assessment')}>Take my assessment</Button></LaunchCard></div></LaunchLayout>;
+    return <LaunchLayout><LaunchHeroBand eyebrow="My Compass" title="My view of me" subtitle="My answers, my focus and my next step, in my words." /><div className="max-w-3xl mx-auto px-4 py-6"><LaunchCard><p className="text-launch-ink/70 mb-4">Complete the short MYRHYTHM assessment to create my first Compass.</p><Button variant="secondary" onClick={() => navigate('/launch/assessment')}>Take my assessment</Button></LaunchCard></div></LaunchLayout>;
   }
 
   return (
     <LaunchLayout>
-      <LaunchHeroBand eyebrow="My Compass" title="My view of me" subtitle="What matters, what helps and what I am trying next — always in my control." />
+      <LaunchHeroBand eyebrow="My Compass" title="My view of me" subtitle="What matters, what helps and what I am trying next, always in my control." />
       <div className="max-w-3xl mx-auto px-4 py-6 pb-28">
         <Tabs defaultValue="now">
           <TabsList className="grid grid-cols-3 h-auto mb-5 bg-launch-ink/5">
@@ -94,7 +94,7 @@ export default function LaunchCompass() {
               {changed && <Button className="mt-3" variant="secondary" onClick={save}>Save review choice</Button>}
             </LaunchCard>
             <LaunchCard>
-              <div className="flex items-center justify-between gap-3"><div><h2 className="font-semibold text-launch-ink">Focus Check</h2><p className="text-sm text-launch-ink/65">A gentle check against what I chose — not a test.</p></div><Button variant="secondary" onClick={() => setShowCheck(!showCheck)}>{showCheck ? 'Close' : 'Check in'}</Button></div>
+              <div className="flex items-center justify-between gap-3"><div><h2 className="font-semibold text-launch-ink">Focus Check</h2><p className="text-sm text-launch-ink/65">A gentle check against what I chose, not a test.</p></div><Button variant="secondary" onClick={() => setShowCheck(!showCheck)}>{showCheck ? 'Close' : 'Check in'}</Button></div>
               {showCheck && <div className="mt-5 space-y-5">
                 {[{ key: 'actionHappened', q: 'Did this action happen?', options: ['Yes', 'Partly', 'Not yet'] }, { key: 'effect', q: 'Did it help with what I wanted to improve?', options: ['Better', 'About the same', 'Harder'] }, { key: 'nextChoice', q: 'What should happen next?', options: ['Keep it', 'Make it easier', 'Choose something else'] }].map((row) => <fieldset key={row.key}><legend className="text-sm font-semibold text-launch-ink mb-2">{row.q}</legend><div className="grid grid-cols-3 gap-2">{row.options.map((option) => <Button key={option} variant={check[row.key as keyof typeof check] === option ? 'secondary' : 'outline'} className="h-auto min-h-[56px] whitespace-normal" onClick={() => setCheck({ ...check, [row.key]: option })}>{option}</Button>)}</div></fieldset>)}
                 <Textarea placeholder="What feels different? (optional)" value={check.reflection} onChange={(event) => setCheck({ ...check, reflection: event.target.value })} />

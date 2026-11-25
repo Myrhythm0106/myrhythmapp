@@ -29,7 +29,7 @@ export function LaunchWeeklyPlanningCard() {
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900">
-            It's {dayNames[preferred]} — plan your week
+            It's {dayNames[preferred]}, plan your week
           </h3>
           <p className="text-sm text-gray-600 mt-0.5">
             {hasPlan

@@ -10,12 +10,12 @@ import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingSty
 import { useAuth } from '@/hooks/useAuth';
 import { LaunchFirstWelcome } from '@/components/launch/LaunchFirstWelcome';
 
-/** Everyone MyRhythm is built for — all shown up front so I can see myself straight away. */
+/** Everyone MyRhythm is built for, all shown up front so I can see myself straight away. */
 const userTypes = [
   {
     id: 'brain-injury',
     title: "I'm rebuilding after a brain injury or brain change",
-    definition: 'Brain injury, stroke, long COVID, MS or memory changes — getting back to home, family and work.',
+    definition: 'Brain injury, stroke, long COVID, MS or memory changes, getting back to home, family and work.',
     icon: Compass,
     color: 'bg-launch-ink',
     iconColor: 'text-launch-gold',
@@ -23,7 +23,7 @@ const userTypes = [
   {
     id: 'caregiver',
     title: 'I support someone I care about',
-    definition: 'Family carer, partner, adult child or friend — keeping track for them without losing my own day.',
+    definition: 'Family carer, partner, adult child or friend, keeping track for them without losing my own day.',
     icon: Anchor,
     color: 'bg-launch-moss',
     iconColor: 'text-launch-cream',
@@ -31,7 +31,7 @@ const userTypes = [
   {
     id: 'everyday',
     title: 'I have too much to hold in my head',
-    definition: 'Stress, overwhelm, burnout or ADHD — things slip, and I want to feel on top of them again.',
+    definition: 'Stress, overwhelm, burnout or ADHD, things slip, and I want to feel on top of them again.',
     icon: Waves,
     color: 'bg-launch-teal',
     iconColor: 'text-launch-cream',
@@ -39,7 +39,7 @@ const userTypes = [
   {
     id: 'executive',
     title: 'I want to stay sharp at work',
-    definition: 'Meetings, promises and deadlines — including returning to work — kept and followed through.',
+    definition: 'Meetings, promises and deadlines, including returning to work, kept and followed through.',
     icon: Target,
     color: 'bg-launch-ember',
     iconColor: 'text-launch-cream',
@@ -47,7 +47,7 @@ const userTypes = [
   {
     id: 'student',
     title: "I'm studying or learning",
-    definition: 'Lectures, revision and deadlines — paced for what I remember, not burnout.',
+    definition: 'Lectures, revision and deadlines, paced for what I remember, not burnout.',
     icon: BookOpen,
     color: 'bg-launch-gold',
     iconColor: 'text-launch-ink',
@@ -128,7 +128,7 @@ export default function LaunchUserType() {
               {firstName ? `Welcome, ${firstName}. ` : ''}What brings me to MyRhythm?
             </h1>
             <p className="text-lg text-launch-ink-deep max-w-xl mx-auto">
-              MyRhythm is for anyone who wants to remember what matters and follow through. I choose the one that fits best — it only changes the words and examples I see.
+              MyRhythm is for anyone who wants to remember what matters and follow through. I choose the one that fits best, it only changes the words and examples I see.
             </p>
           </motion.div>
 
@@ -170,7 +170,7 @@ export default function LaunchUserType() {
             onClick={notSure}
             className="min-h-14 whitespace-normal text-base text-launch-ink-deep underline underline-offset-4"
           >
-            {fromSettings ? 'Back to Settings' : afterSnapshot ? 'Not now — go to Home' : "I'm not sure — carry on"}
+            {fromSettings ? 'Back to Settings' : afterSnapshot ? 'Not now, go to Home' : "I'm not sure, carry on"}
           </Button>
           <p className="text-base leading-relaxed text-launch-ink-deep">I can change this any time in Settings.</p>
         </div>

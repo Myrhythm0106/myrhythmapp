@@ -9,9 +9,9 @@ type Block = {
 
 const blocks: Block[] = [
   { time: '08:30', title: 'Energy Check', load: 'low' },
-  { time: '10:00', title: 'Deep focus — Memory Bridge review', load: 'peak' },
+  { time: '10:00', title: 'Deep focus, Memory Bridge review', load: 'peak' },
   { time: '13:00', title: 'Lunch + walk', load: 'recovery' },
-  { time: '16:00', title: 'Family call — Support Circle', load: 'medium' },
+  { time: '16:00', title: 'Family call, Support Circle', load: 'medium' },
 ];
 
 const loadStyles: Record<Block['load'], { chip: string; label: string; card: string }> = {

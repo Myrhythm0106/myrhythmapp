@@ -40,7 +40,7 @@ export function SendConfirmation({
                 <p className="text-xs text-stone-500 mt-0.5">
                   {online
                     ? 'They will review and accept. Nothing is added until they say yes.'
-                    : 'Queued offline — will sync automatically when you reconnect.'}
+                    : 'Queued offline, will sync automatically when you reconnect.'}
                 </p>
               </div>
             </div>

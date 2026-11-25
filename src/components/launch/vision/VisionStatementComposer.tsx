@@ -21,7 +21,7 @@ export const LEVELS: { id: VisionLevel; label: string }[] = [
 const ANCHORS: { id: Anchor; label: string; ask: string }[] = [
   { id: 'who', label: 'Who', ask: 'Who will be with you on this?' },
   { id: 'what', label: 'What', ask: 'What do you most want to have or do?' },
-  { id: 'where', label: 'Where', ask: 'Where will this happen — home, work, community?' },
+  { id: 'where', label: 'Where', ask: 'Where will this happen, home, work, community?' },
   { id: 'when', label: 'When', ask: 'By when would you love this to be true?' },
   { id: 'why', label: 'Why', ask: 'Why does this matter to you?' },
   { id: 'how', label: 'How', ask: 'What is one first step you could take?' },
@@ -120,7 +120,7 @@ export function VisionStatementComposer({
           My vision, in one paragraph
         </p>
         <p className="mt-1 text-sm text-brain-health-600">
-          Edit freely. This is mine — change a word, a sentence, or the whole thing.
+          Edit freely. This is mine, change a word, a sentence, or the whole thing.
         </p>
       </div>
 
@@ -171,7 +171,7 @@ export function VisionStatementComposer({
           <div className="grid gap-2 sm:grid-cols-2">
             {ANCHORS.map((a) => (
               <label key={a.id} className="block">
-                <span className="text-xs font-semibold text-brain-health-600">{a.label} — {a.ask}</span>
+                <span className="text-xs font-semibold text-brain-health-600">{a.label}, {a.ask}</span>
                 <Input
                   value={extra[a.id] ?? ''}
                   maxLength={300}

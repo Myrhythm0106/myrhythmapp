@@ -24,7 +24,7 @@ function prefersReducedMotion() {
   );
 }
 
-/** A warmer line for the moments that deserve one — not every single tick. */
+/** A warmer line for the moments that deserve one, not every single tick. */
 function milestoneLine(streakCount?: number, doneThisWeek?: number): string | null {
   if (doneThisWeek === 1) return 'That is the first one this week. The rest gets easier from here.';
   if (doneThisWeek && doneThisWeek % 10 === 0) return `${doneThisWeek} finished this week. That is real follow-through.`;

@@ -29,7 +29,7 @@ export default function LaunchCircleGrowth() {
 
         <p className="text-[11px] text-brain-health-500 leading-snug">
           You can see this because they've turned on MyRHYTHM-G sharing. It's a read-only
-          view — no scores, no streaks.
+          view, no scores, no streaks.
         </p>
       </div>
     </LaunchLayout>

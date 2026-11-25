@@ -32,7 +32,7 @@ function meaningFor(total: number) {
   return 'A heavy season. One thing at a time is the right pace.';
 }
 
-/** Simple, honest trend line — no axes, no clutter. */
+/** Simple, honest trend line, no axes, no clutter. */
 function TrendLine({ points }: { points: { at: string; total: number }[] }) {
   if (points.length < 2) return null;
   const w = 320;

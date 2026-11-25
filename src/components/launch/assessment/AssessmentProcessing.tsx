@@ -50,7 +50,7 @@ export function AssessmentProcessing({ onDone, durationMs = 7000 }: AssessmentPr
         Shaping your rhythm
       </h2>
       <p className="text-sm text-launch-ink/60 mb-6">
-        This takes a few seconds. Nothing to do — we'll bring you straight to your snapshot.
+        This takes a few seconds. Nothing to do, we'll bring you straight to your snapshot.
       </p>
 
       <ul className="space-y-2 text-left w-full max-w-xs">

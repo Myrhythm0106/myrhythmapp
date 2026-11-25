@@ -197,7 +197,7 @@ export default function LaunchMemoryBridge() {
       setRestoredDuration(pending.duration);
       setRecordingTitle(prev => prev || pending.title);
       setState(prev => (prev === 'idle' ? 'reviewing' : prev));
-      toast.info('We recovered your last recording — it\'s ready to save.');
+      toast.info('We recovered your last recording, it\'s ready to save.');
     })();
     return () => { cancelled = true; };
   }, []);
@@ -313,7 +313,7 @@ export default function LaunchMemoryBridge() {
   }, [outOfAllowance, nextTierKey, allowance.period, startRecording, setRecordingTitle]);
 
   // Two-tap capture: arriving with ?record=1 starts recording immediately.
-  // One attempt only — a blocked mic must never retry in a loop.
+  // One attempt only, a blocked mic must never retry in a loop.
   const autoStartedRef = useRef(false);
   const recorderCardRef = useRef<HTMLDivElement | null>(null);
   const recordsRef = useRef<HTMLDivElement | null>(null);
@@ -423,7 +423,7 @@ export default function LaunchMemoryBridge() {
     if (duration >= sessionCapSeconds && !autoStoppedRef.current) {
       autoStoppedRef.current = true;
       toast.info(
-        `Reached the ${formatMinutes(allowance.limits.perRecordingMinutes)} limit for one recording — saving what you've captured.`
+        `Reached the ${formatMinutes(allowance.limits.perRecordingMinutes)} limit for one recording, saving what you've captured.`
       );
       handleStopRecording();
     }
@@ -434,28 +434,28 @@ export default function LaunchMemoryBridge() {
 
   const handleSave = async () => {
     if (isExtracting) {
-      console.log('handleSave: ignored — a save is already running');
+      console.log('handleSave: ignored, a save is already running');
       return;
     }
     if (!audioBlobRef.current) {
-      console.warn('handleSave: blocked — no audio in memory');
+      console.warn('handleSave: blocked, no audio in memory');
       toast.error('That recording is no longer available. Please record again.');
       setState('idle');
       return;
     }
 
     if (audioBlobRef.current.size === 0) {
-      console.warn('handleSave: blocked — empty audio blob');
-      toast.error('That recording came through empty — check your microphone and record again.');
+      console.warn('handleSave: blocked, empty audio blob');
+      toast.error('That recording came through empty, check your microphone and record again.');
       setState('idle');
       return;
     }
 
-    // Never trust stale React auth state — ask Supabase and refresh if needed.
+    // Never trust stale React auth state, ask Supabase and refresh if needed.
     const userId = await ensureSession();
     if (!userId) {
-      console.warn('handleSave: blocked — session expired and could not be refreshed');
-      toast.error('Your session timed out — your recording is safe.', {
+      console.warn('handleSave: blocked, session expired and could not be refreshed');
+      toast.error('Your session timed out, your recording is safe.', {
         description: 'Sign in and it will pick up right where it left off.',
         action: {
           label: 'Sign in',
@@ -471,7 +471,7 @@ export default function LaunchMemoryBridge() {
 
 
     try {
-      console.log('handleSave: stage 1 — uploading audio', {
+      console.log('handleSave: stage 1, uploading audio', {
         bytes: audioBlobRef.current.size,
         type: audioBlobRef.current.type,
       });
@@ -485,14 +485,14 @@ export default function LaunchMemoryBridge() {
       );
 
       if (!saved) {
-        console.warn('handleSave: stage 1 failed — upload/insert returned nothing');
+        console.warn('handleSave: stage 1 failed, upload/insert returned nothing');
         toast.error("Couldn't upload that recording.", {
-          description: 'Your audio is still here — check your connection and tap Save again.',
+          description: 'Your audio is still here, check your connection and tap Save again.',
           duration: 10000,
         });
         return;
       }
-      console.log('handleSave: stage 2 — recording row saved', saved.id);
+      console.log('handleSave: stage 2, recording row saved', saved.id);
 
       audioBlobRef.current = null;
       await clearPendingRecording();
@@ -502,7 +502,7 @@ export default function LaunchMemoryBridge() {
       setRequestedConversationId(saved.id);
 
       // Automatically start extraction
-      console.log('handleSave: stage 3 — starting extraction');
+      console.log('handleSave: stage 3, starting extraction');
       const result = await processSavedRecording(
         saved.id,
         userId,
@@ -515,7 +515,7 @@ export default function LaunchMemoryBridge() {
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
         if (outputMode === 'transcript' && result.meetingId) {
-          toast.success('Recording saved — my transcript is ready.');
+          toast.success('Recording saved, my transcript is ready.');
           setTranscriptFor({ meetingId: result.meetingId, title });
         } else {
           toast.success('Recording saved.', { description: 'I can ask for a transcript or actions any time from My Records.' });
@@ -525,7 +525,7 @@ export default function LaunchMemoryBridge() {
         setRecordingTitle('');
         return;
       }
-      console.log('handleSave: stage 4 — extraction finished', result);
+      console.log('handleSave: stage 4, extraction finished', result);
 
 
 
@@ -555,17 +555,17 @@ export default function LaunchMemoryBridge() {
         setLoopAdhoc([]);
       } else if (result.success) {
         // Saved and transcribed, but nothing actionable was found. Never dead-end
-        // on a "0 actions" toast — open the review surface with the transcript so
+        // on a "0 actions" toast, open the review surface with the transcript so
         // I can extract again or add my own next step.
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
         setViewingActions({ recordingId: saved.id, title });
-        toast.info('Recording saved — no next steps found yet.', {
+        toast.info('Recording saved, no next steps found yet.', {
           description: 'Open the transcript to extract again or add your own step.',
           duration: 8000,
         });
       }
-      // On failure, processSavedRecording already shows a toast — nothing else to do.
+      // On failure, processSavedRecording already shows a toast, nothing else to do.
 
 
       fetchRecordings();
@@ -648,7 +648,7 @@ export default function LaunchMemoryBridge() {
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
         setViewingActions({ recordingId: saved.id, title });
-        toast.info('Upload saved — no next steps found yet.', {
+        toast.info('Upload saved, no next steps found yet.', {
           description: 'Open the transcript to extract again or add your own step.',
           duration: 8000,
         });
@@ -677,7 +677,7 @@ export default function LaunchMemoryBridge() {
 
     const userId = await ensureSession();
     if (!userId) {
-      toast.error('Your session timed out — nothing was lost.', {
+      toast.error('Your session timed out, nothing was lost.', {
         description: 'Sign in again and schedule these steps from Recent Recordings.',
         action: {
           label: 'Sign in',
@@ -701,7 +701,7 @@ export default function LaunchMemoryBridge() {
         toast.error(
           summary.total === 0
             ? 'There are no next steps to schedule yet.'
-            : 'Nothing could be added to my diary — please try again.',
+            : 'Nothing could be added to my diary, please try again.',
         );
         throw new Error('No steps were added. Please try again.');
       } else {
@@ -950,7 +950,7 @@ export default function LaunchMemoryBridge() {
                   )} role="status" aria-live="polite">
                     {recordedBytes > 0
                       ? `Audio captured: ${formatBytes(recordedBytes)}`
-                      : 'No audio captured yet — check your microphone is on'}
+                      : 'No audio captured yet, check your microphone is on'}
                   </p>
 
 
@@ -1053,7 +1053,7 @@ export default function LaunchMemoryBridge() {
 
                   {(isProcessing || isExtracting) && (
                     <p className="mt-3 text-base text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
-                      This can take a minute on a phone. Your recording is safe — you can leave this
+                      This can take a minute on a phone. Your recording is safe, you can leave this
                       screen and come back, it'll be waiting in your captures.
                     </p>
                   )}
@@ -1169,7 +1169,7 @@ export default function LaunchMemoryBridge() {
                       )}
                     </div>
 
-                    {/* Output toolbar: Copy / Email / Download — cognitive-load-safe takeaway */}
+                    {/* Output toolbar: Copy / Email / Download, cognitive-load-safe takeaway */}
                     <OutputActions
                       text={[
                         `Recording: ${recording.title}`,
@@ -1177,9 +1177,9 @@ export default function LaunchMemoryBridge() {
                         recording.duration_seconds ? `Length: ${formatDuration(recording.duration_seconds)}` : '',
                         actionsCount > 0 ? `Actions found: ${actionsCount}` : '',
                         recording.transcription ? `\nTranscript:\n${recording.transcription}` : '',
-                        '\n— Sent from MyRhythm (Founding Edition · v0.1)',
+                        '\nSent from MyRhythm (Founding Edition · v0.1)',
                       ].filter(Boolean).join('\n')}
-                      subject={`MyRhythm — ${recording.title}`}
+                      subject={`MyRhythm, ${recording.title}`}
                       size="compact"
                       className="pt-1"
                     />
@@ -1209,7 +1209,7 @@ export default function LaunchMemoryBridge() {
         actionTitle={
           lastExtractionResult?.actionsCount
             ? `${lastExtractionResult.actionsCount} ${lastExtractionResult.actionsCount === 1 ? 'action' : 'actions'} scheduled`
-            : "Recording saved — my transcript and summary are ready"
+            : "Recording saved, my transcript and summary are ready"
         }
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}

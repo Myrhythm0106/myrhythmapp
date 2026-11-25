@@ -16,17 +16,17 @@ export default function LaunchCapture() {
       capabilityKey="capture"
       eyebrow="Capability 01 · Capture"
       title="A reliable record of the conversations that matter."
-      lede="Capture turns spoken moments — clinical visits, family check-ins, fleeting ideas — into a private, searchable record I can return to with confidence."
+      lede="Capture turns spoken moments, clinical visits, family check-ins, fleeting ideas, into a private, searchable record I can return to with confidence."
       heroIcon={Brain}
       tone="emerald"
       metaPills={[
-        { label: 'Overview page — go to Memory Bridge to record', tone: 'info' },
+        { label: 'Overview page, go to Memory Bridge to record', tone: 'info' },
         { label: 'Avg. setup · 4 min', tone: 'neutral' },
         { label: 'On-device first', tone: 'success' },
       ]}
       whyParagraphs={[
-        'Memory rarely fails on schedule. The conversations that matter most often arrive when energy is lowest — at the bedside, after a diagnosis, during a difficult call.',
-        'Capture gives me a calm, dependable system to record, transcribe, and revisit those moments — so nothing important is left to recall under pressure.',
+        'Memory rarely fails on schedule. The conversations that matter most often arrive when energy is lowest, at the bedside, after a diagnosis, during a difficult call.',
+        'Capture gives me a calm, dependable system to record, transcribe, and revisit those moments, so nothing important is left to recall under pressure.',
         'It is just as useful for everyday life: meetings, family plans, creative ideas, or any conversation I may need to trust later.',
       ]}
       capabilities={[
@@ -65,7 +65,7 @@ export default function LaunchCapture() {
         {
           step: '01',
           title: 'Capture',
-          description: 'Record what matters — without disrupting the moment.',
+          description: 'Record what matters, without disrupting the moment.',
         },
         {
           step: '02',

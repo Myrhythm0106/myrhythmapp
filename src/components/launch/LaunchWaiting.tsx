@@ -12,7 +12,7 @@ export function LaunchWaiting({ message = 'Getting your day ready…' }: { messa
       <p className="text-lg text-launch-ink">{message}</p>
       {slow && (
         <Link to="/launch/home" className="min-h-[56px] inline-flex items-center px-6 rounded-xl border border-launch-gold/40 text-launch-ink font-medium hover:bg-launch-cream">
-          This is taking a while — take me Home
+          This is taking a while, take me Home
         </Link>
       )}
     </div>

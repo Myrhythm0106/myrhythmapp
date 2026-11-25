@@ -57,7 +57,7 @@ export function ResearchConsentCard() {
         );
         if (error) throw error;
         setGranted(true);
-        toast.success('Thank you — your patterns will help others.');
+        toast.success('Thank you, your patterns will help others.');
       } else {
         const { error } = await supabase.rpc('withdraw_research_consent');
         if (error) throw error;
@@ -80,7 +80,7 @@ export function ResearchConsentCard() {
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-semibold text-launch-ink">Contribute to research</h3>
             <p className="text-sm text-launch-ink/70 mt-1">
-              Share the <span className="font-medium">shape</span> of how you use MyRhythm — never your words.
+              Share the <span className="font-medium">shape</span> of how you use MyRhythm, never your words.
               Off unless you turn it on. You can turn it off at any time.
             </p>
           </div>
@@ -107,9 +107,9 @@ export function ResearchConsentCard() {
             <div>
               <p className="font-semibold text-launch-ink mb-1.5">What travels</p>
               <ul className="space-y-1 list-disc pl-5">
-                <li>Counts — how often you captured, committed, rescheduled or celebrated</li>
-                <li>Rhythm — which days you were active, how long between plan and action</li>
-                <li>Broad bands — an age band, a stage band, a months-since band</li>
+                <li>Counts, how often you captured, committed, rescheduled or celebrated</li>
+                <li>Rhythm, which days you were active, how long between plan and action</li>
+                <li>Broad bands, an age band, a stage band, a months-since band</li>
               </ul>
             </div>
             <div>
@@ -117,14 +117,14 @@ export function ResearchConsentCard() {
               <ul className="space-y-1 list-disc pl-5">
                 <li>Recordings, transcripts, action titles, notes or any text you wrote</li>
                 <li>Your name, email, exact age, exact dates or anything about your Support Circle</li>
-                <li>Your account ID — rows carry a one-way pseudonym that cannot be reversed</li>
+                <li>Your account ID, rows carry a one-way pseudonym that cannot be reversed</li>
               </ul>
             </div>
             <div className="flex items-start gap-2 rounded-lg bg-launch-gold/10 border border-launch-gold/30 p-3">
               <ShieldCheck className="h-4 w-4 text-launch-gold mt-0.5 shrink-0" />
               <p className="text-launch-ink/80">
                 Nothing is ever reported for a group of fewer than 20 people, so no pattern can be traced back
-                to one person. MyRhythm does not diagnose, treat or make medical claims — this data describes
+                to one person. MyRhythm does not diagnose, treat or make medical claims, this data describes
                 everyday behaviour, confidence and quality of life only.
               </p>
             </div>

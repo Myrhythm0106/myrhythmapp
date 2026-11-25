@@ -37,7 +37,7 @@ function stamp(d: Date): string {
   return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
 
-/** Wall-clock date/time treated as UTC — calendars re-render in the viewer's zone. */
+/** Wall-clock date/time treated as UTC, calendars re-render in the viewer's zone. */
 function instant(date: string, time?: string | null): Date {
   const [y, m, d] = (date || "").split("-").map(Number);
   const [hh, mm] = (time || "09:00").slice(0, 5).split(":").map(Number);

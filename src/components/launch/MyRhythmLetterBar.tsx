@@ -32,11 +32,11 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
     ? foundingMemberConfig.currentPrice.monthly.toFixed(0)
     : foundingMemberConfig.regularPrice.monthly.toFixed(0);
 
-  const label = `${letter} — ${insight.word}, score ${band} of 3. Tap for your personal read.`;
+  const label = `${letter}, ${insight.word}, score ${band} of 3. Tap for your personal read.`;
   const teaser = getSnapshotTeaser(persona, id);
   const ctaLabel = isFoundingMemberActive()
-    ? `Become a Founding Member — £${price}/mo`
-    : `Unlock your full plan — £${price}/mo`;
+    ? `Become a Founding Member, £${price}/mo`
+    : `See my full plan, £${price}/mo`;
 
   const trigger = (
     <button
@@ -114,7 +114,7 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
           </DialogHeader>
 
           <div className="space-y-5 pt-2">
-            {/* FREE TIER — band meaning + persona line */}
+            {/* FREE TIER, band meaning + persona line */}
             <div>
               <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 mb-2">
                 What this facet means
@@ -125,7 +125,7 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
               </p>
             </div>
 
-            {/* PREMIUM TIER — structured teaser, not blur */}
+            {/* PREMIUM TIER, structured teaser, not blur */}
             <div className="rounded-sm border border-[#c9a84c]/40 bg-[#f5f0e0]/40 p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500">
@@ -180,7 +180,7 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
             </div>
 
             <p className="text-[10px] text-stone-400 leading-relaxed border-t border-stone-100 pt-3">
-              A snapshot only — not a clinical score. MyRhythm does not diagnose, treat, or cure any condition.
+              A snapshot only, not a clinical score. MyRhythm does not diagnose, treat, or cure any condition.
             </p>
           </div>
         </DialogContent>

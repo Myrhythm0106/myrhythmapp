@@ -28,7 +28,7 @@ export default function LaunchRoadmap() {
 
   const handleCSV = () => {
     exportToCSV(filteredTasks);
-    toast.success('CSV downloaded — open in Google Sheets via File → Import');
+    toast.success('CSV downloaded, open in Google Sheets via File → Import');
   };
 
   const handleShare = () => {
@@ -41,7 +41,7 @@ export default function LaunchRoadmap() {
       <div className="space-y-8">
         <PageHeader
           title="MyRhythm CCM Roadmap"
-          subtitle="Interactive development timeline — April to December 2026"
+          subtitle="Interactive development timeline, April to December 2026"
         >
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" onClick={handleCSV}>

@@ -13,7 +13,7 @@ import { LaunchStartingChoices } from './LaunchStartingChoices';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 
 /**
- * LaunchYouAreHereDial — the "Wayfinder".
+ * LaunchYouAreHereDial, the "Wayfinder".
  * A quiet circular trigger opens a structured path of four familiar landmarks.
  * The ordered path keeps every destination easy to scan while secondary places
  * stay behind "More places".
@@ -128,7 +128,7 @@ export function LaunchYouAreHereDial() {
 
   return (
     <>
-      {/* Compact dial trigger — champagne-gold ring, deep-ink centre */}
+      {/* Compact dial trigger, champagne-gold ring, deep-ink centre */}
       <div className="flex shrink-0 flex-col items-center gap-1">
         <button
           ref={triggerRef}
@@ -190,7 +190,7 @@ export function LaunchYouAreHereDial() {
               </button>
             )}
 
-            {/* Structured path — one calm reading order, no detached ring labels. */}
+            {/* Structured path, one calm reading order, no detached ring labels. */}
             <div className="relative mx-auto mt-6 w-full max-w-lg">
               <div className="absolute bottom-7 left-7 top-7 w-px bg-launch-gold/40" aria-hidden="true" />
               <ul className="relative space-y-3">

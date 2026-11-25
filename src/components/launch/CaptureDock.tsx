@@ -40,7 +40,7 @@ export function CaptureDock() {
         <button
           type="button"
           onClick={() => navigate('/launch/memory')}
-          aria-label="Recording now — go back to my recording"
+          aria-label="Recording now, go back to my recording"
           className="min-h-12 flex items-center gap-2 rounded-full px-3 text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-launch-gold/50"
         >
           <span className="relative flex h-3 w-3">

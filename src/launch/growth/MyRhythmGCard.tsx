@@ -18,7 +18,7 @@ export function MyRhythmGCard({ className, ownerId, compact }: MyRhythmGCardProp
 
   return (
     <section
-      aria-label={`${MYRHYTHM_G_BRAND} — where you are in your rhythm today`}
+      aria-label={`${MYRHYTHM_G_BRAND}, where you are in your rhythm today`}
       className={cn(
         'rounded-2xl border border-brain-health-100 bg-white/70 backdrop-blur-sm p-4 sm:p-5 shadow-sm',
         className
@@ -66,7 +66,7 @@ export function MyRhythmGCard({ className, ownerId, compact }: MyRhythmGCardProp
       )}
 
       <p className="mt-3 text-[11px] text-brain-health-500 leading-snug">
-        {MYRHYTHM_G_BRAND} uses the same 8 letters as your MYRHYTHM assessment —
+        {MYRHYTHM_G_BRAND} uses the same 8 letters as your MYRHYTHM assessment,
         one is who you are, the other is where you are today.
       </p>
     </section>

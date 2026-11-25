@@ -13,7 +13,7 @@ interface Props {
 }
 
 function buildShareText(statement: string): string {
-  return `Today I Choose… ${statement}\n\n— sent from MyRhythm  #IChoose`;
+  return `Today I Choose… ${statement}\n\nSent from MyRhythm  #IChoose`;
 }
 
 export function IChooseShareSheet({ open, onClose, statement }: Props) {

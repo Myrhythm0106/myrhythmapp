@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
           ["done", "let_go", "cancelled"].includes(e.reminder_status ?? ""),
       );
 
-      // Skip anything already finished or archived — no nagging on done work.
+      // Skip anything already finished or archived, no nagging on done work.
       const finished =
         !action ||
         action.archived_at ||

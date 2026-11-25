@@ -48,9 +48,9 @@ export function LaunchDailyBrief({ date, eventCount, focusTitle, className }: La
       const latest = moods?.[0] as { energy_level: number | null } | undefined;
       if (latest && typeof latest.energy_level === 'number') {
         if (latest.energy_level <= 2) {
-          setEnergyNote('Energy is low — protect one high-value task, park the rest.');
+          setEnergyNote('Energy is low, protect one high-value task, park the rest.');
         } else if (latest.energy_level >= 4) {
-          setEnergyNote('Energy is strong — tackle your focus item first.');
+          setEnergyNote('Energy is strong, tackle your focus item first.');
         } else {
           setEnergyNote(null);
         }
@@ -67,7 +67,7 @@ export function LaunchDailyBrief({ date, eventCount, focusTitle, className }: La
 
   const countLine =
     eventCount === 0
-      ? "Nothing scheduled yet — a clear day is a choice."
+      ? "Nothing scheduled yet, a clear day is a choice."
       : `You have ${eventCount} thing${eventCount === 1 ? '' : 's'} today.`;
 
   return (

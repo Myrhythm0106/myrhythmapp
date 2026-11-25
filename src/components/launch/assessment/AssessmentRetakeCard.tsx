@@ -47,7 +47,7 @@ export function AssessmentRetakeCard() {
     <div className="max-w-md mx-auto w-full px-4 pb-10">
       <div className="rounded-2xl border border-launch-gold/30 bg-launch-ivory p-5">
         <h3 className="font-display font-bold text-launch-ink mb-1">
-          Things change — so can your snapshot
+          Things change, so can your snapshot
         </h3>
         <p className="text-sm text-launch-ink/65 mb-4">
           Retake the assessment whenever you want. Every snapshot is kept, so you can see

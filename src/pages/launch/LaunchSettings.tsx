@@ -117,7 +117,7 @@ export default function LaunchSettings() {
       <LaunchHeroBand
         eyebrow="Preferences"
         title="Settings"
-        subtitle="Customize your rhythm, privacy, connections and brain-healthy scheduling."
+        subtitle="Set up my rhythm, privacy, connections and brain-healthy scheduling."
       />
 
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24 space-y-4">
@@ -136,14 +136,14 @@ export default function LaunchSettings() {
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900">About this edition</h3>
               <p className="text-xs text-gray-500">
-                {EDITION_SHORT} · {EDITION_VERSION} — what's live and what's coming
+                {EDITION_SHORT} · {EDITION_VERSION}, what's live and what's coming
               </p>
             </div>
             <ChevronRight className="h-5 w-5 text-gray-400" />
           </button>
         </LaunchCard>
 
-        {/* What brings me to MyRhythm — the set-up choice, changeable any time */}
+        {/* What brings me to MyRhythm, the set-up choice, changeable any time */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
             onClick={() => navigate('/launch/user-type?after=snapshot&from=settings')}
@@ -194,7 +194,7 @@ export default function LaunchSettings() {
           </button>
         </LaunchCard>
 
-        {/* Scheduling — SMART · Milestones · Health-aware */}
+        {/* Scheduling, SMART · Milestones · Health-aware */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
@@ -258,16 +258,16 @@ export default function LaunchSettings() {
           </div>
         </LaunchCard>
 
-        {/* Brain-Healthy Scheduling — editable defaults with ranges */}
+        {/* Brain-Healthy Scheduling, editable defaults with ranges */}
         <DeviceRemindersCard />
 
-        {/* Fast access — optional phone shortcut setup */}
+        {/* Fast access, optional phone shortcut setup */}
         <TapToRecordCard />
 
-        {/* What I get from each recording — default, changeable per recording */}
+        {/* What I get from each recording, default, changeable per recording */}
         <OutputModeSettingsCard />
 
-        {/* Capture safety — help that follows me across devices */}
+        {/* Capture safety, help that follows me across devices */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
@@ -333,14 +333,14 @@ export default function LaunchSettings() {
 
         <BrainHealthySettingsCard />
 
-        {/* Time-blocking — opt-in, template-seeded, fully editable */}
+        {/* Time-blocking, opt-in, template-seeded, fully editable */}
         <TimeBlockingSettingsCard />
 
 
         {/* Planning Day Section */}
         <PlanningDayCard />
 
-        {/* My plan in any calendar — no sign-in needed */}
+        {/* My plan in any calendar, no sign-in needed */}
         <CalendarFeedCard />
 
         {/* Connected Calendars Section */}
@@ -451,7 +451,7 @@ export default function LaunchSettings() {
             </button>
           </div>
 
-          {/* Any other calendar — Apple, Fastmail, most work calendars */}
+          {/* Any other calendar, Apple, Fastmail, most work calendars */}
           <div className="mt-4 pt-4 border-t border-launch-gold/20">
             <p className="text-sm font-medium text-gray-900">Apple or any other calendar</p>
             <p className="text-xs text-gray-500 mb-2">
@@ -731,7 +731,7 @@ function PlanningDayCard() {
         </SelectContent>
       </Select>
       <p className="text-xs text-gray-500 mt-3">
-        A gentle nudge appears on your Home on this day. You can plan any day — this just sets the reminder.
+        A gentle nudge appears on your Home on this day. You can plan any day, this just sets the reminder.
       </p>
     </LaunchCard>
   );

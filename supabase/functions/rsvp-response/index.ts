@@ -68,7 +68,7 @@ serve(async (req: Request) => {
       const when = ev?.date ? ` on ${ev.date}${ev.time ? ` at ${String(ev.time).slice(0, 5)}` : ""}` : "";
 
       if (answer === "accepted") {
-        return page("Thank you — you're in", `You said yes to ${what}${when}. It's in the organiser's plan, and the calendar file in the email adds it to yours.`);
+        return page("Thank you, you're in", `You said yes to ${what}${when}. It's in the organiser's plan, and the calendar file in the email adds it to yours.`);
       }
       if (answer === "declined") {
         return page("Thank you for letting us know", `You said no to ${what}${when}. The organiser has been told.`);

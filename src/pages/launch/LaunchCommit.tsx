@@ -163,14 +163,14 @@ export default function LaunchCommit() {
     if ((status === 'done' || status === 'completed') && action.status !== 'done' && action.status !== 'completed') {
       const result = await completeAction(actionId, action.action_text);
       if (!result) {
-        toast.error("That didn't save — please try again");
+        toast.error("That didn't save, please try again");
         return;
       }
       setActions(current => current.map(item => item.id === actionId
         ? { ...item, status: 'done', completion_date: new Date().toISOString().slice(0, 10), archived_at: new Date().toISOString() }
         : item));
       setCelebration(result);
-      toast.success('Done — nicely closed off', {
+      toast.success('Done, nicely closed off', {
         action: {
           label: 'Undo',
           onClick: async () => {
@@ -181,7 +181,7 @@ export default function LaunchCommit() {
                 : item));
               toast.success('Back on my open list');
             } else {
-              toast.error("Couldn't undo that — please try again");
+              toast.error("Couldn't undo that, please try again");
             }
           }
         }

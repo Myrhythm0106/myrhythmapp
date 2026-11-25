@@ -46,7 +46,7 @@ export function LaunchYesWeekCard({ date, onAdd }: Props) {
   return (
     <section aria-label="This week in my YES plan" className="rounded-2xl border border-launch-teal/30 bg-launch-teal/5 p-4 text-launch-ink">
       <p className="text-xs uppercase tracking-[0.2em] font-bold text-launch-teal">This week in my YES plan</p>
-      <p className="font-semibold mt-1">Week {week} of 3 · {letter.id} — {letter.word}</p>
+      <p className="font-semibold mt-1">Week {week} of 3 · {letter.id}, {letter.word}</p>
       <ul className="mt-3 space-y-2">
         {actions.map((a) => {
           const state = handled[a.id];

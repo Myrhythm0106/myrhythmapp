@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { isPublicPath } from './publicPaths';
 
-describe('isPublicPath — sign-in needed beyond the landing page', () => {
+describe('isPublicPath, sign-in needed beyond the landing page', () => {
   it('the landing page is open to everyone', () => {
     expect(isPublicPath('/launch/landingpage')).toBe(true);
   });

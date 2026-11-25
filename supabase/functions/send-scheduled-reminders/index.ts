@@ -158,7 +158,7 @@ serve(async (req) => {
         }
 
         if (isClosed(reminder.calendar_events)) {
-          continue; // Answered elsewhere in the app — no nagging on finished items
+          continue; // Answered elsewhere in the app, no nagging on finished items
         }
 
         const { date, time, title } = reminder.calendar_events;

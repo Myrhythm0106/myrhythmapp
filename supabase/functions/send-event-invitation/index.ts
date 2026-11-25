@@ -191,7 +191,7 @@ const handler = async (req: Request): Promise<Response> => {
           from: "MyRhythm <noreply@myrhythmapp.com>",
           replyTo: organiserEmail,
           to: [person.email],
-          subject: `Invitation: ${body.actionText.slice(0, 60)} — ${when}`,
+          subject: `Invitation: ${body.actionText.slice(0, 60)}, ${when}`,
           html: shell(`
             <p style="margin:0 0 12px;"><strong>${esc(organiser)}</strong> has invited you to:</p>
             <p style="font-size:17px;font-weight:600;margin:0 0 12px;">${esc(body.actionText)}</p>

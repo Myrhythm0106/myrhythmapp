@@ -24,7 +24,7 @@ function bucket(): 'morning' | 'afternoon' | 'evening' {
 const OPENERS: Record<string, { hello: string; line: string }> = {
   morning: {
     hello: 'Good morning',
-    line: 'Today is mine to shape. Whatever it holds, I meet it my way — one clear step at a time, with MyRhythm holding the rest.',
+    line: 'Today is mine to shape. Whatever it holds, I meet it my way, one clear step at a time, with MyRhythm holding the rest.',
   },
   afternoon: {
     hello: 'Good afternoon',
@@ -122,7 +122,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
       const arrivedOnPurpose = params.get('welcome') === '1';
       if (!arrivedOnPurpose && !localStorage.getItem(key)) setOpen(true);
     } catch {
-      /* storage blocked — skip the overlay rather than trapping the user */
+      /* storage blocked, skip the overlay rather than trapping the user */
     }
     setVision(loadVision());
   }, [key]);
@@ -147,7 +147,7 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
 
   const shapeSummary = pending.length
     ? `${pending.length} ${pending.length === 1 ? 'commitment' : 'commitments'}${pending[0]?.time ? ` · first at ${pending[0].time}` : ''}`
-    : 'Nothing scheduled — the day is open';
+    : 'Nothing scheduled, the day is open';
 
   const dateLine = new Date()
     .toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' })

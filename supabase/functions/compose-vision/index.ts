@@ -73,7 +73,7 @@ Return:
     if (!res.ok || !res.body) {
       const t = await res.text().catch(() => '');
       console.error('gateway', res.status, t);
-      const msg = res.status === 429 ? 'Busy right now — please try again in a minute.'
+      const msg = res.status === 429 ? 'Busy right now, please try again in a minute.'
         : res.status === 402 ? 'The vision writer is paused (AI credits). Your text is safe.'
         : 'Could not write a draft just now. Your text is safe.';
       return json({ error: msg }, res.status === 429 || res.status === 402 || res.status === 403 ? res.status : 502);

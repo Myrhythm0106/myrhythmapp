@@ -7,7 +7,7 @@ import { clearResumePoint } from '@/launch/onboarding/resumePoint';
 
 export default function LaunchDashboard() {
 
-  // Reaching Home means onboarding is done — unlock the wayfinder dial.
+  // Reaching Home means onboarding is done, unlock the wayfinder dial.
   useEffect(() => {
     markAppReady();
     clearResumePoint();

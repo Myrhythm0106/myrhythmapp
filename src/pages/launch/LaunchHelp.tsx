@@ -25,7 +25,7 @@ export default function LaunchHelp() {
     {
       id: '1',
       question: 'How do I get started with MyRhythm?',
-      answer: 'Start by completing the quick assessment to personalize your experience. Then explore the dashboard to see your daily actions, try a brain game, or write in your gratitude journal.',
+      answer: 'Start with the short Questions so MyRhythm fits the way I work. Then open Home to see what matters today, or record a conversation in Memory Bridge.',
       category: 'Getting Started'
     },
     {

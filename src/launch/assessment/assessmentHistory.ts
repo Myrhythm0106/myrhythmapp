@@ -14,7 +14,7 @@ export interface StoredAssessmentRun {
 
 /**
  * Persist a completed assessment run so it can be re-taken and compared later.
- * Silently no-ops when there's no signed-in user (tester / bypass mode) — the
+ * Silently no-ops when there's no signed-in user (tester / bypass mode), the
  * local snapshot in localStorage is always written by the caller regardless.
  */
 export async function saveAssessmentRun(params: {

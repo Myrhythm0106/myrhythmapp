@@ -1,5 +1,5 @@
 /**
- * Send a dated step to any outside calendar — no account, no sign-in.
+ * Send a dated step to any outside calendar, no account, no sign-in.
  *
  * Three routes from one record:
  *  - Google Calendar  (pre-filled "save event" page)
@@ -113,7 +113,7 @@ function uidFor(item: ExternalCalendarItem): string {
 }
 
 /**
- * A plain PUBLISH calendar entry — no attendees, no RSVP. This is the
+ * A plain PUBLISH calendar entry, no attendees, no RSVP. This is the
  * "put it in my own diary" file, distinct from the REQUEST invitations we
  * email to other people.
  */

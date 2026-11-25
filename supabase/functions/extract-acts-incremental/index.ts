@@ -386,7 +386,7 @@ Be encouraging and supportive - remember these users may have memory challenges.
     // Import validation module
     const { validateExtractedAction } = await import('./validators.ts');
 
-    // Score actions — never silently drop them. Low scores are kept and flagged
+    // Score actions, never silently drop them. Low scores are kept and flagged
     // for review so the person always sees something they can edit or schedule.
     const validatedActions = [];
     for (const action of extractedActions) {

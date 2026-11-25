@@ -21,7 +21,7 @@ export function CalendarFeedCard() {
       toast.success('Link copied. Paste it into your calendar.');
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      toast.error("I couldn't copy it — press and hold the link to copy it by hand.");
+      toast.error("I couldn't copy it, press and hold the link to copy it by hand.");
     }
   };
 
@@ -63,7 +63,7 @@ export function CalendarFeedCard() {
             <h3 className="font-semibold text-launch-ink">See my plan in my own calendar</h3>
             <p className="text-sm text-launch-ink/70 mt-1">
               Paste one link into Google, Outlook or Apple Calendar. Every dated step shows up
-              there and keeps itself current — I never have to add anything twice.
+              there and keeps itself current, I never have to add anything twice.
             </p>
           </div>
 
@@ -130,7 +130,7 @@ export function CalendarFeedCard() {
               </div>
 
               <p className="text-xs text-launch-ink/55">
-                The link is private to me and read-only — anything I paste it into can show my steps,
+                The link is private to me and read-only, anything I paste it into can show my steps,
                 but nothing can change them. If I ever share it by mistake, I can create a new one above.
               </p>
             </>

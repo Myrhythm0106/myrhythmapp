@@ -49,8 +49,8 @@ export async function closeLinkedAction(eventId: string, kind: CloseKind, db: Db
   const message = kind === 'let_go'
     ? 'Your conversation step is closed too.'
     : told > 0
-      ? 'Done — your conversation step is closed and your Support Circle has been told.'
-      : 'Done — your conversation step is closed.';
+      ? 'Done, your conversation step is closed and your Support Circle has been told.'
+      : 'Done, your conversation step is closed.';
   if (notify) toast.success(message, { action: { label: 'Undo', onClick: () => { void undo().then(() => toast('Step reopened')); } } });
   return { actionId, told, undo, message };
 }

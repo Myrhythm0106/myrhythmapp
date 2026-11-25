@@ -119,7 +119,7 @@ export default function LaunchRegister() {
       });
 
       // An existing email comes back with no error but an empty identities
-      // list — treat that as "already registered", never a silent success.
+      // list, treat that as "already registered", never a silent success.
       const alreadyRegistered =
         (!!error &&
           /already registered|already been registered|user already exists/i.test(error.message || '')) ||
@@ -132,7 +132,7 @@ export default function LaunchRegister() {
         return;
       }
 
-      // Make sure we end up with a real session — checkout and saving your
+      // Make sure we end up with a real session, checkout and saving your
       // results both need one.
       let session = data?.session ?? null;
       if (!session) {
@@ -148,20 +148,20 @@ export default function LaunchRegister() {
             return;
           }
           if (/confirm/i.test(signInError?.message || '')) {
-            // Email confirmation is switched on — show the verify screen.
+            // Email confirmation is switched on, show the verify screen.
             setRegistrationSuccess(true);
             toast.success('Account created! Please check your email to confirm it.');
             return;
           }
           toast.error("We couldn't sign you in automatically", {
-            description: 'Your account exists — please sign in to carry on.',
+            description: 'Your account exists, please sign in to carry on.',
           });
           navigate('/launch/signin');
           return;
         }
       }
 
-      toast.success(plan === 'member' ? "You're in — next, my membership." : "You're in — next, add my card for my free 7 days.");
+      toast.success(plan === 'member' ? "You're in, next, my membership." : "You're in, next, add my card for my free 7 days.");
       navigate(afterAccount(), { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
@@ -483,7 +483,7 @@ export default function LaunchRegister() {
                     <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      {plan === 'member' ? 'Create my account and join' : 'Create my account — start free'}
+                      {plan === 'member' ? 'Create my account and join' : 'Create my account, start free'}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}

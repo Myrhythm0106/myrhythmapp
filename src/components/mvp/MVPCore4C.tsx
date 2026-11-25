@@ -51,7 +51,7 @@ const chapters: Chapter[] = [
     title: 'The conversation stays with you.',
     promise: 'Record a conversation or upload a report',
     description:
-      'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view—without asking you to remember everything at once.',
+      'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view, without asking you to remember everything at once.',
     image: emotionalLandscapeImg,
     alt: 'A person reviewing notes outdoors after an important conversation',
     detailTitle: 'What you can expect',
@@ -103,7 +103,7 @@ const chapters: Chapter[] = [
     number: '04',
     marker: 'THE PERSON',
     title: 'The right person can stay connected.',
-    promise: 'Loop in someone you trust — if you choose',
+    promise: 'Loop in someone you trust, if you choose',
     description:
       'A family member, friend or professional can receive only the action or update you choose to share. Support remains permission-based, practical and personal.',
     image: strengthTogetherImg,
@@ -373,7 +373,7 @@ export function MVPCore4C() {
                 The companion that turns conversations into follow-through.
               </h1>
               <p className="mt-4 max-w-2xl font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
-                Like having a discreet executive assistant at every appointment, meeting, and family conversation — so nothing important slips, and people can count on you <span className="text-launch-teal">(again)</span>.
+                Like having a discreet executive assistant at every appointment, meeting, and family conversation, so nothing important slips, and people can count on you <span className="text-launch-teal">(again)</span>.
               </p>
               <p className="mt-3 font-worksans text-base font-bold italic leading-7 text-launch-ink-deep/85 md:mt-5 md:text-lg md:leading-8">
                 Captures it. Plans it. Keeps it. Follows it through.{" "}
@@ -406,7 +406,7 @@ export function MVPCore4C() {
                 {entryState === 'new' && (
                   <>
                     <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                      Get Started: start free for 7 days (card needed, nothing charged for 7 days), or register fully as a Founding Member (£10/month for life · 500 places). Then 4 short steps — account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time.
+                      Get Started: start free for 7 days (card needed, nothing charged for 7 days), or register fully as a Founding Member (£10/month for life · 500 places). Then 4 short steps, account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time.
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
                       Already registered?{' '}
@@ -463,7 +463,7 @@ export function MVPCore4C() {
                 Nothing important should disappear between remembering and doing.
               </h2>
               <p className="mx-auto mt-6 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/70">
-                The 4C loop quietly carries each moment through Capture, Commit, Calibrate and Celebrate—without making your day feel like a system to manage.
+                The 4C loop quietly carries each moment through Capture, Commit, Calibrate and Celebrate, without making your day feel like a system to manage.
               </p>
             </header>
 
@@ -492,9 +492,9 @@ export function MVPCore4C() {
                   { icon: Mic2, label: 'Record a conversation or upload a report', colour: 'bg-launch-ember' },
                   { icon: FileText, label: 'Check your next steps', colour: 'bg-launch-teal' },
                   { icon: CalendarCheck, label: 'Place them into your real schedule', colour: 'bg-launch-gold' },
-                  { icon: Users, label: 'Loop in someone you trust — if you choose', colour: 'bg-launch-teal' },
+                  { icon: Users, label: 'Loop in someone you trust, if you choose', colour: 'bg-launch-teal' },
                   { icon: Link2, label: 'Return to the original conversation at any time', colour: 'bg-launch-ink' },
-                  { icon: CheckCircle2, label: 'Follow through—and mark it complete', colour: 'bg-launch-gold' },
+                  { icon: CheckCircle2, label: 'Follow through, and mark it complete', colour: 'bg-launch-gold' },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -520,7 +520,7 @@ export function MVPCore4C() {
                 Reassuring when memory or energy is harder. Useful when life is full.
               </h2>
               <p className="mt-6 font-worksans text-lg leading-8 text-primary-foreground/75">
-                MyRhythm is designed for people rebuilding confidence after brain injury, navigating memory change, living with ADHD or stress—and for anyone whose responsibilities outrun the space in their head.
+                MyRhythm is designed for people rebuilding confidence after brain injury, navigating memory change, living with ADHD or stress, and for anyone whose responsibilities outrun the space in their head.
               </p>
             </div>
             <div className="grid gap-px overflow-hidden rounded-md border border-primary-foreground/15 bg-primary-foreground/15 sm:grid-cols-3">

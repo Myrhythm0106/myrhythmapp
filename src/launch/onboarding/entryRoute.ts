@@ -7,7 +7,7 @@ import { getResumePoint } from './resumePoint';
  */
 export type EntryIntent = 'start' | 'founding';
 
-/** Who is looking at the landing page — drives button wording. */
+/** Who is looking at the landing page, drives button wording. */
 export type EntryState = 'new' | 'returning' | 'needsQuestions' | 'hasSnapshot' | 'member';
 
 const DEVICE_ACCOUNT_KEY = 'myrhythm_has_account';

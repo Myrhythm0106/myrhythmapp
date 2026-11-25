@@ -28,7 +28,7 @@ export function CompletionStatsStrip({ className }: CompletionStatsStripProps) {
     >
       {nothingYet ? (
         <p className="text-base text-muted-foreground">
-          Nothing finished yet this week — one small step counts.
+          Nothing finished yet this week, one small step counts.
           {stats.openSteps > 0 && (
             <span className="ml-1 text-foreground">
               I have {stats.openSteps} open {stats.openSteps === 1 ? 'step' : 'steps'}.

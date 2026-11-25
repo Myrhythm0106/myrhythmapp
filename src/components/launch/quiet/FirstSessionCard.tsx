@@ -16,7 +16,7 @@ const STEPS: Step[] = [
   {
     key: 'recorded',
     title: 'Record my first conversation',
-    hint: 'Anything — a phone call, an appointment, or a note to myself.',
+    hint: 'Anything, a phone call, an appointment, or a note to myself.',
     icon: Mic,
     cta: 'Start recording',
     to: '/launch/memory?record=1',

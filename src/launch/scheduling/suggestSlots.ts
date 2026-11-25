@@ -1,6 +1,6 @@
 /**
  * Suggest free diary slots for a new step, best time of day first.
- * Pure and tested — used by Home and when conversation steps go into my diary.
+ * Pure and tested, used by Home and when conversation steps go into my diary.
  */
 export interface BusyItem { date: string; time: string; end_time?: string | null; status?: string }
 export interface Slot { date: string; time: string; atPeak: boolean }

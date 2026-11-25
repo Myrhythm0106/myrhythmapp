@@ -1,9 +1,9 @@
 /**
  * How someone chose to begin at Get Started. Both choices add a card straight
  * after the account is created, then carry on with the same set-up:
- *  - 'trial'  : free for 7 days — card at the start, nothing charged for 7 days,
+ *  - 'trial'  : free for 7 days, card at the start, nothing charged for 7 days,
  *               cancel before then and nothing is paid.
- *  - 'member' : register fully — membership starts today, first payment today.
+ *  - 'member' : register fully, membership starts today, first payment today.
  * Device-local; the account itself never depends on it.
  */
 export type StartPlan = 'trial' | 'member';

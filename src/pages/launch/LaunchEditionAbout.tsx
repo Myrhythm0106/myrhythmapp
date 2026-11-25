@@ -13,13 +13,13 @@ import {
 } from '@/config/appDescription';
 
 const LIVE = [
-  '4C loop — Capture, Commit, Calibrate, Celebrate',
+  '4C loop, Capture, Commit, Calibrate, Celebrate',
   'Smart Schedule with energy badges',
   'Memory Bridge recorder (30-day retention)',
   'Support Circle with granular permissions',
   'Record-on-behalf for trusted Anchors (OFF by default)',
-  'Clinical Export PDF — share with your clinician',
-  'GDPR Data Export — download everything we hold',
+  'Clinical Export PDF, share with your clinician',
+  'GDPR Data Export, download everything we hold',
   'Vision Board, Assessment, persona-tailored onboarding',
   'Google Calendar & Outlook sync',
   'MFA, RLS, Vault security baseline',

@@ -10,7 +10,7 @@ interface RhythmDetailStepProps {
 }
 
 /**
- * The compact two-row rhythm step. Not scored — it feeds "My Best Window",
+ * The compact two-row rhythm step. Not scored, it feeds "My Best Window",
  * which the calendar uses as advice, never as a gate.
  */
 export function RhythmDetailStep({ rows, values, onSelect }: RhythmDetailStepProps) {
@@ -50,7 +50,7 @@ export function RhythmDetailStep({ rows, values, onSelect }: RhythmDetailStepPro
       ))}
 
       <p className="text-xs text-launch-ink/55 leading-relaxed">
-        This shapes suggestions only. I can always pick any time I like — other people's
+        This shapes suggestions only. I can always pick any time I like, other people's
         availability and real deadlines still come first.
       </p>
     </div>

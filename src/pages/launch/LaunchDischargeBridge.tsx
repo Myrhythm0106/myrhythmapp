@@ -117,7 +117,7 @@ function saveProgress(progress: Record<DayId, boolean>) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   } catch {
-    /* localStorage disabled — v0.1 accepted trade-off */
+    /* localStorage disabled, v0.1 accepted trade-off */
   }
 }
 

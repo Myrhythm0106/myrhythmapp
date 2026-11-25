@@ -240,7 +240,7 @@ export function LaunchCommitmentBanner({
       </div>
       {!chosenVision && visionLevel !== 'year' && (
         <p className="text-base mb-3">
-          No {VISION_TIMEFRAME_LABEL[visionLevel].toLowerCase()} yet{vision ? " — showing this year's for now." : '.'}{' '}
+          No {VISION_TIMEFRAME_LABEL[visionLevel].toLowerCase()} yet{vision ? ", showing this year's for now." : '.'}{' '}
           <Link to="/launch/vision-statement" className="underline underline-offset-4 text-launch-gold font-semibold">
             Write my {visionLevel === 'three' ? '3-year' : 'long-term'} vision
           </Link>
@@ -248,7 +248,7 @@ export function LaunchCommitmentBanner({
       )}
       {yesWeek && yesWeek !== 'done' && (
         <p className="text-sm mb-3 text-launch-cream/90">
-          <span className="font-semibold text-launch-gold">YES · Week {yesWeek} of 3</span> — this week's step: {YES_LETTERS[yesWeek - 1].word}
+          <span className="font-semibold text-launch-gold">YES · Week {yesWeek} of 3</span>, this week's step: {YES_LETTERS[yesWeek - 1].word}
         </p>
       )}
       {vision ? (
@@ -290,7 +290,7 @@ export function LaunchCommitmentBanner({
           ))}
       </div>
       {expanded && (<div className="pt-4 space-y-4">
-        {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan — check its fit with my vision.</p>}
+        {row?.source === 'ai_assisted' && <p className="text-base">Suggested plan, check its fit with my vision.</p>}
         {vision && local.core.trim() && (
           <label className="flex items-center gap-3 min-h-14 text-base cursor-pointer">
             <Checkbox checked={linked} onCheckedChange={value => confirmConnection(value === true)} />

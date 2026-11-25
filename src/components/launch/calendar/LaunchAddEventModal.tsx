@@ -240,7 +240,7 @@ export function LaunchAddEventModal({
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add the details you might want to remember later — what, where, who, or why."
+              placeholder="Add the details you might want to remember later, what, where, who, or why."
               rows={3}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent text-base resize-none"
             />
@@ -273,7 +273,7 @@ export function LaunchAddEventModal({
             )}
             {clashTitle && (
               <p className="mt-2 text-xs text-launch-ink/70">
-                Heads up — my calendar already shows “{clashTitle}” around then. I can still book it
+                Heads up, my calendar already shows “{clashTitle}” around then. I can still book it
                 if that works for you.
               </p>
             )}
@@ -450,7 +450,7 @@ export function LaunchAddEventModal({
             {reminderOpen && (
               <div className="mt-3 space-y-4">
                 <p className="text-sm text-gray-600">
-                  Pick what feels right today — you can change it anytime.
+                  Pick what feels right today, you can change it anytime.
                 </p>
                 <div className="grid gap-2">
                   {(['gentle', 'steady', 'strong'] as const).map((lvl) => {
@@ -592,7 +592,7 @@ export function LaunchAddEventModal({
                       className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Leave blank to keep repeating — you can change it any time.
+                      Leave blank to keep repeating, you can change it any time.
                     </p>
                   </div>
                 )}

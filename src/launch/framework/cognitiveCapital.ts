@@ -1,5 +1,5 @@
 /**
- * Cognitive Capital Framework — the four-pillar lens used to group the eight
+ * Cognitive Capital Framework, the four-pillar lens used to group the eight
  * MYRHYTHM letters in reports and scheduling.
  *
  * The mapping is sourced from MYRHYTHM_LETTERS so the framework and the report

@@ -8,7 +8,7 @@ const brainTips = [
   { tip: "Sleep helps cement new memories", detail: "During sleep, your brain processes and stores the day's experiences." },
   { tip: "Exercise boosts brain plasticity", detail: "Physical activity increases blood flow and promotes new neural connections." },
   { tip: "Routine reduces cognitive load", detail: "Consistent patterns free up mental energy for important decisions." },
-  { tip: "Celebrate small wins daily", detail: "Recognition releases dopamine, reinforcing positive behaviors." },
+  { tip: "Celebrate small wins daily", detail: "Recognition releases dopamine, reinforcing positive behaviours." },
   { tip: "Connect tasks to existing habits", detail: "Linking new actions to established routines improves follow-through." },
   { tip: "Morning light improves focus", detail: "Natural light helps regulate your circadian rhythm and alertness." },
 ];

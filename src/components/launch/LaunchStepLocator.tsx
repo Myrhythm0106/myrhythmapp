@@ -62,7 +62,7 @@ export function LaunchStepLocator({
             onClick={() => step.path && navigate(step.path)}
             aria-current={isCurrent ? 'step' : undefined}
             aria-label={
-              `${step.label} — step ${idx + 1} of ${total}` +
+              `${step.label}, step ${idx + 1} of ${total}` +
               (isCurrent ? ' (current)' : isComplete ? ' (completed)' : '')
             }
             className={cn(

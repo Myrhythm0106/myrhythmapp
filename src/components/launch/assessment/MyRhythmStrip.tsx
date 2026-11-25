@@ -11,7 +11,7 @@ interface MyRhythmStripProps {
 }
 
 /**
- * The MYRHYTHM letter strip — shows all 8 letters, where you are, and what's done.
+ * The MYRHYTHM letter strip, shows all 8 letters, where you are, and what's done.
  * Questions that share a letter slot (e.g. the follow-through probe under T)
  * collapse into the same chip.
  */
@@ -40,7 +40,7 @@ export function MyRhythmStrip({ questions, currentIndex, answeredIds, onJump }: 
               type="button"
               disabled={!reachable || !onJump}
               onClick={() => reachable && onJump?.(target)}
-              aria-label={`${slot.letter} — ${slot.word}${done ? ' (answered)' : ''}`}
+              aria-label={`${slot.letter}, ${slot.word}${done ? ' (answered)' : ''}`}
               aria-current={isCurrent ? 'step' : undefined}
               className={cn(
                 'relative min-w-0 flex-1 h-11 rounded-lg text-sm font-bold uppercase tracking-wide transition-all',

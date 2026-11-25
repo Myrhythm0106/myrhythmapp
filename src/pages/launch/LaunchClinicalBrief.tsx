@@ -37,7 +37,7 @@ function BriefBody() {
         ]}
       />
 
-      <TierGate required="pro" label="Clinical Brief — unlock with Pro">
+      <TierGate required="pro" label="Clinical Brief, available with Pro">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8 space-y-6">
             <section className="rounded-2xl bg-white border border-brain-health-100 p-6 md:p-8">
@@ -114,7 +114,7 @@ function BriefBody() {
 
             <p className="text-[11px] leading-relaxed text-brain-health-500 px-1 inline-flex items-start gap-2">
               <ShieldCheck className="h-3.5 w-3.5 mt-0.5 shrink-0" strokeWidth={1.75} />
-              This document supports — it does not diagnose, treat, or replace clinical judgement.
+              This document supports, it does not diagnose, treat, or replace clinical judgement.
             </p>
           </aside>
         </div>

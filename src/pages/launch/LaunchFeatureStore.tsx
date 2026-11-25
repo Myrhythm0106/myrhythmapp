@@ -85,14 +85,14 @@ export default function LaunchFeatureStore() {
   const comingSoon = [
     { name: 'Voice Commands', description: 'Control MyRhythm with your voice' },
     { name: 'Apple Health Sync', description: 'Connect your health data' },
-    { name: 'Custom Themes', description: 'Personalize your experience' },
+    { name: 'Custom Themes', description: 'Make it feel like mine' },
   ];
 
   return (
     <LaunchLayout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Feature Store</h1>
-        <p className="text-gray-600">Unlock more of MyRhythm</p>
+        <p className="text-gray-600">More of MyRhythm, when I want it</p>
       </div>
 
       {/* Current Plan */}

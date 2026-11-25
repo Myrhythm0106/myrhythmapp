@@ -1,5 +1,5 @@
 /**
- * MYRHYTHM — the canonical framework definition.
+ * MYRHYTHM, the canonical framework definition.
  *
  * Single source of truth for the eight letters, their words, plain-English meaning
  * and the published research domain each one is anchored to.
@@ -134,7 +134,7 @@ export const wordForGrowthKey = (key: MyRhythmLetter['growthKey']): string =>
 /** How the framework's basis is described in-app. No named person or programme. */
 export const FRAMEWORK_BASIS =
   'Each letter is anchored to a well-established idea in behavioural and brain-health research. ' +
-  'The framework is compatible with, and informed by, established brain-health programmes — ' +
+  'The framework is compatible with, and informed by, established brain-health programmes, ' +
   'the wording, order and the way MyRhythm uses it are our own.';
 
 /** Standard non-clinical disclaimer for framework surfaces. */

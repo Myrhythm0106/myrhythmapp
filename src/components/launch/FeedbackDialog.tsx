@@ -67,7 +67,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         ok_to_contact: okToContact,
       });
       if (error) throw error;
-      toast.success('Thank you — your feedback shapes the next release.');
+      toast.success('Thank you, your feedback shapes the next release.');
       reset();
       onOpenChange(false);
     } catch (err: any) {

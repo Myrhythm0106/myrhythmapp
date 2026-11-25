@@ -10,7 +10,7 @@ import { useCaptureStatus } from '@/launch/capture/captureStatus';
  * Arrive-and-arm.
  *
  * If something in my diary is happening right now, MyRhythm asks once —
- * gently — whether I want it captured. It never starts the microphone on its
+ * gently, whether I want it captured. It never starts the microphone on its
  * own, and once I've answered for that meeting it stays quiet.
  */
 
@@ -82,7 +82,7 @@ export function ArriveAndArmCard() {
     try {
       localStorage.setItem(dismissKey(live.id, today), new Date().toISOString());
     } catch {
-      /* storage blocked — the in-memory dismissal still holds for this visit */
+      /* storage blocked, the in-memory dismissal still holds for this visit */
     }
     setDismissedId(live.id);
     if (startCapture) navigate('/launch/memory?record=1');

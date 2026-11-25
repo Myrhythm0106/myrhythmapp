@@ -9,7 +9,7 @@ import {
 
 /**
  * The brain health questions come first. Anyone who has never answered them
- * is taken there before Home — unless they chose "Not now" today.
+ * is taken there before Home, unless they chose "Not now" today.
  */
 export function AssessmentFirstGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<'checking' | 'allow' | 'redirect'>(() =>

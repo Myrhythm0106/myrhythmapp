@@ -50,7 +50,7 @@ export function DeviceRemindersCard() {
         body: 'This is a test reminder. Your alerts are working.',
         icon: '/icons/icon-192.png',
       });
-      toast.success('Test sent — check your notifications.');
+      toast.success('Test sent, check your notifications.');
     } catch {
       toast.error("We couldn't send the test alert on this device.");
     }

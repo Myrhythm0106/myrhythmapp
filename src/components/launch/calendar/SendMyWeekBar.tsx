@@ -49,7 +49,7 @@ export function SendMyWeekBar({ events, from }: SendMyWeekBarProps) {
       uid: `event-${(e as any).id}`,
     }));
     downloadIcs(items, 'myrhythm-my-week.ics');
-    toast.success(`My week is ready — ${items.length} ${items.length === 1 ? 'item' : 'items'}`, {
+    toast.success(`My week is ready, ${items.length} ${items.length === 1 ? 'item' : 'items'}`, {
       description: 'Open the downloaded file and your calendar will add them all.',
     });
   };

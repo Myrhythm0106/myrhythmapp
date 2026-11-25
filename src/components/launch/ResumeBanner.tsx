@@ -34,7 +34,7 @@ export function ResumeBanner() {
         className="mx-auto flex min-h-14 w-full max-w-md items-center justify-between gap-3 rounded-md bg-launch-ink-deep px-5 py-4 text-left text-primary-foreground shadow-2xl hover:bg-launch-ink"
       >
         <span className="text-sm font-semibold">
-          Pick up where you left off — {LABELS[path]}
+          Pick up where you left off, {LABELS[path]}
         </span>
         <ArrowRight className="h-5 w-5 shrink-0" />
       </Button>

@@ -27,9 +27,9 @@ export const stages: StageData[] = [
     recoveryAnchor: 'Days 0–14 (incl. pre-discharge)',
     intent: 'Stillness. No tasks. Acknowledgement.',
     lensByPersona: {
-      recovery: "You've been through something. No tasks today — just rest, and let people help.",
+      recovery: "You've been through something. No tasks today, just rest, and let people help.",
       caregiver: 'The first days are a lot. Breathe. The system can wait until next week.',
-      productivity: 'A real pause. No optimisation, no planning — just stop.',
+      productivity: 'A real pause. No optimisation, no planning, just stop.',
       student: 'A genuine break. The next term will still be there when you’re ready.',
     },
   },

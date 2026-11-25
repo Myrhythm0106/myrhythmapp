@@ -143,7 +143,7 @@ export function VisionImagePicker({
             <div className="relative rounded-xl overflow-hidden">
               <img 
                 src={imageUrl} 
-                alt="Dream visualization" 
+                alt="My vision picture" 
                 className="w-full h-48 object-cover"
               />
               <Button

@@ -48,7 +48,7 @@ export function LaunchQuickActions() {
     }
   };
 
-  // Stay hidden until onboarding is complete — no shortcuts into the app
+  // Stay hidden until onboarding is complete, no shortcuts into the app
   // before the user has landed on Home.
   if (!appReady) return null;
 

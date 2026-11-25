@@ -73,7 +73,7 @@ export default function LaunchVisionStatement() {
         <CapabilityHero
           eyebrow="Vision"
           title="Your ultimate vision, in your own words."
-          lede="One short paragraph. Five gentle prompts. No right answer — just the one that feels true today."
+          lede="One short paragraph. Five gentle prompts. No right answer, just the one that feels true today."
           icon={Compass}
           tone="teal"
           meta={[

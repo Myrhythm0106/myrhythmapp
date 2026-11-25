@@ -9,7 +9,7 @@ export function ReEntryCard() {
 
   const supporter = fixtures.supportCircle[0];
   const message = supporter
-    ? `${supporter.name} has been cheering you on. Welcome back — no catching up needed.`
+    ? `${supporter.name} has been cheering you on. Welcome back, no catching up needed.`
     : `Welcome back. There's nothing to catch up on. Just begin where you are.`;
 
   return (

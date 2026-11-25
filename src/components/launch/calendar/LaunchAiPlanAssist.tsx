@@ -72,7 +72,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
       setStep('draft');
     } catch (e: any) {
       const msg = String(e?.message ?? e);
-      if (msg.includes('429')) setError("Let's try again in a moment — the assistant is busy.");
+      if (msg.includes('429')) setError("Let's try again in a moment, the assistant is busy.");
       else if (msg.includes('402')) setError('AI credits are needed to continue. Add credits from Settings.');
       else setError("Couldn't generate a plan just now. Please try again.");
     } finally {
@@ -146,9 +146,9 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
               </button>
               {showHints && (
                 <div className="rounded-xl bg-launch-teal/10/60 border border-launch-gold/30 p-3 text-sm text-gray-700 space-y-1.5">
-                  <p><span className="font-semibold text-launch-ink">Low</span> — Tired, foggy, or stretched. Plan stays tiny and kind.</p>
-                  <p><span className="font-semibold text-launch-ink">Steady</span> — Okay-ish. A realistic, normal plan.</p>
-                  <p><span className="font-semibold text-launch-ink">Strong</span> — Clear and energised. Ready to lean in.</p>
+                  <p><span className="font-semibold text-launch-ink">Low</span>, Tired, foggy, or stretched. Plan stays tiny and kind.</p>
+                  <p><span className="font-semibold text-launch-ink">Steady</span>, Okay-ish. A realistic, normal plan.</p>
+                  <p><span className="font-semibold text-launch-ink">Strong</span>, Clear and energised. Ready to lean in.</p>
                 </div>
               )}
               <button
@@ -227,7 +227,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
               {vision && <p className="text-base text-launch-ink leading-relaxed break-words">My vision: {vision}</p>}
               <p className="text-base text-launch-ink">Check how these steps fit my vision before keeping them.</p>
               <p className="text-xs text-gray-500 flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> Suggested — edit anything.
+                <Sparkles className="h-3 w-3" /> Suggested, edit anything.
               </p>
               {(['core', 'key', 'stretch'] as const).map((k) => (
                 <div key={k} className="space-y-1">

@@ -28,7 +28,7 @@ interface AddToCalendarMenuProps {
 }
 
 /**
- * "Add to my calendar" — Google, Outlook, Apple/other, or emailed to me.
+ * "Add to my calendar", Google, Outlook, Apple/other, or emailed to me.
  * Nothing here needs an account link: every route is one the calendar apps
  * already understand.
  */
@@ -65,7 +65,7 @@ export function AddToCalendarMenu({ item, children, align = 'end' }: AddToCalend
       });
       if (error) throw error;
       toast.success('Sent to your inbox', {
-        description: `Open the email and tap accept — it goes straight into your calendar.`,
+        description: `Open the email and tap accept, it goes straight into your calendar.`,
       });
     } catch (err) {
       console.error('Failed to email calendar invite:', err);

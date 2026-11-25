@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 
 /**
  * Optional external-calendar sync bar. Renders nothing when the user has not
- * connected Google or Outlook — keeps the calendar page uncluttered for users
+ * connected Google or Outlook, keeps the calendar page uncluttered for users
  * who choose not to enable this feature during MyRhythm setup.
  */
 export function LaunchSyncBar() {

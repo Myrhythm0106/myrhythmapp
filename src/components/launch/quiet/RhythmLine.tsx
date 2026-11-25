@@ -50,7 +50,7 @@ export function RhythmLine() {
       <div className="flex items-start gap-2">
       <Sunrise className="h-4 w-4 mt-0.5 shrink-0 text-launch-ember" />
       <p className="text-sm text-launch-ink/80">
-        You told me {when} — I'll keep{' '}
+        You told me {when}, I'll keep{' '}
         <span className="font-semibold text-launch-ink">
           {pretty(win.productiveStart)}–{pretty(win.productiveEnd)}
         </span>{' '}
@@ -65,7 +65,7 @@ export function RhythmLine() {
             </li>
           ))}
           <li className="text-xs text-launch-ink/50 leading-relaxed">
-            These are suggestions only — I can always pick a time that suits the people I'm meeting.
+            These are suggestions only, I can always pick a time that suits the people I'm meeting.
           </li>
         </ul>
       ) : null}

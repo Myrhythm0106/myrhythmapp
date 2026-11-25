@@ -85,7 +85,7 @@ export default function LaunchContinuity() {
         </button>
         <h1 className="text-2xl font-bold text-gray-900">Continuity summary</h1>
         <p className="text-gray-500 text-sm mt-1">
-          A life-readiness snapshot for handoff — to a new clinician, therapist, employer, or caregiver.
+          A life-readiness snapshot for handoff, to a new clinician, therapist, employer, or caregiver.
           Not a medical record.
         </p>
       </div>

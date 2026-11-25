@@ -31,7 +31,7 @@ export function QueuedDrawer({ items, onRemove }: Props) {
       >
         <span className="flex items-center gap-2">
           <Clock className="h-4 w-4" />
-          {items.length} queued — will sync
+          {items.length} queued, will sync
         </span>
         {open ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
       </button>
