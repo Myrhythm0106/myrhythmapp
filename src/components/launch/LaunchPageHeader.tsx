@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { canGoBackInApp } from '@/launch/access/appHistory';
 import { useCurrentPlace } from './LaunchYouAreHereDial';
 
 interface LaunchPageHeaderProps {
@@ -29,7 +30,7 @@ export function LaunchPageHeader({
   if (location.pathname === '/launch/home' || location.pathname === '/launch') return null;
 
   const handleBack = () => {
-    if (window.history.length > 1) navigate(-1);
+    if (canGoBackInApp()) navigate(-1);
     else navigate(fallbackPath);
   };
 

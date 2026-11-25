@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { LaunchWaiting } from '@/components/launch/LaunchWaiting';
 import { isPublicPath } from './publicPaths';
+import { recordPath } from './appHistory';
 
 /**
  * App-wide gate: beyond the landing page (and sign-in, legal and invite pages)
@@ -12,6 +13,7 @@ import { isPublicPath } from './publicPaths';
 export function SignedInOnly({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
   const location = useLocation();
+  React.useEffect(() => { recordPath(location.pathname); }, [location.pathname]);
 
   if (isPublicPath(location.pathname)) return <>{children}</>;
 
