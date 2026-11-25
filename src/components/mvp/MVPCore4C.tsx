@@ -24,10 +24,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
 import { useAuth } from '@/hooks/useAuth';
-import preciousMomentsImg from '@/assets/precious-moments-black-couple.png';
-import organizedActionImg from '@/assets/organized-action-black-woman.png';
-import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
-import strengthTogetherImg from '@/assets/strength-together.jpg';
+import heroExecutiveImg from '@/assets/hero-composed-executive.jpg';
+import recordImg from '@/assets/step-record-consultation.jpg';
+import confirmImg from '@/assets/step-confirm-review.jpg';
+import scheduleImg from '@/assets/step-schedule-balance.jpg';
+import communityImg from '@/assets/step-community-circle.jpg';
 import { LANDING_AUDIENCES } from '@/launch/persona/journeyCopy';
 
 type Chapter = {
@@ -53,8 +54,8 @@ const chapters: Chapter[] = [
     promise: 'Record a conversation or upload a report',
     description:
       'Memory Bridge keeps the original conversation or report safe, creates a clear write-up and brings the important decisions and commitments into view, without asking you to remember everything at once.',
-    image: emotionalLandscapeImg,
-    alt: 'A person reviewing notes outdoors after an important conversation',
+    image: recordImg,
+    alt: 'A Black man in a calm conversation with a specialist, his phone quietly recording on the table',
     detailTitle: 'What you can expect',
     details: [
       'You can record a conversation or upload a report.',
@@ -71,8 +72,8 @@ const chapters: Chapter[] = [
     promise: 'Check your next steps',
     description:
       'Names, decisions and actions are organised into a professional summary. You stay in control: you can edit the wording, owner, priority and dates before you accept it.',
-    image: organizedActionImg,
-    alt: 'A Black professional with a natural Afro reviewing clear next steps at her desk',
+    image: confirmImg,
+    alt: 'A professional woman calmly reviewing her next steps on a tablet',
     detailTitle: 'Why checking matters',
     details: [
       'Each action keeps a simple note of which conversation it came from.',
@@ -89,8 +90,8 @@ const chapters: Chapter[] = [
     promise: 'Place it into your schedule',
     description:
       'A next step becomes useful when it has a place in the day. MyRhythm helps you choose a realistic time, add the right level of reminder and send it to your calendar.',
-    image: preciousMomentsImg,
-    alt: 'A Black couple sharing a calm moment at home with time protected for what matters',
+    image: scheduleImg,
+    alt: 'A Black man walking in late afternoon light, glancing at his day on his phone, at ease',
     detailTitle: 'Designed for real schedules',
     details: [
       'Suggestions can reflect your energy and brain-health rhythm.',
@@ -107,8 +108,8 @@ const chapters: Chapter[] = [
     promise: 'Loop in someone you trust, if you choose',
     description:
       'A family member, friend or professional can receive only the action or update you choose to share. Support remains permission-based, practical and personal.',
-    image: strengthTogetherImg,
-    alt: 'A small group of trusted people connecting in warm evening light',
+    image: communityImg,
+    alt: 'A warm circle of trusted people of different ages sharing encouragement around a table',
     detailTitle: 'Your choice stays central',
     details: [
       'You choose who is invited and what they can see.',
@@ -156,6 +157,9 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
           <motion.img
             src={chapter.image}
             alt={chapter.alt}
+            loading="lazy"
+            width={1280}
+            height={1024}
             className="h-full w-full object-cover"
             whileHover={reduceMotion ? undefined : { scale: 1.025 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -168,10 +172,10 @@ function StoryChapter({ chapter }: { chapter: Chapter }) {
           <span className={`h-px w-9 ${markerColour}`} aria-hidden="true" />
           {chapter.marker}
         </p>
-        <p className="mb-4 font-worksans text-sm font-semibold text-launch-teal">
+        <p className="mb-4 hidden font-worksans text-sm font-semibold text-launch-teal sm:block">
           {chapter.promise}
         </p>
-        <h2 className="font-instrument text-4xl leading-[1.05] text-launch-ink-deep md:text-5xl">
+        <h2 className="font-instrument text-[2rem] leading-[1.1] text-launch-ink-deep [text-wrap:balance] sm:text-4xl md:text-5xl md:leading-[1.05]">
           {chapter.title}
         </h2>
         <p className="mt-6 max-w-xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
@@ -351,8 +355,10 @@ export function MVPCore4C() {
         <section className="relative min-h-[calc(100svh-72px)] overflow-hidden border-b border-launch-gold/30">
           <div className="absolute inset-0">
             <img
-              src="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
-              alt="A woman pausing thoughtfully beside her notes and laptop"
+              src={heroExecutiveImg}
+              alt="A composed Black woman executive standing by the window of a light-filled office"
+              width={1920}
+              height={1088}
               className="h-full w-full object-cover object-[68%_center] md:object-[72%_center]"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-launch-cream-light via-launch-cream-light/95 to-launch-cream-light/50 md:via-launch-cream-light/85 md:to-launch-cream-light/10" aria-hidden="true" />
