@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { addDays, format, isSameDay, startOfWeek, endOfWeek, min as minDate, max as maxDate } from 'date-fns';
-import { ChevronLeft, ChevronRight, Mic, CalendarDays, CalendarPlus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mic, CalendarDays, CalendarPlus, Users, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { useFirstSession } from '@/launch/onboarding/useFirstSession';
@@ -35,7 +35,8 @@ import { PriorityDetailSheet } from '../home/PriorityDetailSheet';
 import { cn } from '@/lib/utils';
 import { getResumeStep } from '@/launch/onboarding/resumePoint';
 import { ResumeSetupCard } from './ResumeSetupCard';
-import { MakeItMine } from './MakeItMine';
+import { LaunchInduction } from '@/components/launch/induction/LaunchInduction';
+import { useInduction } from '@/launch/onboarding/useInduction';
 import { VisionInvitation } from '@/components/launch/vision/VisionInvitation';
 import { shouldOfferVision } from '@/launch/vision/actionVision';
 
@@ -74,6 +75,13 @@ export function QuietHome() {
   const [justDone, setJustDone] = React.useState<string[]>([]);
   const [waiting, setWaiting] = React.useState(0);
   const [resumeStep] = React.useState(() => getResumeStep());
+  const induction = useInduction();
+  const [circleCount, setCircleCount] = React.useState<number | null>(null);
+  React.useEffect(() => {
+    if (!user?.id) return;
+    supabase.from('support_circle_members').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      .then(({ count }) => setCircleCount(count ?? 0));
+  }, [user?.id]);
 
   React.useEffect(() => {
     if (!user?.id) return;
@@ -120,56 +128,71 @@ export function QuietHome() {
 
   if (isPause) return <QuietHomePause />;
 
+  const now = new Date();
+  const nextMeeting = todayLive
+    .filter(e => e.status !== 'done' && e.time)
+    .find(e => { const [h, m] = (e.time || '00:00').split(':').map(Number); return h * 60 + m >= now.getHours() * 60 + now.getMinutes(); });
+  const weekDone = weekLive.filter(e => e.status === 'done').length;
+  const followPct = weekLive.length ? Math.round((weekDone / weekLive.length) * 100) : 0;
+  const card = 'rounded-3xl border border-launch-gold/25 bg-launch-ivory/90 p-5 shadow-[0_20px_50px_-34px_hsl(var(--launch-ink-deep)/0.4)] sm:p-6';
+  const label = 'text-[11px] font-semibold uppercase tracking-[0.22em] text-launch-moss';
+  const figures = [
+    { n: todayLive.length, l: todayLive.length === 1 ? 'item in my diary' : 'items in my diary' },
+    { n: top.filter(t => t.status !== 'done').length, l: 'priorities still to do' },
+    { n: waiting, l: waiting === 1 ? 'promise waiting for a time' : 'promises waiting for a time' },
+  ];
+
   return (
-    <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:py-10">
-      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
+      {offset === 0 && <LaunchInduction />}
+      {resumeStep && firstSession.recorded && !induction.visible && <ResumeSetupCard step={resumeStep} />}
+
+      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        className="rounded-3xl bg-launch-ink-deep p-6 text-primary-foreground sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <button type="button" aria-label="Yesterday" disabled={offset === -1} onClick={() => setOffset(offset === 1 ? 0 : -1)}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-launch-ink/60 hover:bg-launch-cream disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
-            <p className="min-w-[10rem] text-center text-sm text-launch-ink/65">
+              className="flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
+            <p className="min-w-[10rem] text-center text-sm text-primary-foreground/75">
               {offset === 0 ? format(today, 'EEEE d MMMM') : offset === -1 ? `Yesterday · ${format(focusDate, 'EEE d MMM')}` : `Tomorrow · ${format(focusDate, 'EEE d MMM')}`}
             </p>
             <button type="button" aria-label="Tomorrow" disabled={offset === 1} onClick={() => setOffset(offset === -1 ? 0 : 1)}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-launch-ink/60 hover:bg-launch-cream disabled:opacity-30"><ChevronRight className="h-5 w-5" /></button>
+              className="flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronRight className="h-5 w-5" /></button>
           </div>
           {offset !== 0 ? (
-            <button type="button" onClick={() => setOffset(0)} className="min-h-[44px] rounded-full border border-launch-gold/40 px-4 text-sm font-semibold text-launch-ink">Back to today</button>
+            <button type="button" onClick={() => setOffset(0)} className="min-h-[44px] rounded-full border border-primary-foreground/30 px-4 text-sm font-semibold">Back to today</button>
           ) : (
-            <div role="group" aria-label="How I see my priorities" className="flex rounded-full border border-launch-gold/35 p-0.5">
+            <div role="group" aria-label="How I see my priorities" className="flex rounded-full border border-primary-foreground/25 p-0.5">
               {(['dashboard', 'list'] as HomeMode[]).map(m => (
                 <button key={m} type="button" aria-pressed={mode === m} onClick={() => chooseMode(m)}
-                  className={cn('min-h-[40px] rounded-full px-4 text-sm capitalize transition', mode === m ? 'bg-launch-ink text-primary-foreground' : 'text-launch-ink/65')}>
+                  className={cn('min-h-[40px] rounded-full px-4 text-sm capitalize transition', mode === m ? 'bg-primary-foreground text-launch-ink-deep' : 'text-primary-foreground/75')}>
                   {m}
                 </button>
               ))}
             </div>
           )}
         </div>
-        <h1 className="font-instrument text-4xl leading-tight text-launch-ink sm:text-5xl">
+        <h1 className="mt-4 font-instrument text-4xl leading-tight sm:text-5xl">
           {offset === 0 ? <>{greeting}{greetName ? `, ${greetName}` : ''}.</> : offset === -1 ? 'Looking back at yesterday.' : 'Getting ready for tomorrow.'}
         </h1>
         {offset === 0 && !(isCaregiver && subject === 'supporting') && (
-          <p className="border-l-2 border-launch-gold/60 pl-3 text-base italic text-launch-ink/70">Today I choose: {entry.statement}</p>
+          <p className="mt-2 text-base italic text-primary-foreground/75">Today I choose: {entry.statement}</p>
         )}
-        {offset === 0 && vision && (
-          <button type="button" onClick={() => navigate('/launch/vision-statement')} className="block text-left text-sm text-launch-moss hover:text-launch-ink">
-            Serving my vision: <span className="text-launch-ink/80">{vision.length > 90 ? `${vision.slice(0, 90)}…` : vision}</span>
-          </button>
+        {offset === 0 && (
+          <dl aria-label="Today at a glance" className="mt-6 grid grid-cols-3 gap-3 border-t border-primary-foreground/15 pt-5">
+            {figures.map(f => (
+              <div key={f.l}>
+                <dt className="sr-only">{f.l}</dt>
+                <dd className="font-instrument text-4xl leading-none sm:text-5xl">{f.n}</dd>
+                <dd className="mt-1 text-sm leading-snug text-primary-foreground/70">{f.l}</dd>
+              </div>
+            ))}
+          </dl>
         )}
       </motion.header>
 
-      {resumeStep && firstSession.recorded ? <ResumeSetupCard step={resumeStep} /> : <FirstSessionCard state={firstSession} />}
-      {offset === 0 && <MakeItMine recorded={firstSession.recorded} />}
-
-      {!settlingIn && offset === 0 && user?.id && shouldOfferVision(firstSession.recorded, vision, false) && (
-        <VisionInvitation userId={user.id} />
-      )}
-
-      {settlingIn && offset === 0 && <StillOpenList />}
-
-      {!settlingIn && offset !== 0 && (
-        <div className="rounded-3xl border border-launch-gold/25 bg-launch-ivory/85 p-5 shadow-[0_20px_50px_-34px_hsl(var(--launch-ink-deep)/0.4)] backdrop-blur-xl sm:p-7">
+      {offset !== 0 && (
+        <div className={card}>
           <HomeDayReview which={offset === -1 ? 'yesterday' : 'tomorrow'} date={focusDate}
             events={events.filter(e => isSameDay(e.date, focusDate))}
             onOpen={setOpenItem}
@@ -182,57 +205,106 @@ export function QuietHome() {
         </div>
       )}
 
-      {!settlingIn && offset === 0 && (
-        <div className="space-y-5 rounded-3xl border border-launch-gold/25 bg-launch-ivory/85 p-5 shadow-[0_20px_50px_-34px_hsl(var(--launch-ink-deep)/0.4)] backdrop-blur-xl sm:p-7">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-launch-moss">
-              {dailySupport.gentle ? 'One step is enough today' : 'My priorities today'}
-            </h2>
-            {top.length > 0 && <span className="text-sm text-launch-ink/60">{top.filter(t => t.status === 'done').length} of {top.length} done</span>}
-          </div>
-
-          <StillOpenList />
-          {top.length === 0 ? (
-            <div>
-              <p className="text-base text-launch-ink">Nothing in my diary yet today.</p>
+      {offset === 0 && (
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+          <section aria-label="My priorities today" className={cn(card, 'space-y-5')}>
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className={label}>{dailySupport.gentle ? 'One step is enough today' : 'My priorities today'}</h2>
+              {top.length > 0 && <span className="text-sm text-launch-ink/60">{top.filter(t => t.status === 'done').length} of {top.length} done</span>}
+            </div>
+            {top.length === 0 ? (
+              <div>
+                <p className="text-base text-launch-ink">Nothing in my diary yet today. A clear day to plan as I choose.</p>
+                <button type="button" onClick={() => navigate('/launch/calendar?view=day')}
+                  className="mt-3 inline-flex min-h-[56px] items-center gap-2 rounded-2xl border border-launch-gold/45 px-5 font-semibold text-launch-ink hover:bg-launch-cream">
+                  <CalendarPlus className="h-5 w-5" /> Plan my day
+                </button>
+              </div>
+            ) : (
+              <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} />
+            )}
+            <HomeNextLine events={todays} excludeIds={topIds} onOpen={setOpenItem} />
+            <div className="flex flex-wrap gap-3 border-t border-launch-gold/20 pt-5">
+              <button type="button" onClick={() => navigate('/launch/memory?record=1')}
+                className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground hover:bg-brand-orange-600">
+                <Mic className="h-5 w-5" /> Record a conversation
+              </button>
               <button type="button" onClick={() => navigate('/launch/calendar?view=day')}
-                className="mt-3 inline-flex min-h-[56px] items-center gap-2 rounded-2xl bg-brand-orange-500 px-5 font-semibold text-primary-foreground">
-                <CalendarPlus className="h-5 w-5" /> Plan my day
+                className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border border-launch-gold/45 px-6 font-semibold text-launch-ink hover:bg-launch-cream">
+                <CalendarDays className="h-5 w-5" /> See my day
               </button>
             </div>
-          ) : (
-            <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} />
-          )}
+            <HomeMoreToday uid={user?.id} items={moreItems} />
+          </section>
 
-          <HomeNextLine events={todays} excludeIds={topIds} onOpen={setOpenItem} />
+          <aside className="space-y-6">
+            <section aria-label="Next up" className={card}>
+              <h2 className={label}>Next up</h2>
+              {nextMeeting ? (
+                <button type="button" onClick={() => setOpenItem(nextMeeting)} className="mt-3 block w-full text-left">
+                  <p className="flex items-center gap-2 text-sm text-launch-ink/65"><Clock className="h-4 w-4" />{nextMeeting.time?.slice(0, 5)}</p>
+                  <p className="mt-1 text-lg font-semibold text-launch-ink-deep">{nextMeeting.title}</p>
+                </button>
+              ) : <p className="mt-3 text-base text-launch-ink/75">Nothing else booked today.</p>}
+              <button type="button" onClick={() => navigate('/launch/memory?record=1')}
+                className="mt-4 inline-flex min-h-[48px] items-center gap-2 text-sm font-semibold text-launch-ink hover:underline">
+                <Mic className="h-4 w-4" /> Record it when it starts
+              </button>
+            </section>
 
-          {mode === 'dashboard' && todayLive.length > 0 && (
-            <HomeStatusLine todayDone={todayLive.filter(e => e.status === 'done').length} todayTotal={todayLive.length}
-              weekPlanned={weekLive.length} weekDone={weekLive.filter(e => e.status === 'done').length} waiting={waiting} />
-          )}
+            <section aria-label="My follow-through this week" className={card}>
+              <div className="flex items-baseline justify-between">
+                <h2 className={label}>Follow-through this week</h2>
+                <span className="font-instrument text-3xl text-launch-ink-deep">{followPct}%</span>
+              </div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-launch-gold/20" role="progressbar" aria-valuenow={followPct} aria-valuemin={0} aria-valuemax={100}>
+                <div className="h-full rounded-full bg-launch-ink" style={{ width: `${followPct}%` }} />
+              </div>
+              <p className="mt-2 text-sm text-launch-ink/65">{weekDone} of {weekLive.length} done{waiting ? ` · ${waiting} waiting for a time` : ''}</p>
+            </section>
 
-          <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => navigate('/launch/memory?record=1')}
-              className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground">
-              <Mic className="h-5 w-5" /> Record a conversation
-            </button>
-            <button type="button" onClick={() => navigate('/launch/calendar?view=day')}
-              className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border border-launch-gold/45 px-6 font-semibold text-launch-ink hover:bg-launch-cream">
-              <CalendarDays className="h-5 w-5" /> See my day
-            </button>
-          </div>
-
-          <HomeMoreToday uid={user?.id} items={moreItems} />
+            <section aria-label="My Support Circle" className={card}>
+              <h2 className={label}>No one walks alone</h2>
+              <button type="button" onClick={() => navigate('/launch/support')} className="mt-3 flex min-h-[56px] w-full items-center gap-3 text-left">
+                <Users className="h-6 w-6 shrink-0 text-launch-ink" />
+                <span className="text-base text-launch-ink-deep">
+                  {circleCount ? `${circleCount} ${circleCount === 1 ? 'person' : 'people'} in my Support Circle. They see only what I share.` : 'Invite someone I trust. I choose what they see, and can turn it off.'}
+                </span>
+              </button>
+            </section>
+          </aside>
         </div>
       )}
 
-      {!settlingIn && (
-        <div className="rounded-3xl border border-launch-gold/20 bg-launch-ivory/70 p-5 sm:p-6">
-          <HomeWeekStrip events={events} onOpen={setOpenItem} />
+      {offset === 0 && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          <section aria-label="My Vision in ACTion" className={card}>
+            <h2 className={label}>My Vision in ACTion</h2>
+            {vision ? (
+              <button type="button" onClick={() => navigate('/launch/vision-statement')} className="mt-3 block text-left text-base text-launch-ink-deep hover:underline">
+                {vision.length > 140 ? `${vision.slice(0, 140)}…` : vision}
+              </button>
+            ) : user?.id && shouldOfferVision(firstSession.recorded, vision, false) ? (
+              <div className="mt-3"><VisionInvitation userId={user.id} /></div>
+            ) : (
+              <button type="button" onClick={() => navigate('/launch/vision-statement')} className="mt-3 min-h-[48px] text-left text-base text-launch-ink hover:underline">
+                Shape the life I am building, one step at a time.
+              </button>
+            )}
+          </section>
+          <section aria-label="Still open" className={card}>
+            <h2 className={label}>Still open</h2>
+            <div className="mt-3"><StillOpenList /></div>
+            <p className="mt-2 text-sm text-launch-ink/60">Anything that slipped waits here, calmly.</p>
+          </section>
         </div>
       )}
 
-      {!settlingIn && user?.id && !(isCaregiver && subject === 'supporting') && <LaunchDailySupport {...dailySupport} />}
+      <div className={card}>
+        <HomeWeekStrip events={events} onOpen={setOpenItem} />
+      </div>
+
+      {user?.id && !(isCaregiver && subject === 'supporting') && <LaunchDailySupport {...dailySupport} />}
 
       <PriorityDetailSheet event={openItem} onClose={() => setOpenItem(null)} onSaved={() => void fetchEvents()} />
 

@@ -61,8 +61,7 @@ export async function resolveEntryRoute(intent: EntryIntent, userId?: string | n
   if (!hasSnapshot()) {
     const resume = getResumePoint();
     if (resume?.startsWith('/launch/assessment')) return '/launch/assessment';
-    if (!localStorage.getItem('myrhythm_user_type') && !localStorage.getItem('myrhythm_starting_point_seen')) return '/launch/user-type';
-    return '/launch/assessment?first=1';
+    // Questions are optional and offered inside the welcome on Home.
   }
 
   if (intent === 'founding') {

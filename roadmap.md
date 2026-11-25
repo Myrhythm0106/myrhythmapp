@@ -1,5 +1,13 @@
 # MyRhythm — task roadmap
 
+## Executive Home, induction, Stripe last (25 Nov 2026)
+- [x] Real sign-up tested on phone, iPad, desktop: account creation works, all reach "Add my card".
+- [x] Executive Home: dark briefing band with three figures, priorities, Next up, follow-through, Support Circle, Vision, Still open.
+- [x] One induction (9 steps, resumable, skippable, replay from Help); old guided start removed.
+- [x] Card step offers access code automatically if card page unavailable.
+- [ ] LAST: connect Stripe (no payment key set up yet), then rerun card test on three devices and confirm landing.
+
+
 ## Real sign-up, seven-day start (25 Nov 2026)
 - [ ] Complete real new-account → card → Home: the supplied address already exists (real signup returned 422); awaiting an unused email. No password changed. Checkout completion remains unverified.
 - [x] Removed repetitive card-step decisions; added larger fields, autofill, labelled password visibility, normalised email and persistent error recovery.

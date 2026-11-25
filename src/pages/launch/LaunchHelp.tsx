@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useInduction } from '@/launch/onboarding/useInduction';
 
 interface FAQ {
   id: string;
@@ -19,6 +20,7 @@ interface FAQ {
 
 export default function LaunchHelp() {
   const navigate = useNavigate();
+  const induction = useInduction();
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
   const faqs: FAQ[] = [
@@ -227,6 +229,10 @@ export default function LaunchHelp() {
         >
           Download How to Get Set Up (PDF)
         </a>
+        <button type="button" onClick={() => { induction.replay(); navigate('/launch/home'); }}
+          className="mt-3 inline-flex min-h-14 w-full items-center justify-center rounded-xl bg-brand-orange-500 px-5 font-semibold text-primary-foreground">
+          Replay my welcome
+        </button>
       </LaunchCard>
 
       {/* Still Need Help */}

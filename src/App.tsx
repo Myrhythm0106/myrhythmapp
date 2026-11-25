@@ -153,7 +153,6 @@ import { DayOpenWelcomeProvider } from "./launch/daily/DayOpenWelcomeContext";
 // MVP Prototype (parallel route tree)
 import { LaunchGuard } from "./components/launch/LaunchGuard";
 import { SignedInOnly } from "./launch/access/SignedInOnly";
-import { AssessmentFirstGate } from "./components/launch/AssessmentFirstGate";
 
 const queryClient = new QueryClient();
 
@@ -348,7 +347,7 @@ function App() {
                         <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
                         <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchLayout showFooter={false} showNav={false}><LaunchWelcome /></LaunchLayout></LaunchModeProvider>} />
 
-                       <Route path="/launch/home" element={<LaunchPrivate><AssessmentFirstGate><LaunchDashboard /></AssessmentFirstGate></LaunchPrivate>} />
+                       <Route path="/launch/home" element={<LaunchPrivate><LaunchDashboard /></LaunchPrivate>} />
                        <Route path="/launch/calendar" element={<LaunchPrivate><LaunchCalendar /></LaunchPrivate>} />
                        <Route path="/launch/memory" element={<LaunchPrivate><LaunchMemoryBridge /></LaunchPrivate>} />
                       <Route path="/launch/diary" element={<LaunchPrivate><LaunchDiary /></LaunchPrivate>} />

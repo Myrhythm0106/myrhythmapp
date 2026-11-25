@@ -14,8 +14,8 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAppReady } from '@/hooks/useAppReady';
-import { LaunchGuidedStart } from './LaunchGuidedStart';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
+import { useInduction } from '@/launch/onboarding/useInduction';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -63,6 +63,7 @@ export function LaunchLayout({
   const appReady = useAppReady();
   const isOnboardingPath = ONBOARDING_PATHS.has(location.pathname);
   const { user } = useAuth();
+  const induction = useInduction();
   const greetName = useDisplayName('');
   const isSelfContained = SELF_CONTAINED_PATHS.has(location.pathname);
 
@@ -79,7 +80,7 @@ export function LaunchLayout({
 
   return (
     <SubjectProvider>
-      {user && !isOnboardingPath && <DayOpenWelcome name={greetName} />}
+      {user && !isOnboardingPath && induction.finished && <DayOpenWelcome name={greetName} />}
       <div className={cn(
         "launch-theme flex flex-col pb-safe px-safe",
         isSelfContained
@@ -143,7 +144,6 @@ export function LaunchLayout({
           <main className="flex-1 pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto px-4 py-6">
               {showBack && <LaunchPageHeader />}
-              {!isOnboardingPath && <LaunchGuidedStart />}
               {children}
             </div>
           </main>

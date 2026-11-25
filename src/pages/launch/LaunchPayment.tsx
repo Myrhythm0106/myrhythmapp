@@ -143,6 +143,7 @@ export default function LaunchPayment() {
     }
   };
 
+  const [showOther, setShowOther] = useState(false);
   const handleStartTrial = async () => {
     setIsLoading(true);
     setCheckoutError(null);
@@ -170,7 +171,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      setCheckoutError("My card page couldn't open just now. Nothing was charged. I can try again without re-entering my details.");
+      setCheckoutError("My card page isn't available just now. Nothing was charged. I can try again, or use an access code below to go straight in.");
     } finally {
       setIsLoading(false);
     }
@@ -212,7 +213,7 @@ export default function LaunchPayment() {
             {isLoading ? <><Loader2 className="h-5 w-5 animate-spin" /> Opening my card page</> : <><CreditCard className="h-5 w-5" />{checkoutError ? 'Try again' : 'Continue to my card'}<ArrowRight className="h-5 w-5" /></>}
           </Button>
           <p className="flex items-start gap-2 text-base text-launch-ink-deep/80"><Shield className="mt-1 h-5 w-5 shrink-0" />My card is handled securely by Stripe. Then straight to Home to record my first conversation.</p>
-          <Collapsible>
+          <Collapsible open={showOther || !!checkoutError} onOpenChange={setShowOther}>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" className="min-h-11 h-auto w-full whitespace-normal justify-between text-launch-ink-deep">Other options or an access code<ChevronDown className="h-5 w-5" /></Button>
             </CollapsibleTrigger>
