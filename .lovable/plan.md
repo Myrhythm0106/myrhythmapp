@@ -19,8 +19,17 @@ Landing -> Account + card -> Who it's for -> Welcome -> Home
 6. **Into my diary.** Accept actions with one tap each. Times are suggested from my best hours. Undo is always there. I can invite people by email or from my Support Circle.
 7. **Reminders and closure.** I get a get-ready prompt, then Done or Snooze, one gentle follow-up, and an end-of-day Still open list. When I tick Done, the action is closed in the conversation too, and my Support Circle is told.
 
+## Where My Vision fits
+My Vision is the thread that runs through the whole journey, gently and never as goal-setting.
+- **Optional, any time:** after the first recording, Home offers "What would a good life look like for me?" It covers home, family and work, takes 3 short prompts, and can be skipped. Targets from my care team or neurologist can be added as well.
+- **On Home:** a quiet "My Vision in ACTion" line sits above the priorities and shows which vision each priority serves.
+- **In the report:** each accepted action can be linked to a vision area with one optional tap, and MyRhythm suggests a match.
+- **In the diary:** a vision filter highlights the steps that move me towards the life I choose.
+- **At Done:** closing an action shows "One step closer to..." with my vision area named, a small win without fuss.
+- Groups see it in their own words: rebuilding life at home, supporting my person well, a calmer head, my career, my studies.
+
 ## Moving freely (new)
-- **A bar along the bottom with five tabs** on every signed-in page: Home, Record, Diary, Circle, More. Record is always one tap away.
+- **A bar along the bottom with five tabs** on every signed-in page: Home, Record, Diary, Circle, More (My Vision sits at the top of More). Record is always one tap away.
 - **Back always works.** Leaving partway through set-up saves my place, and Home shows "Pick up where I left off".
 - **Nothing is locked behind set-up.** I can skip the Questions and go straight to recording. MyRhythm asks again later, gently.
 - **The dial (More) covers everything else:** My Vision, Questions, Snapshot, Settings and Help.
