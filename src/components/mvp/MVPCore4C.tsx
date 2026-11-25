@@ -73,7 +73,7 @@ const chapters: Chapter[] = [
     description:
       'Names, decisions and actions are organised into a professional summary. You stay in control: you can edit the wording, owner, priority and dates before you accept it.',
     image: confirmImg,
-    alt: 'A professional woman calmly reviewing her next steps on a tablet',
+    alt: 'A Black woman professional in a bright office calmly confirming her next steps on a tablet',
     detailTitle: 'Why checking matters',
     details: [
       'Each action keeps a simple note of which conversation it came from.',
@@ -91,7 +91,7 @@ const chapters: Chapter[] = [
     description:
       'A next step becomes useful when it has a place in the day. MyRhythm helps you choose a realistic time, add the right level of reminder and send it to your calendar.',
     image: scheduleImg,
-    alt: 'A Black man walking in late afternoon light, glancing at his day on his phone, at ease',
+    alt: 'A Black professional between meetings by an office window, calmly checking his diary on his phone',
     detailTitle: 'Designed for real schedules',
     details: [
       'Suggestions can reflect your energy and brain-health rhythm.',
