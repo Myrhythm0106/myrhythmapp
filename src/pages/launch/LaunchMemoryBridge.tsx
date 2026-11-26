@@ -11,7 +11,7 @@ import { useConversationDisclosure } from '@/hooks/memoryBridge/useConversationD
 import { LaunchConversationLibrary } from '@/components/memoryBridge/LaunchConversationLibrary';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ensureSession, touchSession } from '@/utils/ensureSession';
 
 import { formatDistanceToNow, format } from 'date-fns';
@@ -314,22 +314,28 @@ export default function LaunchMemoryBridge() {
 
   // Two-tap capture: arriving with ?record=1 starts recording immediately.
   // One attempt only, a blocked mic must never retry in a loop.
-  const autoStartedRef = useRef(false);
+  // Remember which tap was handled (by navigation key), so a second Record tap
+  // while already on this page still starts, but one tap never retries.
+  const autoStartedRef = useRef<string | null>(null);
+  const routeLocation = useLocation();
   const recorderCardRef = useRef<HTMLDivElement | null>(null);
   const recordsRef = useRef<HTMLDivElement | null>(null);
   const [requestedConversationId, setRequestedConversationId] = useState<string | null>(null);
   useEffect(() => {
     const wants = searchParams.get('record') === '1' || searchParams.get('quick') === '1';
-    if (!wants || autoStartedRef.current) return;
-    autoStartedRef.current = true;
+    if (!wants || autoStartedRef.current === routeLocation.key) return;
+    autoStartedRef.current = routeLocation.key;
     const next = new URLSearchParams(searchParams);
     next.delete('record');
     next.delete('quick');
     setSearchParams(next, { replace: true });
-    if (isRecording || state === 'reviewing' || audioBlobRef.current) return;
-    void handleStartRecording().then(() => {
-      recorderCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
+    recorderCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (isRecording) { toast.message('I am already recording.'); return; }
+    if (state === 'reviewing' || audioBlobRef.current) {
+      toast.message('My last recording is waiting to be saved first.');
+      return;
+    }
+    void handleStartRecording();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 

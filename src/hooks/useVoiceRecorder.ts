@@ -154,7 +154,11 @@ export function useVoiceRecorder() {
       setMicBlockReason(blocker.reason ?? 'unsupported');
       console.warn('startRecording: blocked before getUserMedia', blocker.reason);
       if (blocker.reason === 'frame') {
-        toast.error('The browser is blocking the microphone inside this preview frame. Open the app in its own tab to record.');
+        toast.error('The microphone is blocked inside this preview window.', {
+          description: 'Open MyRhythm in its own tab and recording starts with one tap.',
+          action: { label: 'Open in a new tab', onClick: () => window.open(window.location.href, '_blank', 'noopener') },
+          duration: 12000,
+        });
       } else if (blocker.reason === 'insecure') {
         toast.error('Recording needs a secure (https) connection. Open the app over https and try again.');
       } else {
