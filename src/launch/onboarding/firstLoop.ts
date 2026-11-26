@@ -43,3 +43,15 @@ export function loopCopy(step: LoopStep, role?: string | null): StepCopy {
 
 /** Screens that belong to the first loop, where the "Step x of 5" line may appear. */
 export const LOOP_PATHS = ['/launch/memory', '/launch/calendar', '/launch/support'];
+
+/** What happens next once steps are in my diary, in the wording of my role. */
+const AFTER_DIARY: Record<Role, string> = {
+  'brain-injury': 'I get a gentle get-ready prompt before each one, so I do not have to hold it in my head. Nothing else to do now.',
+  caregiver: 'We both get a gentle prompt before each one, and I hear when it is done. Nothing else to do now.',
+  everyday: 'One gentle prompt when it is time. Nothing else to do now.',
+  executive: 'A prompt before each one, and anything still open waits in my end-of-day list. Nothing else to do now.',
+  student: 'A prompt before each study block, until it is done. Nothing else to do now.',
+};
+export function afterDiaryLine(role?: string | null): string {
+  return (role && AFTER_DIARY[role as Role]) || 'A gentle prompt arrives before each one, until it is done. Nothing else to do now.';
+}

@@ -17,3 +17,9 @@ describe('first loop', () => {
     expect(loopCopy('capture', null).next).toBe('Record my first conversation');
   });
 });
+
+import { afterDiaryLine } from './firstLoop';
+describe('after diary line', () => {
+  it('tells a carer they hear when it is done', () => { expect(afterDiaryLine('caregiver')).toContain('I hear when it is done'); });
+  it('falls back to neutral wording', () => { expect(afterDiaryLine(null)).toContain('Nothing else to do now'); });
+});

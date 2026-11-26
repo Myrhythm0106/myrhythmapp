@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { CalendarCheck, Users, BellRing, Undo2, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { afterDiaryLine } from '@/launch/onboarding/firstLoop';
+import { usePersona } from '@/launch/persona/usePersona';
 import type { MeetingScheduleSummary } from './capture-brief/model/scheduleFromMeeting';
 
 interface Props {
@@ -28,6 +30,7 @@ function slotLabel(date: string, time: string): string {
 export function CommitSummarySheet({ summary, onClose, onSeeDay }: Props) {
   const [undoing, setUndoing] = useState(false);
   const [undone, setUndone] = useState(false);
+  const { rawType } = usePersona();
 
   if (!summary) return null;
 
@@ -81,7 +84,7 @@ export function CommitSummarySheet({ summary, onClose, onSeeDay }: Props) {
             <div className="space-y-1.5 text-base text-muted-foreground">
               <p className="flex items-center gap-2">
                 <BellRing className="h-4 w-4" />
-                Reminders are set before each one.
+                {afterDiaryLine(rawType)}
               </p>
               {summary.people.length > 0 && (
                 <p className="flex items-center gap-2">
