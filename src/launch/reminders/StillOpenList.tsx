@@ -1,26 +1,41 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useReminderEngine } from './useReminderEngine';
 
-/** End-of-day list of anything not yet answered. Hidden when empty. */
+/** End-of-day wrap-up of anything not yet answered. Hidden when empty, with a calm clear-plate line once settled. */
 export function StillOpenList() {
   const { stillOpen, respond } = useReminderEngine();
+  const [settled, setSettled] = useState(0);
   const answer = async (item: (typeof stillOpen)[number], a: 'done' | 'tomorrow' | 'let_go', msg: string) => {
-    if (await respond(item, a)) toast.success(msg);
+    if (await respond(item, a)) { toast.success(msg); setSettled((n) => n + 1); }
     else toast.error("Couldn't save that. Please try again.");
   };
-  if (stillOpen.length === 0) return null;
+  if (stillOpen.length === 0) {
+    if (settled === 0) return null;
+    return (
+      <section aria-label="Today is settled" className="rounded-2xl border border-border bg-card/80 p-4">
+        <h2 className="text-lg font-semibold text-foreground">Today is settled</h2>
+        <p className="text-base text-muted-foreground">Nothing left hanging. Tomorrow is ready when I am.</p>
+      </section>
+    );
+  }
+  const count = stillOpen.length;
   return (
     <section aria-label="Still open today" className="rounded-2xl border border-border bg-card/80 p-4 space-y-3">
-      <h2 className="text-lg font-semibold text-foreground">Still open today</h2>
-      <p className="text-base text-muted-foreground">No pressure. Choose what fits.</p>
+      <div>
+        <h2 className="text-lg font-semibold text-foreground">Still open today</h2>
+        <p className="text-base text-muted-foreground">
+          {count === 1 ? '1 step to settle' : `${count} steps to settle`} before tomorrow. Each choice closes it calmly.
+        </p>
+      </div>
       {stillOpen.map((item) => (
         <div key={item.id} className="border-t border-border pt-3">
           <p className="text-base font-medium text-foreground">{item.title}{item.time ? ` · ${item.time.slice(0, 5)}` : ''}</p>
           <div className="mt-2 flex flex-wrap gap-2">
-            <Button variant="action" className="min-h-14" onClick={() => answer(item, 'done', 'Marked done')}>Done</Button>
-            <Button variant="outline" className="min-h-14" onClick={() => answer(item, 'tomorrow', 'Moved to tomorrow')}>Move to tomorrow</Button>
-            <Button variant="ghost" className="min-h-14" onClick={() => answer(item, 'let_go', 'Let go')}>Let it go</Button>
+            <Button variant="action" className="min-h-14" onClick={() => answer(item, 'done', 'Done. One more promise kept.')}>Done</Button>
+            <Button variant="outline" className="min-h-14" onClick={() => answer(item, 'tomorrow', 'Moved to tomorrow. It is in my diary.')}>Move to tomorrow</Button>
+            <Button variant="ghost" className="min-h-14" onClick={() => answer(item, 'let_go', 'Let go. No more reminders for this.')}>Let it go</Button>
           </div>
         </div>
       ))}
