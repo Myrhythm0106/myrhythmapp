@@ -1,7 +1,7 @@
 import { LaunchYesWeekCard } from './LaunchYesWeekCard';
 import type { YesAction } from '@/launch/yes/yesActions';
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell, Star, Lock, Unlock, UserRound, Compass } from 'lucide-react';
+import { MoreVertical, Check, X, Calendar, Sparkles, Bell, Star, Lock, Unlock, UserRound, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLaunchPriorityHighlights } from '@/hooks/useLaunchFocusDisplay';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -16,7 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
 import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
 import { SourceRefLine, type SourceState } from '@/components/traceability/SourceRefLine';
 import { useActionVisionLinks, VISION_AREAS, visionAreaLabel, type VisionArea } from '@/launch/vision/actionVision';
@@ -60,9 +59,9 @@ interface LaunchDayViewProps {
 
 
 
-export function LaunchDayView({ 
-  date, 
-  events, 
+export function LaunchDayView({
+  date,
+  events,
   reminders = [],
   onReminderSelect,
   className = '',
@@ -70,7 +69,6 @@ export function LaunchDayView({
   inheritedMonthFocus,
   inheritedWeekFocus,
   onEventStatusChange,
-  onEventCarryOver,
   onEventReschedule,
   onEventOpenSource,
   onAddYesAction,
@@ -92,56 +90,16 @@ export function LaunchDayView({
   };
 
 
-  const getTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      routine: 'bg-brand-emerald-400',
-      appointment: 'bg-blue-400',
-      medical: 'bg-red-400',
-      activity: 'bg-purple-400',
-      social: 'bg-amber-400',
-      rest: 'bg-brand-teal-400',
-    };
-    return colors[type] || 'bg-gray-400';
-  };
-
   const getStatusStyles = (status?: Event['status']) => {
-    switch (status) {
-      case 'done':
-        return 'bg-green-50 border-green-200';
-      case 'cancelled':
-        return 'bg-gray-50 border-gray-200 opacity-60';
-      case 'carried':
-        return 'bg-amber-50 border-amber-200 opacity-70';
-      default:
-        return '';
-    }
+    if (status === 'done') return 'bg-launch-teal/5 border-launch-teal/30';
+    if (status === 'cancelled' || status === 'carried') return 'bg-muted/40 border-border';
+    return '';
   };
 
-  const handleMarkDone = (index: number) => {
-    onEventStatusChange?.(index, 'done');
-    toast.success('Task completed.');
-  };
-
-  const handleCancel = (index: number) => {
-    onEventStatusChange?.(index, 'cancelled');
-    toast('Task cancelled', { description: 'No worries, priorities shift!' });
-  };
-
-  const handleCarryOver = (index: number) => {
-    onEventCarryOver?.(index);
-    toast.success('Moved to tomorrow', { 
-      description: 'Same time tomorrow. Tap to reschedule if needed.',
-      action: {
-        label: 'Reschedule',
-        onClick: () => onEventReschedule?.(index)
-      }
-    });
-  };
-
-  const handleReschedule = (index: number) => {
-    onEventReschedule?.(index);
-    toast('Opening scheduler...', { description: 'Choose a new date and time' });
-  };
+  // Persistence and the single closure message belong to the parent handlers.
+  const handleMarkDone = (index: number) => onEventStatusChange?.(index, 'done');
+  const handleCancel = (index: number) => onEventStatusChange?.(index, 'cancelled');
+  const handleReschedule = (index: number) => onEventReschedule?.(index);
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -152,7 +110,7 @@ export function LaunchDayView({
         focusTitle={undefined}
       />
 
-      <h2 className="text-xl font-semibold font-display text-launch-ink">My schedule today</h2>
+      <h2 className="text-xl font-semibold font-display text-launch-ink">My schedule · {format(date, 'EEE d MMM')}</h2>
 
       {linkedAreas.length > 0 && (
         <div className="rounded-xl border border-launch-teal/20 bg-launch-teal/5 p-3">
@@ -177,11 +135,12 @@ export function LaunchDayView({
       {sortedReminders.length > 0 && (
         <div className="space-y-2">
           {sortedReminders.map((r) => (
-            <button
+            <Button
+              variant="ghost"
               key={r.id}
               onClick={() => onReminderSelect?.(r)}
               className={cn(
-                'w-full text-left flex items-center gap-3 rounded-xl border border-dashed border-launch-gold/50 bg-launch-gold/5 px-4 py-3 min-h-[56px] transition-colors hover:bg-launch-gold/10',
+                'w-full h-auto whitespace-normal text-left flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-launch-gold/50 bg-launch-gold/5 px-4 py-3 min-h-[56px] transition-colors hover:bg-launch-gold/10',
                 r.sent && 'opacity-60'
               )}
             >
@@ -196,7 +155,7 @@ export function LaunchDayView({
               <span className="text-xs text-launch-ink/60 whitespace-nowrap">
                 {reminderOffsetLabel(r.offsetDays)}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -204,48 +163,48 @@ export function LaunchDayView({
       {sortedEvents.length === 0 ? (
         sortedReminders.length === 0 ? (
           <LaunchCard className="p-8 text-center">
-            <p className="text-gray-500">No events scheduled for today</p>
-            <p className="text-sm text-brand-teal-600 mt-2">Tap "+ Add" to create one</p>
+            <p className="text-foreground text-lg">My diary has space today.</p>
+
           </LaunchCard>
         ) : null
       ) : (
 
         <div className="space-y-3">
           {sortedEvents.map((event, i) => (
-            <LaunchCard 
+            <LaunchCard
               key={event.id ?? i}
-              variant="glass" 
+              variant="glass"
               className={cn("p-4", getStatusStyles(event.status), event.id && isActive(event) && priorities.ids.includes(event.id) && 'border-launch-gold bg-launch-gold/5', isVisionHighlighted(event) && 'border-launch-teal bg-launch-teal/5 ring-1 ring-launch-teal/35')}
             >
-              <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4">
                 <div className="text-center min-w-[50px]">
                   <p className={cn(
                     "text-sm font-bold",
-                    event.status === 'done' ? 'text-green-600' : 
-                    event.status === 'cancelled' ? 'text-gray-400 line-through' : 
-                    'text-gray-900'
+                    event.status === 'done' ? 'text-launch-teal' :
+                    event.status === 'cancelled' ? 'text-muted-foreground line-through' :
+                    'text-foreground'
                   )}>
                     {event.time}
                   </p>
                 </div>
-                <div className={cn("w-1 h-12 rounded-full", getTypeColor(event.type))} />
-                <div className="flex-1 min-w-0">
+                <div className="w-1 h-12 rounded-full bg-launch-teal/40" />
+                <div className="flex-1 min-w-0 basis-[calc(100%-70px)] sm:basis-0">
                   <p className={cn(
                     "font-medium break-words",
-                    event.status === 'done' ? 'text-green-700 line-through' : 
-                    event.status === 'cancelled' ? 'text-gray-400 line-through' : 
-                    'text-gray-900'
+                    event.status === 'done' ? 'text-launch-teal line-through' :
+                    event.status === 'cancelled' ? 'text-muted-foreground line-through' :
+                    'text-foreground'
                   )}>
-                    {event.status === 'done' && <Check className="inline h-4 w-4 mr-1 text-green-500" />}
-                    {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-gray-400" />}
+                    {event.status === 'done' && <Check className="inline h-4 w-4 mr-1 text-launch-teal" />}
+                    {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-muted-foreground" />}
                     {event.title}
                   </p>
                   {event.requiresAcceptance && event.status === 'pending' && (
                     <div className="mt-2 rounded-xl border border-launch-gold/40 bg-launch-cream-light p-3">
                       <p className="flex items-center gap-1.5 text-sm text-launch-ink"><UserRound className="h-4 w-4" />Added by {event.addedByName || 'my Support Circle'}. Shall I keep it?</p>
                       <div className="mt-2 flex gap-2">
-                        <Button size="sm" variant="action" className="min-h-11" onClick={() => onCircleDecision?.(event, true)}>Keep it</Button>
-                        <Button size="sm" variant="outline" className="min-h-11" onClick={() => onCircleDecision?.(event, false)}>No thanks</Button>
+                        <Button size="sm" variant="action" className="min-h-14" onClick={() => onCircleDecision?.(event, true)}>Keep it</Button>
+                        <Button size="sm" variant="outline" className="min-h-14" onClick={() => onCircleDecision?.(event, false)}>No thanks</Button>
                       </div>
                     </div>
                   )}
@@ -256,16 +215,17 @@ export function LaunchDayView({
                     <span className="inline-flex items-center gap-1 text-base text-launch-ink mt-1"><Star className="h-4 w-4 fill-current" />Priority</span>
                   )}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-xs text-gray-500 capitalize">{event.type}</p>
+                    <p className="text-base text-muted-foreground capitalize">{event.type}</p>
                     {event.source === 'memory_bridge' && (
-                      <button
+                      <Button
+                        variant="ghost"
                         type="button"
                         onClick={() => onEventOpenSource?.(event)}
-                        className="text-xs bg-brand-teal-100 text-brand-teal-700 px-2 py-0.5 rounded-full inline-flex items-center gap-1 hover:bg-brand-teal-200 transition-colors"
+                        className="min-h-14 text-base text-launch-teal px-0"
                       >
                         <Sparkles className="h-3 w-3" />
-                        From Memory Bridge
-                      </button>
+                        From my conversation
+                      </Button>
                     )}
 
                     {eventVisionArea(event) && (
@@ -284,17 +244,17 @@ export function LaunchDayView({
 
 
                     {event.carriedFrom && (
-                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                      <span className="text-base bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
                         Carried over
                       </span>
                     )}
                   </div>
                   <ExpandableBrief text={event.description} className="mt-1.5" />
                 </div>
-                
+
                 {event.id && isActive(event) && (
                   <Button variant="ghost" size="icon"
-                    className="shrink-0 min-h-11 min-w-11 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10"
+                    className="shrink-0 min-h-14 min-w-14 text-launch-ink hover:text-launch-ink hover:bg-launch-gold/10"
                     aria-label={`${priorities.ids.includes(event.id) ? 'Remove priority' : 'Mark as a priority'}: ${event.title}`}
                     title={priorities.ids.includes(event.id) ? 'Remove priority' : 'Mark as a priority'}
                     aria-pressed={priorities.ids.includes(event.id)}
@@ -302,33 +262,30 @@ export function LaunchDayView({
                     <Star className={cn('h-5 w-5', priorities.ids.includes(event.id) && 'fill-current')} />
                   </Button>
                 )}
+                {isActive(event) && !event.requiresAcceptance && onEventStatusChange && (
+                  <Button variant="ghost" className="min-h-14 text-launch-teal border border-launch-teal/30" onClick={() => handleMarkDone(i)} aria-label={`Mark done: ${event.title}`}>
+                    <Check />Done
+                  </Button>
+                )}
                 {/* Action Menu */}
                 {event.status !== 'done' && event.status !== 'cancelled' && event.status !== 'carried' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button aria-label={`Actions for ${event.title}`} className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 transition-colors hover:bg-gray-100">
-                        <MoreVertical className="h-4 w-4 text-gray-400" />
-                      </button>
+                      <Button variant="ghost" size="icon" aria-label={`Actions for ${event.title}`} className="min-h-14 min-w-14 text-muted-foreground">
+                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem onClick={() => handleMarkDone(i)} className="text-green-600">
-                        <Check className="h-4 w-4 mr-2" />
-                        Done
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleCancel(i)} className="text-gray-600">
+                      <DropdownMenuItem onClick={() => handleCancel(i)} className="min-h-14 text-muted-foreground">
                         <X className="h-4 w-4 mr-2" />
                         Cancel
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleCarryOver(i)} className="text-amber-600">
-                        <ArrowRight className="h-4 w-4 mr-2" />
-                        Carry to Tomorrow
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleReschedule(i)} className="text-blue-600">
+                      <DropdownMenuItem onClick={() => handleReschedule(i)} className="min-h-14 text-foreground">
                         <Calendar className="h-4 w-4 mr-2" />
-                        Reschedule...
+                        Choose another time
                       </DropdownMenuItem>
                       {onEventPrivacy && event.id && (
-                        <DropdownMenuItem onClick={() => onEventPrivacy(event, !event.isPrivate)}>
+                        <DropdownMenuItem className="min-h-14" onClick={() => onEventPrivacy(event, !event.isPrivate)}>
                           {event.isPrivate ? <Unlock className="h-4 w-4 mr-2" /> : <Lock className="h-4 w-4 mr-2" />}
                           {event.isPrivate ? 'Show to my circle' : 'Keep private'}
                         </DropdownMenuItem>
@@ -341,9 +298,9 @@ export function LaunchDayView({
                 {(event.status === 'done' || event.status === 'cancelled' || event.status === 'carried') && (
                   <div className={cn(
                     "text-xs px-2 py-1 rounded-full",
-                    event.status === 'done' && 'bg-green-100 text-green-700',
-                    event.status === 'cancelled' && 'bg-gray-100 text-gray-500',
-                    event.status === 'carried' && 'bg-amber-100 text-amber-700'
+                    event.status === 'done' && 'bg-launch-teal/10 text-launch-teal',
+                    event.status === 'cancelled' && 'bg-muted text-muted-foreground',
+                    event.status === 'carried' && 'bg-muted text-muted-foreground'
                   )}>
                     {event.status === 'done' && '✓ Done'}
                     {event.status === 'cancelled' && 'Cancelled'}
@@ -355,9 +312,9 @@ export function LaunchDayView({
           ))}
         </div>
       )}
-      <LaunchCommitmentBanner 
-        scope="day" 
-        date={date} 
+      <LaunchCommitmentBanner
+        scope="day"
+        date={date}
         inheritedVision={inheritedVision}
         inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
       />

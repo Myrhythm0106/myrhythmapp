@@ -1,3 +1,4 @@
+import { REVIEW_GROUPS, reviewGroup, type ReviewGroup } from './reviewGroups';
 import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -27,6 +28,8 @@ import type { BriefAction } from '@/components/memoryBridge/capture-brief/model/
 export interface ReviewRowState {
   id: string;
   include: boolean;
+  group?: ReviewGroup;
+  declined?: boolean;
   text: string;
   owner: string;
   date: string;          // YYYY-MM-DD
@@ -243,7 +246,8 @@ export function ReviewStep({
             const date = a.scheduled_date || a.proposed_date || '';
             return {
               id: a.id,
-              include: true,
+              include: reviewGroup(a) === 'steps',
+              group: reviewGroup(a),
               text: a.action_text || a.what_outcome || '',
               owner: a.owner || a.assigned_to || 'Me',
               date,
@@ -456,7 +460,7 @@ export function ReviewStep({
       return;
     }
     const missingDate = included.find(row => !row.date || !row.time);
-    if (missingDate) { toast.info('Choose a day and time for each selected step first.'); return; }
+    if (missingDate) { setExpanded(prev => new Set(prev).add(missingDate.id)); toast.info('Choose a day and time in the open details, then schedule.'); return; }
     const blankStep = included.find(row => !row.text.trim());
     if (blankStep) {
       toast.error('A next step needs some words.');
@@ -510,7 +514,7 @@ export function ReviewStep({
       onClose();
     } catch (e) {
       console.error('ReviewStep commit failed', e);
-      toast.error('Could not add these to my diary — please try again.');
+      toast.error('Could not add these to my diary. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -532,7 +536,7 @@ export function ReviewStep({
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={open => { if (!open && !saving) onClose(); }}>
       <DialogContent
         className="max-w-5xl w-[calc(100vw-1rem)] h-[92vh] p-0 gap-0 flex flex-col bg-background"
         aria-describedby={undefined}
@@ -545,7 +549,9 @@ export function ReviewStep({
           <p className="text-sm md:text-base text-muted-foreground mt-1">
             From “{meetingTitle}”. Nothing goes into my day until I approve it.
           </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <details className="mt-2">
+            <summary className="min-h-14 flex items-center cursor-pointer text-base text-muted-foreground">Transcript and table</summary>
+            <div className="flex flex-wrap items-center gap-2">
             <div role="tablist" aria-label="Show my actions as" className="inline-flex rounded-lg border border-border p-1">
               {(['table', 'list'] as const).map(v => (
                 <Button
@@ -556,7 +562,7 @@ export function ReviewStep({
                   aria-selected={view === v}
                   onClick={() => setView(v)}
                   className={cn(
-                    'min-h-[44px] min-w-[80px] rounded-md px-4 text-sm font-semibold',
+                    'min-h-14 min-w-[80px] rounded-md px-4 text-base font-semibold',
                     view === v ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -565,14 +571,15 @@ export function ReviewStep({
               ))}
             </div>
             {meetingId && !sourceFilePath && (
-              <Button variant="outline" className="min-h-[44px]" onClick={() => setShowTranscript(true)}>
+              <Button variant="outline" className="min-h-14" onClick={() => setShowTranscript(true)}>
                 Read full transcript
               </Button>
             )}
-          </div>
+            </div>
+          </details>
           {sourceFilePath && (
             <p className="text-xs text-primary mt-2">
-              Your document is held until you confirm, then deleted.
+              My document stays here until I confirm, then it is deleted.
             </p>
           )}
         </div>
@@ -592,7 +599,6 @@ export function ReviewStep({
             </div>
           ) : (
             <>
-              <p className="text-base font-medium mb-5">{rows.length} next {rows.length === 1 ? 'step' : 'steps'} to check</p>
               <details className="mb-5"><summary className="min-h-14 flex items-center cursor-pointer text-base">Conversation overview</summary><ExecutiveSummaryPanel model={executiveSummary} /></details>
 
               {/* ---------- Table view ---------- */}
@@ -635,7 +641,7 @@ export function ReviewStep({
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {r.needsCheck && (
                               <Badge variant="outline" className="text-base border-primary/50 text-primary">
-                                suggested — check this
+                                Possible step, for me to check
                               </Badge>
                             )}
                           </div>
@@ -702,110 +708,58 @@ export function ReviewStep({
               </div>
               )}
 
-              {/* ---------- List view ---------- */}
+              {/* Calm grouped cards; the spreadsheet remains an optional view. */}
               {view === 'list' && (
-              <div className="space-y-3">
-                {rows.map(r => {
-                  const open = expanded.has(r.id);
-                  return (
-                    <div
-                      key={r.id}
-                      className={cn(
-                        'rounded-md border border-border bg-card p-3',
-                        !r.include && 'opacity-50',
-                      )}
-                    >
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          checked={r.include}
-                          onCheckedChange={v => patch(r.id, { include: Boolean(v) })}
-                          aria-label="Include this step"
-                          className="mt-3 h-5 w-5"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <StepTextField
-                            value={r.text}
-                            onChange={v => patch(r.id, { text: v })}
-                            className="font-medium"
-                          />
-                          {r.needsCheck && (
-                            <Badge variant="outline" className="mt-2 text-base border-primary/50 text-primary">
-                              suggested — check this
-                            </Badge>
-                          )}
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            <DateField
-                              value={r.date}
-                              onChange={v => patch(r.id, { date: v, slotIsSuggestion: false })}
-                              placeholder="Pick a day"
-                            />
-                            <TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} />
-                          </div>
-                          {r.slotIsSuggestion && (
-                            <p className="mt-1 text-base text-muted-foreground">Suggested, not confirmed — change anything before adding.</p>
-                          )}
-
-                          <Button
-                            variant="ghost"
-                            aria-expanded={open}
-                            type="button"
-                            onClick={() => toggleExpanded(r.id)}
-                            className="mt-2 inline-flex min-h-14 items-center gap-1 text-sm text-primary"
-                          >
-                            {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            {open ? 'Close details' : 'Details'}
-                          </Button>
-
-                          <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
-                          {open && (
-                            <div className="mt-2 space-y-3">
-                              <div>
-                                <label className="text-base text-muted-foreground">Owner</label>
-                                <Input
-                                  value={r.owner}
-                                  onChange={e => patch(r.id, { owner: e.target.value })}
-                                  className="min-h-14 text-base"
-                                />
-                              </div>
-                              <div>
-                                <label className="text-base text-muted-foreground">Due</label>
-                                <DateField
-                                  value={r.dueDate}
-                                  onChange={v => patch(r.id, { dueDate: v })}
-                                  placeholder="No due date"
-                                  allowClear
-                                />
-                              </div>
-                              <div>
-                                <label className="text-base text-muted-foreground">Priority</label>
-                                <Select
-                                  value={priorityValue(r.priority)}
-                                  onValueChange={v => patch(r.id, { priority: Number(v) })}
-                                >
-                                  <SelectTrigger className="min-h-14 text-base"><SelectValue /></SelectTrigger>
-                                  <SelectContent>
-                                    {PRIORITIES.map(p => (
-                                      <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              {renderPeople(r)}
-                              <Button
-                                variant="ghost"
-                                className="min-h-14 w-full text-destructive"
-                                onClick={() => requestRemove(r.id)}
-                              >
-                                <Trash2 className="h-4 w-4 mr-2" /> Remove this step
-                              </Button>
-                            </div>
-                          )}
+                <div className="space-y-6">
+                  {REVIEW_GROUPS.map(group => {
+                    const groupRows = rows.filter(r => (r.group || 'steps') === group.id);
+                    if (!groupRows.length) return null;
+                    return (
+                      <section key={group.id} aria-label={group.title}>
+                        <h3 className="text-lg font-semibold text-foreground">{group.title} <span className="text-muted-foreground font-normal">{groupRows.length}</span></h3>
+                        <p className="mt-1 mb-3 text-base text-muted-foreground">{group.hint}</p>
+                        <div className="space-y-3">
+                          {groupRows.map(r => {
+                            const open = expanded.has(r.id);
+                            return (
+                              <article key={r.id} className={cn('rounded-lg border border-border bg-card/80 p-4', r.declined && 'bg-muted/40')}>
+                                <p className="text-lg font-medium leading-relaxed break-words text-foreground">{r.text}</p>
+                                <p className="mt-1 text-base text-muted-foreground">{r.owner || 'Me'}{r.date && r.time ? ` · ${niceDate(r.date)} at ${r.time}` : ' · Day and time to choose'}</p>
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
+                                  <Button variant="ghost" className="min-h-14 border border-border text-foreground" aria-pressed={r.include} onClick={() => patch(r.id, { include: !r.include, declined: false })}>
+                                    <CalendarPlus className="h-4 w-4" />{r.include ? 'Selected' : 'Keep this step'}
+                                  </Button>
+                                  <Button variant="ghost" className="min-h-14 text-muted-foreground" aria-pressed={Boolean(r.declined)} onClick={() => patch(r.id, { include: false, declined: !r.declined })}>
+                                    {r.declined ? 'Reconsider' : 'Not for me'}
+                                  </Button>
+                                  <Button variant="ghost" className="min-h-14 text-foreground" aria-expanded={open} onClick={() => toggleExpanded(r.id)}>
+                                    {open ? <ChevronUp /> : <ChevronDown />}{open ? 'Close details' : 'Details'}
+                                  </Button>
+                                </div>
+                                {r.include && <div className="mt-2">{renderPeople(r)}</div>}
+                                {open && (
+                                  <div className="mt-4 border-t border-border pt-4 space-y-4">
+                                    <StepTextField value={r.text} onChange={v => patch(r.id, { text: v })} />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                      <div className="min-w-0"><p className="mb-1 text-base text-muted-foreground">Day</p><DateField value={r.date} onChange={v => patch(r.id, { date: v, slotIsSuggestion: false })} placeholder="Pick a day" /></div>
+                                      <div><p className="mb-1 text-base text-muted-foreground">Time</p><TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} /></div>
+                                    </div>
+                                    {r.slotIsSuggestion && r.date && <p className="text-base text-muted-foreground">Suggested time. I can change it before scheduling.</p>}
+                                    <label className="block text-base text-muted-foreground">Owner<Input value={r.owner} onChange={e => patch(r.id, { owner: e.target.value })} className="mt-1 min-h-14 text-base" /></label>
+                                    <div><p className="mb-1 text-base text-muted-foreground">Due date, if needed</p><DateField value={r.dueDate} onChange={v => patch(r.id, { dueDate: v })} placeholder="No due date" allowClear /></div>
+                                    <div><p className="mb-1 text-base text-muted-foreground">Priority</p><Select value={priorityValue(r.priority)} onValueChange={v => patch(r.id, { priority: Number(v) })}><SelectTrigger className="min-h-14 text-base"><SelectValue /></SelectTrigger><SelectContent>{PRIORITIES.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}</SelectContent></Select></div>
+                                    <ActionOrigin meetingId={meetingId} actionId={r.id} quote={r.sourceQuote} userAdded={r.userAdded} />
+                                    <Button variant="ghost" className="min-h-14 text-destructive" onClick={() => requestRemove(r.id)}><Trash2 />Remove this step</Button>
+                                  </div>
+                                )}
+                              </article>
+                            );
+                          })}
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                      </section>
+                    );
+                  })}
+                </div>
               )}
             </>
           )}
@@ -849,31 +803,29 @@ export function ReviewStep({
                 className="mt-0.5"
               />
               <span>
-                I confirm these match my document — approving deletes the uploaded file.
+                I confirm these match my document. Approving deletes the uploaded file.
               </span>
             </label>
           )}
-          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2">
-            <span className="text-sm text-muted-foreground">
+          <div className="grid grid-cols-[1fr_auto] items-center gap-x-2 gap-y-1 sm:flex">
+            <span className="order-2 text-base text-muted-foreground sm:order-1 sm:mr-auto">
               {included.length} of {rows.length} selected
             </span>
-            <div className="flex gap-2">
-              <Button variant="outline" className="min-h-14 flex-1 sm:flex-none" onClick={onClose}>
+              <Button variant="ghost" className="order-3 min-h-14 sm:order-2" disabled={saving} onClick={onClose}>
                 Not yet
               </Button>
               <Button
                 variant="action"
-                className="min-h-14 h-auto whitespace-normal flex-1 sm:flex-none"
+                className="order-1 col-span-2 min-h-14 h-auto whitespace-normal w-full sm:order-3 sm:w-auto"
                 onClick={handleCommit}
                 disabled={saving || included.length === 0 || (!!sourceFilePath && !confirmedAccurate)}
               >
                 {saving ? (
                   <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Adding…</>
                 ) : (
-                  <><CalendarPlus className="h-4 w-4 mr-2" /> Add selected steps to my day</>
+                  <><CalendarPlus className="h-4 w-4 mr-2" /> Place {included.length} {included.length === 1 ? 'step' : 'steps'} into my schedule</>
                 )}
               </Button>
-            </div>
           </div>
         </div>
       </DialogContent>

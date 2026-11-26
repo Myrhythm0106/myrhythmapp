@@ -1,5 +1,11 @@
 # MyRhythm — task roadmap
 
+## Review then diary clarity (26 Nov 2026)
+- [x] Simplify review into grouped next-step cards with optional details, explicit suggestion acceptance and one scheduling button.
+- [x] Make conversation-origin diary actions clear, with visible Done and optional rescheduling; preserve the original-record closure flow.
+- [x] 28 relevant tests and isolated actual-control checks at 320px, 393px, 837px and desktop pass; suggestion accept/decline, edit, selected-only commit, source, reschedule and Done checked without overflow or runtime errors.
+- [ ] Real signed-in recording → review → saved diary → closed action check: blocked by externally managed authentication, which cannot supply a testing session.
+
 ## Welcome clarity and pacing (25 Nov 2026)
 - [x] Clarify each induction step and provide Next without requiring an activity or changing the selected approach.
 - [x] Alternate emerald welcome backgrounds on steps 2, 4, 6 and 8; isolated real controls checked on phone, iPad and desktop across all nine steps, saved approach, Back/Next and completion; seven tests and build pass. Signed-in Home integration cannot be checked through the available session tool with the user-managed backend.
