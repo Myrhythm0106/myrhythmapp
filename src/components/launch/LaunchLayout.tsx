@@ -14,6 +14,8 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAppReady } from '@/hooks/useAppReady';
+import { FirstLoopStrip } from '@/components/launch/firstLoop/FirstLoopCard';
+import { LOOP_PATHS } from '@/launch/onboarding/firstLoop';
 import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 import { useInduction } from '@/launch/onboarding/useInduction';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
@@ -144,6 +146,7 @@ export function LaunchLayout({
           <main className="flex-1 pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto px-4 py-6">
               {showBack && <LaunchPageHeader />}
+              {user && induction.finished && LOOP_PATHS.includes(location.pathname) && <FirstLoopStrip />}
               {children}
             </div>
           </main>

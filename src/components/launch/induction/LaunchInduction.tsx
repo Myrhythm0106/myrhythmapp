@@ -9,15 +9,9 @@ import { Button } from '@/components/ui/button';
 
 type Step = { title: string; text: string; primary: string; to?: string; secondary?: string };
 const STEPS: Record<InductionStep, Step> = {
-  welcome: { title: 'Welcome. Here is how MyRhythm helps me.', text: 'MyRhythm remembers, so I can follow through. I record what matters, choose my next steps, and they wait for me in my diary. This short welcome takes about two minutes, and I can leave it at any point.', primary: 'Show me' },
+  welcome: { title: 'Welcome. Here is how MyRhythm helps me.', text: 'MyRhythm remembers, so I can follow through. I record what matters, choose my next steps, and they wait for me in my diary. This short welcome takes under a minute, and I can leave it at any point.', primary: 'Show me' },
   who: { title: 'Who am I using MyRhythm for?', text: 'One tap tailors the wording and first suggestions. Myself, someone I care for, or a busy working life. Optional.', primary: 'Choose who it is for', to: '/launch/user-type?after=home', secondary: 'Not now' },
   style: { title: 'How would I like to start?', text: 'I choose the approach that feels right. Guide me offers one practical step at a time. Explore my way lets me choose where to begin. Both keep all my pages available, and I can switch in the round menu at any time.', primary: 'Guide me', secondary: 'Explore my way' },
-  record: { title: 'Capture my first conversation', text: 'An appointment, a meeting or a chat at home. One tap starts, one tap stops. If now is not the moment, a 20-second note to myself works just as well.', primary: 'Record now', to: '/launch/memory?record=1', secondary: 'Later' },
-  nextSteps: { title: 'See my summary and next steps', text: 'MyRhythm writes up what was said and pulls out what was agreed. I keep the ones that matter and give one a time in my diary.', primary: 'Open my conversations', to: '/launch/memory', secondary: 'Next' },
-  reminders: { title: 'Gentle reminders, until it is done', text: 'A get-ready prompt before each step, then Done, Snooze or Move. If something slips, it waits for me in Still open at the end of the day. No nagging.', primary: 'Got it' },
-  circle: { title: 'Invite someone I trust', text: 'No one walks alone. A family member, friend or colleague can see what I choose to share, and nothing else. I can turn this off at any time.', primary: 'Invite someone', to: '/launch/support', secondary: 'Not now' },
-  snapshot: { title: 'My free snapshot', text: 'Six minutes of questions about my energy and focus, so MyRhythm suggests times that suit me. Not a test, and never a diagnosis.', primary: 'Start my snapshot', to: '/launch/assessment?first=1', secondary: 'Later' },
-  done: { title: 'My welcome is complete.', text: 'Home is my starting point: my priorities, my diary and the next thing to do. I can record a conversation whenever I am ready, invite someone I trust, or return to this welcome from Help.', primary: 'Go to my day' },
 };
 
 /** The single induction for new members. Never blocks the app. */
@@ -35,7 +29,7 @@ export function LaunchInduction() {
     );
   }
   const s = STEPS[ind.stepId];
-  const emerald = [1, 3, 5, 7].includes(ind.step);
+  const emerald = ind.step === 1;
   const nextId = INDUCTION_STEPS[ind.step + 1];
   const nextStep = nextId ? STEPS[nextId] : undefined;
   const primary = () => {
@@ -67,8 +61,8 @@ export function LaunchInduction() {
         </div>
       )}
       <p className="mt-4 max-w-2xl text-base leading-relaxed opacity-85">
-        {ind.stepId === 'style' ? 'My choice saves here. Next takes me to my first recording, when I am ready.' :
-          nextStep ? `Next: ${nextStep.title} I can try this now or keep going without doing it yet.` : 'I return to Home. Nothing is recorded, scheduled or shared by finishing this welcome.'}
+        {ind.stepId === 'style' ? 'My choice saves here. Next finishes my welcome. My first loop on Home then shows each step from first recording to done.' :
+          nextStep ? `Next: ${nextStep.title} I can try this now or keep going without doing it yet.` : 'Nothing is recorded, scheduled or shared by finishing this welcome.'}
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         {s.to && (
@@ -79,7 +73,7 @@ export function LaunchInduction() {
         )}
         <Button variant="ghost" type="button" onClick={ind.next}
           className="min-h-14 h-auto whitespace-normal rounded-2xl bg-brand-orange-500 px-6 font-semibold text-launch-ink-deep hover:bg-brand-orange-600 hover:text-launch-ink-deep">
-          {ind.stepId === 'done' ? 'Go to my day' : 'Next'}<ArrowRight className="h-5 w-5" />
+          {ind.step === ind.total - 1 ? 'Show my first loop' : 'Next'}<ArrowRight className="h-5 w-5" />
         </Button>
         {ind.step > 0 && (
           <Button variant="ghost" type="button" onClick={ind.back} className={cn('min-h-14 px-3', emerald ? 'text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory' : 'text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep')}>

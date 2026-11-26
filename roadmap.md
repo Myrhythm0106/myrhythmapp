@@ -200,3 +200,5 @@
 - [x] Link conversation actions to vision areas, highlight them in the diary, and name the area at Done
 - [x] Walk through the journey for all five audiences on a phone-sized screen
 - [x] 89 launch tests and 22 isolated phone browser checks passed; real provider sign-in remains unavailable to automation
+
+- [x] One clear journey per role: My first loop on Home, step line, 3-step welcome, flow guide PDF

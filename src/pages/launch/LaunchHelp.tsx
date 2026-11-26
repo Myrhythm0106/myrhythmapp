@@ -229,6 +229,13 @@ export default function LaunchHelp() {
         >
           Download How to Get Set Up (PDF)
         </a>
+        <a
+          href="/downloads/MyRhythm-Flow-By-Role.pdf"
+          download="MyRhythm-Flow-By-Role.pdf"
+          className="mt-3 inline-flex min-h-14 w-full items-center justify-center rounded-xl border border-launch-gold/50 bg-launch-ivory px-5 font-semibold text-launch-ink-deep"
+        >
+          Download the journey for each role (PDF)
+        </a>
         <button type="button" onClick={() => { induction.replay(); navigate('/launch/home'); }}
           className="mt-3 inline-flex min-h-14 w-full items-center justify-center rounded-xl bg-brand-orange-500 px-5 font-semibold text-primary-foreground">
           Replay my welcome

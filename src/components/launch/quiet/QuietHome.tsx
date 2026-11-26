@@ -35,6 +35,7 @@ import { PriorityDetailSheet } from '../home/PriorityDetailSheet';
 import { cn } from '@/lib/utils';
 import { getResumeStep } from '@/launch/onboarding/resumePoint';
 import { ResumeSetupCard } from './ResumeSetupCard';
+import { FirstLoopCard } from '@/components/launch/firstLoop/FirstLoopCard';
 import { LaunchInduction } from '@/components/launch/induction/LaunchInduction';
 import { useInduction } from '@/launch/onboarding/useInduction';
 import { VisionInvitation } from '@/components/launch/vision/VisionInvitation';
@@ -145,6 +146,7 @@ export function QuietHome() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
       {offset === 0 && <LaunchInduction />}
+      {offset === 0 && induction.finished && <FirstLoopCard />}
       {resumeStep && firstSession.recorded && !induction.visible && <ResumeSetupCard step={resumeStep} />}
 
       <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }}
