@@ -19,7 +19,7 @@ import { DiaryAccessControl } from '@/components/support-circle/DiaryAccessContr
 import { Link } from 'react-router-dom';
 
 const roleMeta: Record<string, { label: string; Icon: React.ElementType; badge: string }> = {
-  viewer:    { label: 'Viewer',    Icon: User,          badge: 'bg-gray-100 text-gray-700' },
+  viewer:    { label: 'Viewer',    Icon: User,          badge: 'bg-muted text-muted-foreground' },
   supporter: { label: 'Supporter', Icon: HeartHandshake, badge: 'bg-rose-100 text-rose-700' },
   caregiver: { label: 'Caregiver', Icon: Home,          badge: 'bg-brand-emerald-100 text-brand-emerald-700' },
   medical:   { label: 'Medical',   Icon: Stethoscope,   badge: 'bg-blue-100 text-blue-700' },
@@ -30,13 +30,13 @@ function statusPill(status: SupportCircleMember['status']) {
     case 'active':
       return { label: 'Active', className: 'bg-brand-emerald-100 text-brand-emerald-700', Icon: CheckCircle2 };
     case 'pending':
-      return { label: 'Pending invite', className: 'bg-amber-100 text-amber-700', Icon: Clock };
+      return { label: 'Pending invite', className: 'bg-launch-gold/20 text-launch-ink', Icon: Clock };
     case 'expired':
-      return { label: 'Expired', className: 'bg-gray-100 text-gray-600', Icon: XCircle };
+      return { label: 'Expired', className: 'bg-muted text-muted-foreground', Icon: XCircle };
     case 'revoked':
-      return { label: 'Revoked', className: 'bg-gray-100 text-gray-600', Icon: XCircle };
+      return { label: 'Revoked', className: 'bg-muted text-muted-foreground', Icon: XCircle };
     default:
-      return { label: status, className: 'bg-gray-100 text-gray-600', Icon: Clock };
+      return { label: status, className: 'bg-muted text-muted-foreground', Icon: Clock };
   }
 }
 
@@ -98,13 +98,13 @@ export default function LaunchSupportCircle() {
           {isLoading ? (
             <LaunchCard variant="glass" className="p-8 text-center">
               <Loader2 className="h-6 w-6 animate-spin mx-auto text-brand-emerald-600 mb-2" />
-              <p className="text-sm text-gray-500">Loading your circle…</p>
+              <p className="text-sm text-muted-foreground">Loading your circle…</p>
             </LaunchCard>
           ) : supportCircle.length === 0 ? (
             <LaunchCard variant="glass" className="p-8 text-center">
-              <Users className="h-10 w-10 mx-auto text-gray-300 mb-3" />
-              <h3 className="font-semibold text-gray-800 mb-1">No one in your circle yet</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <Users className="h-10 w-10 mx-auto text-muted-foreground/60 mb-3" />
+              <h3 className="font-semibold text-muted-foreground mb-1">No one in your circle yet</h3>
+              <p className="text-sm text-muted-foreground mb-4">
                 Invite a family member, friend, carer or clinician. You decide what they can see.
               </p>
               <Button onClick={() => setActiveTab('invite')}>
@@ -116,7 +116,7 @@ export default function LaunchSupportCircle() {
             <>
               {pending.length > 0 && (
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-amber-700 mb-2 mt-1">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-launch-ink mb-2 mt-1">
                     Pending invitations
                   </p>
                   <div className="space-y-2">
@@ -128,12 +128,12 @@ export default function LaunchSupportCircle() {
                       return (
                         <LaunchCard key={m.id} variant="glass" className="p-4">
                           <div className="flex items-center gap-4">
-                            <div className="w-11 h-11 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-sm font-semibold text-amber-700">
+                            <div className="w-11 h-11 rounded-full bg-launch-gold/10 border border-launch-gold/40 flex items-center justify-center text-sm font-semibold text-launch-ink">
                               {(m.member_name || '?').slice(0, 2).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-gray-900 truncate">{m.member_name}</p>
-                              <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
+                              <p className="font-semibold text-foreground break-words">{m.member_name}</p>
+                              <p className="text-sm text-muted-foreground flex items-center gap-1 break-all">
                                 <Mail className="h-3 w-3" /> {m.member_email}
                               </p>
                               <div className="flex flex-wrap gap-1.5 mt-1.5">
@@ -144,7 +144,7 @@ export default function LaunchSupportCircle() {
                                   <PillIcon className="h-3 w-3" /> {pill.label}
                                 </span>
                                 {m.relationship && (
-                                  <span className="text-[10px] text-gray-500">· {m.relationship}</span>
+                                  <span className="text-[10px] text-muted-foreground">· {m.relationship}</span>
                                 )}
                               </div>
                             </div>
@@ -184,9 +184,9 @@ export default function LaunchSupportCircle() {
                               {(m.member_name || '?').slice(0, 2).toUpperCase()}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-gray-900 truncate">{m.member_name}</p>
+                              <p className="font-semibold text-foreground break-words">{m.member_name}</p>
                               {m.member_email && (
-                                <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
+                                <p className="text-sm text-muted-foreground flex items-center gap-1 break-all">
                                   <Mail className="h-3 w-3" /> {m.member_email}
                                 </p>
                               )}
@@ -195,10 +195,10 @@ export default function LaunchSupportCircle() {
                                   <RoleIcon className="h-3 w-3" /> {meta.label}
                                 </span>
                                 {m.relationship && (
-                                  <span className="text-[10px] text-gray-500">· {m.relationship}</span>
+                                  <span className="text-[10px] text-muted-foreground">· {m.relationship}</span>
                                 )}
                                 {perms.length > 0 && (
-                                  <span className="text-[10px] text-gray-500">
+                                  <span className="text-[10px] text-muted-foreground">
                                     · Access: {perms.join(', ')}
                                   </span>
                                 )}

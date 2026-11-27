@@ -209,7 +209,7 @@ export const WhosInvolvedCell = ({
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="font-manrope text-[13px] font-medium text-exhibit-ink truncate max-w-[7rem]">
+            <span className="font-manrope text-[13px] font-medium text-exhibit-ink break-words max-w-[9rem]">
               {saved.responsible.name}
             </span>
             <span className="h-[16px] px-1 rounded-[4px] font-sora text-[9px] font-semibold leading-none flex items-center bg-white text-exhibit-moss ring-1 ring-inset ring-exhibit-rule">R</span>
@@ -328,8 +328,8 @@ export const WhosInvolvedCell = ({
                   {circleMembers.map((m) => (
                     <div key={m.id} className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-muted">
                       <div className="min-w-0">
-                        <span className="text-sm block truncate">{m.member_name}</span>
-                        <span className="text-[11px] text-muted-foreground truncate">{m.member_email}</span>
+                        <span className="text-sm block break-words">{m.member_name}</span>
+                        <span className="text-sm text-muted-foreground break-all">{m.member_email}</span>
                       </div>
                       <div className="flex gap-1 shrink-0">
                         {ACTION_ROLES.map((r) => (

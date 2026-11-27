@@ -823,7 +823,7 @@ export function ReviewStep({
                 {saving ? (
                   <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Adding…</>
                 ) : (
-                  <><CalendarPlus className="h-4 w-4 mr-2" /> Place {included.length} {included.length === 1 ? 'step' : 'steps'} into my schedule</>
+                  <><CalendarPlus className="h-4 w-4 mr-2" /> Schedule {included.length} {included.length === 1 ? 'step' : 'steps'}</>
                 )}
               </Button>
           </div>

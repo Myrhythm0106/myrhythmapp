@@ -37,7 +37,7 @@ interface ExecutiveSummaryPanelProps {
 }
 
 const CHIP =
-  'inline-flex items-center gap-1 h-[22px] rounded-[6px] px-2 font-sora text-[11px] font-semibold leading-none whitespace-nowrap';
+  'inline-flex items-center gap-1 min-h-7 rounded-md px-2.5 py-0.5 font-sora text-sm font-semibold leading-tight';
 
 function CountPill({ value, label, icon: Icon, tone }: { value: number; label: string; icon: React.ElementType; tone: 'ink' | 'moss' | 'amber' | 'soft' }) {
   const tones = {
@@ -86,7 +86,7 @@ export function ExecutiveSummaryPanel({ model, onScheduleAll, isSchedulingAll, c
             <span className="block font-sora text-[10px] font-bold uppercase tracking-[0.18em] text-exhibit-paper/70">
               Executive summary
             </span>
-            <span className="block truncate font-sora text-sm font-semibold leading-snug">
+            <span className="block break-words font-sora text-sm font-semibold leading-snug">
               {model.title} <span className="font-manrope font-normal text-exhibit-paper/70">· {model.date}</span>
             </span>
           </div>

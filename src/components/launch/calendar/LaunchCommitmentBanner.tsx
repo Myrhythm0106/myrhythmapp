@@ -246,7 +246,7 @@ export function LaunchCommitmentBanner({
             </div>
           </div>
           <span className="flex w-full items-center justify-between gap-3 min-h-14 rounded-xl bg-launch-cream/10 px-4 text-base font-semibold text-launch-gold">
-            Open my full vision and goals <ChevronDown className="h-5 w-5 shrink-0" aria-hidden />
+            Open my vision <ChevronDown className="h-5 w-5 shrink-0" aria-hidden />
           </span>
         </button>
       </section>

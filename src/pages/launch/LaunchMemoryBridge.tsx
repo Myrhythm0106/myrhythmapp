@@ -1052,7 +1052,7 @@ export default function LaunchMemoryBridge() {
                     ) : (
                       <>
                         <Save className="h-5 w-5" />
-                        {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save and write my transcript' : 'Save and find my next steps'}
+                        {outputMode === 'none' ? 'Save recording' : outputMode === 'transcript' ? 'Save and transcribe' : 'Save and find steps'}
                       </>
                     )}
                   </Button>

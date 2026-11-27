@@ -27,3 +27,4 @@
 - Reminder timing and saved answers come only from `src/launch/reminders/reminderStages.ts` (tested); diary views announce changes through `diarySync.ts` so Home, calendar and the reminder card stay in step — why: one rule set, and an item answered in one place never keeps nagging in another.
 - Review groups use saved category and confidence via `reviewGroups.ts`, never label inferred actions as agreed; guidance and suggestions start unselected, details stay folded, and diary controls reuse existing closure/reschedule handlers — why: explicit choice without duplicate scheduling or closure logic.
 - My Vision in ACTion rests as a compact glance (vision line plus today's step) and opens fully only on tap, remembering the choice per user on device; why: inspire without adding load.
+- Buttons wrap onto whole-word lines instead of nowrap, and labels stay 1 to 4 words; why: no label is ever cut off on a phone.

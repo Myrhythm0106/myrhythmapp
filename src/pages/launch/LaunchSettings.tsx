@@ -134,12 +134,12 @@ export default function LaunchSettings() {
               <Sparkles className="h-5 w-5 text-teal-700" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">About this edition</h3>
+              <h3 className="font-semibold text-foreground">About this edition</h3>
               <p className="text-sm text-muted-foreground">
                 {EDITION_SHORT} · {EDITION_VERSION}, what's live and what's coming
               </p>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground/60" />
           </button>
         </LaunchCard>
 
@@ -153,10 +153,10 @@ export default function LaunchSettings() {
               <Sparkles className="h-5 w-5 text-launch-ink" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">What brings me to MyRhythm</h3>
+              <h3 className="font-semibold text-foreground">What brings me to MyRhythm</h3>
               <p className="text-sm text-muted-foreground">Change the words and examples MyRhythm uses for me</p>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground/60" />
           </button>
         </LaunchCard>
 
@@ -170,10 +170,10 @@ export default function LaunchSettings() {
               <Activity className="h-5 w-5 text-brain-health-700" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">Share my continuity summary</h3>
+              <h3 className="font-semibold text-foreground">Share my continuity summary</h3>
               <p className="text-sm text-muted-foreground">A life-readiness snapshot for a new clinician, employer, or caregiver</p>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground/60" />
           </button>
         </LaunchCard>
 
@@ -183,14 +183,14 @@ export default function LaunchSettings() {
             onClick={() => setFeedbackOpen(true)}
             className="w-full flex items-center gap-3 text-left min-h-[56px]"
           >
-            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
-              <MessageCircle className="h-5 w-5 text-amber-700" />
+            <div className="w-10 h-10 rounded-xl bg-launch-gold/20 flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 text-launch-ink" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">Send feedback to the team</h3>
+              <h3 className="font-semibold text-foreground">Send feedback to the team</h3>
               <p className="text-sm text-muted-foreground">Founding-member notes shape the next release</p>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground/60" />
           </button>
         </LaunchCard>
 
@@ -201,7 +201,7 @@ export default function LaunchSettings() {
               <Sparkles className="h-5 w-5 text-orange-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Scheduling</h3>
+              <h3 className="font-semibold text-foreground">Scheduling</h3>
               <p className="text-sm text-muted-foreground">How MyRhythm picks dates and times</p>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function LaunchSettings() {
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
               <div className="pr-3">
-                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                <Label className="text-sm text-foreground flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-orange-600" /> SMART scheduling
                 </Label>
                 <p className="text-sm text-muted-foreground mt-0.5">
@@ -224,7 +224,7 @@ export default function LaunchSettings() {
 
             <div className="flex items-center justify-between py-2">
               <div className="pr-3">
-                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                <Label className="text-sm text-foreground flex items-center gap-1.5">
                   <ListTree className="h-3.5 w-3.5 text-teal-600" /> Auto-generate milestones
                 </Label>
                 <p className="text-sm text-muted-foreground mt-0.5">
@@ -239,7 +239,7 @@ export default function LaunchSettings() {
 
             <div className="flex items-center justify-between py-2">
               <div className="pr-3">
-                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                <Label className="text-sm text-foreground flex items-center gap-1.5">
                   <HeartPulse className="h-3.5 w-3.5 text-rose-600" /> Health-aware adjustments
                 </Label>
                 <p className="text-sm text-muted-foreground mt-0.5">
@@ -252,7 +252,7 @@ export default function LaunchSettings() {
               />
             </div>
 
-            <p className="text-[11px] text-gray-500 italic leading-relaxed pt-1 border-t border-gray-100">
+            <p className="text-[11px] text-muted-foreground italic leading-relaxed pt-1 border-t border-border">
               MyRhythm uses your logged signals to suggest timing. It does not diagnose, treat, or replace clinical advice.
             </p>
           </div>
@@ -274,14 +274,14 @@ export default function LaunchSettings() {
               <Activity className="h-5 w-5 text-orange-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Capture safety</h3>
+              <h3 className="font-semibold text-foreground">Capture safety</h3>
               <p className="text-sm text-muted-foreground">Gentle help when I forget to start, stop or save</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <Label className="text-sm text-gray-900">Remind me when a meeting starts</Label>
+                <Label className="text-sm text-foreground">Remind me when a meeting starts</Label>
                 <p className="text-sm text-muted-foreground mt-0.5">I choose whether MyRhythm asks if I want to capture it.</p>
               </div>
               <Switch
@@ -291,7 +291,7 @@ export default function LaunchSettings() {
             </div>
             <div className="flex items-center justify-between gap-4">
               <div>
-                <Label className="text-sm text-gray-900">Finish after a quiet stretch</Label>
+                <Label className="text-sm text-foreground">Finish after a quiet stretch</Label>
                 <p className="text-sm text-muted-foreground mt-0.5">I get a 30-second chance to keep listening first.</p>
               </div>
               <Switch
@@ -300,9 +300,9 @@ export default function LaunchSettings() {
               />
             </div>
             {capturePrefs.autoFinishEnabled && (
-              <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
+              <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
                 <div>
-                  <Label className="text-sm text-gray-900">Quiet time before asking</Label>
+                  <Label className="text-sm text-foreground">Quiet time before asking</Label>
                   <p className="text-sm text-muted-foreground mt-0.5">Longer is less interruptive; shorter saves sooner.</p>
                 </div>
                 <Select
@@ -318,9 +318,9 @@ export default function LaunchSettings() {
                 </Select>
               </div>
             )}
-            <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
+            <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
               <div>
-                <Label className="text-sm text-gray-900">Allow my Support Circle to prompt a capture</Label>
+                <Label className="text-sm text-foreground">Allow my Support Circle to prompt a capture</Label>
                 <p className="text-sm text-muted-foreground mt-0.5">Only people I have already permitted can use this.</p>
               </div>
               <Switch
@@ -355,7 +355,7 @@ export default function LaunchSettings() {
               <Calendar className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Connected Calendars</h3>
+              <h3 className="font-semibold text-foreground">Connected Calendars</h3>
               <p className="text-sm text-muted-foreground">Sync with Google & Outlook</p>
             </div>
           </div>
@@ -366,18 +366,18 @@ export default function LaunchSettings() {
               {integrations.map((integration) => (
                 <div
                   key={integration.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-gray-50"
+                  className="flex items-center justify-between p-3 rounded-xl bg-muted"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                       integration.provider === 'google' ? 'bg-red-100' : 'bg-blue-100'
                     }`}>
                       <Calendar className={`h-4 w-4 ${
-                        integration.provider === 'google' ? 'text-red-600' : 'text-blue-600'
+                        integration.provider === 'google' ? 'text-destructive' : 'text-blue-600'
                       }`} />
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-gray-900">{integration.account_email}</p>
+                      <p className="font-medium text-sm text-foreground">{integration.account_email}</p>
                       <p className="text-sm text-muted-foreground">
                         {integration.last_sync
                           ? `Synced ${formatDistanceToNow(new Date(integration.last_sync))} ago`
@@ -391,7 +391,7 @@ export default function LaunchSettings() {
                     </Badge>
                     <button
                       onClick={() => disconnectCalendar(integration.id)}
-                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                      className="p-2 text-muted-foreground/60 hover:text-destructive transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -418,7 +418,7 @@ export default function LaunchSettings() {
             <button
               onClick={connectGoogle}
               disabled={isLoading || googleConnected}
-              className="w-full flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="w-full flex items-center gap-3 p-3 rounded-xl border border-border hover:bg-muted transition-colors disabled:opacity-50"
             >
               <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -428,7 +428,7 @@ export default function LaunchSettings() {
                   <path fill="#34A853" d="M12 24c3 0 5.5-1 7.3-2.7l-3.6-2.8c-1 .7-2.3 1-3.7 1-2.9 0-5.5-2-6.4-4.7l-3.9 3c1.9 3.8 5.8 6.2 10.3 6.2z"/>
                 </svg>
               </div>
-              <span className="flex-1 text-left text-sm font-medium text-gray-900">
+              <span className="flex-1 text-left text-sm font-medium text-foreground">
                 {googleConnected ? 'Google Calendar Connected' : 'Connect Google Calendar'}
               </span>
               {googleConnected && <CheckCircle2 className="h-5 w-5 text-green-500" />}
@@ -437,14 +437,14 @@ export default function LaunchSettings() {
             <button
               onClick={connectOutlook}
               disabled={isLoading || outlookConnected}
-              className="w-full flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="w-full flex items-center gap-3 p-3 rounded-xl border border-border hover:bg-muted transition-colors disabled:opacity-50"
             >
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#0078D4" d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7.29-.3.7-.3h6.13V1q0-.46.32-.8.34-.32.8-.32h15.74q.47 0 .8.33.33.34.33.8v2.5l-4.5 2.5L24 8v4z"/>
                 </svg>
               </div>
-              <span className="flex-1 text-left text-sm font-medium text-gray-900">
+              <span className="flex-1 text-left text-sm font-medium text-foreground">
                 {outlookConnected ? 'Outlook Connected' : 'Connect Outlook'}
               </span>
               {outlookConnected && <CheckCircle2 className="h-5 w-5 text-green-500" />}
@@ -453,7 +453,7 @@ export default function LaunchSettings() {
 
           {/* Any other calendar, Apple, Fastmail, most work calendars */}
           <div className="mt-4 pt-4 border-t border-launch-gold/20">
-            <p className="text-sm font-medium text-gray-900">Apple or any other calendar</p>
+            <p className="text-sm font-medium text-foreground">Apple or any other calendar</p>
             <p className="text-sm text-muted-foreground mb-2">
               Paste the calendar's share link. In Apple Calendar: right-click the calendar, Share
               Calendar, tick Public Calendar, then copy the link. This brings your busy times in so I
@@ -467,7 +467,7 @@ export default function LaunchSettings() {
                 onChange={(e) => setFeedUrl(e.target.value)}
                 placeholder="https://… or webcal://…"
                 aria-label="Calendar share link"
-                className="flex-1 min-h-[48px] px-3 rounded-xl border border-gray-200 text-sm"
+                className="flex-1 min-h-[48px] px-3 rounded-xl border border-border text-sm"
               />
               <button
                 type="button"
@@ -500,14 +500,14 @@ export default function LaunchSettings() {
               <Globe className="h-5 w-5 text-green-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Language & Region</h3>
+              <h3 className="font-semibold text-foreground">Language & Region</h3>
               <p className="text-sm text-muted-foreground">Set your preferences</p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700">Language</Label>
+              <Label className="text-sm text-muted-foreground">Language</Label>
               <Select defaultValue="en">
                 <SelectTrigger className="w-full rounded-xl">
                   <SelectValue />
@@ -522,7 +522,7 @@ export default function LaunchSettings() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-700">Time Zone</Label>
+              <Label className="text-sm text-muted-foreground">Time Zone</Label>
               <Select defaultValue="Europe/London">
                 <SelectTrigger className="w-full rounded-xl">
                   <SelectValue />
@@ -568,30 +568,30 @@ export default function LaunchSettings() {
         {/* Notifications */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
-              <Bell className="h-5 w-5 text-amber-600" />
+            <div className="w-10 h-10 rounded-xl bg-launch-gold/20 flex items-center justify-center">
+              <Bell className="h-5 w-5 text-launch-ink" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Notifications</h3>
+              <h3 className="font-semibold text-foreground">Notifications</h3>
               <p className="text-sm text-muted-foreground">Manage your alerts</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Push Notifications</Label>
+              <Label className="text-sm text-foreground">Push Notifications</Label>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Email Reminders</Label>
+              <Label className="text-sm text-foreground">Email Reminders</Label>
               <Switch />
             </div>
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Goal Reminders</Label>
+              <Label className="text-sm text-foreground">Goal Reminders</Label>
               <Switch defaultChecked />
             </div>
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Celebrations</Label>
+              <Label className="text-sm text-foreground">Celebrations</Label>
               <Switch defaultChecked />
             </div>
           </div>
@@ -604,14 +604,14 @@ export default function LaunchSettings() {
               <Palette className="h-5 w-5 text-pink-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Appearance</h3>
+              <h3 className="font-semibold text-foreground">Appearance</h3>
               <p className="text-sm text-muted-foreground">Customize your look</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Dark Mode</Label>
+              <Label className="text-sm text-foreground">Dark Mode</Label>
               <Switch />
             </div>
           </div>
@@ -624,17 +624,17 @@ export default function LaunchSettings() {
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-              <Shield className="h-5 w-5 text-red-600" />
+              <Shield className="h-5 w-5 text-destructive" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Privacy & Security</h3>
+              <h3 className="font-semibold text-foreground">Privacy & Security</h3>
               <p className="text-sm text-muted-foreground">Your data settings</p>
             </div>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
-              <Label className="text-sm text-gray-900">Usage Analytics</Label>
+              <Label className="text-sm text-foreground">Usage Analytics</Label>
               <Switch defaultChecked />
             </div>
             <LaunchButton
@@ -712,7 +712,7 @@ function PlanningDayCard() {
           <Sparkles className="h-5 w-5 text-brand-emerald-600" />
         </div>
         <div>
-          <h3 className="font-semibold text-gray-900">Planning day</h3>
+          <h3 className="font-semibold text-foreground">Planning day</h3>
           <p className="text-sm text-muted-foreground">The day MyRhythm nudges you to plan the coming week</p>
         </div>
       </div>

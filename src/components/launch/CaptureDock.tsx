@@ -198,8 +198,8 @@ function CaptureSheet({ open, onClose }: { open: boolean; onClose: () => void })
             className="mt-3 w-full min-h-[56px] rounded-2xl border border-launch-gold/30 bg-white px-4 flex items-center gap-3 text-left">
             <History className="h-5 w-5 text-launch-teal shrink-0" />
             <span className="min-w-0">
-              <span className="block text-sm font-medium text-launch-ink truncate">My last conversation: {last.title}</span>
-              <span className="block text-xs text-launch-ink/60 truncate">
+              <span className="block text-sm font-medium text-launch-ink line-clamp-2 break-words">My last conversation: {last.title}</span>
+              <span className="block text-sm text-launch-ink/70 break-words">
                 {[last.referenceCode, last.startedAt ? format(new Date(last.startedAt), 'd MMM, HH:mm') : null].filter(Boolean).join(' · ')}
               </span>
             </span>

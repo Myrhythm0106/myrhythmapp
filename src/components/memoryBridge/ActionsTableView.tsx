@@ -593,7 +593,7 @@ const ActionCard = ({
             )}
             <span className={cn('relative inline-flex h-2 w-2 rounded-full', statusLine.dot)} />
           </span>
-          <span className="truncate font-sora text-[11px] font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
+          <span className="break-words font-sora text-xs font-semibold uppercase tracking-[0.14em] text-exhibit-moss">
             {statusLine.label}
           </span>
         </span>

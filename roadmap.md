@@ -214,3 +214,4 @@
 - [x] Whole-app pass: confident, reliable, independent, trustworthy, in control (scorecard + fixes)
 - [x] Spacing and tap targets on Home, Diary, evening wrap-up (56px)
 - [x] Spacing and tap targets on Record, Circle, Circle diary, Vision, Settings
+- [x] Professional finish: wrapping buttons, short labels, readable tags, token colours (Circle, Settings)
