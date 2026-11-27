@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
 import { useInduction } from '@/launch/onboarding/useInduction';
 import { useLaunchStartingStyle } from '@/launch/onboarding/useLaunchStartingStyle';
 import { INDUCTION_STEPS, type InductionStep } from '@/launch/onboarding/induction';
@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 type Step = { title: string; text: string; primary: string; to?: string; secondary?: string };
 const STEPS: Record<InductionStep, Step> = {
   welcome: { title: 'Welcome. Here is how MyRhythm helps you.', text: 'MyRhythm remembers, so you can follow through. You record what matters, choose your next steps, and they wait for you in your diary. This short welcome takes under a minute, and you can leave it at any point.', primary: 'Show me' },
-  who: { title: 'Who am I using MyRhythm for?', text: 'One tap tailors the wording and first suggestions. Myself, someone I care for, or a busy working life. Optional.', primary: 'Choose who it is for', to: '/launch/user-type?after=home', secondary: 'Not now' },
+  who: { title: 'Who are you using MyRhythm for?', text: 'One tap tailors the wording and first suggestions: yourself, someone you care for, or a busy working life. Optional.', primary: 'Choose who it is for', to: '/launch/user-type?after=home', secondary: 'Not now' },
   rhythm: { title: 'Two quick settings, so MyRhythm fits you.', text: 'When your mind feels clearest, MyRhythm suggests that time for your next steps. Choose where gentle reminders go. You can change both later in Settings.', primary: 'Save' },
   style: { title: 'How would you like to start?', text: 'Take a short walkthrough of the four places you will use most, or discover the app in your own time. You can switch in the round menu at any time.', primary: 'Take the walkthrough', secondary: 'Discover in my own time' },
 };
@@ -50,9 +50,10 @@ export function LaunchInduction() {
     ind.next();
     if (s.to) navigate(s.to);
   };
+  const tourBtn = (on: boolean) => cn('min-h-14 h-auto whitespace-normal rounded-2xl border px-5 font-semibold text-launch-ink-deep hover:text-launch-ink-deep', on ? 'border-brand-orange-500 bg-brand-orange-500/10 hover:bg-brand-orange-500/15' : 'border-launch-ink-deep/30 hover:bg-launch-ink-deep/10');
   const pill = (on: boolean) => cn('min-h-14 h-auto whitespace-normal rounded-2xl border px-5 font-semibold',
-    emerald ? (on ? 'border-launch-ivory bg-launch-ivory/15 text-launch-ivory hover:bg-launch-ivory/20 hover:text-launch-ivory' : 'border-launch-ivory/40 text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory')
-      : (on ? 'border-launch-ink-deep bg-launch-ink-deep/10 text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep' : 'border-launch-ink-deep/30 text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep'));
+    emerald ? (on ? 'border-2 border-brand-orange-500 bg-launch-ivory/15 text-launch-ivory hover:bg-launch-ivory/20 hover:text-launch-ivory' : 'border-launch-ivory/40 text-launch-ivory hover:bg-launch-ivory/10 hover:text-launch-ivory')
+      : (on ? 'border-2 border-brand-orange-500 bg-brand-orange-500/10 text-launch-ink-deep hover:bg-brand-orange-500/15 hover:text-launch-ink-deep' : 'border-launch-ink-deep/30 text-launch-ink-deep hover:bg-launch-ink-deep/10 hover:text-launch-ink-deep'));
   return (
     <section aria-label="My welcome" className={cn('relative overflow-hidden rounded-3xl border border-launch-gold/40 p-6 shadow-[0_30px_60px_-30px_hsl(var(--launch-ink-deep)/0.7)] sm:p-8', emerald ? 'bg-launch-ink text-launch-ivory' : 'bg-launch-ivory text-launch-ink-deep')}>
       <div className="flex items-center justify-between gap-3">
@@ -75,7 +76,7 @@ export function LaunchInduction() {
               {(['morning', 'afternoon', 'evening'] as const).map(w => (
                 <Button key={w} variant="ghost" type="button" aria-pressed={focus === w} className={pill(focus === w)}
                   onClick={() => { setFocus(w); saveFocus(user?.id, w); }}>
-                  {w === 'morning' ? 'Morning' : w === 'afternoon' ? 'Afternoon' : 'Evening'}
+                  {focus === w && <Check className="h-4 w-4" aria-hidden="true" />}{w === 'morning' ? 'Morning' : w === 'afternoon' ? 'Afternoon' : 'Evening'}
                 </Button>
               ))}
             </div>
@@ -86,7 +87,7 @@ export function LaunchInduction() {
               {(['email', 'both'] as const).map(c => (
                 <Button key={c} variant="ghost" type="button" aria-pressed={remind === c} className={pill(remind === c)}
                   onClick={() => { setRemind(c); saveReminderChoice(user?.id, c); }}>
-                  {c === 'email' ? 'Email' : 'Phone and email'}
+                  {remind === c && <Check className="h-4 w-4" aria-hidden="true" />}{c === 'email' ? 'Email' : 'Phone and email'}
                 </Button>
               ))}
             </div>
@@ -102,22 +103,22 @@ export function LaunchInduction() {
               onClick={() => { starting.chooseStyle('explore'); setTour(null); }}>Discover in my own time</Button>
           </div>
           {tour !== null && (
-            <div aria-live="polite" className="mt-5 rounded-2xl border border-launch-ink-deep/20 bg-launch-cream/60 p-5">
+            <div aria-live="polite" className="mt-5 rounded-2xl border border-launch-gold/40 bg-launch-cream p-5 text-launch-ink-deep">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-70">Walkthrough · {tour + 1} of {TOUR.length}</p>
               <h3 className="mt-2 font-instrument text-2xl">{TOUR[tour].title}</h3>
               <p className="mt-2 text-base leading-relaxed">{TOUR[tour].text}</p>
               <div className="mt-4 flex flex-wrap gap-3">
-                {tour > 0 && <Button variant="ghost" type="button" className={pill(false)} onClick={() => setTour(tour - 1)}>Previous</Button>}
+                {tour > 0 && <Button variant="ghost" type="button" className={tourBtn(false)} onClick={() => setTour(tour - 1)}>Previous</Button>}
                 {tour < TOUR.length - 1
-                  ? <Button variant="ghost" type="button" className={pill(true)} onClick={() => setTour(tour + 1)}>Next stop</Button>
-                  : <p className="self-center text-sm font-semibold">That is the tour. Next opens your first loop.</p>}
+                  ? <Button variant="ghost" type="button" className={tourBtn(true)} onClick={() => setTour(tour + 1)}>Next stop</Button>
+                  : <p className="self-center text-sm font-semibold">That is the tour. Tap Show my first loop below when you are ready.</p>}
               </div>
             </div>
           )}
         </div>
       )}
       <p className="mt-4 max-w-2xl text-base leading-relaxed opacity-85">
-        {ind.stepId === 'style' ? 'Next finishes your welcome. Your first loop on Home then shows each step from first recording to done.' : ind.stepId === 'rhythm' ? 'Each choice saves as you tap. Skip either one and MyRhythm uses a calm morning default.' :
+        {ind.stepId === 'style' ? 'Next finishes your welcome. Your first loop on Home then shows each step from first recording to done.' : ind.stepId === 'rhythm' ? (focus && remind ? 'Both saved. You can change them any time in Settings.' : 'Each choice saves as you tap. Skip either and MyRhythm starts with mornings, by phone and email.') :
           nextStep ? `Next: ${nextStep.title} You can try this now or keep going without doing it yet.` : 'Nothing is recorded, scheduled or shared by finishing this welcome.'}
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
