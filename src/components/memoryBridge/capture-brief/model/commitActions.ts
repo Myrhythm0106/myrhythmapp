@@ -77,8 +77,13 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
   }
 
   // 2. Reminders
+  const rollback = async (message: string): Promise<CommitResult> => {
+    await supabase.from('calendar_events').delete().eq('id', event.id);
+    return { ok: false, error: message };
+  };
+
   if (input.reminders.length > 0) {
-    await supabase.from('event_reminders').insert(
+    const { error: remErr } = await supabase.from('event_reminders').insert(
       input.reminders.map(r => ({
         event_id: event.id,
         user_id: userId,
@@ -87,6 +92,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
         is_active: true,
       })),
     );
+    if (remErr) return rollback('The reminder did not save, so nothing was added. Please try again.');
   }
 
   // 3. Invitations
@@ -105,7 +111,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
   }
 
   // 4. Update extracted_actions
-  await supabase
+  const { error: linkErr } = await supabase
     .from('extracted_actions')
     .update({
       scheduled_date: input.startDate,
@@ -117,6 +123,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       support_circle_notified: watchers.length > 0,
     })
     .eq('id', action.id);
+  if (linkErr) return rollback('This step could not be linked to its conversation, so nothing was added. Please try again.');
 
   // 5. Tell people — invitees get a calendar invite, watchers get a light notice
   let notified = 0;

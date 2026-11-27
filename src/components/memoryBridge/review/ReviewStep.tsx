@@ -1,4 +1,4 @@
-import { REVIEW_GROUPS, reviewGroup, type ReviewGroup } from './reviewGroups';
+import { REVIEW_GROUPS, reviewGroup, startsSelected, type ReviewGroup } from './reviewGroups';
 import { ActionOrigin } from '@/components/memoryBridge/ActionOrigin';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -20,6 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { format, parseISO, addDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { suggestSlots, savedPeakHours, type BusyItem } from '@/launch/scheduling/suggestSlots';
 import type { ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { ExecutiveSummaryPanel, type MeetingSummaryModel } from '@/components/memoryBridge/ExecutiveSummaryPanel';
 import { buildExecutiveSummary, extractDecisions, extractOpenQuestions, extractThemes } from '@/components/memoryBridge/capture-brief/model/synthesize';
@@ -107,6 +108,21 @@ function StepTextField({
     />
   );
 }
+
+// "Not yet" keeps my edits on this device until I come back and schedule.
+const DRAFT_KEY = (id: string) => `myrhythm.reviewDraft.${id}`;
+type DraftFields = Pick<ReviewRowState, 'include' | 'text' | 'owner' | 'date' | 'time' | 'dueDate' | 'priority'>;
+function saveDraft(id: string, rows: ReviewRowState[]) {
+  try {
+    const d: Record<string, DraftFields> = {};
+    rows.forEach(r => { d[r.id] = { include: r.include, text: r.text, owner: r.owner, date: r.date, time: r.time, dueDate: r.dueDate, priority: r.priority }; });
+    localStorage.setItem(DRAFT_KEY(id), JSON.stringify(d));
+  } catch { /* noop */ }
+}
+function readDraft(id: string): Record<string, DraftFields> | null {
+  try { const raw = localStorage.getItem(DRAFT_KEY(id)); return raw ? JSON.parse(raw) : null; } catch { return null; }
+}
+function clearDraft(id: string) { try { localStorage.removeItem(DRAFT_KEY(id)); } catch { /* noop */ } }
 
 /** Tap-friendly date control used on every breakpoint. */
 function DateField({
@@ -246,7 +262,7 @@ export function ReviewStep({
             const date = a.scheduled_date || a.proposed_date || '';
             return {
               id: a.id,
-              include: reviewGroup(a) === 'steps',
+              include: startsSelected(a),
               group: reviewGroup(a),
               text: a.action_text || a.what_outcome || '',
               owner: a.owner || a.assigned_to || 'Me',
@@ -265,6 +281,8 @@ export function ReviewStep({
           }),
         );
       }
+      const draftRows = readDraft(meetingId);
+      if (draftRows) setRows(prev => prev.map(r => (draftRows[r.id] ? { ...r, ...draftRows[r.id] } : r)));
       setLoading(false);
     })();
     return () => { cancelled = true; };
@@ -290,7 +308,9 @@ export function ReviewStep({
     const participants = meetingSummaryData?.participants || [];
     const summary = actions.length > 0
       ? buildExecutiveSummary({ title: meetingTitle, participants, actions, decisions, themes })
-      : 'No next steps were captured from this conversation yet.';
+      : transcript.trim()
+        ? `No next steps were found. What was said: ${transcript.trim().split(/(?<=[.!?])\s+/).slice(0, 3).join(' ').slice(0, 320)}`
+        : 'No next steps were captured from this conversation yet.';
 
     return {
       title: meetingTitle || 'My conversation',
@@ -454,13 +474,44 @@ export function ReviewStep({
     else toast.warning('Approved and logged, but the source document could not be deleted automatically.');
   };
 
+  const fillMissingTimes = async (missing: { id: string; dueDate: string }[]) => {
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      const uid = u?.user?.id;
+      const today = new Date();
+      const { data } = await supabase.from('calendar_events').select('date,time,end_time,status')
+        .eq('user_id', uid).gte('date', format(today, 'yyyy-MM-dd')).lte('date', format(addDays(today, 14), 'yyyy-MM-dd'));
+      const busy: BusyItem[] = ((data || []) as BusyItem[]).filter(b => b.time);
+      rows.forEach(r => { if (r.include && r.date && r.time) busy.push({ date: r.date, time: r.time }); });
+      const out: { id: string; date: string; time: string }[] = [];
+      for (const m of missing) {
+        const [slot] = suggestSlots({ busy, peakHours: savedPeakHours(uid) ?? undefined, dueDate: m.dueDate || undefined, count: 1, days: 14 });
+        if (!slot) continue;
+        out.push({ id: m.id, date: slot.date, time: slot.time });
+        busy.push({ date: slot.date, time: slot.time });
+      }
+      return out;
+    } catch { return []; }
+  };
+
   const handleCommit = async () => {
     if (included.length === 0) {
       toast.info('Tick at least one step first.');
       return;
     }
     const missingDate = included.find(row => !row.date || !row.time);
-    if (missingDate) { setExpanded(prev => new Set(prev).add(missingDate.id)); toast.info('Choose a day and time in the open details, then schedule.'); return; }
+    if (missingDate) {
+      // One tap: fill every missing day and time from my best hours and free gaps, then let me check.
+      const filled = await fillMissingTimes(included.filter(row => !row.date || !row.time));
+      if (filled.length) {
+        setRows(prev => prev.map(r => { const f = filled.find(x => x.id === r.id); return f ? { ...r, date: f.date, time: f.time, slotIsSuggestion: true } : r; }));
+        toast.success(filled.length === 1 ? 'I added a suggested time. Check it, then press Schedule.' : `I added ${filled.length} suggested times. Check them, then press Schedule.`);
+      } else {
+        setExpanded(prev => new Set(prev).add(missingDate.id));
+        toast.info('Choose a day and time in the open details, then schedule.');
+      }
+      return;
+    }
     const blankStep = included.find(row => !row.text.trim());
     if (blankStep) {
       toast.error('A next step needs some words.');
@@ -511,6 +562,7 @@ export function ReviewStep({
       }
       await onCommit(included.map(r => r.id), overrides);
       await cleanupSourceDocument(included.length);
+      clearDraft(meetingId);
       onClose();
     } catch (e) {
       console.error('ReviewStep commit failed', e);
@@ -811,7 +863,7 @@ export function ReviewStep({
             <span className="order-2 text-base text-muted-foreground sm:order-1 sm:mr-auto">
               {included.length} of {rows.length} selected
             </span>
-              <Button variant="ghost" className="order-3 min-h-14 sm:order-2" disabled={saving} onClick={onClose}>
+              <Button variant="ghost" className="order-3 min-h-14 sm:order-2" disabled={saving} onClick={() => { saveDraft(meetingId, rows); onClose(); }}>
                 Not yet
               </Button>
               <Button

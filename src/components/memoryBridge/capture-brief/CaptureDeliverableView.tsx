@@ -46,17 +46,18 @@ export function CaptureDeliverableView() {
   const [includeSchedule, setIncludeSchedule] = useState(true);
   const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx' | 'clinician'>(null);
   const [togglesOpen, setTogglesOpen] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     if (!meetingId) return;
     let cancelled = false;
     (async () => {
       try {
-        setLoading(true);
+        if (attempt === 0) setLoading(true);
         const m = await buildCaptureBrief(meetingId);
         if (!cancelled) setModel(m);
       } catch (e: any) {
-        toast.error(e?.message || 'Could not load capture brief');
+        if (attempt === 0) console.warn('Capture brief not ready yet', e);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -64,7 +65,14 @@ export function CaptureDeliverableView() {
     return () => {
       cancelled = true;
     };
-  }, [meetingId]);
+  }, [meetingId, attempt]);
+
+  // Still processing: check again quietly every 10 seconds, for up to two minutes.
+  useEffect(() => {
+    if (loading || model || attempt >= 12) return;
+    const t = setTimeout(() => setAttempt(a => a + 1), 10_000);
+    return () => clearTimeout(t);
+  }, [loading, model, attempt]);
 
   const handleActionUpdate = (id: string, updates: Partial<typeof model.actions[number]>) => {
     setModel(prev => prev ? {
@@ -123,11 +131,19 @@ export function CaptureDeliverableView() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <div className="text-center max-w-sm">
-          <p className="text-foreground font-semibold mb-2">We couldn't find this capture.</p>
-          <p className="text-sm text-muted-foreground mb-4">
-            It may still be processing, or the link may be invalid.
+          {attempt < 12 && <Loader2 className="h-6 w-6 animate-spin text-brand-orange-600 mx-auto mb-3" />}
+          <p className="text-foreground font-semibold mb-2" role="status">
+            {attempt < 12 ? 'Still working on your summary' : 'Your summary is not ready yet'}
           </p>
-          <Button onClick={() => navigate('/launch/memory')}>Back to Memory Bridge</Button>
+          <p className="text-base text-muted-foreground mb-4">
+            {attempt < 12
+              ? 'This page checks again on its own. You can leave it open or come back later; nothing is lost.'
+              : 'Your recording is safe. Try again in a moment, or open it from Memory Bridge.'}
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button className="min-h-14" onClick={() => setAttempt(a => a + 1)}>Try again</Button>
+            <Button variant="outline" className="min-h-14" onClick={() => navigate('/launch/memory')}>Back to Memory Bridge</Button>
+          </div>
         </div>
       </div>
     );

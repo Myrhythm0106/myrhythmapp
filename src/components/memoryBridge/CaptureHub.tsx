@@ -79,6 +79,7 @@ export function CaptureHub({ onStartCapture, onUploadClick, isStarting, isUpload
           <p className="mt-3 text-base text-launch-ink-deep leading-relaxed" role="status">
             {outOfAllowance ? 'My recording time is used for this period.' : `${allowance.remainingMinutes} minutes left this ${allowance.period} · up to ${allowance.limits.perRecordingMinutes} minutes per recording`}
           </p>
+          <p className="mt-2 text-base text-launch-ink">Before you start, let everyone in the conversation know you are recording.</p>
           {outOfAllowance && nextTierInfo && <p className="mt-2 text-base text-launch-ink">{nextTierInfo.label}: {nextTierInfo.perRecordingMinutes} minutes per recording, {nextTierInfo.monthlyMinutes} minutes a month.</p>}
         </div>
       </div>

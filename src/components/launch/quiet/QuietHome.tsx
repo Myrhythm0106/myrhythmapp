@@ -146,7 +146,7 @@ export function QuietHome() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
       {offset === 0 && <LaunchInduction />}
-      {offset === 0 && induction.finished && <FirstLoopCard />}
+      {offset === 0 && (induction.finished || !induction.visible) && <FirstLoopCard />}
       {resumeStep && firstSession.recorded && !induction.visible && <ResumeSetupCard step={resumeStep} />}
 
       <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }}

@@ -67,9 +67,21 @@ const getPersonaMessage = (persona: string | null, eventTitle: string): { subjec
 };
 
 // Calculate if reminder should be sent based on reminder_time type
+// Diary times are saved as UK wall-clock times; the server runs in UTC.
+const londonToUtc = (date: string, time: string): Date => {
+  const naive = new Date(`${date}T${(time || "09:00").slice(0, 8)}Z`);
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London", hourCycle: "h23",
+    year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit",
+  }).formatToParts(naive);
+  const g = (t: string) => Number(parts.find((x) => x.type === t)?.value);
+  const asLondon = Date.UTC(g("year"), g("month") - 1, g("day"), g("hour"), g("minute"));
+  return new Date(naive.getTime() - (asLondon - naive.getTime()));
+};
+
 const shouldSendReminder = (reminderTime: string, eventDate: string, eventTime: string): boolean => {
   const now = new Date();
-  const eventDateTime = new Date(`${eventDate}T${eventTime}`);
+  const eventDateTime = londonToUtc(eventDate, eventTime);
   const diffMs = eventDateTime.getTime() - now.getTime();
   const diffMinutes = diffMs / (1000 * 60);
 
@@ -86,10 +98,8 @@ const shouldSendReminder = (reminderTime: string, eventDate: string, eventTime: 
       return diffMinutes <= 1440 && diffMinutes > 1380; // 24h to 23h before
     case 'morning_of':
       // Send at 8 AM on the event day
-      const eventDay = new Date(eventDate).toDateString();
-      const today = now.toDateString();
-      const currentHour = now.getHours();
-      return eventDay === today && currentHour >= 8 && currentHour < 9;
+      const start = londonToUtc(eventDate, "08:00").getTime();
+      return now.getTime() >= start && now.getTime() < start + 60 * 60 * 1000;
     default:
       return false;
   }
@@ -182,7 +192,10 @@ serve(async (req) => {
         }
 
         const { subject, body } = getPersonaMessage(profile.persona_mode, title);
-        const methods = reminder.reminder_methods || ["in_app"];
+        // "push" has no phone delivery yet, so it also sends email when available.
+        const requested = reminder.reminder_methods || ["in_app"];
+        const methods = requested.includes("push") ? [...requested, "email"] : requested;
+        let delivered = false;
 
         // Send email if method includes email and we have Resend API key
         if (methods.includes("email") && resendApiKey && profile.email) {
@@ -194,7 +207,7 @@ serve(async (req) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                from: "MyRhythm <reminders@myrhythm.app>",
+                from: Deno.env.get("REMINDER_FROM_EMAIL") ?? "MyRhythm <reminders@myrhythm.app>",
                 to: [profile.email],
                 subject,
                 html: `
@@ -207,7 +220,7 @@ serve(async (req) => {
                     <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
                       <p style="font-size: 12px; color: #9ca3af;">
                         This reminder was sent by MyRhythm. 
-                        <a href="https://myrhythm.app/settings" style="color: #0d9488;">Manage your reminder preferences</a>
+                        <a href="https://myrhythmapp.com/launch/settings" style="color: #0d9488;">Manage your reminder preferences</a>
                       </p>
                     </div>
                   </div>
@@ -217,6 +230,7 @@ serve(async (req) => {
 
             if (emailResponse.ok) {
               console.log(`✉️ Email sent to ${profile.email}`);
+              delivered = true;
             } else {
               const errorText = await emailResponse.text();
               console.error(`Email send failed:`, errorText);
@@ -246,7 +260,15 @@ serve(async (req) => {
             console.error(`Error creating in-app notification:`, notifError);
           } else {
             console.log(`📱 In-app notification created for user ${reminder.user_id}`);
+            delivered = true;
           }
+        }
+
+        // Only mark as sent when something actually reached the person;
+        // otherwise the next run tries again while the window is open.
+        if (!delivered) {
+          errors.push(`Reminder ${reminder.id} not delivered, will retry`);
+          continue;
         }
 
         // Mark reminder as sent

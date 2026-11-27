@@ -582,7 +582,7 @@ export default function LaunchMemoryBridge() {
       const stillSignedIn = await ensureSession();
       if (!stillSignedIn) {
         toast.error('Your session expired during extraction.', {
-          description: 'Sign in again, then tap "Extract actions" on this recording in Recent Recordings.',
+          description: 'Sign in again, then tap "Find my next steps" on this recording in your saved list.',
           duration: 12000,
         });
       } else {
@@ -869,7 +869,7 @@ export default function LaunchMemoryBridge() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={keepGoing}>Keep listening</AlertDialogCancel>
-              <AlertDialogAction onClick={finishQuietly}>Stop and save</AlertDialogAction>
+              <AlertDialogAction onClick={finishQuietly}>Stop listening</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

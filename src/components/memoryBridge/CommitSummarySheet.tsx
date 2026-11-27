@@ -39,9 +39,12 @@ export function CommitSummarySheet({ summary, onClose, onSeeDay }: Props) {
     try {
       const eventIds = summary.entries.map(e => e.eventId).filter(Boolean);
       const actionIds = summary.entries.map(e => e.actionId);
-      if (eventIds.length) await supabase.from('calendar_events').delete().in('id', eventIds);
+      if (eventIds.length) {
+        const { error } = await supabase.from('calendar_events').delete().in('id', eventIds);
+        if (error) throw error;
+      }
       if (actionIds.length) {
-        await supabase
+        const { error } = await supabase
           .from('extracted_actions')
           .update({
             scheduled_date: null,
@@ -50,11 +53,12 @@ export function CommitSummarySheet({ summary, onClose, onSeeDay }: Props) {
             status: 'pending',
           })
           .in('id', actionIds);
+        if (error) throw error;
       }
       setUndone(true);
       toast.success('Removed from my diary');
     } catch (e) {
-      toast.error('Could not undo — please check my calendar');
+      toast.error('That did not undo. Your steps are still in your diary, so please try again.');
     } finally {
       setUndoing(false);
     }

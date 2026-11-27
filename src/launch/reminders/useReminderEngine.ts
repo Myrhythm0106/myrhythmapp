@@ -30,7 +30,7 @@ export function useReminderEngine() {
       .from('calendar_events')
       .select(COLS)
       .eq('user_id', user.id)
-      .gte('date', format(today, 'yyyy-MM-dd'))
+      .gte('date', format(addDays(today, -7), 'yyyy-MM-dd')) // carry the last week's open items into Still open
       .lte('date', format(addDays(today, 1), 'yyyy-MM-dd'))
       .neq('status', 'cancelled')
       .order('date', { ascending: true })

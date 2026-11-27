@@ -394,7 +394,7 @@ export function MVPCore4C() {
                 {entryState === 'new' && (
                   <>
                     <p className="mt-4 max-w-md font-worksans text-sm leading-6 text-launch-ink-deep/70">
-                      Get Started: start free for 7 days (card needed, nothing charged for 7 days), or register fully as a Founding Member (£10/month for life · 500 places). Then 4 short steps, account, about you, a few questions (about 5 minutes), your free snapshot. Stop and come back any time.
+                      Get Started: start free for 7 days (card needed, nothing charged for 7 days), or register fully as a Founding Member (£10/month for life · 500 places). Two steps: create your account, add your card. Then you are straight in, ready to record your first conversation.
                     </p>
                     <p className="mt-2 font-worksans text-sm text-launch-ink-deep/75">
                       Already registered?{' '}
