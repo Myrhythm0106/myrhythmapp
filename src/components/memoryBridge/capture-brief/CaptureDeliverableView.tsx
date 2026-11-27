@@ -108,7 +108,7 @@ export function CaptureDeliverableView() {
           await exportCaptureBriefXlsx(model, opts);
         }
       }
-      toast.success(`Downloaded ${kind === 'clinician' ? 'clinician summary' : kind.toUpperCase()}`);
+      toast.success(`${kind === 'clinician' ? 'Clinician summary' : kind.toUpperCase()} ready`);
     } catch (e: any) {
       toast.error(e?.message || `Could not export ${kind === 'clinician' ? 'clinician summary' : kind.toUpperCase()}`);
     } finally {

@@ -15,7 +15,7 @@ import {
   TextRun,
   WidthType,
 } from 'docx';
-import { saveAs } from 'file-saver';
+import { shareOrSave } from '@/lib/shareOrSave';
 import { CaptureBriefModel, ExportOptions } from '../model/types';
 
 const ORANGE = 'EA580C';
@@ -249,5 +249,5 @@ export async function exportCaptureBriefDocx(model: CaptureBriefModel, opts: Exp
   });
 
   const blob = await Packer.toBlob(doc);
-  saveAs(blob, opts.filename + '.docx');
+  await shareOrSave(blob, opts.filename + '.docx');
 }

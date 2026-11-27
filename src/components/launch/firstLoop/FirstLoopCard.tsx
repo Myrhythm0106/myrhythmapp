@@ -35,7 +35,7 @@ export function FirstLoopCard() {
       {next && (
         <>
           <p className="mt-5 text-base leading-relaxed">Next: {next.next}. Each step ticks itself once it has happened, so I always know where I am.</p>
-          <Button variant="ghost" onClick={() => navigate(next.to)}
+          <Button variant="ghost" onClick={() => navigate((loop.next === 'confirm' || loop.next === 'diary') && loop.latestRecordingId ? `/launch/memory?open=${loop.latestRecordingId}` : next.to)}
             className="mt-4 min-h-14 h-auto whitespace-normal rounded-2xl bg-brand-orange-500 px-6 font-semibold text-launch-ink-deep hover:bg-brand-orange-600 hover:text-launch-ink-deep">
             {next.next}<ArrowRight className="h-5 w-5" />
           </Button>

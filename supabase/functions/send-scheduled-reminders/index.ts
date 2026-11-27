@@ -207,7 +207,7 @@ serve(async (req) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                from: Deno.env.get("REMINDER_FROM_EMAIL") ?? "MyRhythm <reminders@myrhythm.app>",
+                from: Deno.env.get("REMINDER_FROM_EMAIL") ?? "MyRhythm <noreply@myrhythmapp.com>",
                 to: [profile.email],
                 subject,
                 html: `

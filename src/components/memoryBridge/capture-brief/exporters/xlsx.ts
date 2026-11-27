@@ -1,5 +1,5 @@
 import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import { shareOrSave } from '@/lib/shareOrSave';
 import { CaptureBriefModel, ExportOptions } from '../model/types';
 
 const ORANGE = 'FFEA580C';
@@ -144,5 +144,5 @@ export async function exportCaptureBriefXlsx(model: CaptureBriefModel, opts: Exp
   }
 
   const buffer = await wb.xlsx.writeBuffer();
-  saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), opts.filename + '.xlsx');
+  await shareOrSave(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), opts.filename + '.xlsx');
 }

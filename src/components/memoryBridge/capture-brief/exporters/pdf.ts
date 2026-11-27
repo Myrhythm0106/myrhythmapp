@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { saveAs } from 'file-saver';
+import { shareOrSave } from '@/lib/shareOrSave';
 import { BriefAction, CaptureBriefModel, ExportOptions } from '../model/types';
 
 const BRAND_ORANGE: [number, number, number] = [234, 88, 12]; // tailwind orange-600
@@ -217,5 +217,5 @@ export async function exportCaptureBriefPdf(model: CaptureBriefModel, opts: Expo
 
   footer(doc);
   const blob = doc.output('blob');
-  saveAs(blob, opts.filename + '.pdf');
+  await shareOrSave(blob, opts.filename + '.pdf');
 }

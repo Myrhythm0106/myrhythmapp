@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { saveAs } from 'file-saver';
+import { shareOrSave } from '@/lib/shareOrSave';
 import { CaptureBriefModel } from '../model/types';
 
 const BRAND_ORANGE: [number, number, number] = [234, 88, 12];
@@ -208,5 +208,5 @@ export async function exportClinicianPdf(model: CaptureBriefModel, filename: str
 
   footer(doc);
   const blob = doc.output('blob');
-  saveAs(blob, filename + '-clinician.pdf');
+  await shareOrSave(blob, filename + '-clinician.pdf');
 }

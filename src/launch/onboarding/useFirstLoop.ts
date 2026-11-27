@@ -8,6 +8,7 @@ const count = async (q: PromiseLike<{ count: number | null }>) => (await q).coun
 export function useFirstLoop() {
   const { user } = useAuth();
   const [counts, setCounts] = useState<LoopCounts | null>(null);
+  const [latestId, setLatestId] = useState<string | null>(null);
   useEffect(() => {
     if (!user?.id) return;
     let live = true;
@@ -19,10 +20,12 @@ export function useFirstLoop() {
       count(supabase.from('calendar_events').select('id', head).eq('user_id', uid)),
       count(supabase.from('calendar_events').select('id', head).eq('user_id', uid).eq('status', 'done')),
       count(supabase.from('support_circle_members').select('id', head).eq('user_id', uid)),
+      supabase.from('meeting_recordings').select('id').eq('user_id', uid).order('created_at', { ascending: false }).limit(1)
+        .then(({ data }) => { if (live) setLatestId(data?.[0]?.id ?? null); }),
     ]).then(([recordings, confirmed, scheduled, finished, circle]) => {
       if (live) setCounts({ recordings, confirmed, scheduled, finished, circle });
     }).catch(() => { /* leave hidden if counts cannot load */ });
     return () => { live = false; };
   }, [user?.id]);
-  return counts ? { counts, ...loopProgress(counts) } : null;
+  return counts ? { counts, latestRecordingId: latestId, ...loopProgress(counts) } : null;
 }
