@@ -1,3 +1,4 @@
+import { readReminderChoice, reminderChannel } from '@/launch/onboarding/welcomeSettings';
 import { supabase } from '@/integrations/supabase/client';
 import type { BriefAction, ActionReminder, PersonPick } from './types';
 import { defaultReminders } from './scheduleActions';
@@ -82,13 +83,14 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
     return { ok: false, error: message };
   };
 
+  const chosen = readReminderChoice(userId);
   if (input.reminders.length > 0) {
     const { error: remErr } = await supabase.from('event_reminders').insert(
       input.reminders.map(r => ({
         event_id: event.id,
         user_id: userId,
         reminder_time: reminderLabel(r.minutesBefore),
-        reminder_methods: [r.channel],
+        reminder_methods: [chosen ? reminderChannel(chosen) : r.channel],
         is_active: true,
       })),
     );

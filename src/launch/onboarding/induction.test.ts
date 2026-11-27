@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { INDUCTION_STEPS, FRESH, next, back, skip, resume, replay, shouldShow, parse } from './induction';
 
 describe('induction', () => {
-  it('is three short steps: welcome, who, style', () => {
-    expect(INDUCTION_STEPS).toEqual(['welcome', 'who', 'style']);
+  it('is four short steps: welcome, who, rhythm, style', () => {
+    expect(INDUCTION_STEPS).toEqual(['welcome', 'who', 'rhythm', 'style']);
   });
   it('finishes only after the last step', () => {
     let s = { ...FRESH };

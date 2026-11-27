@@ -1,6 +1,6 @@
 /** One induction for new members: ordered steps, resumable, skippable, replayable. */
 export const INDUCTION_STEPS = [
-  'welcome', 'who', 'style',
+  'welcome', 'who', 'rhythm', 'style',
 ] as const;
 export type InductionStep = typeof INDUCTION_STEPS[number];
 
