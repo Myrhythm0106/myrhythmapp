@@ -15,7 +15,7 @@ export function MakeItMine({ recorded }: { recorded: boolean }) {
   if (hidden) return null;
 
   const items = [
-    !hasType && { label: "Tell me who MyRhythm is for, so I can tailor it", to: '/launch/user-type?after=snapshot' },
+    !hasType && { label: "Choose what brings you to MyRhythm", to: '/launch/user-type?after=snapshot' },
     recorded && !hasSnapshot && { label: 'Get my free snapshot (about 6 minutes)', to: '/launch/assessment?first=1' },
   ].filter(Boolean) as { label: string; to: string }[];
 

@@ -13,17 +13,17 @@ const NEUTRAL: JourneyCopy = {
 const COPY: Record<string, JourneyCopy> = {
   'brain-injury': {
     firstTitle: 'Record my first appointment',
-    firstHint: 'A clinic appointment, phone call or family conversation. I can keep what was said without holding it all in my head.',
+    firstHint: 'A clinic appointment, phone call or family conversation. Keep what was said without holding it all in your head.',
     firstCta: 'Record an appointment',
   },
   caregiver: {
     firstTitle: 'Record an appointment or family conversation',
-    firstHint: 'Keep the important details for the person I support and for me, then choose what to share.',
+    firstHint: 'Keep the important details for the person you support and for you, then choose what to share.',
     firstCta: 'Record a conversation',
   },
   everyday: {
     firstTitle: 'Clear one thing from my head',
-    firstHint: 'Record a thought, call or conversation. MyRhythm will help me see what needs to happen next.',
+    firstHint: 'Record a thought, call or conversation. MyRhythm helps you see what needs to happen next.',
     firstCta: 'Clear my head',
   },
   executive: {
@@ -33,7 +33,7 @@ const COPY: Record<string, JourneyCopy> = {
   },
   student: {
     firstTitle: 'Record a lecture or study conversation',
-    firstHint: 'Turn what was said into notes, next steps and dates I can return to.',
+    firstHint: 'Turn what was said into notes, next steps and dates you can return to.',
     firstCta: 'Record and take notes',
   },
 };

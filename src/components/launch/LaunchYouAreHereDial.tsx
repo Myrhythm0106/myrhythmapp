@@ -40,7 +40,7 @@ const SECONDARY: Place[] = [
   { path: '/launch/assessment?mode=retake', label: 'My questions and snapshot', purpose: 'Review or answer again', icon: ClipboardList },
   { path: '/launch/support', label: 'Support Circle', purpose: 'The people with me', icon: Users },
   { path: '/launch/settings', label: 'Settings', purpose: 'Preferences and profile', icon: Settings },
-  { path: '/launch/help', label: 'Help', purpose: 'Guidance when I need it', icon: HelpCircle },
+  { path: '/launch/help', label: 'Help', purpose: 'Guidance when you need it', icon: HelpCircle },
   { path: '/launch/whats-new', label: "What's New", purpose: 'Recent improvements', icon: Sparkles },
 ];
 

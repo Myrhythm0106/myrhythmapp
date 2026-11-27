@@ -131,7 +131,7 @@ export default function LaunchDiary() {
             </h3>
             <p className="text-sm text-launch-ink/65">
               {entries.length === 0
-                ? 'Every conversation I capture, every brain health snapshot I take, and every next step I finish will appear here, in date order, with a reference I can trace back to where it came from.'
+                ? 'Every conversation you capture, every brain health snapshot you take and every next step you finish appears here, in date order, with a reference you can trace back to where it came from.'
                 : 'Try a different word, or clear the search to see everything.'}
             </p>
           </LaunchCard>

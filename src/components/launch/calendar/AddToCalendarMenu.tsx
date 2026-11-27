@@ -45,7 +45,7 @@ export function AddToCalendarMenu({ item, children, align = 'end' }: AddToCalend
 
   const emailToMe = async () => {
     if (!user?.email) {
-      toast.error("I can't find your email address", {
+      toast.error("Your email address isn't available", {
         description: 'Add it in Settings and try again.',
       });
       return;

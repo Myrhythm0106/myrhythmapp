@@ -42,7 +42,7 @@ export function resumeStepFor(path: string | null | undefined): ResumeStep | nul
     return {
       path,
       title: 'My questions and snapshot',
-      description: 'My answers are saved on this device. I can carry on, or leave them again at any point.',
+      description: 'Your answers are saved on this device. Carry on, or leave them again at any point.',
       button: 'Continue my questions',
     };
   }
@@ -50,7 +50,7 @@ export function resumeStepFor(path: string | null | undefined): ResumeStep | nul
     return {
       path,
       title: 'About me',
-      description: 'Choose what brings me to MyRhythm. This only changes the words and examples I see.',
+      description: 'Choose what brings you to MyRhythm. It tailors your examples, and every part stays open to you.',
       button: 'Continue about me',
     };
   }

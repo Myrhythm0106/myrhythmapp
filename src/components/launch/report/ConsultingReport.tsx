@@ -94,7 +94,7 @@ export function ConsultingReport({ answers, onChosen }: Props) {
       <section aria-labelledby="top3-title" className="border-b border-launch-gold/30 px-5 py-8 md:px-12">
         <Eyebrow>My top 3 to start with</Eyebrow>
         <h2 id="top3-title" className="mt-1 font-display text-2xl text-launch-ink md:text-3xl">
-          {confirmed ? 'My priorities are set. I can change them any time.' : 'MyRhythm recommends these. I decide.'}
+          {confirmed ? 'Your priorities are set. You can change them any time.' : 'MyRhythm recommends these. You decide.'}
         </h2>
         <ol className="mt-4 space-y-2">
           {(chosen.length ? order.filter((a) => chosen.includes(a.id)) : ranked.slice(0, 3)).map((a, i) => (
@@ -128,7 +128,7 @@ export function ConsultingReport({ answers, onChosen }: Props) {
       <section aria-labelledby="prio-title" className="border-b border-launch-gold/30 px-5 py-8 md:px-12 md:py-10">
         <Eyebrow>My priority areas</Eyebrow>
         <h2 id="prio-title" className="mt-1 font-display text-2xl text-launch-ink md:text-3xl">Here’s where MyRhythm recommends I start. I decide.</h2>
-        <p className="mt-2 max-w-2xl text-base text-launch-ink/80">Ranked by impact on my day, then by how quickly I could feel a difference. I can pick up to 3 and put them in my own order.</p>
+        <p className="mt-2 max-w-2xl text-base text-launch-ink/80">Ranked by impact on your day, then by how quickly you could feel a difference. Pick up to 3 and put them in your own order.</p>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
           <ol className="space-y-3">

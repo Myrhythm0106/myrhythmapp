@@ -35,7 +35,7 @@ export function ReminderCard() {
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {stage === 'prep' ? (
-          <Button variant="action" className="min-h-14 text-base" onClick={() => answer('ready', "Ready. I'll remind you when it's time.")}>I'm ready</Button>
+          <Button variant="action" className="min-h-14 text-base" onClick={() => answer('ready', "Ready. MyRhythm reminds you when it's time.")}>I'm ready</Button>
         ) : snoozing ? (
           <>
             <Button variant="outline" className="min-h-14 text-base" onClick={() => answer('snooze10', 'Reminding you in 10 minutes')}>10 minutes</Button>

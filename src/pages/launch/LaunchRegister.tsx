@@ -158,7 +158,7 @@ export default function LaunchRegister() {
       navigate(afterAccount(), { replace: true });
     } catch (err: any) {
       console.error('[register] unexpected error', err);
-      toast.error(err?.message || 'That did not go through. My details are safe, so I can try again.', {
+      toast.error(err?.message || 'That did not go through. Your details are safe, so you can try again.', {
         description: 'Nothing was lost. Please try again in a moment.',
       });
     } finally {
@@ -177,7 +177,7 @@ export default function LaunchRegister() {
         toast.success('Confirmation email sent! Please check your inbox and spam folder.');
       }
     } catch (err: any) {
-      toast.error(err.message || 'That did not go through. My details are safe, so I can try again.');
+      toast.error(err.message || 'That did not go through. Your details are safe, so you can try again.');
     } finally {
       setIsResending(false);
     }

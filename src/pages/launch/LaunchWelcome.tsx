@@ -159,7 +159,7 @@ export default function LaunchWelcome() {
     ? getMessage(persona)
     : {
         headline: 'My next step starts here',
-        subtitle: 'This snapshot reflects the answers I gave. I can make MyRhythm more personal next, or go straight to Home.',
+        subtitle: 'This snapshot reflects the answers you gave. You can make MyRhythm more personal next, or go straight to Home.',
         highlights: [
           'My answers shape what MyRhythm brings forward',
           'My preferred pace stays flexible',
@@ -200,10 +200,10 @@ export default function LaunchWelcome() {
             role="status"
             aria-live="polite"
           >
-            <p className="text-lg font-bold" style={SORA}>I'm in. My plan is active.</p>
+            <p className="text-lg font-bold" style={SORA}>You're in. Your plan is active.</p>
             <p className="mt-1 text-sm opacity-80">
               {bhs
-                ? `${startedLine} Everything below is my snapshot, when I'm ready, head to Home.`
+                ? `${startedLine} Everything below is your snapshot. When you're ready, head to Home.`
                 : `${startedLine} Next: tell MyRhythm about me and answer a few short questions.`}
             </p>
             <button

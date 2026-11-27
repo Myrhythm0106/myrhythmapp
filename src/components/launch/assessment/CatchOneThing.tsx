@@ -64,7 +64,7 @@ export function CatchOneThing({ answers }: Props) {
 
   return (
     <section aria-labelledby="catch-title" className="px-5 md:px-12 py-8 md:py-10 bg-launch-cream border-b border-launch-gold/30">
-      <p className="text-xs uppercase tracking-[0.2em] font-semibold text-launch-ember">Let MyRhythm show me</p>
+      <p className="text-xs uppercase tracking-[0.2em] font-semibold text-launch-ember">Let MyRhythm show you</p>
       <h2 id="catch-title" className="mt-1 font-display text-2xl md:text-3xl text-launch-ink">What can’t I afford to forget this week?</h2>
       <p className="mt-2 text-base text-launch-ink/75">Type one real thing. For example: “Call the surgery about my results” or “Mum’s birthday on Saturday”.</p>
 
@@ -116,7 +116,7 @@ export function CatchOneThing({ answers }: Props) {
       {!kept && confirming && (
         <div className="mt-5 rounded-2xl border-2 border-launch-teal/50 bg-launch-ivory p-4">
           <p className="text-base font-semibold text-launch-ink">
-            {rule.offerTimes ? 'Which time tomorrow works for me?' : `Shall I put it in my day tomorrow at ${time}?`}
+            {rule.offerTimes ? 'Which time tomorrow works for you?' : `Put it in your day tomorrow at ${time}?`}
           </p>
           {rule.offerTimes && (
             <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Time tomorrow">

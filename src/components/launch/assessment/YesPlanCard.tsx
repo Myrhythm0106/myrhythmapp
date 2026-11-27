@@ -46,7 +46,7 @@ export function YesPlanCard() {
     <section className="p-8 md:p-10 border-b border-launch-ink/5 bg-launch-ivory">
       <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-launch-gold mb-2">My first 3 weeks</p>
       <h2 className="text-2xl font-display font-bold text-launch-ink mb-1">My YES plan</h2>
-      <p className="text-sm text-launch-ink/65 mb-5">Set up from my own answers. I can change any part.</p>
+      <p className="text-sm text-launch-ink/65 mb-5">Set up from your own answers. You can change any part.</p>
       <ol className="space-y-3 mb-6">
         {YES_LETTERS.map((l) => (
           <li key={l.id} className="flex items-start gap-3 rounded-2xl border border-launch-gold/30 bg-launch-cream p-4">

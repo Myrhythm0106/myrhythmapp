@@ -92,7 +92,7 @@ export default function LaunchSignIn() {
       else if (destination.startsWith('/launch/user-type')) toast.success('Welcome back, continuing at Step 2, About me.');
       navigate(destination, { replace: true });
     } catch (err: any) {
-      toast.error(err.message || 'That did not go through. My details are safe, so I can try again.');
+      toast.error(err.message || 'That did not go through. Your details are safe, so you can try again.');
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +111,7 @@ export default function LaunchSignIn() {
         toast.success('Confirmation email sent! Please check your inbox and spam folder.');
       }
     } catch (err: any) {
-      toast.error(err.message || 'That did not go through. My details are safe, so I can try again.');
+      toast.error(err.message || 'That did not go through. Your details are safe, so you can try again.');
     } finally {
       setIsResending(false);
     }
@@ -136,7 +136,7 @@ export default function LaunchSignIn() {
           </h1>
           <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
             {returningTo
-              ? "Log in to continue where you were. I'll bring you straight back."
+              ? "Log in to continue where you were. MyRhythm brings you straight back."
               : 'For people already registered. I’ll take you to exactly where you stopped, or to your day.'}
           </p>
 

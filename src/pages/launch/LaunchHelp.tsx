@@ -197,7 +197,7 @@ export default function LaunchHelp() {
             <ol className="list-decimal ml-5 space-y-1">
               <li>Open <strong>Voice Memos</strong> on my watch and tap record. Tap again to stop.</li>
               <li>On my iPhone, open Voice Memos, tap the recording, then <strong>Share → Save to Files</strong>.</li>
-              <li>In MyRhythm, open Memory Bridge and choose <strong>Upload</strong>. It is named and written up for me.</li>
+              <li>In MyRhythm, open Memory Bridge and choose <strong>Upload</strong>. It is named and written up for you.</li>
             </ol>
           </div>
           <div>

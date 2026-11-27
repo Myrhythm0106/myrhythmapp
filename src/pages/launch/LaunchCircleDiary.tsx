@@ -78,7 +78,7 @@ export default function LaunchCircleDiary() {
         ) : shared.length === 0 ? (
           <div className="rounded-3xl border border-launch-gold/25 bg-launch-ivory/80 p-6">
             <p className="text-base text-launch-ink">No one has shared their diary with me yet.</p>
-            <p className="mt-1 text-sm text-launch-ink/60">When someone in a Support Circle switches on diary sharing for me, it appears here.</p>
+            <p className="mt-1 text-sm text-launch-ink/60">When someone in a Support Circle switches on diary sharing for you, it appears here.</p>
           </div>
         ) : (
           <>

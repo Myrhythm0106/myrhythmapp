@@ -34,7 +34,7 @@ function OutputModeSettingsCard() {
   return (
     <LaunchCard className="bg-launch-ivory border-launch-gold/30">
       <h3 className="font-semibold text-launch-ink mb-1">From each recording</h3>
-      <p className="text-sm text-launch-ink/70 mb-4">My usual choice. I can still change it on any recording.</p>
+      <p className="text-sm text-launch-ink/70 mb-4">Your usual choice. You can still change it on any recording.</p>
       <OutputModeChooser value={mode} onChange={setMode} />
     </LaunchCard>
   );
@@ -153,8 +153,8 @@ export default function LaunchSettings() {
               <Sparkles className="h-5 w-5 text-launch-ink" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-foreground">What brings me to MyRhythm</h3>
-              <p className="text-sm text-muted-foreground">Change the words and examples MyRhythm uses for me</p>
+              <h3 className="font-semibold text-foreground">What brings you to MyRhythm</h3>
+              <p className="text-sm text-muted-foreground">Change the words and examples MyRhythm uses for you</p>
             </div>
             <ChevronRight className="h-5 w-5 text-muted-foreground/60" />
           </button>

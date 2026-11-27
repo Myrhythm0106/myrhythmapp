@@ -33,7 +33,7 @@ const STEP_DESCRIPTIONS: Record<string, string> = {
   '/launch/assessment':
     'My answers shape my diary, reminders and breaks. Next: my free snapshot.',
   '/launch/welcome':
-    'My MYRHYTHM snapshot, I can keep it, choose one action, and continue to Home.',
+    'Your MYRHYTHM snapshot. Keep it, choose one action and continue to Home.',
 };
 
 // Screens where the strip is mounted inside LaunchLayout's fixed-height

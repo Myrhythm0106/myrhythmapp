@@ -63,7 +63,7 @@ export function QuietHome() {
   const today = React.useMemo(() => new Date(), []);
   React.useEffect(() => {
     const q = new URLSearchParams(window.location.search);
-    if (q.get('postCheckout') === '1') toast.success(q.get('trial') === '1' ? "I'm in. My 7 free days have started." : "I'm in. My membership is active.");
+    if (q.get('postCheckout') === '1') toast.success(q.get('trial') === '1' ? "You're in. Your 7 free days have started." : "You're in. Your membership is active.");
   }, []);
   const rangeStart = React.useMemo(() => minDate([startOfWeek(today, { weekStartsOn: 1 }), addDays(today, -1)]), [today]);
   const rangeEnd = React.useMemo(() => maxDate([endOfWeek(today, { weekStartsOn: 1 }), addDays(today, 1)]), [today]);

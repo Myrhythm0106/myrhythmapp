@@ -17,7 +17,7 @@ export function HomeDayReview({ which, date, events, onOpen, onCarry, onPrep }: 
     <section className="space-y-3" aria-label={which === 'yesterday' ? 'Yesterday' : 'Tomorrow'}>
       <p className="text-base text-launch-ink/75">
         {which === 'yesterday'
-          ? items.length === 0 ? 'Nothing was in my diary yesterday.' : `I completed ${done.length} of ${items.length}.${left.length ? ' I can carry the rest into today.' : ' Everything got done.'}`
+          ? items.length === 0 ? 'Nothing was in my diary yesterday.' : `You completed ${done.length} of ${items.length}.${left.length ? ' You can carry the rest into today.' : ' Everything got done.'}`
           : items.length === 0 ? 'Tomorrow is open. Nothing to prepare.' : `${items.length} booked${items[0]?.time ? `, first at ${items[0].time.slice(0, 5)}` : ''}.`}
       </p>
       {items.length > 0 && (

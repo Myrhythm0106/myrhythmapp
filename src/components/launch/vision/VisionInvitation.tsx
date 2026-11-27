@@ -13,7 +13,7 @@ export function VisionInvitation({ userId }: { userId: string }) {
   return (
     <section aria-labelledby="vision-invitation-title" className="rounded-3xl border border-launch-teal/25 bg-launch-teal/5 p-5 sm:p-6">
       <Compass className="h-6 w-6 text-launch-teal" aria-hidden="true" />
-      <h2 id="vision-invitation-title" className="mt-3 font-instrument text-2xl text-launch-ink">What would a good life look like for me?</h2>
+      <h2 id="vision-invitation-title" className="mt-3 font-instrument text-2xl text-launch-ink">What would a good life look like for you?</h2>
       <p className="mt-2 max-w-2xl text-base leading-relaxed text-launch-ink/75">
         A few words about home, family or work is enough. I can include a target from my care team too. This is optional, and I can come back to it at any time.
       </p>

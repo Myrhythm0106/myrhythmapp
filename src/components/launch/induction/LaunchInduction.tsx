@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 
 type Step = { title: string; text: string; primary: string; to?: string; secondary?: string };
 const STEPS: Record<InductionStep, Step> = {
-  welcome: { title: 'Welcome. Here is how MyRhythm helps me.', text: 'MyRhythm remembers, so I can follow through. I record what matters, choose my next steps, and they wait for me in my diary. This short welcome takes under a minute, and I can leave it at any point.', primary: 'Show me' },
+  welcome: { title: 'Welcome. Here is how MyRhythm helps you.', text: 'MyRhythm remembers, so you can follow through. You record what matters, choose your next steps, and they wait for you in your diary. This short welcome takes under a minute, and you can leave it at any point.', primary: 'Show me' },
   who: { title: 'Who am I using MyRhythm for?', text: 'One tap tailors the wording and first suggestions. Myself, someone I care for, or a busy working life. Optional.', primary: 'Choose who it is for', to: '/launch/user-type?after=home', secondary: 'Not now' },
-  style: { title: 'How would I like to start?', text: 'I choose the approach that feels right. Guide me offers one practical step at a time. Explore my way lets me choose where to begin. Both keep all my pages available, and I can switch in the round menu at any time.', primary: 'Guide me', secondary: 'Explore my way' },
+  style: { title: 'How would you like to start?', text: 'Choose the approach that feels right. Guide me offers one practical step at a time. Explore my way lets you choose where to begin. Both keep every page available, and you can switch in the round menu at any time.', primary: 'Guide me', secondary: 'Explore my way' },
 };
 
 /** The single induction for new members. Never blocks the app. */
@@ -62,7 +62,7 @@ export function LaunchInduction() {
       )}
       <p className="mt-4 max-w-2xl text-base leading-relaxed opacity-85">
         {ind.stepId === 'style' ? 'My choice saves here. Next finishes my welcome. My first loop on Home then shows each step from first recording to done.' :
-          nextStep ? `Next: ${nextStep.title} I can try this now or keep going without doing it yet.` : 'Nothing is recorded, scheduled or shared by finishing this welcome.'}
+          nextStep ? `Next: ${nextStep.title} You can try this now or keep going without doing it yet.` : 'Nothing is recorded, scheduled or shared by finishing this welcome.'}
       </p>
       <div className="mt-6 flex flex-wrap items-center gap-3">
         {s.to && (

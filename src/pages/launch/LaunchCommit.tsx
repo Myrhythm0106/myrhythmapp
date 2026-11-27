@@ -333,7 +333,7 @@ export default function LaunchCommit() {
         {error ? (
           <LaunchCard className="border-launch-ember/30 bg-launch-ivory p-8 text-center">
             <p className="text-lg font-semibold text-launch-ink">I could not load my saved conversations.</p>
-            <p className="mt-2 text-sm text-launch-ink/70">Nothing has been lost. I can try that again.</p>
+            <p className="mt-2 text-sm text-launch-ink/70">Nothing has been lost. You can try that again.</p>
             <Button onClick={() => void loadMeetings()} className="mt-5 min-h-14 bg-launch-teal text-white hover:bg-[hsl(var(--launch-teal)/0.88)]">
               <RefreshCw className="mr-2 h-4 w-4" /> Try again
             </Button>

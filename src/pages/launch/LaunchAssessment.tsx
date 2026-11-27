@@ -52,14 +52,14 @@ function seedFromSnapshot(): AnswerMap {
 function partPreview(part: string, a: AnswerMap): string | null {
   const p = (id: string) => a[id]?.primary ?? '';
   if (part === 'Y') {
-    if (p('memorySlips') === 'appointments') return "Remembered: I'll remind you the evening before appointments, and again on the day.";
+    if (p('memorySlips') === 'appointments') return "Remembered: MyRhythm reminds you the evening before appointments, and again on the day.";
     if (p('memorySlips') === 'what-was-said') return 'Remembered: conversations become a short written note you can check any time.';
-    if (p('memorySlips') === 'half-done') return "Remembered: I'll gently bring back tasks you started, so they don't get lost.";
+    if (p('memorySlips') === 'half-done') return "Remembered: MyRhythm gently brings back tasks you started, so they don't get lost.";
     return 'Remembered: what matters is kept, so you don’t have to hold it all.';
   }
   if (part === 'E') {
     if (p('mindsetSlip') === 'harsh') return 'Resilient: a slip is not a failure. It waits for you, and you pick it up when ready.';
-    if (p('habitSleep') === 'under-6') return "Resilient: after a poor night, I'll suggest a lighter day first.";
+    if (p('habitSleep') === 'under-6') return "Resilient: after a poor night, MyRhythm suggests a lighter day first.";
     return 'Resilient: if a day goes wrong, nothing is lost.';
   }
   return null;
@@ -124,11 +124,11 @@ function loadProgress(): StoredProgress | null {
 /** Benefit-only helper lines, never scoring or scheduling rules. */
 const QUESTION_HELPS: Record<string, string> = {
   memorySlips: 'Sets up: what MyRhythm guards first.',
-  memoryRecall: 'Sets up: how MyRhythm captures conversations for me.',
+  memoryRecall: 'Sets up: how MyRhythm captures conversations for you.',
   findAgain: 'Sets up: how MyRhythm keeps what was agreed, ready to show.',
   controlStyle: 'Sets up: how much MyRhythm asks before placing a step.',
   habitSleep: 'Sets up: lighter plans after a poor night.',
-  habitCalm: 'Sets up: pauses where I need them most.',
+  habitCalm: 'Sets up: pauses where you need them most.',
   mindsetSlip: 'Sets up: how MyRhythm talks to me when something slips.',
   planningRhythm: 'Sets up: when important things go in my day, and which times stay light.',
   energyDip: 'Sets up: which times stay light.',
@@ -285,7 +285,7 @@ export default function LaunchAssessment() {
           >
             Start my questions
           </button>
-          <p className="text-sm text-launch-ink/70 text-center mt-3">About 6 minutes · I can stop and come back any time · No right or wrong answers</p>
+          <p className="text-sm text-launch-ink/70 text-center mt-3">About 6 minutes · You can stop and come back any time · No right or wrong answers</p>
 
           <details className="mt-8 rounded-2xl border border-launch-gold/30 bg-launch-ivory p-4">
             <summary className="min-h-[44px] cursor-pointer text-base font-semibold text-launch-ink">Why it helps</summary>
@@ -660,7 +660,7 @@ export default function LaunchAssessment() {
       if (!res.ok && res.error !== 'not-signed-in') {
         console.warn('[assessment] save failed:', res.error);
         setSaveWarning(
-          "My snapshot is ready, but we couldn't save it to my account yet. It's kept on this device and will sync next time I'm online."
+          "Your snapshot is ready, but it couldn't be saved to your account yet. It's kept on this device and syncs next time you're online."
         );
       }
     });

@@ -176,14 +176,14 @@ export function deriveProductivityWindow(
   }
 
   if (answers.heal === 'none-yet') {
-    reasons.push("You haven't found your reset yet, I'll keep one quiet slot free each day to try one.");
+    reasons.push("You haven't found your reset yet, so MyRhythm keeps one quiet slot free each day to try one.");
   }
   if (answers.sleep === 'under-6' || answers.sleep === 'patchy') {
     bufferMinutes = Math.max(bufferMinutes, 15);
     reasons.push('Your nights are uneven, so I leave a little more room between things and keep late evenings clear.');
   }
   if (answers.calm === 'spiral') {
-    reasons.push('When your mind races, a short calm-down slot before big moments helps, I will suggest one.');
+    reasons.push('When your mind races, a short calm-down slot before big moments helps, and MyRhythm suggests one.');
   }
   const struggles = answers.transform ?? [];
   if (struggles.includes('fatigue')) {
@@ -238,7 +238,7 @@ export function outsideWindowNote(
   const gap = window.bufferMinutes || 10;
   return `This sits outside your best hours (${label(window.productiveStart)}–${label(
     window.productiveEnd
-  )}). That's completely fine, I'll keep the block shorter and leave ${gap} minutes to recover afterwards.`;
+  )}). That's completely fine. MyRhythm keeps the block shorter and leave ${gap} minutes to recover afterwards.`;
 }
 
 /** Read the window saved at the end of the assessment. Returns null when absent. */

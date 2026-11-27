@@ -524,7 +524,7 @@ export default function LaunchMemoryBridge() {
           toast.success('Recording saved, my transcript is ready.');
           setTranscriptFor({ meetingId: result.meetingId, title });
         } else {
-          toast.success('Recording saved.', { description: 'I can ask for a transcript or actions any time from My Records.' });
+          toast.success('Recording saved.', { description: 'You can ask for a transcript or actions any time from My Records.' });
         }
         fetchRecordings();
         setState('idle');

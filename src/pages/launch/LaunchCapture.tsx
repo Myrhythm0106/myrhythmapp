@@ -16,7 +16,7 @@ export default function LaunchCapture() {
       capabilityKey="capture"
       eyebrow="Capability 01 · Capture"
       title="A reliable record of the conversations that matter."
-      lede="Capture turns spoken moments, clinical visits, family check-ins, fleeting ideas, into a private, searchable record I can return to with confidence."
+      lede="Capture turns spoken moments, clinical visits, family check-ins, fleeting ideas, into a private, searchable record you can return to with confidence."
       heroIcon={Brain}
       tone="emerald"
       metaPills={[
@@ -75,7 +75,7 @@ export default function LaunchCapture() {
         {
           step: '03',
           title: 'Return',
-          description: 'Revisit decisions and details whenever I need them.',
+          description: 'Revisit decisions and details whenever you need them.',
         },
       ]}
       kpis={[

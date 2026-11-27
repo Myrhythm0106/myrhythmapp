@@ -47,7 +47,7 @@ export function RhythmCalendarConsent({ mainFocus }: { mainFocus?: string | null
       items: all ? { work: true, productive: true, breaks: true } : status === 'no' ? { work: false, productive: false, breaks: false } : c.items,
     }));
     setChoosing(false);
-    toast.success(status === 'yes' ? 'Added to my calendar. I can change this any time in Settings.' : 'Nothing added. I can switch this on later in Settings.');
+    toast.success(status === 'yes' ? 'Added to your calendar. You can change this any time in Settings.' : 'Nothing added. You can switch this on later in Settings.');
   };
 
   const addAppointment = () => {
@@ -100,7 +100,7 @@ export function RhythmCalendarConsent({ mainFocus }: { mainFocus?: string | null
             </li>
           )}
         </ul>
-        <p className="mt-3 text-sm text-launch-ink-deep/70">These are suggestions, not rules. I'm in control.</p>
+        <p className="mt-3 text-sm text-launch-ink-deep/70">These are suggestions, not rules. You stay in control.</p>
       </div>
 
       <div className="rounded-xl border border-launch-teal/30 bg-launch-cream-light p-6 md:p-8">

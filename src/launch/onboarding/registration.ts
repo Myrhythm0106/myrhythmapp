@@ -8,10 +8,10 @@ export const registrationSchema = z.object({
 
 export function registrationError(message: string): string {
   if (/sending.*email|smtp|confirmation email/i.test(message)) {
-    return "My account couldn't be created because the confirmation email couldn't be sent. My details stay here so I can try again.";
+    return "Your account couldn't be created because the confirmation email couldn't be sent. Your details stay here so you can try again.";
   }
   if (/rate limit|too many requests|security purposes/i.test(message)) {
-    return 'Too many attempts just now. My details stay here. I can try again in a few minutes.';
+    return 'Too many attempts just now. Your details stay here. You can try again in a few minutes.';
   }
-  return message || "My account couldn't be created. My details stay here so I can try again.";
+  return message || "Your account couldn't be created. Your details stay here so you can try again.";
 }

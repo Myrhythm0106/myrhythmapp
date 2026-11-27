@@ -171,7 +171,7 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      setCheckoutError("My card page isn't available just now. Nothing was charged. I can try again, or use an access code below to go straight in.");
+      setCheckoutError("The card page isn't available just now. Nothing was charged. You can try again, or use an access code below to go straight in.");
     } finally {
       setIsLoading(false);
     }
@@ -204,7 +204,7 @@ export default function LaunchPayment() {
               {isTrial && <span className="block text-base font-normal">After my free 7 days.</span>}
             </p>
             <p className="text-base leading-relaxed text-launch-ink-deep/80">
-              {isTrial ? 'I can cancel before the 7 days end and pay nothing.' : 'I can cancel any time from my account.'}
+              {isTrial ? 'You can cancel before the 7 days end and pay nothing.' : 'You can cancel any time from your account.'}
             </p>
           </div>
           {IS_TEST_MODE && <p role="status" className="text-base text-launch-ember">Test payments only. I use a Stripe test card, not a real card.</p>}
@@ -365,8 +365,8 @@ export default function LaunchPayment() {
             </h1>
             <p className="mt-5 max-w-2xl font-worksans text-lg leading-8 text-launch-ink-deep/75">
               {isTrial
-                ? '£10 a month, for as long as I stay a member. My first 7 days are free, a card is needed to start, nothing is charged for 7 days, and I can cancel any time from my account.'
-                : '£10 a month, for as long as I stay a member. My membership starts today, and I can cancel any time from my account.'}
+                ? '£10 a month, for as long as you stay a member. Your first 7 days are free, a card is needed to start, nothing is charged for 7 days, and you can cancel any time from your account.'
+                : '£10 a month, for as long as you stay a member. Your membership starts today, and you can cancel any time from your account.'}
             </p>
           </motion.div>
 

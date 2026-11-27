@@ -165,7 +165,7 @@ export function VisionStatementComposer({
         <p className="text-xs text-brain-health-600">
           {canCompose
             ? `Uses what you wrote in: ${filled.map((p) => (p.id === 'future' ? futureLabel : p.label)).join(', ')}. Shaped by Who, What, Where, When, Why and How. Free.`
-            : 'Fill in at least two sections above and I can weave them into one clear paragraph.'}
+            : 'Fill in at least two sections above and MyRhythm weaves them into one clear paragraph.'}
         </p>
         {showExtra && (
           <div className="grid gap-2 sm:grid-cols-2">
