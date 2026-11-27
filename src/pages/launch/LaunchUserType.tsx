@@ -124,10 +124,10 @@ export default function LaunchUserType() {
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-launch-ink mb-3 font-display">
-              {firstName ? `Welcome, ${firstName}. ` : ''}What brings me to MyRhythm?
+              {firstName ? `Welcome, ${firstName}. ` : ''}What brings you to MyRhythm?
             </h1>
             <p className="text-lg text-launch-ink-deep max-w-xl mx-auto">
-              MyRhythm is for anyone who wants to remember what matters and follow through. I choose the one that fits best, it only changes the words and examples I see.
+              Choose the one that fits you best today. It tailors your examples, and every part of MyRhythm stays open to you.
             </p>
           </motion.div>
 
@@ -169,9 +169,9 @@ export default function LaunchUserType() {
             onClick={notSure}
             className="min-h-14 whitespace-normal text-base text-launch-ink-deep underline underline-offset-4"
           >
-            {fromSettings ? 'Back to Settings' : afterSnapshot ? 'Not now, go to Home' : "I'm not sure, carry on"}
+            {fromSettings ? 'Back to Settings' : afterSnapshot ? 'Not now, go to Home' : "Not sure? Carry on"}
           </Button>
-          <p className="text-base leading-relaxed text-launch-ink-deep">I can change this any time in Settings.</p>
+          <p className="text-base leading-relaxed text-launch-ink-deep">You can change this any time in Settings.</p>
         </div>
       </div>
     </div>
