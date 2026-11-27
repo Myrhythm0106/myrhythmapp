@@ -1,6 +1,6 @@
 # MyRhythm: Heart and MVP presentation
 
-A 12-slide deck that tells the story in Annabel's voice (British English, warm, no hype, no medical claims), shown in the app at a new open link `/mvp-deck`, alongside the existing investor decks. Presentable full screen, swipeable on a phone, and exportable to PDF.
+A 14-slide deck that tells the story in Annabel's voice (British English, warm, no hype, no medical claims), shown in the app at a new open link `/mvp-deck`, alongside the existing investor decks. Presentable full screen, swipeable on a phone, and exportable to PDF.
 
 ## Story (one idea per slide)
 1. Title: MyRhythm. Memory-First Design™. The North Point, verbatim.
@@ -14,7 +14,11 @@ A 12-slide deck that tells the story in Annabel's voice (British English, warm, 
 9. MVP feature 4, Follow through: get-ready prompt, Done / Snooze / Let go, one gentle follow-up, Still open at 18:00, closed loop with Undo.
 10. MVP feature 5, No one walks alone: Support Circle with permission levels, private stays private, off switch.
 11. What is in the MVP and what waits: in v0.1 vs later (watch app, discharge plan, Bring a Witness).
-12. Close: the five feelings (reliable, trustworthy, confident, independent, follow-through) and the North Point.
+12. Three lines to remember (the user's own wording): bridging the Discharge Cliff and the Clinical-to-Life Ready Gap; not another to-do list but an end-to-end follow-through loop from the spoken word to a completed task; the North Point.
+13. Why follow-through and dignity matter: follow-through is where recovery turns into real life; dignity is agency, keeping your word; caregivers return to being partners, not monitors.
+14. Close and live demo cue: the five feelings (reliable, trustworthy, confident, independent, follow-through) and the North Point, with a presenter note: open /launch/home and walk Home, Record, Diary, Support Circle.
+
+The North Point uses the locked wording ("My confidence returns"). Em dashes in the phrases become commas, per the voice guide.
 
 ## Look
 Existing brand colours (orange, purple, teal, emerald), dark title and closing slides, light content slides, landing photos reused, one repeated motif: rounded glass cards.
@@ -22,6 +26,7 @@ Existing brand colours (orange, purple, teal, emerald), dark title and closing s
 ## Technical details
 - New page `src/pages/MvpDeckPage.tsx` with slide components at 1920x1080 scaled to fit; arrow keys, swipe, full screen, `?slide=N`, `?print` for PDF.
 - Add `/mvp-deck` route in `App.tsx` and the public allowlist in `publicPaths.ts` (plus its test), matching the investor decks.
+- Presenter notes per slide carry the speaking points.
 - No numbers invented; pricing uses the locked ladder only.
 
 ## Optional ideas
