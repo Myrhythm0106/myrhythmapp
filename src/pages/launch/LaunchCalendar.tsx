@@ -226,7 +226,8 @@ export default function LaunchCalendar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleNavigate('prev')}
-                className="p-2 hover:bg-launch-gold/10 rounded-lg transition-colors"
+                aria-label="Previous"
+                className="min-h-14 min-w-14 inline-flex items-center justify-center hover:bg-launch-gold/10 rounded-xl transition-colors"
               >
                 <ChevronLeft className="h-5 w-5 text-launch-ink" />
               </button>
@@ -235,7 +236,8 @@ export default function LaunchCalendar() {
               </h1>
               <button
                 onClick={() => handleNavigate('next')}
-                className="p-2 hover:bg-launch-gold/10 rounded-lg transition-colors"
+                aria-label="Next"
+                className="min-h-14 min-w-14 inline-flex items-center justify-center hover:bg-launch-gold/10 rounded-xl transition-colors"
               >
                 <ChevronRight className="h-5 w-5 text-launch-ink" />
               </button>
@@ -243,7 +245,7 @@ export default function LaunchCalendar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowReminders((s) => !s)}
-                className="text-sm text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
+                className="min-h-14 min-w-14 px-3 justify-center rounded-xl hover:bg-launch-gold/10 text-base text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
                 title={showReminders ? 'Hide reminder nudges' : 'Show reminder nudges'}
                 aria-pressed={showReminders}
               >
@@ -252,7 +254,7 @@ export default function LaunchCalendar() {
               </button>
               <button
                 onClick={() => setShowImportCard((s) => !s)}
-                className="text-sm text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
+                className="min-h-14 min-w-14 px-3 justify-center rounded-xl hover:bg-launch-gold/10 text-base text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
                 title="Import schedule from a document"
               >
                 <FileUp className="h-4 w-4" />
@@ -260,20 +262,20 @@ export default function LaunchCalendar() {
               </button>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="text-sm text-launch-ember font-medium hover:text-launch-ember/80"
+                className="min-h-14 min-w-14 px-3 rounded-xl text-base text-launch-ember font-semibold hover:bg-launch-gold/10"
               >
                 + Add
               </button>
-              <LaunchButton variant="secondary" size="icon" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+              <LaunchButton variant="secondary" size="icon" aria-label="Share my diary" className="min-h-14 min-w-14 border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
                 <Share2 className="h-5 w-5" />
               </LaunchButton>
             </div>
           </div>
 
-          <div className="mt-4">
-            <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} />
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <LaunchViewSwitcher className="flex-1" currentView={currentView} onViewChange={setCurrentView} />
             <button type="button" onClick={() => navigate('/launch/vision-statement')}
-              className="min-h-[44px] rounded-full px-3 text-sm text-launch-ink/70 hover:bg-launch-cream hover:text-launch-ink">Vision</button>
+              className="min-h-14 rounded-full px-4 text-base text-launch-ink/80 self-start sm:self-auto hover:bg-launch-cream hover:text-launch-ink">Vision</button>
           </div>
         </LaunchCard>
 

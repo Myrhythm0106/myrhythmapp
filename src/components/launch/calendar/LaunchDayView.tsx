@@ -128,7 +128,7 @@ export function LaunchDayView({
               {linkedAreas.map(area => <option key={area.id} value={area.id}>{area.label}</option>)}
             </select>
           </label>
-          {visionHighlight && <p className="mt-1 text-xs text-launch-ink/60">Everyday appointments stay visible.</p>}
+          {visionHighlight && <p className="mt-1 text-sm text-launch-ink/70">Everyday appointments stay visible.</p>}
         </div>
       )}
 
@@ -144,7 +144,7 @@ export function LaunchDayView({
                 r.sent && 'opacity-60'
               )}
             >
-              <span className="text-xs font-semibold text-launch-ink/60 min-w-[42px]">
+              <span className="text-sm font-semibold text-launch-ink/70 min-w-[48px]">
                 {format(r.dueAt, 'HH:mm')}
               </span>
               <Bell className="h-4 w-4 text-launch-ember shrink-0" />
@@ -152,7 +152,7 @@ export function LaunchDayView({
                 <span className="font-medium">Nudge · </span>
                 {r.actionText}
               </span>
-              <span className="text-xs text-launch-ink/60 whitespace-nowrap">
+              <span className="text-sm text-launch-ink/70 whitespace-nowrap">
                 {reminderOffsetLabel(r.offsetDays)}
               </span>
             </Button>
@@ -229,7 +229,7 @@ export function LaunchDayView({
                     )}
 
                     {eventVisionArea(event) && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-launch-teal/10 px-2 py-0.5 text-xs font-semibold text-launch-teal">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-launch-teal/10 px-3 py-1 text-sm font-semibold text-launch-teal">
                         <Compass className="h-3 w-3" aria-hidden="true" />My Vision: {visionAreaLabel(eventVisionArea(event))}
                       </span>
                     )}
@@ -297,7 +297,7 @@ export function LaunchDayView({
                 {/* Status indicator for completed/cancelled */}
                 {(event.status === 'done' || event.status === 'cancelled' || event.status === 'carried') && (
                   <div className={cn(
-                    "text-xs px-2 py-1 rounded-full",
+                    "text-sm px-3 py-1 rounded-full",
                     event.status === 'done' && 'bg-launch-teal/10 text-launch-teal',
                     event.status === 'cancelled' && 'bg-muted text-muted-foreground',
                     event.status === 'carried' && 'bg-muted text-muted-foreground'

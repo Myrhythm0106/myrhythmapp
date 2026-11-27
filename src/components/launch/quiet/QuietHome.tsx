@@ -154,12 +154,12 @@ export function QuietHome() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <button type="button" aria-label="Yesterday" disabled={offset === -1} onClick={() => setOffset(offset === 1 ? 0 : -1)}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
-            <p className="min-w-[10rem] text-center text-sm text-primary-foreground/75">
+              className="flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronLeft className="h-5 w-5" /></button>
+            <p className="min-w-[10rem] text-center text-base text-primary-foreground/80">
               {offset === 0 ? format(today, 'EEEE d MMMM') : offset === -1 ? `Yesterday · ${format(focusDate, 'EEE d MMM')}` : `Tomorrow · ${format(focusDate, 'EEE d MMM')}`}
             </p>
             <button type="button" aria-label="Tomorrow" disabled={offset === 1} onClick={() => setOffset(offset === -1 ? 0 : 1)}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronRight className="h-5 w-5" /></button>
+              className="flex h-14 w-14 items-center justify-center rounded-full text-primary-foreground/75 hover:bg-primary-foreground/10 disabled:opacity-30"><ChevronRight className="h-5 w-5" /></button>
           </div>
           {offset !== 0 ? (
             <button type="button" onClick={() => setOffset(0)} className="min-h-[44px] rounded-full border border-primary-foreground/30 px-4 text-sm font-semibold">Back to today</button>
@@ -226,13 +226,13 @@ export function QuietHome() {
               <HomePriorities items={dailySupport.gentle ? top.slice(0, 1) : top} mode={mode} onToggle={e => void toggle(e)} onOpen={setOpenItem} />
             )}
             <HomeNextLine events={todays} excludeIds={topIds} onOpen={setOpenItem} />
-            <div className="flex flex-wrap gap-3 border-t border-launch-gold/20 pt-5">
+            <div className="grid grid-cols-1 gap-3 border-t border-launch-gold/20 pt-5 sm:flex sm:flex-wrap">
               <button type="button" onClick={() => navigate('/launch/memory?record=1')}
-                className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground hover:bg-brand-orange-600">
+                className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-brand-orange-500 px-6 font-semibold text-primary-foreground hover:bg-brand-orange-600">
                 <Mic className="h-5 w-5" /> Record a conversation
               </button>
               <button type="button" onClick={() => navigate('/launch/calendar?view=day')}
-                className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border border-launch-gold/45 px-6 font-semibold text-launch-ink hover:bg-launch-cream">
+                className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border border-launch-gold/45 px-6 font-semibold text-launch-ink hover:bg-launch-cream">
                 <CalendarDays className="h-5 w-5" /> See my day
               </button>
             </div>
@@ -249,7 +249,7 @@ export function QuietHome() {
                 </button>
               ) : <p className="mt-3 text-base text-launch-ink/75">Nothing else booked today.</p>}
               <button type="button" onClick={() => navigate('/launch/memory?record=1')}
-                className="mt-4 inline-flex min-h-[48px] items-center gap-2 text-sm font-semibold text-launch-ink hover:underline">
+                className="mt-4 inline-flex min-h-[56px] items-center gap-2 text-base font-semibold text-launch-ink hover:underline">
                 <Mic className="h-4 w-4" /> Record it when it starts
               </button>
             </section>

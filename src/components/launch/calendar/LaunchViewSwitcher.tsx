@@ -22,16 +22,16 @@ export function LaunchViewSwitcher({
   className = '' 
 }: LaunchViewSwitcherProps) {
   return (
-    <div className={cn("flex bg-gray-100 rounded-xl p-1", className)}>
+    <div className={cn("flex gap-1 bg-muted rounded-xl p-1", className)}>
       {views.map((view) => (
         <button
           key={view.key}
           onClick={() => onViewChange(view.key)}
           className={cn(
-            "flex-1 py-2.5 px-4 text-sm font-medium rounded-lg transition-all duration-200 min-h-[44px]",
+            "flex-1 px-2 text-base font-medium rounded-lg transition-all duration-200 min-h-14",
             currentView === view.key
-              ? "bg-white text-brand-emerald-600 shadow-sm"
-              : "text-gray-600 hover:text-gray-900"
+              ? "bg-background text-launch-teal shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           {view.label}
