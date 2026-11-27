@@ -30,3 +30,4 @@
 - Buttons wrap onto whole-word lines instead of nowrap, and labels stay 1 to 4 words; why: no label is ever cut off on a phone.
 - Server reminders (`send-scheduled-reminders`, cron every 5 min) read diary times as Europe/London wall-clock, also email when "push" is chosen, and mark a reminder sent only after a channel succeeded; why: a reminder that silently fails must retry, never be recorded as delivered.
 - Scheduling from a conversation is all-or-nothing in `commitActions.ts` (diary row is removed if its reminder or action link fails), and review preselects only `startsSelected` steps; why: "added to my day" must always mean reminded and traceable, and inferred steps need an explicit choice.
+- The MVP presentation lives as one self-contained page at /mvp-deck (public, like the investor decks) with print-to-PDF via ?print; why: shareable without an account and always matches the live product story.

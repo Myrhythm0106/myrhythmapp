@@ -33,4 +33,8 @@ describe('isPublicPath, sign-in needed beyond the landing page', () => {
     expect(isPublicPath('/launch/home/')).toBe(false);
     expect(isPublicPath('/launch/landingpage/')).toBe(true);
   });
+
+  it('the MVP presentation can be shared without an account', () => {
+    expect(isPublicPath('/mvp-deck')).toBe(true);
+  });
 });

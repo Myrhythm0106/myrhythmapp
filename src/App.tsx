@@ -61,6 +61,7 @@ import LaunchStart from "./pages/launch/LaunchStart";
 
 
 const InvestorDeckPage = lazy(() => import("./pages/InvestorDeckPage"));
+const MvpDeckPage = lazy(() => import("./pages/MvpDeckPage"));
 const ProductivityDeckPage = lazy(() => import("./pages/ProductivityDeckPage"));
 import SubscribeCancel from "./pages/SubscribeCancel";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
@@ -335,6 +336,7 @@ function App() {
                        
                        {/* Investor Decks */}
                        <Route path="/investor-deck" element={<InvestorDeckPage />} />
+                       <Route path="/mvp-deck" element={<MvpDeckPage />} />
                        <Route path="/investor-deck-productivity" element={<ProductivityDeckPage />} />
                        
                        {/* V1 Launch Mode Routes */}

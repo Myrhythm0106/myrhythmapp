@@ -21,6 +21,8 @@ const PUBLIC_EXACT = new Set<string>([
   // Investor decks are shared with people who don't have an account
   '/investor-deck',
   '/investor-deck-productivity',
+  // MVP presentation, shared with people who don't have an account
+  '/mvp-deck',
 ]);
 
 export function isPublicPath(pathname: string): boolean {
