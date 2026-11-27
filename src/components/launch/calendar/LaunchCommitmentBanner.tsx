@@ -71,6 +71,14 @@ export function LaunchCommitmentBanner({
   useEffect(() => {
     setConnection(readLocalFocusValue(connectionKey, null));
   }, [connectionKey]);
+  const openKey = `launch.vision-open:${userKey}`;
+  const [open, setOpenState] = useState(false);
+  useEffect(() => { setOpenState(readLocalFocusValue(openKey, false)); }, [openKey]);
+  const setOpen = (next: boolean) => {
+    setOpenState(next);
+    writeLocalFocusValue(openKey, next);
+    if (!next) setExpanded(false);
+  };
   const linked = Boolean(vision && local.core.trim() && connection?.vision === vision && connection.core === local.core);
   const confirmConnection = (checked: boolean) => {
     const next = checked ? { vision, core: local.core } : null;
@@ -213,6 +221,37 @@ export function LaunchCommitmentBanner({
     );
   }
 
+  if (!open && !expanded) {
+    const step = local.core.trim();
+    return (
+      <section aria-labelledby={`${detailsId}-title`} className={cn('rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream border-t-2 border-launch-gold', className)}>
+        <button type="button" onClick={() => setOpen(true)} aria-expanded={false}
+          className="w-full text-left px-5 py-5 sm:px-7 sm:py-6 min-h-14 hover:bg-launch-cream/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-launch-gold">
+          <div className="flex items-center gap-3 mb-3">
+            <Compass className="h-6 w-6 shrink-0 text-launch-gold" />
+            <h2 id={`${detailsId}-title`} className="text-xl font-semibold font-display">{scopeTitles[scope](date)}</h2>
+          </div>
+          {vision ? (
+            <p className="font-display text-xl sm:text-2xl leading-snug break-words line-clamp-2">“{vision}”</p>
+          ) : (
+            <p className="text-lg leading-relaxed">What I am building towards goes here, when I am ready.</p>
+          )}
+          <p className="mt-3 flex items-start gap-2 text-base sm:text-lg leading-relaxed">
+            <Star className="h-5 w-5 mt-0.5 shrink-0 text-launch-gold" aria-hidden />
+            <span className="break-words line-clamp-2">
+              <span className="font-semibold text-launch-gold">{scope === 'day' ? "Today's step: " : 'My main step: '}</span>
+              {step || 'Not chosen yet'}
+            </span>
+          </p>
+          {linked && <p className="mt-2 text-base text-launch-cream/85">This supports my vision.</p>}
+          <span className="mt-4 inline-flex items-center gap-2 text-base font-semibold text-launch-gold">
+            Open my full vision and goals <ChevronDown className="h-5 w-5" aria-hidden />
+          </span>
+        </button>
+      </section>
+    );
+  }
+
   return (
     <section aria-labelledby={`${detailsId}-title`} className={cn('rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream px-5 py-6 sm:p-7 border-t-2 border-launch-gold', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -220,7 +259,13 @@ export function LaunchCommitmentBanner({
         <Compass className="h-6 w-6 shrink-0 text-launch-gold" />
         <h2 id={`${detailsId}-title`} className="text-xl font-semibold font-display">{title}</h2>
         </div>
-        {AssistChip}
+        <div className="flex flex-wrap items-center gap-2">
+          {AssistChip}
+          <Button variant="ghost" onClick={() => setOpen(false)} aria-expanded
+            className="min-h-14 px-4 text-base text-launch-cream hover:text-launch-cream hover:bg-launch-cream/10">
+            Fold to a glance <ChevronDown className="h-5 w-5 rotate-180" />
+          </Button>
+        </div>
       </div>
       <div role="group" aria-label="Vision timeframe" className="flex flex-wrap gap-2 mb-3">
         {(Object.keys(VISION_TIMEFRAME_LABEL) as VisionTimeframe[]).map((l) => (
