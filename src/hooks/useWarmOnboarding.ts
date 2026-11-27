@@ -264,7 +264,7 @@ export function useWarmOnboarding() {
       
     } catch (error) {
       console.error('Onboarding completion failed:', error);
-      toast.error('Something went wrong. Please try again.');
+      toast.error('That did not save. Nothing is lost, so I can try again.');
     }
   };
 

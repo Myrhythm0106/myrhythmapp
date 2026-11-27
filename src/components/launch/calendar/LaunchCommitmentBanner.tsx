@@ -226,26 +226,27 @@ export function LaunchCommitmentBanner({
     return (
       <section aria-labelledby={`${detailsId}-title`} className={cn('rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-launch-ink-deep to-launch-ink text-launch-cream border-t-2 border-launch-gold', className)}>
         <button type="button" onClick={() => setOpen(true)} aria-expanded={false}
-          className="w-full text-left px-5 py-5 sm:px-7 sm:py-6 min-h-14 hover:bg-launch-cream/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-launch-gold">
-          <div className="flex items-center gap-3 mb-3">
-            <Compass className="h-6 w-6 shrink-0 text-launch-gold" />
-            <h2 id={`${detailsId}-title`} className="text-xl font-semibold font-display">{scopeTitles[scope](date)}</h2>
+          className="w-full text-left px-5 py-6 sm:px-7 min-h-[72px] space-y-4 hover:bg-launch-cream/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-launch-gold">
+          <div className="flex items-center gap-3">
+            <Compass className="h-6 w-6 shrink-0 text-launch-gold" aria-hidden />
+            <h2 id={`${detailsId}-title`} className="text-lg sm:text-xl font-semibold font-display">{scopeTitles[scope](date)}</h2>
           </div>
           {vision ? (
             <p className="font-display text-xl sm:text-2xl leading-snug break-words line-clamp-2">“{vision}”</p>
           ) : (
-            <p className="text-lg leading-relaxed">What I am building towards goes here, when I am ready.</p>
+            <p className="text-base sm:text-lg leading-relaxed">What I am building towards goes here, when I am ready.</p>
           )}
-          <p className="mt-3 flex items-start gap-2 text-base sm:text-lg leading-relaxed">
+          <div className="border-t border-launch-gold/30" aria-hidden />
+          <div className="rounded-xl bg-launch-cream/10 p-3 flex items-start gap-3">
             <Star className="h-5 w-5 mt-0.5 shrink-0 text-launch-gold" aria-hidden />
-            <span className="break-words line-clamp-2">
-              <span className="font-semibold text-launch-gold">{scope === 'day' ? "Today's step: " : 'My main step: '}</span>
-              {step || 'Not chosen yet'}
-            </span>
-          </p>
-          {linked && <p className="mt-2 text-base text-launch-cream/85">This supports my vision.</p>}
-          <span className="mt-4 inline-flex items-center gap-2 text-base font-semibold text-launch-gold">
-            Open my full vision and goals <ChevronDown className="h-5 w-5" aria-hidden />
+            <div className="min-w-0 text-base sm:text-lg leading-relaxed">
+              <p className="font-semibold text-launch-gold">{scope === 'day' ? "Today's step" : 'My main step'}</p>
+              <p className="break-words line-clamp-2">{step || 'Not chosen yet'}</p>
+              {linked && <p className="text-base text-launch-cream/85">This supports my vision.</p>}
+            </div>
+          </div>
+          <span className="flex w-full items-center justify-between gap-3 min-h-14 rounded-xl bg-launch-cream/10 px-4 text-base font-semibold text-launch-gold">
+            Open my full vision and goals <ChevronDown className="h-5 w-5 shrink-0" aria-hidden />
           </span>
         </button>
       </section>

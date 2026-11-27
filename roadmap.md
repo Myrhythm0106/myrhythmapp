@@ -208,3 +208,7 @@
 - [x] 89 launch tests and 22 isolated phone browser checks passed; real provider sign-in remains unavailable to automation
 
 - [x] One clear journey per role: My first loop on Home, step line, 3-step welcome, flow guide PDF
+
+## Five feelings (27 Nov 2026)
+- [x] Compact vision block easier to scan on phones
+- [x] Whole-app pass: confident, reliable, independent, trustworthy, in control (scorecard + fixes)

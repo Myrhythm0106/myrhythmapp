@@ -256,7 +256,7 @@ export function useBrainHealthReminders() {
       setActiveEscalation(null);
     } catch (error) {
       console.error('Failed to snooze reminder:', error);
-      toast.error('Failed to snooze');
+      toast.error('Snooze did not save. The reminder is still here, so I can try again.');
     }
   }, [user?.id, queryClient]);
 

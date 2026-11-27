@@ -92,7 +92,7 @@ export default function LaunchSignIn() {
       else if (destination.startsWith('/launch/user-type')) toast.success('Welcome back, continuing at Step 2, About me.');
       navigate(destination, { replace: true });
     } catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
+      toast.error(err.message || 'That did not go through. My details are safe, so I can try again.');
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +111,7 @@ export default function LaunchSignIn() {
         toast.success('Confirmation email sent! Please check your inbox and spam folder.');
       }
     } catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
+      toast.error(err.message || 'That did not go through. My details are safe, so I can try again.');
     } finally {
       setIsResending(false);
     }
