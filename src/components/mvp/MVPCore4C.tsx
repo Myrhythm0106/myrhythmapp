@@ -361,7 +361,7 @@ export function MVPCore4C() {
                 The companion that turns conversations into follow-through.
               </h1>
               <p className="mt-4 max-w-2xl font-instrument text-xl leading-snug text-launch-ink-deep md:mt-6 md:text-2xl">
-                Like having a discreet executive assistant at every appointment, meeting, and family conversation, so nothing important slips, and people can count on you <span className="text-launch-teal">(again)</span>.
+                Your discreet personal and executive assistant at every appointment, meeting and family conversation. Nothing important slips, and people can count on you <span className="text-launch-teal">(again)</span>.
               </p>
               <p className="mt-3 font-worksans text-base font-bold italic leading-7 text-launch-ink-deep/85 md:mt-5 md:text-lg md:leading-8">
                 Captures it. Plans it. Keeps it. Follows it through.{" "}
