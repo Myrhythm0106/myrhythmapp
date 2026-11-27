@@ -1121,7 +1121,7 @@ export default function LaunchMemoryBridge() {
                       <Button variant="ghost"
                         type="button"
                         onClick={() => openTranscriptForRecording(recording.id, recording.title)}
-                        className="flex min-h-[44px] items-center gap-1.5 px-4 py-2 rounded-md text-base font-medium border border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 transition-all"
+                        className="flex min-h-14 items-center gap-1.5 px-4 py-2 rounded-md text-base font-medium border border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 transition-all"
                       >
                         Read transcript
                       </Button>
@@ -1167,7 +1167,7 @@ export default function LaunchMemoryBridge() {
                         <Button variant="ghost"
                           type="button"
                           onClick={() => setRecordingToDelete(recording)}
-                          className="flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-2 text-base font-medium text-launch-ink/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
+                          className="flex min-h-14 items-center gap-1.5 rounded-md px-3 py-2 text-base font-medium text-launch-ink/60 transition-colors hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
                           Delete recording

@@ -86,7 +86,7 @@ export default function LaunchCircleDiary() {
               <div className="flex flex-wrap gap-2">
                 {shared.map(s => (
                   <button key={s.owner_id} type="button" onClick={() => setActive(s)}
-                    className={cn('min-h-[48px] rounded-full border px-4 text-sm font-semibold', active?.owner_id === s.owner_id ? 'border-launch-teal bg-launch-ivory text-launch-ink' : 'border-launch-gold/30 text-launch-ink/70')}>
+                    className={cn('min-h-14 rounded-full border px-5 text-base font-semibold', active?.owner_id === s.owner_id ? 'border-launch-teal bg-launch-ivory text-launch-ink' : 'border-launch-gold/30 text-launch-ink/70')}>
                     {s.owner_name}
                   </button>
                 ))}
@@ -129,8 +129,8 @@ export default function LaunchCircleDiary() {
                         <span className={cn('flex-1 text-base', it.is_busy_only ? 'text-launch-ink/55' : 'text-launch-ink', it.status === 'done' && 'line-through text-launch-ink/45')}>
                           {it.is_busy_only && <Lock className="mr-1.5 inline h-3.5 w-3.5" />}{it.title}
                         </span>
-                        {it.awaiting_confirmation && <span className="inline-flex items-center gap-1 text-xs text-launch-ink/60"><Clock3 className="h-3.5 w-3.5" />Waiting for {first}</span>}
-                        {it.status === 'done' && <span className="text-xs text-launch-teal">Done</span>}
+                        {it.awaiting_confirmation && <span className="inline-flex items-center gap-1 text-sm text-launch-ink/70"><Clock3 className="h-3.5 w-3.5" />Waiting for {first}</span>}
+                        {it.status === 'done' && <span className="text-sm text-launch-teal">Done</span>}
                       </li>
                     ))}
                   </ul>
@@ -147,7 +147,7 @@ export default function LaunchCircleDiary() {
                     </button>
                   </form>
                 )}
-                {active.level === 'help' && <p className="mt-2 text-xs text-launch-ink/55">{first} sees "Added by me" and decides whether to keep it.</p>}
+                {active.level === 'help' && <p className="mt-2 text-sm text-launch-ink/70">{first} sees "Added by me" and decides whether to keep it.</p>}
               </section>
             )}
           </>

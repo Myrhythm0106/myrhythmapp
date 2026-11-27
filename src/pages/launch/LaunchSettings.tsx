@@ -135,7 +135,7 @@ export default function LaunchSettings() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900">About this edition</h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 {EDITION_SHORT} · {EDITION_VERSION}, what's live and what's coming
               </p>
             </div>
@@ -154,7 +154,7 @@ export default function LaunchSettings() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900">What brings me to MyRhythm</h3>
-              <p className="text-xs text-gray-500">Change the words and examples MyRhythm uses for me</p>
+              <p className="text-sm text-muted-foreground">Change the words and examples MyRhythm uses for me</p>
             </div>
             <ChevronRight className="h-5 w-5 text-gray-400" />
           </button>
@@ -171,7 +171,7 @@ export default function LaunchSettings() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900">Share my continuity summary</h3>
-              <p className="text-xs text-gray-500">A life-readiness snapshot for a new clinician, employer, or caregiver</p>
+              <p className="text-sm text-muted-foreground">A life-readiness snapshot for a new clinician, employer, or caregiver</p>
             </div>
             <ChevronRight className="h-5 w-5 text-gray-400" />
           </button>
@@ -188,7 +188,7 @@ export default function LaunchSettings() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900">Send feedback to the team</h3>
-              <p className="text-xs text-gray-500">Founding-member notes shape the next release</p>
+              <p className="text-sm text-muted-foreground">Founding-member notes shape the next release</p>
             </div>
             <ChevronRight className="h-5 w-5 text-gray-400" />
           </button>
@@ -202,7 +202,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Scheduling</h3>
-              <p className="text-xs text-gray-500">How MyRhythm picks dates and times</p>
+              <p className="text-sm text-muted-foreground">How MyRhythm picks dates and times</p>
             </div>
           </div>
 
@@ -212,7 +212,7 @@ export default function LaunchSettings() {
                 <Label className="text-sm text-gray-900 flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-orange-600" /> SMART scheduling
                 </Label>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   Suggest times for my steps from my best time of day and the free gaps in my diary. I can always change them.
                 </p>
               </div>
@@ -227,7 +227,7 @@ export default function LaunchSettings() {
                 <Label className="text-sm text-gray-900 flex items-center gap-1.5">
                   <ListTree className="h-3.5 w-3.5 text-teal-600" /> Auto-generate milestones
                 </Label>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   Break big actions into scheduled checkpoints working back from the due date.
                 </p>
               </div>
@@ -242,7 +242,7 @@ export default function LaunchSettings() {
                 <Label className="text-sm text-gray-900 flex items-center gap-1.5">
                   <HeartPulse className="h-3.5 w-3.5 text-rose-600" /> Health-aware adjustments
                 </Label>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   Protect recovery windows after appointments, respect sleep and medication windows.
                 </p>
               </div>
@@ -275,14 +275,14 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Capture safety</h3>
-              <p className="text-xs text-gray-500">Gentle help when I forget to start, stop or save</p>
+              <p className="text-sm text-muted-foreground">Gentle help when I forget to start, stop or save</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <Label className="text-sm text-gray-900">Remind me when a meeting starts</Label>
-                <p className="text-xs text-gray-500 mt-0.5">I choose whether MyRhythm asks if I want to capture it.</p>
+                <p className="text-sm text-muted-foreground mt-0.5">I choose whether MyRhythm asks if I want to capture it.</p>
               </div>
               <Switch
                 checked={capturePrefs.capturePromptEnabled}
@@ -292,7 +292,7 @@ export default function LaunchSettings() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <Label className="text-sm text-gray-900">Finish after a quiet stretch</Label>
-                <p className="text-xs text-gray-500 mt-0.5">I get a 30-second chance to keep listening first.</p>
+                <p className="text-sm text-muted-foreground mt-0.5">I get a 30-second chance to keep listening first.</p>
               </div>
               <Switch
                 checked={capturePrefs.autoFinishEnabled}
@@ -303,7 +303,7 @@ export default function LaunchSettings() {
               <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
                 <div>
                   <Label className="text-sm text-gray-900">Quiet time before asking</Label>
-                  <p className="text-xs text-gray-500 mt-0.5">Longer is less interruptive; shorter saves sooner.</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">Longer is less interruptive; shorter saves sooner.</p>
                 </div>
                 <Select
                   value={String(capturePrefs.quietFinishMinutes)}
@@ -321,7 +321,7 @@ export default function LaunchSettings() {
             <div className="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
               <div>
                 <Label className="text-sm text-gray-900">Allow my Support Circle to prompt a capture</Label>
-                <p className="text-xs text-gray-500 mt-0.5">Only people I have already permitted can use this.</p>
+                <p className="text-sm text-muted-foreground mt-0.5">Only people I have already permitted can use this.</p>
               </div>
               <Switch
                 checked={capturePrefs.companionCaptureEnabled}
@@ -356,7 +356,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Connected Calendars</h3>
-              <p className="text-xs text-gray-500">Sync with Google & Outlook</p>
+              <p className="text-sm text-muted-foreground">Sync with Google & Outlook</p>
             </div>
           </div>
 
@@ -378,7 +378,7 @@ export default function LaunchSettings() {
                     </div>
                     <div>
                       <p className="font-medium text-sm text-gray-900">{integration.account_email}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {integration.last_sync
                           ? `Synced ${formatDistanceToNow(new Date(integration.last_sync))} ago`
                           : 'Never synced'}
@@ -454,7 +454,7 @@ export default function LaunchSettings() {
           {/* Any other calendar, Apple, Fastmail, most work calendars */}
           <div className="mt-4 pt-4 border-t border-launch-gold/20">
             <p className="text-sm font-medium text-gray-900">Apple or any other calendar</p>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-sm text-muted-foreground mb-2">
               Paste the calendar's share link. In Apple Calendar: right-click the calendar, Share
               Calendar, tick Public Calendar, then copy the link. This brings your busy times in so I
               never suggest a slot you've already given away.
@@ -483,7 +483,7 @@ export default function LaunchSettings() {
             </div>
           </div>
 
-          <p className="text-xs text-gray-500 mt-4">
+          <p className="text-sm text-muted-foreground mt-4">
             Google and Outlook need their connection keys added before those two buttons can finish.
             The Apple / other-calendar link above works today.
           </p>
@@ -501,7 +501,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Language & Region</h3>
-              <p className="text-xs text-gray-500">Set your preferences</p>
+              <p className="text-sm text-muted-foreground">Set your preferences</p>
             </div>
           </div>
 
@@ -573,7 +573,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Notifications</h3>
-              <p className="text-xs text-gray-500">Manage your alerts</p>
+              <p className="text-sm text-muted-foreground">Manage your alerts</p>
             </div>
           </div>
 
@@ -605,7 +605,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Appearance</h3>
-              <p className="text-xs text-gray-500">Customize your look</p>
+              <p className="text-sm text-muted-foreground">Customize your look</p>
             </div>
           </div>
 
@@ -628,7 +628,7 @@ export default function LaunchSettings() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">Privacy & Security</h3>
-              <p className="text-xs text-gray-500">Your data settings</p>
+              <p className="text-sm text-muted-foreground">Your data settings</p>
             </div>
           </div>
 
@@ -645,7 +645,7 @@ export default function LaunchSettings() {
               <Download className="h-4 w-4 mr-2" />
               Download My Data
             </LaunchButton>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Get a copy of everything MyRhythm holds about you (UK GDPR Art. 20). Includes a JSON file and a PDF summary.
             </p>
           </div>
@@ -713,7 +713,7 @@ function PlanningDayCard() {
         </div>
         <div>
           <h3 className="font-semibold text-gray-900">Planning day</h3>
-          <p className="text-xs text-gray-500">The day MyRhythm nudges you to plan the coming week</p>
+          <p className="text-sm text-muted-foreground">The day MyRhythm nudges you to plan the coming week</p>
         </div>
       </div>
       <Select
@@ -730,7 +730,7 @@ function PlanningDayCard() {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-xs text-gray-500 mt-3">
+      <p className="text-sm text-muted-foreground mt-3">
         A gentle nudge appears on your Home on this day. You can plan any day, this just sets the reminder.
       </p>
     </LaunchCard>

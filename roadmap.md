@@ -213,3 +213,4 @@
 - [x] Compact vision block easier to scan on phones
 - [x] Whole-app pass: confident, reliable, independent, trustworthy, in control (scorecard + fixes)
 - [x] Spacing and tap targets on Home, Diary, evening wrap-up (56px)
+- [x] Spacing and tap targets on Record, Circle, Circle diary, Vision, Settings

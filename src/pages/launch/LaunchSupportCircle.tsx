@@ -116,7 +116,7 @@ export default function LaunchSupportCircle() {
             <>
               {pending.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 mb-2 mt-1">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-amber-700 mb-2 mt-1">
                     Pending invitations
                   </p>
                   <div className="space-y-2">
@@ -133,7 +133,7 @@ export default function LaunchSupportCircle() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-gray-900 truncate">{m.member_name}</p>
-                              <p className="text-xs text-gray-500 flex items-center gap-1 truncate">
+                              <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
                                 <Mail className="h-3 w-3" /> {m.member_email}
                               </p>
                               <div className="flex flex-wrap gap-1.5 mt-1.5">
@@ -153,7 +153,7 @@ export default function LaunchSupportCircle() {
                               variant="ghost"
                               onClick={() => handleRemove(m.id)}
                               disabled={removingId === m.id}
-                              className="text-gray-500 hover:text-red-600"
+                              className="min-h-14 px-4 text-base text-muted-foreground hover:text-destructive"
                             >
                               {removingId === m.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Cancel'}
                             </Button>
@@ -167,7 +167,7 @@ export default function LaunchSupportCircle() {
 
               {active.length > 0 && (
                 <div className={pending.length > 0 ? 'mt-4' : ''}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-emerald-700 mb-2">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-brand-emerald-700 mb-2">
                     Active members
                   </p>
                   <div className="space-y-2">
@@ -186,7 +186,7 @@ export default function LaunchSupportCircle() {
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-gray-900 truncate">{m.member_name}</p>
                               {m.member_email && (
-                                <p className="text-xs text-gray-500 flex items-center gap-1 truncate">
+                                <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
                                   <Mail className="h-3 w-3" /> {m.member_email}
                                 </p>
                               )}
@@ -209,7 +209,7 @@ export default function LaunchSupportCircle() {
                               variant="ghost"
                               onClick={() => handleRemove(m.id)}
                               disabled={removingId === m.id}
-                              className="text-gray-500 hover:text-red-600"
+                              className="min-h-14 px-4 text-base text-muted-foreground hover:text-destructive"
                             >
                               {removingId === m.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Remove'}
                             </Button>
@@ -227,7 +227,7 @@ export default function LaunchSupportCircle() {
 
         <TabsContent value="invite">
           <SimpleInviteForm />
-          <p className="text-xs text-center text-launch-ink/50 mt-4">
+          <p className="text-sm text-center text-launch-ink/70 mt-4">
             Invitations expire in 48 hours. Your circle member decides whether to accept.
           </p>
         </TabsContent>

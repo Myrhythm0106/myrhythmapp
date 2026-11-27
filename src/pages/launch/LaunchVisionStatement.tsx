@@ -108,7 +108,7 @@ export default function LaunchVisionStatement() {
           lastSaved={state.savedAt}
         />
 
-        <p className="text-center text-xs text-brain-health-500 pt-2 pb-6">
+        <p className="text-center text-sm text-brain-health-500 pt-2 pb-6">
           This is yours. Nothing here is shared, scored, or judged.
         </p>
       </div>
